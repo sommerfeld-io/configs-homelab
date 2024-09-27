@@ -4,8 +4,10 @@
 
 All workstations heavily rely on Docker to provide virtually every development tool. By using Docker, we can easily install and manage various development tools without worrying about dependencies or compatibility issues. This allows us to work on multiple projects simultaneously, each with its own set of specific requirements, without having to worry about conflicts.
 
-- [ ] Caprica is my primary workstation for development tasks and daily to-dos.
-- [ ] Kobol is my secondary workstation (notebook) for development tasks and daily to-dos.
+| Workstation | Description                                                             |
+| ----------- | ----------------------------------------------------------------------- |
+| `caprica`   | Primary workstation for development tasks and daily to-dos              |
+| `kobol`     | Secondary workstation (notebook) for development tasks and daily to-dos |
 
 ## Installation and Configuration
 The installation steps are the same for all workstations.

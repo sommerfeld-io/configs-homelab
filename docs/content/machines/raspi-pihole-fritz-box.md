@@ -1,12 +1,14 @@
 # RasPi: pihole.fritz.box
 
-
-This RasPi node (Raspberry Pi 4 Model B) runs Pi-hole to block ads on my local network.
+This RasPi node runs Pi-hole to block ads on my local network.
 
 ## About this Raspberry Pi
 [Pi-hole](https://docs.pi-hole.net) is a Linux network-level advertisement and Internet tracker blocking application which acts as a [DNS sinkhole](https://en.wikipedia.org/wiki/DNS_sinkhole) and optionally a [DHCP server](https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol), intended for use on a private network. It is designed for low-power embedded devices with network capability, such as the [Raspberry Pi](https://en.wikipedia.org/wiki/Raspberry_Pi), but can be installed on almost any Linux machine.
 
 This machine is not intended for development purposes so there is no need to push any data to Github. Therefore there is no SSH key configuration for GitHub on this machine. It is only possible to clone public repositories via HTTPS.
+
+!!! note ""
+    Raspberry Pi 4 Model B, 8 Gigabyte RAM, 32GB SD Card
 
 ## Operating System Setup
 Use the "Raspberry Pi Imager" to install "{os}" onto a SD card. Use the following settings:
