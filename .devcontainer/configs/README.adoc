@@ -1,0 +1,3 @@
+= README
+
+Folder is copied from `components/configs` (docker compose took care of it).

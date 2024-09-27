@@ -1,0 +1,93 @@
+---
+volumes:
+
+  project-root-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind
+
+
+services:
+
+  cleanup:
+    container_name: ${COMPOSE_PROJECT_NAME}-cleanup
+    image: alpine:latest
+    volumes: &volumes
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - project-root-volume:/workspaces/template-repository
+    working_dir: &default-workdir /workspaces/template-repository
+    command: |
+      rm -rf target
+      rm -rf docs/site
+    tty: &tty true
+
+  lint-yaml:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
+    image: cytopia/yamllint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: .
+    tty: *tty
+
+  lint-workflows:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
+    image: rhysd/actionlint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: -color
+    tty: *tty
+
+  lint-filenames:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
+    image: lslintorg/ls-lint:1.11.2
+    volumes: *volumes
+    working_dir: *default-workdir
+    tty: *tty
+
+  lint-folders:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
+    image: sommerfeldio/folderslint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: .
+    tty: *tty
+
+  docs-build:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs-build
+    image: &docs-image sommerfeldio/mkdocs:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: build
+    tty: *tty
+    depends_on:
+      cleanup:
+        condition: service_completed_successfully
+
+  docs-dev-server:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
+    image: *docs-image
+    volumes: *volumes
+    working_dir: *default-workdir
+    ports:
+      - 3080:8000
+    tty: *tty
+
+  lint-dockerfile:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
+    image: &lint-dockerfile-image hadolint/hadolint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    entrypoint: hadolint Dockerfile
+
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    image: ${COMPOSE_PROJECT_NAME}-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      lint-dockerfile:
+        condition: service_completed_successfully

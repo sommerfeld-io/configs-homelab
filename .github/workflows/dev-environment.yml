@@ -1,0 +1,44 @@
+---
+name: Test Development Environment
+
+on:
+  push:
+    branches-ignore:
+      - dependabot/**
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/dev-environment.yml'
+  schedule:
+    - cron: '0 1 * * 2'
+
+env:
+  IMAGE_NAME: devcontainer
+  CONTEXT: .devcontainer
+  DOCKERFILE: Dockerfile
+
+jobs:
+  devcontainer:
+    runs-on: ubuntu-latest
+    env:
+      CHEF_LICENSE: accept-no-persist
+      CONTAINER_NAME: system_under_test
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ env.CONTEXT }}/${{ env.DOCKERFILE }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build the Docker image WITHOUT pushing
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.CONTEXT }}
+          file: ${{ env.CONTEXT }}/${{ env.DOCKERFILE }}
+          build-args: |
+            VERSION=${{ github.sha }}
+            COMMIT_SHA=${{ github.sha }}
+          platforms: linux/amd64
+          push: false
+          tags: local/${{ env.IMAGE_NAME }}:${{ github.sha }}

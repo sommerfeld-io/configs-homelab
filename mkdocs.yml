@@ -1,0 +1,64 @@
+---
+site_name: Template Repository
+site_url: https://www.sommerfeld.io
+site_author: Sebastian Sommerfeld
+site_description: >-
+  Template Repository for sommerfeld.io projects.
+
+repo_name: sommerfeld-io/template-repository
+repo_url: https://github.com/sommerfeld-io/template-repository
+
+copyright: Copyright &copy; 2024 Sommerfeld.io
+
+docs_dir: docs/content
+site_dir: docs/site
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+  features:
+    - content.code.copy
+    - content.tabs.link
+    # - navigation.tabs
+    - navigation.footer
+    - navigation.expand
+    - navigation.tracking
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - kroki:
+  - search:
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sommerfeld-io/template-repository
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/sommerfeldio
+
+nav:
+  - Home: index.md
+  - How to Use:
+      - usage/index.md
+      - usage/markdown-components.md
+      - usage/markdown-from-code.md
+  - About this Project:
+      - about/development-guide.md
+      - about/project-structure.md
+      - about/contribute.md
+      - about/security.md
+      - about/code-of-conduct.md
+      - about/license.md
+      - about/terms.md
