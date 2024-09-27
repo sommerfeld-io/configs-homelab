@@ -1,5 +1,5 @@
 {
-    "name": "template-repository",
+    "name": "configs-homelab",
     "build": {
         "dockerfile": "Dockerfile"
     },

@@ -1,12 +1,12 @@
 ---
-site_name: Template Repository
+site_name: Homelab Configs
 site_url: https://www.sommerfeld.io
 site_author: Sebastian Sommerfeld
 site_description: >-
-  Template Repository for sommerfeld.io projects.
+  Homelab Configs for sommerfeld.io projects.
 
-repo_name: sommerfeld-io/template-repository
-repo_url: https://github.com/sommerfeld-io/template-repository
+repo_name: sommerfeld-io/configs-homelab
+repo_url: https://github.com/sommerfeld-io/configs-homelab
 
 copyright: Copyright &copy; 2024 Sommerfeld.io
 
@@ -17,7 +17,7 @@ theme:
   name: material
   palette:
     scheme: slate
-    primary: indigo
+    primary: black
   features:
     - content.code.copy
     - content.tabs.link
@@ -44,7 +44,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/sommerfeld-io/template-repository
+      link: https://github.com/sommerfeld-io/configs-homelab
     - icon: fontawesome/brands/docker
       link: https://hub.docker.com/u/sommerfeldio
 
@@ -52,8 +52,6 @@ nav:
   - Home: index.md
   - How to Use:
       - usage/index.md
-      - usage/markdown-components.md
-      - usage/markdown-from-code.md
   - About this Project:
       - about/development-guide.md
       - about/project-structure.md

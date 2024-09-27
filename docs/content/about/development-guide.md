@@ -160,23 +160,7 @@ All related projects are hosted on GitHub.
 The pipeline and workflow engine of choice is GitHub Actions.
 
 ### Application Language and Build Tool
-!!! warning "Todo"
-    Update Project specific information
-
-## Coding Style Guide
-We follow a set of coding style guidelines to ensure that our code is consistent, readable, and maintainable. These guidelines cover various aspects of coding, including naming conventions, formatting, and documentation.
-
-### Go Code Style (example)
-!!! warning "Todo"
-    Update Project specific information
-
-### Error Handling
-!!! warning "Todo"
-    Update Project specific information
-
-### Some more stuff
-!!! warning "Todo"
-    Update Project specific information
+Setup for all workstations and RasPi nodes is done using Ansible. All workstations are running Ubuntu.
 
 ## Task Management
 To ensure that our development process is organized and efficient, we use a task management system to track and manage our work. This system helps us prioritize tasks, assign work, and track progress throughout the development lifecycle.
@@ -194,7 +178,7 @@ We use architecture decision records (ADRs) to document the key decisions made d
 
 We treat ADRs as working items, updating them as necessary to reflect the current state of the issue. Thats why we manage and track ADRs as GitHub issues. This approach allows us to easily reference and link to ADRs from other parts of the documentation and use the GitHub issue for collaboration and discussion.
 
-See [all issues labeled as ADR](https://github.com/sommerfeld-io/template-repository/issues?q=is%3Aissue+label%3AADR) for a list of all ADRs.
+See [all issues labeled as ADR](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR) for a list of all ADRs.
 
 ### Risks and Technical Debts
-All issues labeled as `risk` (= some sort of risk or a technical debt) or `security` (= disclosed security issues - e.g. CVEs) [are tracked as GitHub issue](https://github.com/sommerfeld-io/template-repository/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen) and carry the respective label.
+All issues labeled as `risk` (= some sort of risk or a technical debt) or `security` (= disclosed security issues - e.g. CVEs) [are tracked as GitHub issue](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen) and carry the respective label.

@@ -14,7 +14,7 @@ In order for us to best respond to your report, please include any of the follow
 - Any relevant tools, including versions used
 - Tool output
 
-[All issues labeled as `security`](https://github.com/sommerfeld-io/template-repository/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen) tackle already disclosed security issues (e.g. CVEs) and are publicly known already.
+[All issues labeled as `security`](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen) tackle already disclosed security issues (e.g. CVEs) and are publicly known already.
 
 ## Detecting Vulnerabilities
 We prioritize the security of our project and take proactive measures to detect vulnerabilities. As part of our continuous integration and delivery process, we scan our Docker images using Docker Scout in every pipeline run and for every pull request. This ensures that any potential vulnerabilities are identified and addressed promptly.

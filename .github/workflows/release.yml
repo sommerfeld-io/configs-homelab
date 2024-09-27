@@ -6,9 +6,6 @@ on:
     types: [created]
 
 env:
-  IMAGE_TAG_RC: rc
-  IMAGE_TAG_LATEST: latest
-  IMAGE_NAME: template-repository
   DOCS_PAGES_ARTIFACT: docs-page
 
 jobs:
@@ -54,39 +51,3 @@ jobs:
         uses: actions/deploy-pages@v4.0.5
         with:
           artifact_name: ${{ env.DOCS_PAGES_ARTIFACT }}
-
-  publish-release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      # - name: Login to DockerHub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USER }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # - name: Deploy to DockerHub
-      #   run: |
-      #     TAG="${GITHUB_REF#refs/tags/}"
-      #     TAG="${TAG#v}"
-
-      #     echo "New version tag = $TAG"
-
-      #     docker pull "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_RC }}"
-
-      #     docker tag "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_RC }}" "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}"
-      #     docker tag "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_RC }}" "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:$TAG"
-
-      #     docker push "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}"
-      #     docker push "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:$TAG"
-      #   shell: bash
-      # - name: Update DockerHub description
-      #   uses: peter-evans/dockerhub-description@v4
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USER }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      #     repository: ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}
-      #     short-description: ${{ github.event.repository.description }}
-      #     readme-filepath: README.md

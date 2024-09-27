@@ -1,13 +1,13 @@
 {
-  "name": "template-repository",
-  "version": "1.2.0",
+  "name": "configs-homelab",
+  "version": "0.9.0",
   "directories": {
     "doc": "docs"
   },
   "keywords": [],
   "author": "sebastian-sommerfeld.io",
   "license": "MIT",
-  "description": "Template Repo",
+  "description": "Configuration as code for all my workstations and RasPi nodes",
   "devDependencies": {
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",
