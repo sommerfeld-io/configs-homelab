@@ -1,0 +1,82 @@
+---
+- name: Setup for group raspi
+  hosts: raspi
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/global.yml
+  vars:
+    ops_project_name: ops
+    ops_compose_file: "/home/{{ ansible_user }}/work/repos/sommerfeld-io/configs-homelab/components/docker-stacks/ops/docker-compose.yml"
+    portainer_project_name: portainer
+    portainer_compose_file: "/home/{{ ansible_user }}/work/repos/sommerfeld-io/configs-homelab/components/docker-stacks/portainer/docker-compose.yml"
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
+    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/common-git.yml
+    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
+    - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-docker.yml
+
+    - name: Config -> Clone mandatory git repositories from Github (github.com/sebastian-sommerfeld-io) via https
+      ansible.builtin.git:
+        repo: "https://github.com/sebastian-sommerfeld-io/{{ item }}.git"
+        dest: "/home/{{ ansible_user }}/work/repos/sebastian-sommerfeld-io/{{ item }}"
+      with_items:
+        - configs
+
+    - name: Service Startup -> Check if Docker Compose stack is running -> {{ ops_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ ops_project_name }} -f {{ ops_compose_file }} ps -q
+      register: compose_ps_output
+      changed_when: false
+      check_mode: false
+    - name: Service Startup -> Start Docker Compose stack if not running -> {{ ops_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ ops_project_name }} -f {{ ops_compose_file }} up -d
+      when: compose_ps_output.stdout == ""
+
+    - name: Service Startup -> Check if Docker Compose stack is running -> {{ portainer_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ portainer_project_name }} -f {{ portainer_compose_file }} ps -q
+      register: compose_ps_output
+      changed_when: false
+      check_mode: false
+    - name: Service Startup -> Start Docker Compose stack if not running -> {{ portainer_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ portainer_project_name }} -f {{ portainer_compose_file }} up -d
+      when: compose_ps_output.stdout == ""
+
+- name: Setup for single raspi node -> pihole.fritz.box
+  hosts: pihole.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/global.yml
+  vars:
+    pihole_project_name: pihole
+    pihole_compose_file: "/home/{{ ansible_user }}/work/repos/sommerfeld-io/configs-homelab/components/docker-stacks/pihole/docker-compose.yml"
+  tasks:
+
+    - name: Pi-hole Startup -> Stop systemd-resolved service to avoid conflicts with Pi-hole (DNS port)
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: stopped
+    - name: Pi-hole Startup -> Disable systemd-resolved service to avoid conflicts with Pi-hole (DNS port)
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        enabled: false
+
+    - name: Pi-hole Startup -> Check if Docker Compose stack is running -> {{ pihole_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ pihole_project_name }} -f {{ pihole_compose_file }} ps -q
+      register: compose_ps_output
+      changed_when: false
+      check_mode: false
+    - name: Pi-hole Startup -> Start Docker Compose stack if not running -> {{ pihole_project_name }}
+      ansible.builtin.command: |
+        docker compose -p {{ pihole_project_name }} -f {{ pihole_compose_file }} up -d
+      when: compose_ps_output.stdout == ""

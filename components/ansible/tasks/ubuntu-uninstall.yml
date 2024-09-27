@@ -1,0 +1,10 @@
+---
+- name: Uninstall -> Some pre-installed packages
+  ansible.builtin.apt:
+    pkg:
+      - thunderbird
+      - libreoffice
+      - libreoffice-*
+      - totem
+      - totem-*
+    state: absent

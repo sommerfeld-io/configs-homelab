@@ -43,10 +43,19 @@ ignore:
   - docs/site
   - target
 
+  # Helm expects this specific filename in this specific case
+  - Chart.yaml
+  - components/minikube/admin-charts/portainer/Chart.yaml
+
   # linter definitions etc.
+  - .ansible-lint.yml
   - .hadolint.yml
   - .ls-lint.yml
   - .yamllint.yml
   - .pre-commit-config.yaml
   - .releaserc
   - .release.sh
+
+  # Misc
+  - components/docker-stacks/pihole/etc-pihole
+  - components/docker-stacks/pihole/etc-dnsmasq.d

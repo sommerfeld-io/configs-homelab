@@ -21,8 +21,8 @@ theme:
   features:
     - content.code.copy
     - content.tabs.link
-    # - navigation.tabs
-    - navigation.footer
+    - navigation.tabs
+    # - navigation.footer
     - navigation.expand
     - navigation.tracking
 
@@ -45,13 +45,19 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/sommerfeld-io/configs-homelab
-    - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/u/sommerfeldio
 
 nav:
-  - Home: index.md
-  - How to Use:
-      - usage/index.md
+  - Home:
+      - index.md
+      - memos.md
+  - Workstations and RasPi Nodes:
+      - machines/ubuntu-workstations.md
+      - machines/raspi-pihole-fritz-box.md
+  - Scripts and CLIs:
+      - scripts/ansible-cli-sh.md
+      - scripts/docker-stacks-cli-sh.md
+      - scripts/minikube-cli-sh.md
+      - scripts/run-sh.md
   - About this Project:
       - about/development-guide.md
       - about/project-structure.md

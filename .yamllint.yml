@@ -1,10 +1,12 @@
 ---
 extends: default
 
+# Helm charts are excluded because they are validated with helm lint
 ignore: |
   node_modules
   .vagrant
   target
+  components/minikube
 
 rules:
   line-length:
@@ -19,3 +21,5 @@ rules:
   brackets:
     max-spaces-inside: 1
     level: error
+  comments:
+    min-spaces-from-content: 1

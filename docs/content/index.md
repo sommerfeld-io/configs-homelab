@@ -1,8 +1,8 @@
-# Homelab Configs
+# Introduction to Homelab Configs
 [doc-website]: https://sommerfeld-io.github.io/configs-homelab
 [github-repo]: https://github.com/sommerfeld-io/configs-homelab
 [file-issues]: https://github.com/sommerfeld-io/configs-homelab/issues
-[project-board]: https://github.com/orgs/sommerfeld-io/projects/1/views/17
+[project-board]: https://github.com/orgs/sommerfeld-io/projects/1/views/1
 
 This project contains infrastructure configurations and docs for my workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
@@ -14,8 +14,8 @@ This project contains infrastructure configurations and docs for my workstations
 ## Requirements and Features
 This section outlines the basic requirements and features of the project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
-!!! warning "Todo - Remove if not needed"
-    Short description of the functional requirements, driving forces, extract (or abstract) of requirements. Maybe link to GitHub issues (which are written as user stories) or to link some BDD-style executable specifications.
+- Install all necessary software on workstations and servers. Follow Infrastructure as Code (IaC) principles. Ansible is used for this purpose.
+- Every machines run services (some of them are mandatory for every machine). These services run inside Docker containers. The containers are controlled through scripts from this project.
 
 ## Usage
 This project contains several scripts to control the respective function set.

@@ -9,10 +9,17 @@
 
 		".vscode",
 
+		"components/ansible/**",
+		"components/bootstrap",
+		"components/conky/**",
+		"components/docker-stacks/**",
+		"components/minikube/**",
+
 		"docs",
 		"docs/content/_assets/**",
 		"docs/content/about/**",
-		"docs/content/usage/**",
+		"docs/content/machines/**",
+		"docs/content/scripts/**",
 		"docs/site/**",
 
 		"node_modules/**",
