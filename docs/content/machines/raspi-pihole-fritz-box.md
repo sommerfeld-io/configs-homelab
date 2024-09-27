@@ -1,4 +1,4 @@
-# RasPi: pihole.fritz.box
+# pihole.fritz.box
 
 This RasPi node runs Pi-hole to block ads on my local network.
 

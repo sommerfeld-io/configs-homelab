@@ -23,6 +23,7 @@ theme:
     - content.tabs.link
     - navigation.tabs
     # - navigation.footer
+    - navigation.sections
     - navigation.expand
     - navigation.tracking
 
@@ -52,12 +53,15 @@ nav:
       - memos.md
   - Workstations and RasPi Nodes:
       - machines/ubuntu-workstations.md
-      - machines/raspi-pihole-fritz-box.md
+      - Raspberry Pi:
+          - machines/raspi-pihole-fritz-box.md
   - Scripts and CLIs:
-      - scripts/ansible-cli-sh.md
-      - scripts/docker-stacks-cli-sh.md
-      - scripts/minikube-cli-sh.md
-      - scripts/run-sh.md
+      - scripts/index.md
+      - Scripts:
+          - scripts/ansible-cli-sh.md
+          - scripts/docker-stacks-cli-sh.md
+          - scripts/minikube-cli-sh.md
+          - scripts/run-sh.md
   - About this Project:
       - about/development-guide.md
       - about/project-structure.md
