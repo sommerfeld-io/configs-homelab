@@ -1,10 +1,13 @@
 #!/bin/bash
-## The script starts all Conky instances. By default this script is triggered
-## automatically when the machine starts (the script is configured as a startup application
-## by ansible playbook).
-##
-## === Script Arguments
-## The script does not accept any parameters.
+# @file run.sh
+# @brief Start all Conky instances.
+# @description
+#   The script starts all Conky instances. By default this script is triggered
+#   automatically when the machine starts (the script is configured as a startup application
+#   by ansible playbook).
+#
+#   ### Script Arguments
+#   The script does not accept any parameters.
 
 
 readonly BASE_PATH="$HOME/work/repos/sommerfeld-io/configs-homelab/components/conky"

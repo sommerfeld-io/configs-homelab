@@ -55,12 +55,18 @@ nav:
       - machines/ubuntu-workstations.md
       - Raspberry Pi:
           - machines/raspi-pihole-fritz-box.md
-  - Scripts and CLIs:
-      - scripts/index.md
+  - Scripts and Docker Stacks:
+      #- generated/index.md
       - Scripts:
-          - scripts/generated/ansible-cli-sh.md
-          - scripts/generated/docker-stacks-cli-sh.md
-          - scripts/generated/minikube-cli-sh.md
+          - generated/scripts/ansible-cli-sh.md
+          - generated/scripts/docker-stacks-cli-sh.md
+          - generated/scripts/minikube-cli-sh.md
+          - generated/scripts/bootstrap-install-basics-sh.md
+          - generated/scripts/bootstrap-ssh-server-sh.md
+      - Docker Stacks:
+          - generated/stacks/ops-docker-compose-yml.md
+          - generated/stacks/pihole-docker-compose-yml.md
+          - generated/stacks/portainer-docker-compose-yml.md
   - About this Project:
       - about/development-guide.md
       - about/project-structure.md

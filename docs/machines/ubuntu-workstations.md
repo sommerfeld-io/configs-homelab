@@ -31,7 +31,7 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/ssh-server.sh | bash -` if needed
 
 ### Configuration and package installation
-- [ ] Install machine using the Ansible configs from this repo (use [ansible-cli.sh](../scripts/generated/ansible-cli-sh.md)).
+- [ ] Install machine using the Ansible configs from this repo (use [ansible-cli.sh](../generated/scripts/ansible-cli-sh.md)).
 - [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
 
 ### Manual Follow-Up todos
@@ -39,5 +39,5 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
-- [ ] Use [docker-stacks-cli.sh](../scripts/generated/docker-stacks-cli-sh.md) to start Docker Compose services. Make sure you only start the Portainer Stack! Other Stacks are managed by Portainer.
-- [ ] Use [components/conky/run.sh](../scripts/generated/run-sh.md) to start all conky instances.
+- [ ] Use [docker-stacks-cli.sh](../generated/scripts/docker-stacks-cli-sh.md) to start Docker Compose services. Make sure you only start the Portainer Stack! Other Stacks are managed by Portainer.
+- [ ] Use [components/conky/run.sh](../generated/scripts/run-sh.md) to start all conky instances.

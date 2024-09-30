@@ -1,13 +1,14 @@
 #!/bin/bash
-## This script runs the basic provisioning. This is a prerequisite to run the ansible steps.
-##
-## === Usage
-## [source, bash]
-## ....
-## curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/basics.sh | bash -
-## ....
-##
-## The script does not accept any parameters.
+# @file install-basics.sh
+# @brief Install basic tools and apply basic configs to allow further setup using Ansible.
+# @description
+#   This script runs the basic provisioning. This is a prerequisite to run the ansible steps.
+#
+#   ```bash
+#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/basics.sh | bash -
+#   ````
+#
+#   The script does not accept any parameters.
 
 
 set -o errexit

@@ -1,13 +1,14 @@
 #!/bin/bash
-## This script installs and configures openssh-server.
-##
-# === Usage
-## [source, bash]
-## ....
-## curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/ssh-server.sh | bash -
-## ....
-##
-## The script does not accept any parameters.
+# @file ssh-server.sh
+# @brief Install and configure openssh-server.
+# @description
+#   This script installs and configures openssh-server.
+#
+#   ```bash
+#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/ssh-server.sh | bash -
+#   ```
+#
+#   The script does not accept any parameters.
 
 
 set -o errexit

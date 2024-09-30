@@ -19,7 +19,7 @@
 		"docs/_assets/**",
 		"docs/about/**",
 		"docs/machines/**",
-		"docs/scripts/**",
+		"docs/generated/**",
 		"target/docs/site/**",
 
 		"node_modules/**",

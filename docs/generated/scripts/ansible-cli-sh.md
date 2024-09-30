@@ -110,4 +110,3 @@ Ansible running in a Docker container.
 #### Arguments
 
 * **...** (String): The ansible-playbook commands (1-n arguments) - $1 is mandatory
-
