@@ -56,7 +56,6 @@ nav:
       - Raspberry Pi:
           - machines/raspi-pihole-fritz-box.md
   - Scripts and Docker Stacks:
-      #- generated/index.md
       - Scripts:
           - generated/scripts/ansible-cli-sh.md
           - generated/scripts/docker-stacks-cli-sh.md
