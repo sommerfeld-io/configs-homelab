@@ -1,4 +1,4 @@
-# docker-compose.yml
+# PiHole Compose Config
 
 Docker stack for monitoring system metrics with Prometheus and Grafana.
 
@@ -49,3 +49,5 @@ network setup.
 
 #### Setup of choice
 Pi-hole is set up as a DNS sinkhole only. The router's DHCP server is used.
+
+

@@ -1,4 +1,4 @@
-# docker-compose.yml
+# Ops Compose Config
 
 Docker stack for monitoring system metrics with Prometheus and Grafana.
 
@@ -14,3 +14,5 @@ metrics, such as CPU usage, disk usage, and network activity.
 | ------------- | ---- | --------------------- |
 | node_exporter | 9100 | http://localhost:9100 |
 | cAdvisor      | 9110 | http://localhost:9110 |
+
+

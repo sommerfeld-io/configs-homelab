@@ -11,3 +11,5 @@ curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/compon
 ```
 
 The script does not accept any parameters.
+
+

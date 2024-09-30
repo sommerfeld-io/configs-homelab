@@ -1,4 +1,4 @@
-# docker-compose.yml
+# Portainer Compose Config
 
 Docker stack for Portainer CE.
 
@@ -11,3 +11,5 @@ admin user and handles deployments of other Docker stacks through GitOps techniq
 | Component | Port |URL                    |
 | --------- | ---- |---------------------- |
 | Portainer | 9990 | http://localhost:9990 |
+
+
