@@ -136,7 +136,7 @@ function ansible-playbook() {
 title 'Ansible CLI'
 
 (
-  cd src/main/ansible || exit
+  cd ansible || exit
 
   if ! id "$ANSIBLE_USER" &>/dev/null; then
     echo -e "$LOG_ERROR +-----------------------------------------------------------------------------+"
