@@ -6,7 +6,7 @@
 #
 #   ```bash
 #   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/basics.sh | bash -
-#   ````
+#   ```
 #
 #   The script does not accept any parameters.
 
