@@ -55,6 +55,15 @@ services:
     command: .
     tty: *tty
 
+  lint-ansible:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-ansible
+    image: cytopia/ansible-lint:latest
+    volumes:
+      - .:/workspaces/configs
+    working_dir: *default-workdir
+    command: components/ansible/playbooks -c .ansible-lint.yml
+    tty: true
+
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
