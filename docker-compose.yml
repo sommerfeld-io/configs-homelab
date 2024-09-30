@@ -24,6 +24,16 @@ services:
       rm -rf target/docs/site
     tty: &tty true
 
+  generate-docs:
+    container_name: ${COMPOSE_PROJECT_NAME}-generate-docs
+    image: alpine:latest
+    user: 1000:1000
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: |
+      echo "some shdoc stuff"
+    tty: *tty
+
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
