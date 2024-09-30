@@ -182,3 +182,4 @@ Utility function to undeploy a Helm chart.
 #### Arguments
 
 * **$1** (string): The sub folder name (= the release name) of the actual deployment configuration.
+

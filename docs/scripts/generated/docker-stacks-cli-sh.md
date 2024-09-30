@@ -45,3 +45,4 @@ Utility function to shutdown docker compose services.
 ### logs
 
 Utility function to show docker compose logs.
+
