@@ -58,10 +58,9 @@ nav:
   - Scripts and CLIs:
       - scripts/index.md
       - Scripts:
-          - scripts/ansible-cli-sh.md
-          - scripts/docker-stacks-cli-sh.md
-          - scripts/minikube-cli-sh.md
-          - scripts/run-sh.md
+          - scripts/generated/ansible-cli-sh.md
+          - scripts/generated/docker-stacks-cli-sh.md
+          - scripts/generated/minikube-cli-sh.md
   - About this Project:
       - about/development-guide.md
       - about/project-structure.md

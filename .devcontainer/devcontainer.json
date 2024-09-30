@@ -30,10 +30,10 @@
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",
     "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post-start.sh",
 
-    "forwardPorts": [2990, 3080],
+    "forwardPorts": [3990, 3080],
     "portsAttributes": {
-        "2990": {
-            "label": "2990 Portainer"
+        "3990": {
+            "label": "3990 Portainer"
         }
     }
 }

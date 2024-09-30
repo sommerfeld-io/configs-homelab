@@ -1,4 +1,1 @@
-# Getting started
-
-!!! warning
-    Todo ...
+# Getting Started

@@ -18,7 +18,7 @@ This section outlines the basic requirements and features of the project. These 
 - Every machines run services (some of them are mandatory for every machine). These services run inside Docker containers. The containers are controlled through scripts from this project.
 
 ## Usage
-This project contains several [scripts](scripts) to control the respective function set.
+This project contains several [scripts](scripts/index.md) to control the respective function set.
 
 ## Scope and Context
 This configuration set is intended to work specifically for our machines. You might be able to adopt some stuff from this project, but using it "as is" most likely will result in failure.
