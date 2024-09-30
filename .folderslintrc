@@ -16,11 +16,11 @@
 		"components/minikube/**",
 
 		"docs",
-		"docs/content/_assets/**",
-		"docs/content/about/**",
-		"docs/content/machines/**",
-		"docs/content/scripts/**",
-		"docs/site/**",
+		"docs/_assets/**",
+		"docs/about/**",
+		"docs/machines/**",
+		"docs/scripts/**",
+		"target/docs/site/**",
 
 		"node_modules/**",
 		"public/**",

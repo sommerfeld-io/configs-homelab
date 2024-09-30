@@ -21,7 +21,7 @@ services:
     working_dir: &default-workdir /workspaces/configs-homelab
     command: |
       rm -rf target
-      rm -rf docs/site
+      rm -rf target/docs/site
     tty: &tty true
 
   lint-yaml:

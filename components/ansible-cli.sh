@@ -1,5 +1,5 @@
 #!/bin/bash
-## TODO ... docs from docs/content/scripts/ansible-cli-sh.md
+## TODO ... docs from docs/scripts/ansible-cli-sh.md
 ## TODO ... auto-generated Markdown file
 
 set -o errexit

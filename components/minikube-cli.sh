@@ -1,5 +1,5 @@
 #!/bin/bash
-## TODO ... docs from docs/content/scripts/minikube-cli-sh.md
+## TODO ... docs from docs/scripts/minikube-cli-sh.md
 ## TODO ... auto-generated Markdown file
 ## TODO ... Update path in components/ansible/tasks/ubuntu-minikube.yml (bash alias)
 

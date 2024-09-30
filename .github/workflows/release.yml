@@ -23,13 +23,13 @@ jobs:
         run: docker compose up docs-build
         shell: bash
       - name: List contents
-        run: ls -alF docs/site
+        run: ls -alF target/docs/site
         shell: bash
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           name: ${{ env.DOCS_PAGES_ARTIFACT }}
-          path: docs/site
+          path: target/docs/site
 
   docs-deploy:
     runs-on: ubuntu-latest

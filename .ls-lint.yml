@@ -40,7 +40,7 @@ ignore:
   - .idea
   - .vscode
   - node_modules
-  - docs/site
+  - target/docs/site
   - target
 
   # Helm expects this specific filename in this specific case

@@ -10,8 +10,8 @@ repo_url: https://github.com/sommerfeld-io/configs-homelab
 
 copyright: Copyright &copy; 2024 Sommerfeld.io
 
-docs_dir: docs/content
-site_dir: docs/site
+docs_dir: docs
+site_dir: target/docs/site
 
 theme:
   name: material
