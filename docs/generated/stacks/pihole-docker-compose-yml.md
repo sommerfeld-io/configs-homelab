@@ -1,6 +1,6 @@
 # PiHole Compose Config
 
-Docker stack for monitoring system metrics with Prometheus and Grafana.
+Stack to run PiHole. Pi-hole is a Linux network-level advertisement and Internet tracker blocking application.
 
 ## Overview
 
@@ -11,10 +11,10 @@ Internet tracker blocking application which acts.
 
 See <https://github.com/pi-hole/docker-pi-hole?tab=readme-ov-file##quick-start>
 
-### Setup Options
+## Setup Options
 You can use Pi-hole to block ads and trackers, or as a DHCP server.
 
-#### Setting Up Pi-hole for Ad-Blocking Only
+### Setting Up Pi-hole for Ad-Blocking Only
 If you prefer to keep your existing router's DHCP service and only want to use
 Pi-hole for ad-blocking, you can do so with the following steps:
 
@@ -28,7 +28,7 @@ Pi-hole for ad-blocking, you can do so with the following steps:
 - Test Configuration:
 - Verify that your devices are using Pi-hole for DNS by checking the DNS server settings on a few devices. You can also check the Pi-hole query log to see if DNS requests are being processed.
 
-#### Advantages of Using Pi-hole as a DHCP Server
+### Advantages of Using Pi-hole as a DHCP Server
 - Consistent Network-Wide Ad-Blocking:
 - When Pi-hole is used as a DHCP server, it ensures that all devices on your network use Pi-hole as their DNS server. This avoids potential issues where devices might bypass Pi-hole if they are manually configured or use alternative DNS settings.
 - Device-Specific Blocking and Statistics:
@@ -40,7 +40,7 @@ Pi-hole for ad-blocking, you can do so with the following steps:
 - No Need to Configure Router's DNS Settings:
 - When using Pi-hole as the DHCP server, it automatically assigns itself as the DNS server for all devices. This means you don't have to manually configure the DNS settings on your router, which can sometimes be a limitation on certain routers.
 
-#### Summary
+### Summary
 Using Pi-hole as a DHCP server can simplify network-wide DNS management and provide enhanced
 monitoring and control over individual devices. However, if your primary goal is ad-blocking,
 configuring your router to use Pi-hole as the DNS server without changing the DHCP server is
@@ -49,5 +49,3 @@ network setup.
 
 #### Setup of choice
 Pi-hole is set up as a DNS sinkhole only. The router's DHCP server is used.
-
-

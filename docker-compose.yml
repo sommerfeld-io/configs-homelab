@@ -27,33 +27,18 @@ services:
         rm -rf target/docs/site
     tty: &tty true
 
-  # TODO turn into image in container-images
   generate-docs:
     container_name: ${COMPOSE_PROJECT_NAME}-generate-docs
-    image: ubuntu:24.04
+    image: sommerfeldio/shdoc:0.5.0
     volumes: *volumes
     working_dir: *default-workdir
     command:
       - /bin/bash
       - -c
       - |
-        apt-get update
-        apt-get install -y --no-install-recommends gawk
-        apt-get install -y --no-install-recommends git
-        apt-get install -y --no-install-recommends make
-        apt-get install -y --no-install-recommends ca-certificates
-        apt-get clean
-        rm -rf /var/lib/apt/lists/*
-
-        (
-          cd /tmp || exit
-          git clone --recursive https://github.com/reconquest/shdoc
-          cd shdoc || exit
-          make install
-        )
-
         rm -rf docs/generated/scripts
         mkdir -p docs/generated/scripts
+
         shdoc < components/ansible-cli.sh > docs/generated/scripts/ansible-cli-sh.md
         shdoc < components/docker-stacks-cli.sh > docs/generated/scripts/docker-stacks-cli-sh.md
         shdoc < components/minikube-cli.sh > docs/generated/scripts/minikube-cli-sh.md
@@ -62,6 +47,7 @@ services:
 
         rm -rf docs/generated/stacks
         mkdir -p docs/generated/stacks
+
         shdoc < components/docker-stacks/ops/docker-compose.yml > docs/generated/stacks/ops-docker-compose-yml.md
         shdoc < components/docker-stacks/pihole/docker-compose.yml > docs/generated/stacks/pihole-docker-compose-yml.md
         shdoc < components/docker-stacks/portainer/docker-compose.yml > docs/generated/stacks/portainer-docker-compose-yml.md
