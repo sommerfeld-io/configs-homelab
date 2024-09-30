@@ -64,7 +64,7 @@ function logs() {
 hostnamectl
 
 (
-  cd src/main/docker-stacks || exit
+  cd docker-stacks || exit
 
   echo -e "$LOG_INFO Select the docker compose stack"
   select s in */; do

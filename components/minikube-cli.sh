@@ -222,7 +222,7 @@ function destroy() {
 # @arg $2 string The sub folder name containing the actual deployment configuration.
 function deploy() {
   (
-    cd "src/main/minikube/$1" || exit
+    cd "minikube/$1" || exit
 
     echo -e "$LOG_INFO Deploy ${P}$1${D}/${P}$2${D} with helm"
     helm install "$2" "./$2"
