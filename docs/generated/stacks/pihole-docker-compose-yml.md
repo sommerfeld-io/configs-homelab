@@ -49,3 +49,5 @@ network setup.
 
 #### Setup of choice
 Pi-hole is set up as a DNS sinkhole only. The router's DHCP server is used.
+
+
