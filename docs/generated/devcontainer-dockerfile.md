@@ -19,8 +19,6 @@ for development and testing purposes only.
 ```kroki-plantuml
 @startuml
 !define WHITE #e2e4e9
-!define GREY #e2e4e9
-!define DARK_GREY #1e2129
 
 skinparam backgroundColor transparent
 skinparam DefaultFontColor WHITE
@@ -53,3 +51,5 @@ control Helm
 ## Prerequisites
 Having Visual Studio Code (VSCode) and the Dev Container plugin installed are essential
 prerequisites for this development environment. Docker is also mandatory.
+
+
