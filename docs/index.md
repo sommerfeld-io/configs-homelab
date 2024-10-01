@@ -20,6 +20,8 @@ This section outlines the basic requirements and features of the project. These 
 ## Usage
 This project contains several [scripts](scripts/index.md) to control the respective function set.
 
+When developing, make sure to take a look at the [Dev Container Dockerfile](generated/devcontainer-dockerfile.md) docs.
+
 ## Scope and Context
 This configuration set is intended to work specifically for our machines. You might be able to adopt some stuff from this project, but using it "as is" most likely will result in failure.
 

@@ -36,18 +36,19 @@ services:
       - /bin/bash
       - -c
       - |
-        rm -rf docs/generated/scripts
-        mkdir -p docs/generated/scripts
+        rm -rf docs/generated
 
+        mkdir -p docs/generated
+        shdoc < .devcontainer/Dockerfile > docs/generated/devcontainer-dockerfile.md
+
+        mkdir -p docs/generated/scripts
         shdoc < components/ansible-cli.sh > docs/generated/scripts/ansible-cli-sh.md
         shdoc < components/docker-stacks-cli.sh > docs/generated/scripts/docker-stacks-cli-sh.md
         shdoc < components/minikube-cli.sh > docs/generated/scripts/minikube-cli-sh.md
         shdoc < components/bootstrap/install-basics.sh > docs/generated/scripts/bootstrap-install-basics-sh.md
         shdoc < components/bootstrap/ssh-server.sh > docs/generated/scripts/bootstrap-ssh-server-sh.md
 
-        rm -rf docs/generated/stacks
         mkdir -p docs/generated/stacks
-
         shdoc < components/docker-stacks/ops/docker-compose.yml > docs/generated/stacks/ops-docker-compose-yml.md
         shdoc < components/docker-stacks/pihole/docker-compose.yml > docs/generated/stacks/pihole-docker-compose-yml.md
         shdoc < components/docker-stacks/portainer/docker-compose.yml > docs/generated/stacks/portainer-docker-compose-yml.md

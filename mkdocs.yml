@@ -55,6 +55,8 @@ nav:
       - machines/ubuntu-workstations.md
       - Raspberry Pi:
           - machines/raspi-pihole-fritz-box.md
+      - Development Environment:
+          - generated/devcontainer-dockerfile.md
   - Scripts and Docker Stacks:
       - Scripts:
           - generated/scripts/ansible-cli-sh.md
