@@ -92,7 +92,7 @@ services:
     volumes: *volumes
     working_dir: *default-workdir
     command: components/ansible/playbooks -c .ansible-lint.yml
-    tty: true
+    tty: *tty
 
   lint-helm:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-helm
@@ -100,7 +100,7 @@ services:
     volumes: *volumes
     working_dir: *default-workdir
     command: lint components/minikube/admin-charts/portainer --with-subcharts
-    tty: true
+    tty: *tty
 
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
