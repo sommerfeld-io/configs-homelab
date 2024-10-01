@@ -55,6 +55,12 @@ repos:
         language: script
         # TODO: add --exit-code-from lint-ansible again when ansible is updated to 2.17.0 or greater
         entry: /bin/bash -c 'docker compose up lint-ansible'
+  - repo: local
+    hooks:
+      - id: lint-helm
+        name: lint-helm
+        language: script
+        entry: /bin/bash -c 'docker compose up lint-helm --exit-code-from lint-helm'
   # - repo: local
   #   hooks:
   #     - id: lint-dockerfile

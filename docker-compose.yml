@@ -94,6 +94,14 @@ services:
     command: components/ansible/playbooks -c .ansible-lint.yml
     tty: true
 
+  lint-helm:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-helm
+    image: alpine/helm:3.16.1
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: lint components/minikube/admin-charts/portainer --with-subcharts
+    tty: true
+
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
