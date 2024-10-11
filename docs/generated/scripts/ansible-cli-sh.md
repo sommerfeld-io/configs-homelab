@@ -32,6 +32,11 @@ clean and automated environment for running them.
 ### Usage
 The script does not accept any parameters.
 
+**Important:** This script must run on the host machine, not in a Docker container. The script checks if the
+user is `vscode` and exits with an error message if this is the case. This is mandatory because
+the development container cannot connect to machines on the host network and therefore cannot
+successfully run Ansible commands.
+
 ### Prerequisites
 Before using this script, you need to ensure that Docker 24.0.6 or greater is installed on the
 system which runs the playbooks. The script assumes that the Docker engine is running, and the
