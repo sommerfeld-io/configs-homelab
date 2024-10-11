@@ -30,6 +30,11 @@
 #   ### Usage
 #   The script does not accept any parameters.
 #
+#   **Important:** This script must run on the host machine, not in a Docker container. The script checks if the
+#   user is `vscode` and exits with an error message if this is the case. This is mandatory because
+#   the development container cannot connect to machines on the host network and therefore cannot
+#   successfully run Ansible commands.
+#
 #   ### Prerequisites
 #   Before using this script, you need to ensure that Docker 24.0.6 or greater is installed on the
 #   system which runs the playbooks. The script assumes that the Docker engine is running, and the
@@ -57,6 +62,16 @@
 #   safe-upgrade on Ubuntu and RaspberryPi OS machines (both are Debian-based).
 
 
+if [ "$USER" == "vscode" ]; then
+  echo "[ERROR] You are running the script as the user: vscode"
+  echo "[ERROR] That means you are running the script in a development container"
+  echo "[ERROR] Cannot run Ansible commands from development container"
+  echo "[ERROR] Cannot connect to nodes on the host network"
+  echo "[ERROR] Please run the script on your local machine"
+  exit 8
+fi
+
+
 set -o errexit
 set -o pipefail
 set -o nounset
@@ -72,7 +87,7 @@ readonly ANSIBLE_USER="sebastian"
 function title() {
   if [ -z "$1" ]; then
     echo -e "$LOG_ERROR No title passed"
-    echo -e "$LOG_ERROR exit" && exit 8
+    exit 8
   fi
 
   echo -e "$LOG_INFO ------------------------------------------"
@@ -97,7 +112,7 @@ function title() {
 function invoke() {
   if [ -z "$1" ]; then
     echo -e "$LOG_ERROR No command passed to the ansible container"
-    echo -e "$LOG_ERROR exit" && exit 8
+    exit 8
   fi
 
   docker run -it --rm \
