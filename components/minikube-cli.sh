@@ -85,35 +85,37 @@
 #
 #   The script does not accept any parameters.
 #
-#   #### Deployments
-#   Installing and uninstalling apps is done with `helm` or ArgoCD. This script can handle some
-#   `helm` charts, but not all. All supported Helm charts can be selected from the menu.
+#   #### Argo CD
+#   [Argo CD](https://argo-cd.readthedocs.io/en/stable) is a declarative, GitOps continuous delivery tool for Kubernetes. Application definitions,
+#   configurations, and environments should be declarative and version controlled. Application
+#   deployment and lifecycle management should be automated, auditable, and easy to understand.
 #
-#   ##### Portainer
-#   Portainer is deployed into Minikube to offer an additional method for inspecting and monitoring
-#   the Minikube cluster, complementing the existing Dashboard plugin.
+#   ```kroki-plantumk
+#   @startuml
 #
-#   To deploy Portainer in the Minikube cluster, you can select the respective action in the
-#   `minikube-cli` or deploy directly with `helm`.
+#   skinparam linetype ortho
 #
-#   ```bash
-#   cd components/minikube/admin-charts
+#   component Minikube {
+#       component ArgoCD
+#       collections Apps
+#       note left of Apps: Including k8s config
 #
-#   helm install portainer ./portainer
-#   helm uninstall portainer
+#    ArgoCD -down-> Apps : Deploy
+#   }
+#
+#   card GitHub {
+#       database Repo {
+#           card cfg as "Argo Config"
+#           card Manifests
+#           Manifests -[hidden]down- cfg
+#       }
+#   }
+#
+#   cfg -left~> Minikube
+#   ArgoCD -right-> Manifests : Watch
+#
+#   @enduml
 #   ```
-#
-#   With this Portainer setup, a service account with `cluster-admin` permissions is used to enable
-#   Portainer to interact with the Kubernetes API. This high-level permission is necessary because
-#   it allows Portainer to query detailed information about the cluster, manage resources, and
-#   perform administrative tasks.
-#
-#   This could be a security risk, so it is recommended to use Portainer in a controlled
-#   environment. This minikube setup is intended for development and testing purposes only. It is
-#   not recommended for production use.
-#
-#   For more information, see the Portainer Helm Chart in the
-#   [portainer/k8s GitHub repository](https://github.com/portainer/k8s).
 #
 #   #### Increasing the NodePort range
 #   By default, minikube only exposes ports `30000-32767`. If this does not work for you, you can
