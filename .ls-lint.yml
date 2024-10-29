@@ -51,6 +51,7 @@ ignore:
   - .ansible-lint.yml
   - .hadolint.yml
   - .ls-lint.yml
+  - .markdownlint.yml
   - .yamllint.yml
   - .pre-commit-config.yaml
   - .releaserc

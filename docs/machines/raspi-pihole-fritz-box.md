@@ -3,6 +3,7 @@
 This RasPi node runs Pi-hole to block ads on my local network.
 
 ## About this Raspberry Pi
+
 [Pi-hole](https://docs.pi-hole.net) is a Linux network-level advertisement and Internet tracker blocking application which acts as a [DNS sinkhole](https://en.wikipedia.org/wiki/DNS_sinkhole) and optionally a [DHCP server](https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol), intended for use on a private network. It is designed for low-power embedded devices with network capability, such as the [Raspberry Pi](https://en.wikipedia.org/wiki/Raspberry_Pi), but can be installed on almost any Linux machine.
 
 This machine is not intended for development purposes so there is no need to push any data to Github. Therefore there is no SSH key configuration for GitHub on this machine. It is only possible to clone public repositories via HTTPS.
@@ -11,6 +12,7 @@ This machine is not intended for development purposes so there is no need to pus
     Raspberry Pi 4 Model B, 8 Gigabyte RAM, 32GB SD Card
 
 ## Operating System Setup
+
 Use the "Raspberry Pi Imager" to install "{os}" onto a SD card. Use the following settings:
 
 ![protection-rule](../_assets/machines/pihole-fritz-box/setup-1.png)
@@ -20,6 +22,7 @@ Use the "Raspberry Pi Imager" to install "{os}" onto a SD card. Use the followin
     Make sure to enter a valid hostname and user `sebastian` uses the correct password!
 
 ## Configuration and package installation
+
 Steps to run on a normal workstation (= a machine with SSH access to the RasPi node - which is probably the one used to setup the SD card)
 
 - [ ] Enable passwordless SSH connections (from workstation, not the RasPi node)
@@ -33,9 +36,10 @@ Steps to run on a normal workstation (= a machine with SSH access to the RasPi n
 - [ ] Router Settings
     - [ ] Use Pi-hole as DNS server for the local network
         - [ ] Configure your router's DHCP options to force clients to use Pi-hole as their DNS server. In this case, use `192.168.178.113` as the DNS server.
-        - [ ] The FritzBox expects an alternative DNS server. Use `8.8.8.8` which is part of link:https://en.wikipedia.org/wiki/Google_Public_DNS[Google's public DNS servers].
+        - [ ] The FritzBox expects an alternative DNS server. Use `8.8.8.8` which is part of link:<https://en.wikipedia.org/wiki/Google_Public_DNS[Google's> public DNS servers].
 
 ![protection-rule](../_assets/machines/pihole-fritz-box/fritz-box-dns-setup.png)
 
 ## Pi-hole management interface
+
 See <http://pihole.fritz.box/admin> for the Pi-hole management interface. Password can be found in the docker compose file.

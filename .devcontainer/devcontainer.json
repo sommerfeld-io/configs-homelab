@@ -18,7 +18,8 @@
                 "redhat.vscode-yaml",
                 "GitHub.copilot",
                 "golang.go",
-                "alexkrechik.cucumberautocomplete"
+                "alexkrechik.cucumberautocomplete",
+                "DavidAnson.vscode-markdownlint"
             ]
         }
     },

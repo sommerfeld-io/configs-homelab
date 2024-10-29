@@ -30,40 +30,28 @@ repos:
         name: lint-yaml
         language: script
         entry: /bin/bash -c 'docker compose up lint-yaml --exit-code-from lint-yaml'
-  - repo: local
-    hooks:
       - id: lint-workflows
         name: lint-workflows
         language: script
         entry: /bin/bash -c 'docker compose up lint-workflows --exit-code-from lint-workflows'
-  - repo: local
-    hooks:
       - id: lint-filenames
         name: lint-filenames
         language: script
         entry: /bin/bash -c 'docker compose up lint-filenames --exit-code-from lint-filenames'
-  - repo: local
-    hooks:
       - id: lint-folders
         name: lint-folders
         language: script
         entry: /bin/bash -c 'docker compose up lint-folders --exit-code-from lint-folders'
-  - repo: local
-    hooks:
       - id: lint-ansible
         name: lint-ansible
         language: script
         # TODO: add --exit-code-from lint-ansible again when ansible is updated to 2.17.0 or greater
         entry: /bin/bash -c 'docker compose up lint-ansible'
-  - repo: local
-    hooks:
       - id: lint-helm
         name: lint-helm
         language: script
         entry: /bin/bash -c 'docker compose up lint-helm --exit-code-from lint-helm'
-  # - repo: local
-  #   hooks:
-  #     - id: lint-dockerfile
-  #       name: lint-dockerfile
-  #       language: script
-  #       entry: /bin/bash -c 'docker compose up lint-dockerfile --exit-code-from lint-dockerfile'
+      # - id: lint-dockerfile
+      #   name: lint-dockerfile
+      #   language: script
+      #   entry: /bin/bash -c 'docker compose up lint-dockerfile --exit-code-from lint-dockerfile'

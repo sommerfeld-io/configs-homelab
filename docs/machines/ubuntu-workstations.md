@@ -10,13 +10,16 @@ All workstations heavily rely on Docker to provide virtually every development t
 | `kobol`     | Secondary workstation (notebook) for development tasks and daily to-dos |
 
 ## Installation and Configuration
+
 The installation steps are the same for all workstations.
 
 ### Create bootable USB stick with Ubuntu
+
 - [ ] Download Ubuntu from the [Ubuntu website](https://ubuntu.com).
 - [ ] Create a bootable USB stick from the downloaded iso image with a tool like [Etcher](https://www.balena.io/etcher) or the Startup Disk Creator (shipped with Ubuntu).
 
 ### Install machine from stick
+
 The setup wizard takes care of the hostname, network settings, ssh, etc.
 
 - [ ] When prompted for a user and password, use the username `sebastian` and the default password.
@@ -28,13 +31,16 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
     - [ ] `kobol` via `ssh sebastian@kobol.fritz.box`
 
 ### Install SSH Server
+
 - [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/ssh-server.sh | bash -` if needed
 
 ### Configuration and package installation
+
 - [ ] Install machine using the Ansible configs from this repo (use [ansible-cli.sh](../generated/scripts/ansible-cli-sh.md)).
 - [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
 
 ### Manual Follow-Up todos
+
 - [ ] Set dark mode, Dock config, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
