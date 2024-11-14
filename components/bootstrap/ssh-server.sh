@@ -17,7 +17,7 @@ set -o nounset
 # set -o xtrace
 
 
-readonly LOG_DONE="[\e[32mDONE\e[0m]"
+# readonly LOG_DONE="[\e[32mDONE\e[0m]"
 # readonly LOG_ERROR="[\e[1;31mERROR\e[0m]"
 readonly LOG_INFO="[\e[34mINFO\e[0m]"
 # readonly LOG_WARN="[\e[93mWARN\e[0m]"
@@ -42,4 +42,3 @@ sudo apt-get -y update
 sudo apt-get install -y openssh-server
 sudo ufw allow ssh # if the firewall is enabled on your system, open the ssh port
 sudo systemctl enable --now ssh
-echo -e "$LOG_DONE Installed and started SSH server"
