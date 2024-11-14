@@ -45,9 +45,8 @@ sudo apt-get install -y lsb-release
 echo -e "$LOG_INFO ${Y}Install git${D}"
 sudo apt-get install -y git
 
-echo "[INFO] Install Ansible"
-readonly UBUNTU_CODENAME=oracular
-curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | sudo gpg --dearmour -o /usr/share/keyrings/ansible-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu $UBUNTU_CODENAME main" | sudo tee /etc/apt/sources.list.d/ansible.list
+echo -e "$LOG_INFO ${Y}Install Ansible${D}"
 sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y --update ppa:ansible/ansible
 sudo apt-get install -y ansible
