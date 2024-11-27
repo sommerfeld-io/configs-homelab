@@ -14,5 +14,6 @@
       - git
       - neofetch
       - python3-pip # python package manager
+      - vim
     state: latest
     update_cache: true
