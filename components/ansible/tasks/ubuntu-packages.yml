@@ -50,5 +50,7 @@
   community.general.snap:
     name:
       - code # vscode
+      - intellij-idea-ultimate
+      - intellij-idea-community
     state: present
     classic: true
