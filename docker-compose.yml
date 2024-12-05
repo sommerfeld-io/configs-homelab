@@ -13,7 +13,7 @@ services:
 
   cleanup:
     container_name: ${COMPOSE_PROJECT_NAME}-cleanup
-    image: alpine:latest
+    image: &linux-image alpine:latest
     volumes: &volumes
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -26,35 +26,6 @@ services:
         rm -rf target
         rm -rf target/docs/site
     tty: &tty true
-
-  generate-docs:
-    container_name: ${COMPOSE_PROJECT_NAME}-generate-docs
-    image: sommerfeldio/shdoc:0.5.0
-    volumes: *volumes
-    working_dir: *default-workdir
-    command:
-      - /bin/bash
-      - -c
-      - |
-        rm -rf docs/generated
-
-        mkdir -p docs/generated
-        shdoc < .devcontainer/Dockerfile > docs/generated/devcontainer-dockerfile.md
-
-        mkdir -p docs/generated/scripts
-        shdoc < components/ansible-cli.sh > docs/generated/scripts/ansible-cli-sh.md
-        shdoc < components/docker-stacks-cli.sh > docs/generated/scripts/docker-stacks-cli-sh.md
-        shdoc < components/minikube-cli.sh > docs/generated/scripts/minikube-cli-sh.md
-        shdoc < components/bootstrap/install-basics.sh > docs/generated/scripts/bootstrap-install-basics-sh.md
-        shdoc < components/bootstrap/ssh-server.sh > docs/generated/scripts/bootstrap-ssh-server-sh.md
-
-        mkdir -p docs/generated/stacks
-        shdoc < components/docker-stacks/ops/docker-compose.yml > docs/generated/stacks/ops-docker-compose-yml.md
-        shdoc < components/docker-stacks/pihole/docker-compose.yml > docs/generated/stacks/pihole-docker-compose-yml.md
-        shdoc < components/docker-stacks/portainer/docker-compose.yml > docs/generated/stacks/portainer-docker-compose-yml.md
-
-        chown -R 1000:1000 docs
-    tty: *tty
 
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml

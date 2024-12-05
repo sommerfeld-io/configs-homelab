@@ -17,9 +17,9 @@
 
 		"docs",
 		"docs/_assets/**",
+		"docs/api-docs/**",
 		"docs/about/**",
-		"docs/machines/**",
-		"docs/generated/**",
+		"docs/nodes/**",
 		"target/docs/site/**",
 
 		"node_modules/**",

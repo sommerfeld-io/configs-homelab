@@ -18,28 +18,28 @@ theme:
   font:
     text: Work Sans
   palette:
-    # scheme: slate
-    # primary: black
-    # Palette toggle for light mode
-    - scheme: default
-      primary: &header-color black
-      accent: *header-color
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    # Palette toggle for dark mode
-    - scheme: slate
-      primary: *header-color
-      accent: *header-color
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+    scheme: slate
+    primary: black
+    # # Palette toggle for light mode
+    # - scheme: default
+    #   primary: &header-color black
+    #   accent: *header-color
+    #   toggle:
+    #     icon: material/brightness-7
+    #     name: Switch to dark mode
+    # # Palette toggle for dark mode
+    # - scheme: slate
+    #   primary: *header-color
+    #   accent: *header-color
+    #   toggle:
+    #     icon: material/brightness-4
+    #     name: Switch to light mode
   features:
     - content.code.copy
     - content.tabs.link
     - navigation.tabs
     # - navigation.footer
-    - navigation.sections
+    # - navigation.sections
     - navigation.expand
     - navigation.tracking
 
@@ -68,25 +68,19 @@ nav:
       - index.md
       - memos.md
   - Workstations and RasPi Nodes:
-      - machines/ubuntu-workstations.md
+      - nodes/ubuntu-workstations.md
       - Raspberry Pi:
-          - machines/raspi-pihole-fritz-box.md
-      - Development Environment:
-          - generated/devcontainer-dockerfile.md
-  - Scripts and Docker Stacks:
+          - nodes/raspi-pihole-fritz-box.md
+  - Api Docs:
+      - Docker:
+          - api-docs/docker/ops-docker-compose-yml.md
+          - api-docs/docker/portainer-docker-compose-yml.md
       - Scripts:
-          - generated/scripts/ansible-cli-sh.md
-          - generated/scripts/docker-stacks-cli-sh.md
-          - generated/scripts/minikube-cli-sh.md
-          - generated/scripts/bootstrap-install-basics-sh.md
-          - generated/scripts/bootstrap-ssh-server-sh.md
-      - Docker Stacks:
-          - generated/stacks/ops-docker-compose-yml.md
-          - generated/stacks/pihole-docker-compose-yml.md
-          - generated/stacks/portainer-docker-compose-yml.md
+          - api-docs/scripts/ansible-cli.md
+          - api-docs/scripts/docker-stacks.md
+          - api-docs/scripts/minikube-cli.md
   - About this Project:
       - about/development-guide.md
-      - about/project-structure.md
       - about/contribute.md
       - about/security.md
       - about/code-of-conduct.md
