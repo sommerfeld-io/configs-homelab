@@ -131,7 +131,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Done
 
 ### Install Management Node
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc. Nullam nec purus. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc.
+- Install Operating system
+    - ...
+- Provision the node
+    - Run the Ansible Playbook for the `talos-mgmt-pi` to install all necessary tools and configurations.
 
 ### Install Talos Nodes
 
