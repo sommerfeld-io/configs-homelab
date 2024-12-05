@@ -40,7 +40,7 @@ theme:
     - navigation.tabs
     # - navigation.footer
     # - navigation.sections
-    - navigation.expand
+    # - navigation.expand
     - navigation.tracking
 
 markdown_extensions:
@@ -71,6 +71,7 @@ nav:
       - nodes/ubuntu-workstations.md
       - Raspberry Pi:
           - nodes/raspi-pihole-fritz-box.md
+      - nodes/talos/index.md
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md
