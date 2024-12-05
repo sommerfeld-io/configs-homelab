@@ -28,14 +28,14 @@ System_Ext(router, "FritzBox Router", "The homelab router which provides network
 
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
+System(switch, "Network Switch", "Allow cable connections for the Kubernetes cluster")
+
 System(talos, "Talos", "Raspberry Pi Cluster running Talos Linux")
 
-System_Ext(pihole, "PiHole", "PiHole running on a Raspberry Pi for DNS and ad-blocking")
-
-Rel(user, workstation, "Uses")
+Rel_Neighbor(user, workstation, "Uses")
 Rel(router, workstation, "Network access", "DNS, DHCP")
-Rel(router, pihole, "Network access", "DNS, DHCP")
-Rel(router, talos, "Network access", "DNS, DHCP")
+Rel(router, switch, "Network access", "DNS, DHCP")
+Rel(switch, talos, "Network access", "DNS, DHCP")
 Rel_Neighbor(workstation, talos, "Manage", "SSH")
 @enduml
 ```
@@ -61,6 +61,8 @@ skinparam arrowColor #E2E4E9
 
 LAYOUT_TOP_DOWN()
 
+Person(user, "User", "A person using a computer or mobile device")
+
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
 Container(mgmt, "talos-mgmt-pi", "Raspberry Pi 3A+", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
@@ -71,6 +73,7 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
     Container(w2, "talos-worker-pi-2", "Raspberry Pi 4", "Worker Node for applications and services")
 }
 
+Rel(user, workstation, "Uses")
 Rel(workstation, mgmt, "Connect", "SSH")
 Rel_Neighbor(mgmt, talos, "Manage", "SSH")
 Rel(cp, w1, "Manage")
