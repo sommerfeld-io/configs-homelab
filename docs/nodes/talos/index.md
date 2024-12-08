@@ -126,20 +126,27 @@ Applications are organized in namespaces. The `Base Component` applications are 
 
 According to our [Development Guide](about/development-guide.md), all code and configuration are stored in a Git repository. We treat everything as code.
 
-Information about the replica count, resources, possible assignmnts to nodes, and other (kubernetes-related) configurations are part of the manifests config files.
+Information about the replica count, resources, possible assignments to nodes, and other (kubernetes-related) configurations are part of the manifests config files.
 
 ## Installation
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc. Nullam nec purus. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc.
+The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `talos-mgmt-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `talos-mgmt-pi` node is installed and provisioned by Ansible.
+
+The second step is to install the actual Talos nodes. These nodes are Raspberry Pi devices running Talos Linux. The nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
 ### Install Management Node
 
-- Install Operating System [Ubuntu Server](https://ubuntu.com/) via the Raspberry Pi Imager
-- Provision the node
-    - Enable passwordless SSH connections (from workstation, not the RasPi node)
-        - `ssh sebastian@talos-mgmt-pi.fritz.box`
-        - `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
-    - Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations.
+- [ ] Install Operating System [Ubuntu Server](https://ubuntu.com/) via the Raspberry Pi Imager
+- [ ] Enable passwordless SSH connections (from workstation, not the RasPi node)
+    - [ ] `ssh sebastian@talos-mgmt-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
+- [ ] Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations.
+
+#### Software and Services
+
+The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://talos-mgmt-pi.fritz.box:9100>.
+
+THe Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
 
 ### Install Talos Nodes
 

@@ -19,3 +19,4 @@
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt-node-exporter.yml
