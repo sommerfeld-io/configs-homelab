@@ -2,8 +2,8 @@
 - name: Docker Setup -> Purge deprecated docker installations
   ansible.builtin.apt:
     pkg:
-      - docker-compose
       - docker
+      - docker-compose
       - docker-engine
       - docker.io
       - containerd

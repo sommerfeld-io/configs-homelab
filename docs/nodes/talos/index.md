@@ -134,11 +134,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Done
 
 ### Install Management Node
 
-- Install Operating system
-    - ...
+- Install Operating System [Ubuntu Server](https://ubuntu.com/) via the Raspberry Pi Imager
 - Provision the node
-    - Run the Ansible Playbook for the `talos-mgmt-pi` to install all necessary tools and configurations.
+    - Enable passwordless SSH connections (from workstation, not the RasPi node)
+        - `ssh sebastian@talos-mgmt-pi.fritz.box`
+        - `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
+    - Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations.
 
 ### Install Talos Nodes
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc. Nullam nec purus. Donec euismod, nunc nec vehicula suscipit, nunc nisl ultricies nunc, nec tincidunt nunc nisl nec nunc.
+as
