@@ -1,5 +1,5 @@
 ---
-- name: Talos  ****  Node Exporter  ****  Download binary
+- name: Talos  ----  Node Exporter  ----  Download binary
   ansible.builtin.get_url:
     url: "https://github.com/prometheus/node_exporter/releases/download/v{{ version }}/node_exporter-{{ version }}.linux-{{ architecture }}.tar.gz"
     dest: "/tmp/node_exporter.tar.gz"
@@ -8,27 +8,27 @@
     version: 1.8.2
     architecture: arm64
 
-- name: Talos  ****  Node Exporter  ****  Extract Archive
+- name: Talos  ----  Node Exporter  ----  Extract Archive
   ansible.builtin.unarchive:
     src: "/tmp/node_exporter.tar.gz"
     dest: "/usr/local/bin/"
     remote_src: true
     extra_opts: [--strip-components=1]
 
-- name: Talos  ****  Node Exporter  ****  Create node_exporter user
+- name: Talos  ----  Node Exporter  ----  Create node_exporter user
   ansible.builtin.user:
     name: node_exporter
     system: true
     shell: /usr/sbin/nologin
 
-- name: Talos  ****  Node Exporter  ****  Set permissions for binary
+- name: Talos  ----  Node Exporter  ----  Set permissions for binary
   ansible.builtin.file:
     path: "/usr/local/bin/node_exporter"
     owner: node_exporter
     group: node_exporter
     mode: "0755"
 
-- name: Talos  ****  Node Exporter  ****  Create systemd service
+- name: Talos  ----  Node Exporter  ----  Create systemd service
   ansible.builtin.copy:
     dest: "/etc/systemd/system/node_exporter.service"
     content: |
@@ -47,11 +47,11 @@
       WantedBy=multi-user.target
     mode: "0644"
 
-- name: Talos  ****  Node Exporter  ****  Reload systemd
+- name: Talos  ----  Node Exporter  ----  Reload systemd
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: Talos  ****  Node Exporter  ****  Start and enable service
+- name: Talos  ----  Node Exporter  ----  Start and enable service
   ansible.builtin.systemd:
     name: node_exporter
     state: started

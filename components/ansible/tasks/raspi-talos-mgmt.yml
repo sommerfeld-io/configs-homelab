@@ -1,5 +1,5 @@
 ---
-- name: Talos  ****  Mgmt Pi  ****  Download kubectl
+- name: Talos  ----  Mgmt Pi  ----  Download kubectl
   ansible.builtin.get_url:
     url: "https://dl.k8s.io/release/{{ version }}/bin/linux/{{ architecture }}/kubectl"
     dest: /usr/local/bin/kubectl
@@ -8,7 +8,7 @@
     version: v1.31.3
     architecture: arm64
 
-- name: Talos  ****  Mgmt Pi  ****  Download talosctl
+- name: Talos  ----  Mgmt Pi  ----  Download talosctl
   ansible.builtin.get_url:
     url: "https://github.com/siderolabs/talos/releases/download/{{ version }}/talosctl-linux-{{ architecture }}"
     dest: /usr/local/bin/talosctl
@@ -17,22 +17,22 @@
     version: v1.8.3
     architecture: arm64
 
-- name: Talos  ****  Mgmt Pi  ****  Verify kubectl installation
+- name: Talos  ----  Mgmt Pi  ----  Verify kubectl installation
   ansible.builtin.command:
     cmd: kubectl version --client
   register: kubectl_version_output
   ignore_errors: true
 
-- name: Talos  ****  Mgmt Pi  ****  Verify talosctl installation
+- name: Talos  ----  Mgmt Pi  ----  Verify talosctl installation
   ansible.builtin.command:
     cmd: talosctl version --client
   register: talosctl_version_output
   ignore_errors: true
 
-- name: Talos  ****  Mgmt Pi  ****  Print kubectl version
+- name: Talos  ----  Mgmt Pi  ----  Print kubectl version
   ansible.builtin.debug:
     var: kubectl_version_output.stdout
 
-- name: Talos  ****  Mgmt Pi  ****  Print talosctl version
+- name: Talos  ----  Mgmt Pi  ----  Print talosctl version
   ansible.builtin.debug:
     var: talosctl_version_output.stdout

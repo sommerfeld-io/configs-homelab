@@ -1,5 +1,5 @@
 ---
-- name: Install  ****  Install media player and DRM packages
+- name: Install  ----  Install media player and DRM packages
   ansible.builtin.apt:
     pkg:
       - vlc
@@ -14,7 +14,7 @@
     state: latest
     update_cache: true
 
-- name: Install  ****  Install audio CD ripper
+- name: Install  ----  Install audio CD ripper
   ansible.builtin.apt:
     pkg:
       - asunder # https://wiki.ubuntuusers.de/Asunder
@@ -26,7 +26,7 @@
     state: latest
     update_cache: true
 
-- name: Install  ****  Install CD/DVD writer
+- name: Install  ----  Install CD/DVD writer
   ansible.builtin.apt:
     pkg:
       - brasero
