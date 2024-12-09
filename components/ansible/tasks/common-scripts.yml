@@ -1,5 +1,5 @@
 ---
-- name: Config -> Create directories for scripts
+- name: Config  ****  Create directories for scripts
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -9,7 +9,7 @@
   with_items:
     - /opt/scripts
 
-- name: Config -> Copy scripts
+- name: Config  ****  Copy scripts
   ansible.builtin.copy:
     src: "../assets/scripts/{{ item }}.sh"
     dest: "/opt/scripts/{{ item }}.sh"
@@ -19,7 +19,7 @@
   with_items:
     - system-info
 
-- name: Config -> Create symlinks to scripts in /usr/bin
+- name: Config  ****  Create symlinks to scripts in /usr/bin
   ansible.builtin.file:
     src: "/opt/scripts/{{ item }}.sh"
     dest: "/usr/bin/{{ item }}"

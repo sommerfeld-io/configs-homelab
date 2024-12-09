@@ -1,12 +1,12 @@
 ---
-- name: Install -> Git
+- name: Install  ****  Git
   ansible.builtin.apt:
     pkg:
       - git
     state: latest
     update_cache: true
 
-- name: Config -> Copy git configuration
+- name: Config  ****  Copy git configuration
   ansible.builtin.copy:
     src: ../assets/.gitconfig
     dest: "/home/{{ ansible_user }}/.gitconfig"

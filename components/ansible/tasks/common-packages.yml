@@ -1,5 +1,5 @@
 ---
-- name: Install -> Basic packages
+- name: Install  ****  Basic packages
   ansible.builtin.apt:
     pkg:
       - apt-transport-https

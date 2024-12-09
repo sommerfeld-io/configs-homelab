@@ -1,5 +1,5 @@
 ---
-- name: Wallpaper -> Create directory
+- name: Wallpaper  ****  Create directory
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -9,7 +9,7 @@
   with_items:
     - "/home/{{ ansible_user }}/Pictures/wallpapers"
 
-- name: Wallpaper -> Copy files
+- name: Wallpaper  ****  Copy files
   ansible.builtin.copy:
     src: "../assets/wallpapers/{{ item }}"
     dest: "/home/{{ ansible_user }}/Pictures/wallpapers/{{ item }}"

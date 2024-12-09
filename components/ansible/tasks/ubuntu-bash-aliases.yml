@@ -1,5 +1,5 @@
 ---
-- name: Config -> Write aliases to .bashrc (for Ubuntu desktop)
+- name: Config  ****  Write aliases to .bashrc (for Ubuntu desktop)
   ansible.builtin.lineinfile:
     create: true
     mode: 0600
