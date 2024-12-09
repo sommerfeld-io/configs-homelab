@@ -44,7 +44,7 @@ Rel_Neighbor(workstation, mgmt, "Manage", "SSH")
 @enduml
 ```
 
-The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP. However, the router should always provide the same IP addresses to each nodes.
+The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP.
 
 ### Containers
 
