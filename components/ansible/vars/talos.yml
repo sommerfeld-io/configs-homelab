@@ -1,0 +1,4 @@
+---
+cluster_name: talos-pi-cluster
+control_plane_endpoint: https://talos-control-pi.fritz.box:6443
+mgmt_pi_generated_config_dir: /opt/generated-talos-config

@@ -1,0 +1,59 @@
+---
+- name: Talos Cluster Config -> Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "{{ mgmt_pi_generated_config_dir }}"
+    - "/home/{{ ansible_user }}/.talos"
+
+- name: Talos Cluster Config -> Check if controlplane.yaml file exists
+  ansible.builtin.stat:
+    path: "{{ mgmt_pi_generated_config_dir }}/controlplane.yaml"
+  register: controlplane_exists
+
+- name: Talos Cluster Config -> Check if worker.yaml file exists
+  ansible.builtin.stat:
+    path: "{{ mgmt_pi_generated_config_dir }}/worker.yaml"
+  register: worker_exists
+
+- name: Talos Cluster Config -> Check if talosconfig file exists
+  ansible.builtin.stat:
+    path: "{{ mgmt_pi_generated_config_dir }}/talosconfig"
+  register: talosconfig_exists
+
+# Only generate cluster configuration files when these files do not already exist.
+# This is to prevent overwriting existing configuration files. Existing files indicate, that
+# the cluster has already been configured. So this should only be done once or when the cluster
+# is completely re-installed from scratch (which most likely means that the SD cards have been
+# flashed with a new image).
+- name: Talos Cluster Config -> Generate cluster configuration files
+  ansible.builtin.command:
+    cmd: talosctl gen config {{ cluster_name }} {{ control_plane_endpoint }}
+    chdir: "{{ mgmt_pi_generated_config_dir }}"
+  when: not (controlplane_exists.stat.exists and worker_exists.stat.exists and talosconfig_exists.stat.exists)
+
+# Download the generated talos configuration files to the Ansible host so they can be copied to the
+# SD cards of the Raspberry Pi nodes before booting them up. This should allow for non-interactive
+# setup of the cluster. Otherwise the nodes would have to be booted up first and then the
+# configuration files would have been written by a manual wizard-like setup process. For this
+# process the nodes would have to be connected to a display and keyboard which is not always
+# possible or convenient plus takes more time than necessary.
+- name: Talos Cluster Config -> Download generated talos configuration files to the Ansible host
+  ansible.builtin.fetch:
+    src: "{{ mgmt_pi_generated_config_dir }}/{{ item.src }}"
+    dest: "../../talos-raspi-cluster/node-configs/{{ item.dest }}"
+    flat: true
+  with_items:
+    - { src: "controlplane.yaml", dest: "talos-control-pi/config" }
+    - { src: "worker.yaml", dest: "talos-worker-pi/config" }
+
+# Also only done once or when the cluster is setup or re-installed from scratch to ensure that the
+# talos config matches the cluster configuration files.
+- name: Talos Cluster Config -> Move talosconfig to ~/.talos/config on the Management Pi
+  ansible.builtin.command: cp {{ mgmt_pi_generated_config_dir }}/talosconfig /home/{{ ansible_user }}/.talos/config
+  args:
+    creates: "/home/{{ ansible_user }}/.talos/config"
