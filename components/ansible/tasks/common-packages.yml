@@ -14,5 +14,6 @@
       - neofetch
       - python3-pip # python package manager
       - vim
+      - jq
     state: latest
     update_cache: true
