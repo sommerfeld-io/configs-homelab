@@ -36,7 +36,7 @@ Steps to run on a normal workstation (= a machine with SSH access to the RasPi n
 - [ ] Router Settings
     - [ ] Use Pi-hole as DNS server for the local network
         - [ ] Configure your router's DHCP options to force clients to use Pi-hole as their DNS server. In this case, use `192.168.178.113` as the DNS server.
-        - [ ] The FritzBox expects an alternative DNS server. Use `8.8.8.8` which is part of link:<https://en.wikipedia.org/wiki/Google_Public_DNS[Google's> public DNS servers].
+        - [ ] The FritzBox expects an alternative DNS server. Use `8.8.8.8` which is part of [Google's public DNS servers](https://en.wikipedia.org/wiki/Google_Public_DNS).
 
 ![protection-rule](../_assets/nodes/pihole-fritz-box/fritz-box-dns-setup.png)
 
