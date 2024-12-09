@@ -14,6 +14,7 @@
 		"components/conky/**",
 		"components/docker-stacks/**",
 		"components/minikube/**",
+		"components/talos-raspi-cluster/**",
 
 		"docs",
 		"docs/_assets/**",

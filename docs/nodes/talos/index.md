@@ -30,13 +30,17 @@ System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used fo
 
 System(switch, "Network Switch", "Allow cable connections for the Kubernetes cluster")
 
-System(talos, "Talos", "Raspberry Pi Cluster running Talos Linux")
+System(talos, "Talos k8s Cluster", "Raspberry Pi Cluster running Talos Linux")
+
+System(mgmt, "Talos Mgmt Node", "Raspberry Pi Cluster running Talos Linux")
 
 Rel_Neighbor(user, workstation, "Uses")
 Rel(router, workstation, "Network access", "DNS, DHCP")
 Rel(router, switch, "Network access", "DNS, DHCP")
 Rel(switch, talos, "Network access", "DNS, DHCP")
-Rel_Neighbor(workstation, talos, "Manage", "SSH")
+Rel(router, mgmt, "Network access", "DNS, DHCP")
+Rel(workstation, talos, "Manage", "talosctl")
+Rel_Neighbor(workstation, mgmt, "Manage", "SSH")
 @enduml
 ```
 
@@ -75,7 +79,7 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
 
 Rel(user, workstation, "Uses")
 Rel(workstation, mgmt, "Connect", "SSH")
-Rel_Neighbor(mgmt, talos, "Manage", "SSH")
+Rel_Neighbor(mgmt, talos, "Manage", "talosctl")
 Rel(cp, w1, "Manage")
 Rel(cp, w2, "Manage")
 
@@ -130,9 +134,9 @@ Information about the replica count, resources, possible assignments to nodes, a
 
 ### Network Setup
 
-All RasPi nodes are connected to the switch via cable. The switch is connected to the  wifi network through the repeater.
+All RasPi nodes that are running the Talos Cluster are connected to the switch via cable. The switch is connected to the wifi network through the repeater.
 
-Requests from workstations are routed through the router to the RasPi nodes, so they still rely on WiFi. But the RasPi nodes themselves should communicate with each other through the wired connection. For internet access, they too rely on the WiFi connection.
+Requests from workstations and the management node are routed through the router to the RasPi nodes, so they still rely on WiFi. But the cluster nodes themselves should communicate with each other through the wired connection. For internet access, they too rely on the WiFi connection.
 
 ```kroki-plantuml
 @startuml
@@ -151,23 +155,23 @@ component ws as "Workstation"
 component Router
 component Repeater
 component Switch
-component pi1 as "talos-mgmt-pi" <<RasPi Node>>
-component pi2 as "talos-control-pi" <<RasPi Node>>
-component pi3 as "talos-worker-pi-1" <<RasPi Node>>
-component pi4 as "talos-worker-pi-2" <<RasPi Node>>
+component pi_mgmt as "talos-mgmt-pi" <<RasPi Node>>
+component pi0 as "talos-control-pi" <<RasPi Node>>
+component pi1 as "talos-worker-pi-1" <<RasPi Node>>
+component pi2 as "talos-worker-pi-2" <<RasPi Node>>
 
 ws -down-> Router
 Router -right-> Repeater
-Repeater -down-> Switch
+Router -down-> pi_mgmt
+Repeater -right-> Switch
+Switch -down-> pi0
 Switch -down-> pi1
 Switch -down-> pi2
-Switch -down-> pi3
-Switch -down-> pi4
 
 @enduml
 ```
 
-For each RasPi node wifi could be used additionally (as a fallback) but primary communication should happen through the wired connections.
+For each RasPi cluster node wifi could be used additionally (as a fallback) but primary communication should happen through the wired connections.
 
 ## Installation
 
