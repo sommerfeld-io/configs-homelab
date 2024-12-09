@@ -72,7 +72,10 @@ nav:
       - nodes/ubuntu-workstations.md
       - Raspberry Pi:
           - nodes/raspi-pihole-fritz-box.md
-      - nodes/talos/index.md
+      - Raspberry Pi Talos Cluster:
+          - Overview: nodes/talos/index.md
+          - Installation: nodes/talos/installation.md
+          - nodes/talos/howto/deploy-application-with-argocd.md
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md

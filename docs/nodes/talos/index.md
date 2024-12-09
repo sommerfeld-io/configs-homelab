@@ -1,16 +1,14 @@
-# Raspberry Pi - Talos Cluster
+# Talos Cluster - Overview
+
+The [Talos Kubernetes](https://www.talos.dev) cluster in my homelab is powered by a small fleet of Raspberry Pi devices. This setup combines the minimalism and security of Talos Linux with the versatility of Raspberry Pi, creating a lightweight, efficient, and manageable Kubernetes environment.
 
 [Talos Linux](https://www.talos.dev) is Linux designed for Kubernetes - secure, immutable, and minimal.
-
-## Overview
-
-The Talos Kubernetes cluster in my homelab is powered by a small fleet of Raspberry Pi devices. This setup combines the minimalism and security of Talos Linux with the versatility of Raspberry Pi, creating a lightweight, efficient, and manageable Kubernetes environment.
 
 By leveraging this cluster, I can experiment with Kubernetes deployments and maintain a dedicated, small-scale infrastructure for development and testing purposes.
 
 This also provides a platform for some production-grade applications and services running in my homelab.
 
-### Context
+## Context
 
 ```kroki-c4plantuml
 @startuml
@@ -46,7 +44,7 @@ Rel_Neighbor(workstation, mgmt, "Manage", "SSH")
 
 The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP.
 
-### Containers
+## Containers
 
 The `talos-mgmt-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
 
@@ -88,9 +86,9 @@ Rel(cp, w2, "Manage")
 
 The setup features a `talos-mgmt-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `talos-mgmt-pi` we avoid possible conflicts with e.g. `kubectl`.
 
-### Components
+## Components
 
-To deploy applications and services to the Talos Kubernetes Cluster, we use ArgoCD. ArgoCD is a GitOps tool that helps to manage all deployments, applications, and services in a GitOps way. Applications and services are **never directly deployed to the cluster (e.g. through `kubectl`). Everything is managed by ArgoCD.
+To deploy applications and services to the Talos Kubernetes Cluster, we use [ArgoCD](https://argo-cd.readthedocs.io/en/stable). ArgoCD is a GitOps tool that helps to manage all deployments, applications, and services in a GitOps way. Applications and services are **never directly deployed to the cluster (e.g. through `kubectl`). Everything is managed by ArgoCD.
 
 ```kroki-c4plantuml
 @startuml
@@ -122,17 +120,17 @@ Rel(argo, etc, "Deploy", "sync")
 @enduml
 ```
 
-ArgoCD is set up with the help of the ArgoCD Autopilot. The Autopilot is a CLI tool that helps to set up ArgoCD with the best practices. It sets up all configurations and manifests inside a repository. The manifests are part of [this repository](https://github.com/sommerfeld-io/configs-homelab).
+[ArgoCD](https://argo-cd.readthedocs.io/en/stable) is set up with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable). The Autopilot is a CLI tool that helps to set up ArgoCD with the best practices. It sets up all configurations and manifests inside a repository. The manifests are part of [this repository](https://github.com/sommerfeld-io/configs-homelab).
 
 Applications are organized in namespaces. The `Base Component` applications are inside a dedicated namespace. Applications are inside their own namespaces.
 
-### Code / Configuration
+## Code / Configuration
 
 According to our [Development Guide](about/development-guide.md), all code and configuration are stored in a Git repository. We treat everything as code.
 
 Information about the replica count, resources, possible assignments to nodes, and other (kubernetes-related) configurations are part of the manifests config files.
 
-### Network Setup
+## Network Setup
 
 All RasPi nodes that are running the Talos Cluster are connected to the switch via cable. The switch is connected to the wifi network through the repeater.
 
@@ -171,29 +169,10 @@ Switch -down-> pi2
 @enduml
 ```
 
-## Installation
+### Load balancing for services inside Kubernetes
 
-The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `talos-mgmt-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `talos-mgmt-pi` node is installed and provisioned by Ansible.
-
-The second step is to install the actual Talos nodes. These nodes are Raspberry Pi devices running Talos Linux. The nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
-
-### Install Management Node
-
-- [ ] Install Operating System [Ubuntu Server](https://ubuntu.com) via the [Raspberry Pi Imager](https://www.raspberrypi.com/software)
-- [ ] Enable password-less SSH connections (from workstation, not the RasPi node)
-    - [ ] `ssh sebastian@talos-mgmt-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
-- [ ] Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node as well as the for the Talos Kubernetes nodes. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
-
-The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://talos-mgmt-pi.fritz.box:9100>.
-
-The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
-
-### Install Talos Nodes
-
-- [ ] Make sure you did run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node (as stated above) as well as the for the Talos Kubernetes nodes.
-- [ ] Follow the instructions from the [Talos Documentation for the Raspberry Pi Series](https://www.talos.dev/v1.8/talos-guides/install/single-board-computers/rpi_generic) to install Talos on the Raspberry Pi devices.
-    - [ ] Copy the generated Talos configuration file for the respective node from `components/talos-raspi-cluster/node-configs` to the SD card before booting the node. This allows for an unattended installation without having to manually configure the node through a setup wizard. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
+!!! warning "TODO"
+    Write description and diagram about load balancing for services inside Kubernetes. The load balancer should run inside kubernetes and distribute the traffic to the services. See <https://github.com/sommerfeld-io/configs-homelab/issues/19>
 
 ## References / External Links
 
