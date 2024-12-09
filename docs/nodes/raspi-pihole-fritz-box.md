@@ -2,6 +2,9 @@
 
 This RasPi node runs Pi-hole to block ads on my local network.
 
+!!! warning "Deprecated"
+    As of 2024-09-12, this node and this setup is deprecated and is no longer maintained. It will be replaced by a service inside the [Talos Kubernetes Cluster](talos/index.md).
+
 ## About this Raspberry Pi
 
 [Pi-hole](https://docs.pi-hole.net) is a Linux network-level advertisement and Internet tracker blocking application which acts as a [DNS sinkhole](https://en.wikipedia.org/wiki/DNS_sinkhole) and optionally a [DHCP server](https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol), intended for use on a private network. It is designed for low-power embedded devices with network capability, such as the [Raspberry Pi](https://en.wikipedia.org/wiki/Raspberry_Pi), but can be installed on almost any Linux machine.
