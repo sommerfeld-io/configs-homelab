@@ -24,7 +24,6 @@ services:
       - -c
       - |
         rm -rf target
-        rm -rf target/docs/site
     tty: &tty true
 
   lint-yaml:
@@ -74,6 +73,13 @@ services:
     command: lint components/minikube/admin-charts/portainer --with-subcharts
     tty: *tty
 
+  kroki:
+    container_name: ${COMPOSE_PROJECT_NAME}-kroki
+    image: yuzutech/kroki:0.26.0
+    ports:
+      - 8000:8000
+    tty: *tty
+
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
@@ -88,8 +94,15 @@ services:
   docs-dev-server:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
     image: *docs-image
+    environment:
+      - KROKI_SERVER_URL=http://localhost:8000
     volumes: *volumes
     working_dir: *default-workdir
     ports:
       - 3080:8000
     tty: *tty
+    depends_on:
+      cleanup:
+        condition: service_completed_successfully
+      kroki:
+        condition: service_started
