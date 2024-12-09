@@ -187,10 +187,14 @@ The second step is to install the actual Talos nodes. These nodes are Raspberry 
 
 The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://talos-mgmt-pi.fritz.box:9100>.
 
-THe Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
+The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
 
 ### Install Talos Nodes
 
 - [ ] Make sure you did run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node (as stated above) as well as the for the Talos Kubernetes nodes.
 - [ ] Follow the instructions from the [Talos Documentation for the Raspberry Pi Series](https://www.talos.dev/v1.8/talos-guides/install/single-board-computers/rpi_generic) to install Talos on the Raspberry Pi devices.
     - [ ] Copy the generated Talos configuration file for the respective node from `components/talos-raspi-cluster/node-configs` to the SD card before booting the node. This allows for an unattended installation without having to manually configure the node through a setup wizard. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
+
+## References / External Links
+
+- Initial Setup of the Talos cluster took place with issue [#19 Setting Up a 3-Node Talos Kubernetes Cluster in my Personal Homelab](https://github.com/sommerfeld-io/configs-homelab/issues/19) and Pull Request [#24 Talos Kubernetes on Raspberry Pi cluster](https://github.com/sommerfeld-io/configs-homelab/pull/24).
