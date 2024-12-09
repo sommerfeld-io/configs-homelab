@@ -50,7 +50,7 @@ The Talos Raspberry Pi nodes should get their IP addresses from the router via D
 
 The `talos-mgmt-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
 
-The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos Variant for Raspberry Pi directly.
+The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
 - Raspberry Pi 3A+: 32GB SD Card and 2GB RAM.
 - Raspberry Pi 4: 32GB SD Card and 8GB RAM.
