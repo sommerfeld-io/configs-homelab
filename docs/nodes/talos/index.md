@@ -128,6 +128,47 @@ According to our [Development Guide](about/development-guide.md), all code and c
 
 Information about the replica count, resources, possible assignments to nodes, and other (kubernetes-related) configurations are part of the manifests config files.
 
+### Network Setup
+
+All RasPi nodes are connected to the switch via cable. The switch is connected to the  wifi network through the repeater.
+
+Requests from workstations are routed through the router to the RasPi nodes, so they still rely on WiFi. But the RasPi nodes themselves should communicate with each other through the wired connection. For internet access, they too rely on the WiFi connection.
+
+```kroki-plantuml
+@startuml
+
+skinparam linetype polyline
+skinparam backgroundColor transparent
+skinparam fontColor #E2E4E9
+skinparam arrowColor #E2E4E9
+
+skinparam activity {
+    'FontName Ubuntu
+    FontName Roboto
+}
+
+component ws as "Workstation"
+component Router
+component Repeater
+component Switch
+component pi1 as "talos-mgmt-pi" <<RasPi Node>>
+component pi2 as "talos-control-pi" <<RasPi Node>>
+component pi3 as "talos-worker-pi-1" <<RasPi Node>>
+component pi4 as "talos-worker-pi-2" <<RasPi Node>>
+
+ws -down-> Router
+Router -right-> Repeater
+Repeater -down-> Switch
+Switch -down-> pi1
+Switch -down-> pi2
+Switch -down-> pi3
+Switch -down-> pi4
+
+@enduml
+```
+
+For each RasPi node wifi could be used additionally (as a fallback) but primary communication should happen through the wired connections.
+
 ## Installation
 
 The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `talos-mgmt-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `talos-mgmt-pi` node is installed and provisioned by Ansible.
@@ -136,8 +177,8 @@ The second step is to install the actual Talos nodes. These nodes are Raspberry 
 
 ### Install Management Node
 
-- [ ] Install Operating System [Ubuntu Server](https://ubuntu.com/) via the Raspberry Pi Imager
-- [ ] Enable passwordless SSH connections (from workstation, not the RasPi node)
+- [ ] Install Operating System [Ubuntu Server](https://ubuntu.com) via the [Raspberry Pi Imager](https://www.raspberrypi.com/software)
+- [ ] Enable password-less SSH connections (from workstation, not the RasPi node)
     - [ ] `ssh sebastian@talos-mgmt-pi.fritz.box`
     - [ ] `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
 - [ ] Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations.
