@@ -1,9 +1,9 @@
 ---
-- name: Docker Setup -> Purge deprecated docker installations
+- name: Docker Setup  ----  Purge deprecated docker installations
   ansible.builtin.apt:
     pkg:
-      - docker-compose
       - docker
+      - docker-compose
       - docker-engine
       - docker.io
       - containerd
@@ -11,18 +11,18 @@
     state: absent
     update_cache: true
 
-- name: Docker Setup -> Add GPG apt key
+- name: Docker Setup  ----  Add GPG apt key
   ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
     keyring: /etc/apt/trusted.gpg.d/docker.gpg
 
-- name: Docker Setup -> Add apt repository (OS-codename {{ ansible_distribution_release }})
+- name: Docker Setup  ----  Add apt repository (OS-codename {{ ansible_distribution_release }})
   ansible.builtin.apt_repository:
     repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
     state: present
 
-- name: Docker Setup -> Install docker packages
+- name: Docker Setup  ----  Install docker packages
   ansible.builtin.apt:
     pkg:
       - docker-ce
@@ -33,25 +33,25 @@
     state: latest
     update_cache: true
 
-- name: Docker Setup -> Add user to docker group
+- name: Docker Setup  ----  Add user to docker group
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     shell: /bin/bash
     groups: docker
     append: true
 
-- name: Docker Setup -> Verify Docker installation
+- name: Docker Setup  ----  Verify Docker installation
   ansible.builtin.command: docker version
   register: docker_version_output
 
-- name: Docker Setup -> Print Docker version
+- name: Docker Setup  ----  Print Docker version
   ansible.builtin.debug:
     msg: "{{ docker_version_output.stdout }}"
 
-- name: Docker Setup -> Verify Docker Compose installation
+- name: Docker Setup  ----  Verify Docker Compose installation
   ansible.builtin.command: docker compose version
   register: docker_compose_version_output
 
-- name: Docker Setup -> Print Docker Compose version
+- name: Docker Setup  ----  Print Docker Compose version
   ansible.builtin.debug:
     msg: "{{ docker_compose_version_output.stdout }}"

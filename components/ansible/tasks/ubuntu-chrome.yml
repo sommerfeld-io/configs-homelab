@@ -1,5 +1,5 @@
 ---
-- name: Install -> Chromium packages
+- name: Install  ----  Chromium packages
   ansible.builtin.apt:
     pkg:
       - chromium-browser
@@ -8,22 +8,22 @@
     state: latest
     update_cache: true
 
-# - name: Install -> Download Chrome package
+# - name: Install  ----  Download Chrome package
 #   ansible.builtin.uri:
 #     url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 #     dest: /tmp/chrome.deb
 #     status_code: [200, 301, 302, 304]
 
-# - name: Install -> Chrome
+# - name: Install  ----  Chrome
 #   ansible.builtin.apt:
 #     deb: /tmp/chrome.deb
 
-# - name: Install -> Chrome cleanup
+# - name: Install  ----  Chrome cleanup
 #   ansible.builtin.file:
 #     path: /tmp/chrome.deb
 #     state: absent
 
-- name: Uninstall -> Chrome package
+- name: Uninstall  ----  Chrome package
   ansible.builtin.apt:
     pkg:
       - google-chrome-stable
