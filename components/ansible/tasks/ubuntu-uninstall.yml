@@ -1,5 +1,5 @@
 ---
-- name: Uninstall -> Some pre-installed packages
+- name: Uninstall  ----  Some pre-installed packages
   ansible.builtin.apt:
     pkg:
       - thunderbird
@@ -7,4 +7,10 @@
       - libreoffice-*
       - totem
       - totem-*
+    state: absent
+
+- name: Uninstall  ----  Some pre-installed snap packages
+  community.general.snap:
+    name:
+      - thunderbird
     state: absent

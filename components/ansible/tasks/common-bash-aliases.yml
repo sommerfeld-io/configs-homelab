@@ -1,5 +1,5 @@
 ---
-- name: Config -> Write commands to .bashrc
+- name: Config  ----  Write commands to .bashrc
   ansible.builtin.lineinfile:
     dest: "/home/{{ ansible_user }}/.bashrc"
     state: present
@@ -14,7 +14,7 @@
     - export D="\e[0m"
     - export G='\033[1;30m'
 
-- name: Config -> Write aliases to .bash_aliases
+- name: Config  ----  Write aliases to .bash_aliases
   ansible.builtin.lineinfile:
     create: true
     mode: 0600

@@ -5,14 +5,14 @@
   become: true
   tasks:
 
-    - name: Install -> Steam
+    - name: Install  ----  Steam
       ansible.builtin.apt:
         pkg:
           - steam
         state: latest
         update_cache: true
 
-    - name: Info -> Post installation message
+    - name: Info  ----  Post installation message
       ansible.builtin.debug:
         msg:
           - "Things left to do"
