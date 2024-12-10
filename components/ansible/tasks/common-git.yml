@@ -12,4 +12,4 @@
     dest: "/home/{{ ansible_user }}/.gitconfig"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "{{ file_permissions }}"
+    mode: u=rw,g=r,o=r

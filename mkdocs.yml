@@ -70,8 +70,6 @@ nav:
       - memos.md
   - Workstations and RasPi Nodes:
       - nodes/ubuntu-workstations.md
-      - Raspberry Pi:
-          - nodes/raspi-pihole-fritz-box.md
       - Raspberry Pi Talos Cluster:
           - Overview: nodes/talos/index.md
           - Installation: nodes/talos/installation.md

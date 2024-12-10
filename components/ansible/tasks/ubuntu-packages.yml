@@ -20,7 +20,6 @@
   ansible.builtin.apt:
     pkg:
       - yarn
-      - hugo
       - asciidoctor
       - pre-commit
     state: latest
@@ -54,3 +53,16 @@
       - intellij-idea-community
     state: present
     classic: true
+
+- name: Install  ----  Balena Etcher (download)
+  ansible.builtin.get_url:
+    url: https://github.com/balena-io/etcher/releases/download/v{{ version }}/balena-etcher_{{ version }}_amd64.deb
+    dest: /tmp/balena-etcher_amd64.deb
+    mode: u=rwx,g=rx,o=rx
+  vars:
+    version: 1.19.25
+
+- name: Install  ----  Balena Etcher
+  ansible.builtin.apt:
+    deb: /tmp/balena-etcher_amd64.deb
+    state: present

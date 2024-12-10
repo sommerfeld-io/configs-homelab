@@ -27,18 +27,20 @@ Before using this script, you need to ensure that Ansible is installed on the sy
 
 This script automatically detects all Ansible playbooks in the `components/homelab/src/main/ansible/playbooks` folder.
 
-### Playbook: `desktops-main.yml`
+### Playbook: `ubuntu-desktop-baseline.yml`
 
 This Ansible playbook is designed to configure basic settings, directory structure, and software packages for Ubuntu desktop machines. The playbook also includes some tasks that are shared with other playbooks to ensure a consistent setup among all machines.
 
-### Playbook: `desktops-steam.yml`
+### Playbook: `ubuntu-desktop-steam.yml`
 
 This Ansible playbook is designed to install Steam on Ubuntu desktop machines.
 
-### Playbook: `raspi-main.yml`
+### Playbook: `raspi-baseline.yml`
 
 This Ansible playbook is designed to configure basic settings, directory structure, and software packages for Raspberry Pi machines. The playbook also includes some tasks that are shared with other playbooks to ensure a consistent setup among all machines but uses a reduced tasks set.
 
 ### Playbook: `raspi-talos.yml`
 
-This Ansible playbook is designed to configure basic settings, directory structure, and software packages for Raspberry Pi machines that are part of the Talos Cluster. This playbook contains a reduced set of tasks compared to the `raspi-main.yml` playbook and targets the Talos Cluster nodes. The Raspberry Pi nodes that run Talos Linux are not provisioned by Ansible. They are managed by the `talosctl` command line tool. The management Pi is provisioned by Ansible and runs the `talosctl` and `kubectl` commands line tool.
+This Ansible playbook is designed to configure basic settings, directory structure, and software packages for Raspberry Pi machines that are part of the Talos Cluster. This playbook includes the `raspi-baseline.yml` playbook and adds tasks to setup the Talos Cluster nodes.
+
+The Raspberry Pi nodes that run Talos Linux are not provisioned by Ansible. They are managed by the `talosctl` command line tool. The management Pi is provisioned by Ansible and runs the `talosctl` and `kubectl` commands line tool.

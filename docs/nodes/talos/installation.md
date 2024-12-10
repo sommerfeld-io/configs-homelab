@@ -21,3 +21,6 @@ The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to
 - [ ] Make sure you did run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node (as stated above) as well as the for the Talos Kubernetes nodes.
 - [ ] Follow the instructions from the [Talos Documentation for the Raspberry Pi Series](https://www.talos.dev/v1.8/talos-guides/install/single-board-computers/rpi_generic) to install Talos on the Raspberry Pi devices.
     - [ ] Copy the generated Talos configuration file for the respective node from `components/talos-raspi-cluster/node-configs` to the SD card before booting the node. This allows for an unattended installation without having to manually configure the node through a setup wizard. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
+
+!!! note Recommendation
+    Flash the SD card with Balena Etcher. The tool is installed through the ansible playbook `ubuntu-desktop-baseline.yml`.
