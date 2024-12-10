@@ -42,9 +42,7 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-copy-files.yml
 
-    #  +-----------------------------------------------------------------------------+
-    # !|    Must be last task in this play !!!                                       |
-    #  |    Local changes result in a failure for this task.                         |
-    #  |    In case of failure, all other tasks for the affected node are skipped    |
-    #  +-----------------------------------------------------------------------------+
+    # ! Must be last task in this play
+    # ! Local changes result in a failure for this task
+    # ! In case of failure, all other tasks for the affected node are skipped
     - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
