@@ -29,6 +29,7 @@ function title() {
 
   echo -e "$LOG_INFO ------------------------------------------"
   echo -e "$LOG_INFO     $1"
+  echo -e "$LOG_INFO ------------------------------------------"
   ansible --version
   echo -e "$LOG_INFO ------------------------------------------"
 }

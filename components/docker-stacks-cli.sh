@@ -34,7 +34,11 @@ function logs() {
   docker compose logs -f
 }
 
+echo -e "$LOG_INFO ------------------------------------------"
+echo -e "$LOG_INFO     Docker Stacks CLI"
+echo -e "$LOG_INFO ------------------------------------------"
 hostnamectl
+echo -e "$LOG_INFO ------------------------------------------"
 
 (
   cd docker-stacks || exit

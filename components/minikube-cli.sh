@@ -120,6 +120,9 @@ function undeploy() {
   )
 }
 
+echo -e "$LOG_INFO ------------------------------------------"
+echo -e "$LOG_INFO     Minikube CLI"
+echo -e "$LOG_INFO ------------------------------------------"
 
 echo -e "$LOG_INFO Select the action"
 select s in "$OPTION_START" \
