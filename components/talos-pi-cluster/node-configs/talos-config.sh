@@ -19,7 +19,7 @@ readonly WORKER_NODES=(
 )
 
 
-if [ -f "$CONTROL_PLANE_NODE.yaml" ]; then
+if [ -f "$OUTPUT_DIR/$CONTROL_PLANE_NODE.yaml" ]; then
   echo "[ERROR] $CONTROL_PLANE_NODE.yaml config file already exists."
   echo "[ERROR] Abort script to avoid overwriting existing configs."
   echo "[ERROR] This would most likely result in a broken cluster (config)."
