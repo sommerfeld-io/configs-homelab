@@ -4,3 +4,5 @@ machine:
     hostname: talos-control-pi
   install:
     disk: /dev/mmcblk0
+  certSANs:
+    - talos-control-pi.fritz.box

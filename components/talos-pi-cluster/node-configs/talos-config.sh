@@ -72,7 +72,8 @@ done
 
 
 echo "[INFO] Bootstrap cluster --------------------------------------"
-talosctl bootstrap --nodes talos-control-pi.fritz.box --endpoints talos-control-pi.fritz.box
+talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
+  --endpoints "$CONTROL_PLANE_NODE.fritz.box"
 
 
 echo "[INFO] Copy talos config into home dir ------------------------"
@@ -80,5 +81,5 @@ cp talosconfig ~/.talos/config
 
 
 echo "[INFO] Generate kubectl config --------------------------------"
+echo "[INFO] Add (merge) new cluster into local Kubernetes config"
 talosctl kubeconfig
-# ?????????? cp ??????????
