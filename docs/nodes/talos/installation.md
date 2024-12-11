@@ -64,7 +64,7 @@ These steps only need to be done once when the initial setup is done or when the
 
     ```bash
     # Run on the host that has the git repository cloned
-    # scp ...
+    scp -r sebastian@talos-mgmt-pi:work/repos/sommerfeld-io/configs-homelab/components/talos-pi-cluster/node-configs .
     ```
 
 - [ ] Push the configuration files to the remote repository
