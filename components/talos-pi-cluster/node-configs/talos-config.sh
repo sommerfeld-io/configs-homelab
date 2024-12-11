@@ -64,7 +64,6 @@ done
 
 
 echo "[INFO] Apply node configs -------------------------------------"
-echo "[INFO] Apply $CONTROL_PLANE_NODE"
 apply "$CONTROL_PLANE_NODE"
 
 for worker in "${WORKER_NODES[@]}"; do

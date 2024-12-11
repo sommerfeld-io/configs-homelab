@@ -2,3 +2,5 @@
 machine:
   network:
     hostname: talos-worker-pi-3
+  install:
+    disk: /dev/mmcblk0
