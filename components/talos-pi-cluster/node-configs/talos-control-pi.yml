@@ -25,7 +25,7 @@ machine:
     rbac: true
     stableHostname: true
     apidCheckExtKeyUsage: true
-    diskQuotaSupport: tru
+    diskQuotaSupport: true
     kubePrism:
       enabled: true
       port: 7445
