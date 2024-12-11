@@ -20,20 +20,7 @@ theme:
   palette:
     scheme: slate
     primary: black
-    # # Palette toggle for light mode
-    # - scheme: default
-    #   primary: &header-color black
-    #   accent: *header-color
-    #   toggle:
-    #     icon: material/brightness-7
-    #     name: Switch to dark mode
-    # # Palette toggle for dark mode
-    # - scheme: slate
-    #   primary: *header-color
-    #   accent: *header-color
-    #   toggle:
-    #     icon: material/brightness-4
-    #     name: Switch to light mode
+    accent: deep orange
   features:
     - content.code.copy
     - content.tabs.link
@@ -74,6 +61,7 @@ nav:
           - Overview: nodes/talos/index.md
           - Installation: nodes/talos/installation.md
           - nodes/talos/howto/deploy-application-with-argocd.md
+          - nodes/talos/howto/loadbalancing.md
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md
