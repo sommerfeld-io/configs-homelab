@@ -17,6 +17,9 @@
     "[shellscript]": {
         "editor.tabSize": 2
     },
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true
 }

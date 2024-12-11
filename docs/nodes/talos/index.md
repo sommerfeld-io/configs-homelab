@@ -18,31 +18,18 @@ skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
 skinparam arrowColor #E2E4E9
 
-LAYOUT_TOP_DOWN()
+LAYOUT_LEFT_RIGHT()
 
 Person(user, "User", "A person using a computer or mobile device")
 
-System_Ext(router, "FritzBox Router", "The homelab router which provides network communication, internet access, DNS, DHCP, ...")
-
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
-System(switch, "Network Switch", "Allow cable connections for the Kubernetes cluster")
+System(talos, "Talos Kubernetes", "Raspberry Pi Cluster running Talos Linux")
 
-System(talos, "Talos k8s Cluster", "Raspberry Pi Cluster running Talos Linux")
-
-System(mgmt, "Talos Mgmt Node", "Raspberry Pi Cluster running Talos Linux")
-
-Rel_Neighbor(user, workstation, "Uses")
-Rel(router, workstation, "Network access", "DNS, DHCP")
-Rel(router, switch, "Network access", "DNS, DHCP")
-Rel(switch, talos, "Network access", "DNS, DHCP")
-Rel(router, mgmt, "Network access", "DNS, DHCP")
-Rel(workstation, talos, "Manage", "talosctl")
-Rel_Neighbor(workstation, mgmt, "Manage", "SSH")
+Rel(user, workstation, "Uses")
+Rel(workstation, talos, "Access", "talosctl\nkubectl")
 @enduml
 ```
-
-The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP.
 
 ## Containers
 
@@ -73,6 +60,7 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
     Container(cp, "talos-control-pi", "Raspberry Pi 4", "Control Plane Node for Kubernetes")
     Container(w1, "talos-worker-pi-1", "Raspberry Pi 4", "Worker Node for applications and services")
     Container(w2, "talos-worker-pi-2", "Raspberry Pi 4", "Worker Node for applications and services")
+    Container(w3, "talos-worker-pi-3", "Raspberry Pi 4", "Worker Node for applications and services")
 }
 
 Rel(user, workstation, "Uses")
@@ -80,6 +68,7 @@ Rel(workstation, mgmt, "Connect", "SSH")
 Rel_Neighbor(mgmt, talos, "Manage", "talosctl\nkubectl")
 Rel(cp, w1, "Manage")
 Rel(cp, w2, "Manage")
+Rel(cp, w3, "Manage")
 
 @enduml
 ```
@@ -157,10 +146,12 @@ component pi_mgmt as "talos-mgmt-pi" <<RasPi Node>>
 component pi0 as "talos-control-pi" <<RasPi Node>>
 component pi1 as "talos-worker-pi-1" <<RasPi Node>>
 component pi2 as "talos-worker-pi-2" <<RasPi Node>>
+component pi3 as "talos-worker-pi-3" <<RasPi Node>>
 
-ws -down-> Router
+ws <-down- Router
 Router -right-> Repeater
 Router -down-> pi_mgmt
+Router -down-> pi3
 Repeater -right-> Switch
 Switch -down-> pi0
 Switch -down-> pi1
@@ -169,10 +160,16 @@ Switch -down-> pi2
 @enduml
 ```
 
-### Load balancing for services inside Kubernetes
+The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP. The router should assign the same IP address to the same device every time. This is not mandatory but recommended.
 
-!!! warning "TODO"
-    Write description and diagram about load balancing for services inside Kubernetes. The load balancer should run inside kubernetes and distribute the traffic to the services. See <https://github.com/sommerfeld-io/configs-homelab/issues/19>
+## RasPi Rack Setup
+
+The `talos-mgmt-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
+
+1. `talos-control-pi`
+1. `talos-worker-pi-1`
+1. `talos-worker-pi-2`
+1. *empty*
 
 ## References / External Links
 

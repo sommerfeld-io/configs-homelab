@@ -8,15 +8,10 @@
   become: true
   vars_files:
     - ../vars/global.yml
-    - ../vars/talos.yml
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt.yml
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-node-exporter.yml
-
-    # ! Only run this task once when the cluster is setup or re-installed from scratch.
-    # ! Re-installing from scratch means that the SD cards have been flashed with a new image.
-    # - ansible.builtin.import_tasks: ../tasks/raspi-talos-cluster-config.yml
 
 - name: Setup for group raspi_talos (non-root)
   hosts: raspi_talos
