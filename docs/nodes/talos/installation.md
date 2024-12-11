@@ -26,7 +26,7 @@ These steps only need to be done once when the initial setup is done or when the
 - [ ] Make sure you generated the Talos configuration on the `talos-mgmt-pi` node. Only needs to be done once.
     - [ ] `talosctl gen config talos-pi-cluster https://talos-control-pi.fritz.box:6443`
     - [ ] `cp talosconfig ~/.talos/config`
-    - [ ] Download the config files to this repo into `components/talos-raspi-cluster/node-configs`, cleanup the yaml markup, duplicate the worker yaml file for each worker node and adjust the hostnames in all yaml files as described in <https://www.talos.dev/v1.8/reference/configuration/v1alpha1/config/#Config.machine.network>.
+    - [ ] Download the config files to this repo into `components/talos-pi-cluster/node-configs`, cleanup the yaml markup, duplicate the worker yaml file for each worker node and adjust the hostnames in all yaml files as described in <https://www.talos.dev/v1.8/reference/configuration/v1alpha1/config/#Config.machine.network>.
 
 These steps need to be done for each Raspberry Pi node that should join the Talos Kubernetes cluster.
 
@@ -43,7 +43,7 @@ Once the SD card is flashed and inserted into the Raspberry Pi and boot. Check t
 
 Continue with configuring the Talos node. Do this from the `talos-mgmt-pi` node.
 
-- [ ] On the RasPi node, switch into the `configs-homelab` repo and the into the folder `components/talos-raspi-cluster/node-configs`.
+- [ ] On the RasPi node, switch into the `configs-homelab` repo and the into the folder `components/talos-pi-cluster/node-configs`.
 - [ ] Apply configs from this repo to the **control plane**:
     - [ ] `talosctl apply-config --insecure --nodes talos-control-pi.fritz.box --file talos-control-pi.yml`
 - [ ] Apply configs from this repo to each **worker node**:
