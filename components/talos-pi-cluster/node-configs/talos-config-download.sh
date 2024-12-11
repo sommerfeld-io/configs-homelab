@@ -8,8 +8,8 @@ set -o nounset
 readonly REMOTE_USER="$USER"
 readonly REMOTE_HOST="talos-mgmt-pi.fritz.box"
 readonly REMOTE_PATH="work/repos/sommerfeld-io/configs-homelab/components/talos-pi-cluster/node-configs"
-readonly LOCAL_PATH="."
+readonly LOCAL_PATH="./generated"
 
 echo "[INFO] Download generated config files"
 scp -r "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/*.yaml" "$LOCAL_PATH"
-scp -r "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/talosconfig" "$LOCAL_PATH"
+scp -r "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/talosconfig" "$LOCAL_PATH/talosconfig.yaml"
