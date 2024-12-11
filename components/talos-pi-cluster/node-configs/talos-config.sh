@@ -93,3 +93,4 @@ talosctl kubeconfig
 echo "[INFO] Cleanup ------------------------------------------------"
 mv controlplane.yaml "$OUTPUT_DIR/controlplane.yaml"
 mv worker.yaml "$OUTPUT_DIR/worker.yaml"
+mv talosconfig "$OUTPUT_DIR/talosconfig.yaml"
