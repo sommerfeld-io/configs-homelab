@@ -19,6 +19,8 @@ The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to
 
 ## Install Cluster with Control Plane and Worker Nodes
 
+The config files inside this repo are auto-generated and downloaded from the `talos-mgmt-pi`. The `*-patch.yml` files however are manually created and are used to patch the Talos config files (meaning the are an input for generating the Talos config files).
+
 ### Setup SD Cards for Raspberry Pi Nodes
 
 These steps need to be done for each Raspberry Pi node that should join the Talos Kubernetes cluster.
