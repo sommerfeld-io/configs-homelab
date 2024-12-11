@@ -9,6 +9,8 @@ set -o nounset
 readonly CLUSTER_NAME="talos-pi-cluster"
 readonly CLUSTER_ENDPOINT="https://talos-control-pi.fritz.box:6443"
 
+readonly OUTPUT_DIR="generated"
+
 readonly CONTROL_PLANE_NODE="talos-control-pi"
 readonly WORKER_NODES=(
   "talos-worker-pi-1"
@@ -35,7 +37,7 @@ function patch() {
   echo "[INFO] Patch $2 to $1.yaml"
   talosctl machineconfig patch "$2" \
     --patch "@$1-patch.yml" \
-    --output "$1.yaml"
+    --output "$OUTPUT_DIR/$1.yaml"
 }
 
 
@@ -47,8 +49,12 @@ function apply() {
 
   talosctl apply-config --insecure \
     --nodes "$1.fritz.box" \
-    --file "$1.yaml"
+    --file "$OUTPUT_DIR/$1.yaml"
 }
+
+
+echo "[INFO] Create output directory -------------------------------"
+mkdir -p "$OUTPUT_DIR"
 
 
 echo "[INFO] Generating Talos config --------------------------------"
@@ -83,3 +89,7 @@ cp talosconfig ~/.talos/config
 echo "[INFO] Generate kubectl config --------------------------------"
 echo "[INFO] Add (merge) new cluster into local Kubernetes config"
 talosctl kubeconfig
+
+echo "[INFO] Cleanup ------------------------------------------------"
+mv controlplane.yaml "$OUTPUT_DIR/controlplane.yaml"
+mv worker.yaml "$OUTPUT_DIR/worker.yaml"
