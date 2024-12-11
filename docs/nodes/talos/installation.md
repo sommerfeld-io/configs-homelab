@@ -63,8 +63,10 @@ These steps only need to be done once when the initial setup is done or when the
 - [ ] Download config files from the `talos-mgmt-pi`. Run:
 
     ```bash
-    # Run on the host that has the git repository cloned
-    scp -r sebastian@talos-mgmt-pi:work/repos/sommerfeld-io/configs-homelab/components/talos-pi-cluster/node-configs .
+    # Run on the host with the cloned repository
+    cd work/repos/sommerfeld-io/configs-homelab
+    cd components/talos-pi-cluster/node-configs
+    ./talos-config-download.sh
     ```
 
 - [ ] Push the configuration files to the remote repository

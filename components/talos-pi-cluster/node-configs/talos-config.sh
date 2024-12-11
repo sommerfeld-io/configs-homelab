@@ -17,8 +17,8 @@ readonly WORKER_NODES=(
 )
 
 
-if [ -f "$CONTROL_PLANE_NODE.yml" ]; then
-  echo "[ERROR] $CONTROL_PLANE_NODE.yml config file already exists."
+if [ -f "$CONTROL_PLANE_NODE.yaml" ]; then
+  echo "[ERROR] $CONTROL_PLANE_NODE.yaml config file already exists."
   echo "[ERROR] Abort script to avoid overwriting existing configs."
   echo "[ERROR] This would most likely result in a broken cluster (config)."
   echo "[ERROR] Newly generated configs surly conflict with certs and PKI"
@@ -32,10 +32,10 @@ fi
 # @args $1: The node name
 # @args $2: The default config file (controlplane.yaml or worker.yaml) that should be patched
 function patch() {
-  echo "[INFO] Patch $2 to $1.yml"
+  echo "[INFO] Patch $2 to $1.yaml"
   talosctl machineconfig patch "$2" \
     --patch "@$1-patch.yml" \
-    --output "$1.yml"
+    --output "$1.yaml"
 }
 
 
@@ -47,7 +47,7 @@ function apply() {
 
   talosctl apply-config --insecure \
     --nodes "$1.fritz.box" \
-    --file "$1.yml"
+    --file "$1.yaml"
 }
 
 
