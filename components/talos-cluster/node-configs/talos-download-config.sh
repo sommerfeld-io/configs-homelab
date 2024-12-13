@@ -6,8 +6,8 @@ set -o nounset
 # set -o xtrace
 
 readonly REMOTE_USER="$USER"
-readonly REMOTE_HOST="talos-mgmt-pi.fritz.box"
-readonly REMOTE_PATH="work/repos/sommerfeld-io/configs-homelab/components/talos-pi-cluster/node-configs"
+readonly REMOTE_HOST="talos-admin-pi.fritz.box"
+readonly REMOTE_PATH="work/repos/sommerfeld-io/configs-homelab/components/talos-cluster/node-configs"
 readonly LOCAL_PATH="."
 
 echo "[INFO] Download generated config files"

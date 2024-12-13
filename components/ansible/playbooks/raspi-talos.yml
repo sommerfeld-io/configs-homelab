@@ -12,6 +12,8 @@
 
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt.yml
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-node-exporter.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt-k9s.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-mgmt-argocd-autopilot.yml
 
 - name: Setup for group raspi_talos (non-root)
   hosts: raspi_talos

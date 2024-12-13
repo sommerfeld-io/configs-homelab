@@ -6,16 +6,17 @@ set -o nounset
 # set -o xtrace
 
 
-readonly CLUSTER_NAME="talos-pi-cluster"
-readonly CLUSTER_ENDPOINT="https://talos-control-pi.fritz.box:6443"
+readonly CLUSTER_NAME="talos-cluster"
+readonly CLUSTER_ENDPOINT="https://talos-cp.fritz.box:6443"
 
 readonly OUTPUT_DIR="generated"
 
-readonly CONTROL_PLANE_NODE="talos-control-pi"
+readonly CONTROL_PLANE_NODE="talos-cp"
 readonly WORKER_NODES=(
-  "talos-worker-pi-1"
-  "talos-worker-pi-2"
-  "talos-worker-pi-3"
+  "talos-w1"
+  "talos-w2"
+  "talos-w3"
+  # "talos-w3"
 )
 
 
@@ -50,6 +51,24 @@ function apply() {
   talosctl apply-config --insecure \
     --nodes "$1.fritz.box" \
     --file "$OUTPUT_DIR/$1.yaml"
+}
+
+
+# Enter the Github token for the ArgoCD Autopilot.:-D
+function bootstrapArgoCD() {
+  export GIT_REPO="https://github.com/sommerfeld-io/configs-homelab.git/components/talos-cluster/manifests"
+  readonly ARGO_PROJECT="$CLUSTER_NAME"
+
+  echo "[INFO] Github Token"
+  read -s -r -p "Enter Token: " GIT_TOKEN
+  export GIT_TOKEN
+  echo
+
+  echo "[INFO] Bootstrap ArgoCD"
+  argocd-autopilot repo bootstrap
+
+  echo "[INFO] Create Project"
+  argocd-autopilot project create "$ARGO_PROJECT"
 }
 
 
@@ -99,6 +118,9 @@ mv talosconfig "$OUTPUT_DIR/talosconfig.yaml"
 
 echo "[INFO] kubectl get nodes --------------------------------------"
 kubectl get nodes
+
+echo "[INFO] Bootstrap ArgoCD with ArgoCD Autopilot -----------------"
+bootstrapArgoCD
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
 kubectl get all --all-namespaces

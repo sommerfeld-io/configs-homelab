@@ -1,0 +1,14 @@
+---
+machine:
+  network:
+    hostname: talos-w3
+  install:
+    disk: /dev/mmcblk0
+  certSANs:
+    - talos-w3.fritz.box
+  nodeLabels:
+    node.arch: arm64
+    node.connected-to: router
+    node.device: raspi-4
+    node.storage: 32gb
+    node.type: worker

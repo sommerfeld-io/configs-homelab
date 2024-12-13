@@ -7,7 +7,7 @@ ignore: |
   .vagrant
   target
   components/minikube
-  components/talos-pi-cluster/node-configs/generated
+  components/talos-cluster/node-configs/generated
 
 rules:
   line-length:

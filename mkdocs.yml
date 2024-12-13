@@ -57,11 +57,11 @@ nav:
       - memos.md
   - Workstations and RasPi Nodes:
       - nodes/ubuntu-workstations.md
-      - Raspberry Pi Talos Cluster:
-          - Overview: nodes/talos/index.md
-          - Installation: nodes/talos/installation.md
-          - nodes/talos/howto/deploy-application-with-argocd.md
-          - nodes/talos/howto/loadbalancing.md
+      - Talos Cluster:
+          - Overview: nodes/talos-cluster/index.md
+          - Installation: nodes/talos-cluster/installation.md
+          - nodes/talos-cluster/howto/deploy-application-with-argocd.md
+          - nodes/talos-cluster/howto/loadbalancing.md
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md

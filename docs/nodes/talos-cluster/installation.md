@@ -1,6 +1,6 @@
 # Talos Cluster - Installation
 
-The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `talos-mgmt-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `talos-mgmt-pi` node is installed and provisioned by Ansible.
+The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `talos-admin-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `talos-admin-pi` node is installed and provisioned by Ansible.
 
 The second step is to install the actual Talos nodes. These nodes are Raspberry Pi devices running Talos Linux. The nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
@@ -9,17 +9,17 @@ The second step is to install the actual Talos nodes. These nodes are Raspberry 
 - [ ] Flash Operating System [Ubuntu Server](https://ubuntu.com) via the [Raspberry Pi Imager](https://www.raspberrypi.com/software) onto an SD card.
     - [ ] Configure the Raspberry Pi through the Raspberry Pi Imager to enable SSH, set a hostname and configure WiFi.
 - [ ] Enable password-less SSH connections (from workstation, not the RasPi node)
-    - [ ] `ssh sebastian@talos-mgmt-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@talos-mgmt-pi.fritz.box`
+    - [ ] `ssh sebastian@talos-admin-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@talos-admin-pi.fritz.box`
 - [ ] Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node as well as the for the Talos Kubernetes nodes. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
 
-The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://talos-mgmt-pi.fritz.box:9100>.
+The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://talos-admin-pi.fritz.box:9100>.
 
 The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
 
 ## Install Cluster with Control Plane and Worker Nodes
 
-The config files inside this repo are auto-generated and downloaded from the `talos-mgmt-pi`. The `*-patch.yml` files however are manually created and are used to patch the Talos config files (meaning the are an input for generating the Talos config files).
+The config files inside this repo are auto-generated and downloaded from the `talos-admin-pi`. The `*-patch.yml` files however are manually created and are used to patch the Talos config files (meaning the are an input for generating the Talos config files).
 
 ### Setup SD Cards for Raspberry Pi Nodes
 
@@ -42,39 +42,36 @@ These steps need to be done for each Raspberry Pi node that should join the Talo
     - [ ] Assign a name to the device. This should be the same as the hostname of the RasPi node itself.
     - [ ] Also ensure that the device always gets the same IP address (not mandatory but recommended).
 
-### Configure and Bootstrap the Talos Cluster (Nodes)
+### Configure and Bootstrap the Talos Cluster (including ArgoCD)
 
 These steps only need to be done once when the initial setup is done or when the cluster is re-installed from scratch. The steps are not necessary when the cluster is already running and a new node is added.
 
 ??? note "Re-use of existing configurations"
     Installing a new cluster should also be possible with re-using the existing configurations for the management node and the talos cluster nodes. The cluster would need freshly flashed SD cards. But then the existing configurations can be re-used without having to generate new ones. Simply applying the configurations to the new nodes and bootstrapping the cluster should be sufficient.
 
-- [ ] Make sure you generated the Talos configuration on the `talos-mgmt-pi` node. Only needs to be done once. Run:
+- [ ] Make sure you generated the Talos configuration on the `talos-admin-pi` node. Only needs to be done once. Run:
 
     ```bash
-    # Run on talos-mgmt-pi
+    # Run on talos-admin-pi
     cd work/repos/sommerfeld-io/configs-homelab
     git pull
 
-    cd components/talos-pi-cluster/node-configs
-    ./talos-config.sh
+    cd components/talos-cluster/node-configs
+    ./talos-bootstrap.sh
     ```
 
-- [ ] Download config files from the `talos-mgmt-pi`. Run:
+    The `talos-bootstrap.sh` also installs ArgoCD with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable/Getting-Started). To do this, it prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope.
+
+- [ ] Download config files from the `talos-admin-pi`. Run:
 
     ```bash
     # Run on the host with the cloned repository
     cd work/repos/sommerfeld-io/configs-homelab
-    cd components/talos-pi-cluster/node-configs
-    ./talos-config-download.sh
+    cd components/talos-cluster/node-configs
+    ./talos-download-config.sh
     ```
 
 - [ ] Push the configuration files to the remote repository
-
-## Setup ArgoCD
-
-!!! warning TODO
-    This section is not yet implemented. Write some words in ArgoCD and ArgoCD Autopilot ...
 
 ## References / External Links
 

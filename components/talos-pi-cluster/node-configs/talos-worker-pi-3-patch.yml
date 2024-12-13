@@ -1,8 +1,0 @@
----
-machine:
-  network:
-    hostname: talos-worker-pi-3
-  install:
-    disk: /dev/mmcblk0
-  certSANs:
-    - talos-worker-pi-2.fritz.box

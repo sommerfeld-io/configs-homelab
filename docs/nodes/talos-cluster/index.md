@@ -33,12 +33,12 @@ Rel(workstation, talos, "Access", "talosctl\nkubectl")
 
 ## Containers
 
-The `talos-mgmt-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
+The `talos-admin-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
 
 The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
-- Raspberry Pi 3A+: 32GB SD Card and 2GB RAM.
-- Raspberry Pi 4: 32GB SD Card and 8GB RAM.
+- Raspberry Pi 4: 8 GB RAM and 32 GB SD-Card
+- Raspberry Pi 5: 8 GB RAM and 128 GB SD-Card
 
 ```kroki-c4plantuml
 @startuml
@@ -54,13 +54,13 @@ Person(user, "User", "A person using a computer or mobile device")
 
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
-Container(mgmt, "talos-mgmt-pi", "Raspberry Pi 3A+", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
+Container(mgmt, "talos-admin-pi", "Raspberry Pi 3A+", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
-    Container(cp, "talos-control-pi", "Raspberry Pi 4", "Control Plane Node for Kubernetes")
-    Container(w1, "talos-worker-pi-1", "Raspberry Pi 4", "Worker Node for applications and services")
-    Container(w2, "talos-worker-pi-2", "Raspberry Pi 4", "Worker Node for applications and services")
-    Container(w3, "talos-worker-pi-3", "Raspberry Pi 4", "Worker Node for applications and services")
+    Container(cp, "talos-cp", "RaspPi Model 4", "Control Plane Node for Kubernetes")
+    Container(w1, "talos-w1", "RaspPi Model 4", "Worker Node for applications and services")
+    Container(w2, "talos-w2", "RaspPi Model 5", "Worker Node for applications and services")
+    Container(w3, "talos-w3", "RaspPi Model 4", "Worker Node for applications and services")
 }
 
 Rel(user, workstation, "Uses")
@@ -73,7 +73,7 @@ Rel(cp, w3, "Manage")
 @enduml
 ```
 
-The setup features a `talos-mgmt-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `talos-mgmt-pi` we avoid possible conflicts with e.g. `kubectl`.
+The setup features a `talos-admin-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `talos-admin-pi` we avoid possible conflicts with e.g. `kubectl`.
 
 ## Components
 
@@ -142,17 +142,17 @@ component ws as "Workstation"
 component Router
 component Repeater
 component Switch
-component pi_mgmt as "talos-mgmt-pi" <<RasPi Node>>
-component pi0 as "talos-control-pi" <<RasPi Node>>
-component pi1 as "talos-worker-pi-1" <<RasPi Node>>
-component pi2 as "talos-worker-pi-2" <<RasPi Node>>
-component pi3 as "talos-worker-pi-3" <<RasPi Node>>
+component pi_mgmt as "talos-admin-pi" <<RasPi Node>>
+component pi0 as "talos-cp" <<RasPi Node>>
+component pi1 as "talos-w1" <<RasPi Node>>
+component pi2 as "talos-w2" <<RasPi Node>>
+component pi3 as "talos-w3" <<RasPi Node>>
 
 ws <-down- Router
 Router -right-> Repeater
-Router -down-> pi_mgmt
 Router -down-> pi3
 Repeater -right-> Switch
+Switch -down-> pi_mgmt
 Switch -down-> pi0
 Switch -down-> pi1
 Switch -down-> pi2
@@ -164,12 +164,12 @@ The Talos Raspberry Pi nodes should get their IP addresses from the router via D
 
 ## RasPi Rack Setup
 
-The `talos-mgmt-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
+The `talos-admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
 
-1. `talos-control-pi`
-1. `talos-worker-pi-1`
-1. `talos-worker-pi-2`
-1. *empty*
+1. `talos-admin-pi`
+1. `talos-cp`
+1. `talos-w1`
+1. `talos-w2`
 
 ## References / External Links
 
