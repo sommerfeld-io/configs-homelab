@@ -1,7 +1,7 @@
 ---
 - name: Talos  ----  Mgmt Pi  ----  Download ArgoCD Autopilot tarball
   ansible.builtin.get_url:
-    url: https://github.com/argoproj-labs/argocd-autopilot/releases/download/{{ version }}/argocd-autopilot-linux-{{ architecture }}.tar.gz
+    url: "https://github.com/argoproj-labs/argocd-autopilot/releases/download/{{ version }}/argocd-autopilot-linux-{{ architecture }}.tar.gz"
     dest: /tmp/argocd-autopilot-linux-arm64.tar.gz
     mode: '0644'
   vars:
@@ -11,13 +11,21 @@
 - name: Talos  ----  Mgmt Pi  ----  Extract the ArgoCD Autopilot tarball
   ansible.builtin.unarchive:
     src: /tmp/argocd-autopilot-linux-arm64.tar.gz
-    dest: /tmp/
+    dest: /tmp
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     remote_src: true
 
 - name: Talos  ----  Mgmt Pi  ----  Move ArgoCD Autopilot binary to /usr/local/bin
-  ansible.builtin.command: mv /tmp/argocd-autopilot-* /usr/local/bin/argocd-autopilot
-  args:
-    creates: /usr/local/bin/argocd-autopilot
+  ansible.builtin.copy:
+    src: /tmp/argocd-autopilot-linux-{{ architecture }}
+    dest: /usr/local/bin/argocd-autopilot
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+    remote_src: true
+  vars:
+    architecture: arm64
 
 # - name: Talos  ----  Mgmt Pi  ----  Clean up the downloaded tarball
 #   ansible.builtin.file:
