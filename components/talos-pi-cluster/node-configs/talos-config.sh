@@ -77,20 +77,28 @@ for worker in "${WORKER_NODES[@]}"; do
 done
 
 
-echo "[INFO] Bootstrap cluster --------------------------------------"
-talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
-  --endpoints "$CONTROL_PLANE_NODE.fritz.box"
-
-
 echo "[INFO] Copy talos config into home dir ------------------------"
 cp talosconfig ~/.talos/config
 
 
+echo "[INFO] Bootstrap cluster --------------------------------------"
+sleep 5s
+talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
+  --endpoints "$CONTROL_PLANE_NODE.fritz.box"
+
+
 echo "[INFO] Generate kubectl config --------------------------------"
 echo "[INFO] Add (merge) new cluster into local Kubernetes config"
-talosctl kubeconfig
+talosctl kubeconfig --nodes "$CONTROL_PLANE_NODE.fritz.box" \
+  --endpoints "$CONTROL_PLANE_NODE.fritz.box"
 
 echo "[INFO] Cleanup ------------------------------------------------"
 mv controlplane.yaml "$OUTPUT_DIR/controlplane.yaml"
 mv worker.yaml "$OUTPUT_DIR/worker.yaml"
 mv talosconfig "$OUTPUT_DIR/talosconfig.yaml"
+
+echo "[INFO] kubectl get nodes --------------------------------------"
+kubectl get nodes
+
+echo "[INFO] kubectl get all --all-namespaces -----------------------"
+kubectl get all --all-namespaces
