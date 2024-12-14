@@ -24,6 +24,7 @@
     "files.insertFinalNewline": true,
     "cSpell.words": [
         "controlplane",
+        "talosconfig",
         "talosctl"
     ]
 }

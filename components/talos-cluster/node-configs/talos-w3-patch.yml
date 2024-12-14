@@ -7,8 +7,7 @@ machine:
   certSANs:
     - talos-w3.fritz.box
   nodeLabels:
-    node.arch: arm64
-    node.connected-to: router
+    node.network-connect: router
     node.device: raspi-4
     node.storage: 32gb
     node.type: worker

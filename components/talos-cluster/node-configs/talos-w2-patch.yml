@@ -7,8 +7,7 @@ machine:
   certSANs:
     - talos-w2.fritz.box
   nodeLabels:
-    node.arch: arm64
-    node.connected-to: switch
+    node.network-connect: switch
     node.device: raspi-5
     node.storage: 128gb
     node.type: worker

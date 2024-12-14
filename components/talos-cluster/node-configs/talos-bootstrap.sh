@@ -16,8 +16,10 @@ readonly WORKER_NODES=(
   "talos-w1"
   "talos-w2"
   "talos-w3"
-  # "talos-w3"
 )
+
+export GIT_REPO="https://github.com/sommerfeld-io/configs-homelab.git/components/talos-cluster/manifests"
+readonly ARGO_PROJECT="$CLUSTER_NAME"
 
 
 if [ -f "$OUTPUT_DIR/$CONTROL_PLANE_NODE.yaml" ]; then
@@ -54,22 +56,11 @@ function apply() {
 }
 
 
-# Enter the Github token for the ArgoCD Autopilot.:-D
-function bootstrapArgoCD() {
-  export GIT_REPO="https://github.com/sommerfeld-io/configs-homelab.git/components/talos-cluster/manifests"
-  readonly ARGO_PROJECT="$CLUSTER_NAME"
-
-  echo "[INFO] Github Token"
-  read -s -r -p "Enter Token: " GIT_TOKEN
-  export GIT_TOKEN
-  echo
-
-  echo "[INFO] Bootstrap ArgoCD"
-  argocd-autopilot repo bootstrap
-
-  echo "[INFO] Create Project"
-  argocd-autopilot project create "$ARGO_PROJECT"
-}
+echo "[INFO] Github Token for ArgoCD Autopilot ---------------------"
+echo "[INFO] Github Repo = $GIT_REPO"
+read -s -r -p "Enter Token: " GIT_TOKEN
+export GIT_TOKEN
+echo
 
 
 echo "[INFO] Create output directory -------------------------------"
@@ -120,7 +111,13 @@ echo "[INFO] kubectl get nodes --------------------------------------"
 kubectl get nodes
 
 echo "[INFO] Bootstrap ArgoCD with ArgoCD Autopilot -----------------"
-bootstrapArgoCD
+echo "[INFO] Bootstrap ArgoCD"
+argocd-autopilot repo bootstrap
+
+echo "[INFO] Create Project"
+argocd-autopilot project create "$ARGO_PROJECT"
+
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
+sleep 5s
 kubectl get all --all-namespaces
