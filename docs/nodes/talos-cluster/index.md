@@ -166,10 +166,22 @@ The Talos Raspberry Pi nodes should get their IP addresses from the router via D
 
 The `talos-admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
 
-1. `talos-admin-pi`
-1. `talos-cp`
-1. `talos-w1`
-1. `talos-w2`
+```kroki-rackdiag
+rackdiag {
+  4U;
+  4: talos-admin-pi;
+  3: talos-cp;
+  2: talos-w1;
+  1: talos-w2;
+}
+```
+
+```kroki-rackdiag
+rackdiag {
+  1U;
+  1: talos-w3;
+}
+```
 
 ## References / External Links
 
