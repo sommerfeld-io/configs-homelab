@@ -38,7 +38,7 @@ The `talos-admin-pi` setup is done by Ansible. The Ansible Playbook are run from
 The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
 - Raspberry Pi 4: 8 GB RAM and 32 GB SD-Card
-- Raspberry Pi 5: 8 GB RAM and 128 GB SD-Card
+- Raspberry Pi 5: 8 GB RAM, Quad Core 2,4GHz and 128 GB SD-Card
 
 ```kroki-c4plantuml
 @startuml
@@ -169,17 +169,17 @@ The `talos-admin-pi` is not mounted inside the rack. It is placed next to the ra
 ```kroki-rackdiag
 rackdiag {
   4U;
-  4: talos-admin-pi;
-  3: talos-cp;
-  2: talos-w1;
-  1: talos-w2;
+  4: talos-cp\nRasPi 4;
+  3: talos-w1\nRasPi 4;
+  2: talos-admin-pi\nRasPi 4;
+  1: talos-w2\nRasPi 5;
 }
 ```
 
 ```kroki-rackdiag
 rackdiag {
   1U;
-  1: talos-w3;
+  1: talos-w3\nRasPi 4;
 }
 ```
 
