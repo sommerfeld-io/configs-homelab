@@ -1,5 +1,5 @@
 ---
-- name: Talos  ----  Mgmt Pi  ----  Download k9s .deb package
+- name: Talos  ----  Admin Pi  ----  Download k9s .deb package
   ansible.builtin.get_url:
     url: https://github.com/derailed/k9s/releases/download/{{ version }}/k9s_linux_{{ architecture }}.deb
     dest: /tmp/k9s_linux_arm64.deb
@@ -8,12 +8,12 @@
     version: v0.32.7
     architecture: arm64
 
-- name: Talos  ----  Mgmt Pi  ----  Install k9s .deb package
+- name: Talos  ----  Admin Pi  ----  Install k9s .deb package
   ansible.builtin.apt:
     deb: /tmp/k9s_linux_arm64.deb
     state: present
 
-# - name: Talos  ----  Mgmt Pi  ----  Clean up the downloaded .deb file
+# - name: Talos  ----  Admin Pi  ----  Clean up the downloaded .deb file
 #   ansible.builtin.file:
 #     path: /tmp/k9s_linux_arm64.deb
 #     state: absent
