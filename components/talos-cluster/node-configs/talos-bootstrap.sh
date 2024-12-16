@@ -93,7 +93,7 @@ cp talosconfig ~/.talos/config
 
 
 echo "[INFO] Bootstrap cluster --------------------------------------"
-sleep 5s
+sleep 15s
 talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
 
