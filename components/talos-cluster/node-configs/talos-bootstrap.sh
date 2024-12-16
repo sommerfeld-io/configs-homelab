@@ -88,6 +88,7 @@ done
 
 
 echo "[INFO] Copy talos config into home dir ------------------------"
+mkdir -p ~/.talos
 cp talosconfig ~/.talos/config
 
 
