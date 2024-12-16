@@ -57,10 +57,8 @@ These steps only need to be done once when the initial setup is done or when the
     git pull
 
     cd components/talos-cluster/node-configs
-    ./talos-bootstrap.sh
+    ./bootstrap-talos.sh
     ```
-
-    The `talos-bootstrap.sh` also installs ArgoCD with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable/Getting-Started). To do this, it prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope.
 
 - [ ] Download config files from the `admin-pi`. Run:
 
@@ -68,10 +66,22 @@ These steps only need to be done once when the initial setup is done or when the
     # Run on the host with the cloned repository
     cd work/repos/sommerfeld-io/configs-homelab
     cd components/talos-cluster/node-configs
-    ./talos-download-config.sh
+    ./download-config.sh
     ```
 
 - [ ] Push the configuration files to the remote repository
+- [ ] Bootstrap ArgoCD on the `admin-pi` node. Only needs to be done once. Run:
+
+    ```bash
+    # Run on admin-pi
+    cd work/repos/sommerfeld-io/configs-homelab
+    git pull
+
+    cd components/talos-cluster/node-configs
+    ./bootstrap-argocd.sh
+    ```
+
+    The `bootstrap-argocd.sh` installs ArgoCD with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable/Getting-Started). To do this, it prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope.
 
 ## References / External Links
 
