@@ -54,7 +54,6 @@ function apply() {
 
 
 echo "[INFO] Create directories ------------------------------------"
-
 readonly directories=(
   "$OUTPUT_DIR"
   "$TALOS_CONF_DIR"
@@ -63,6 +62,10 @@ for d in "${directories[@]}"; do
   echo "[INFO] Create directory: $d"
   mkdir -p "$d"
 done
+
+
+echo "[INFO] Cleanup kube config -----------------------------------"
+rm .kube/config
 
 
 echo "[INFO] Generating Talos config --------------------------------"
