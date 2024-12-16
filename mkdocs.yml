@@ -60,6 +60,7 @@ nav:
       - Talos Cluster:
           - Overview: nodes/talos-cluster/index.md
           - Installation: nodes/talos-cluster/installation.md
+          - Kubernetes Network Setup: nodes/talos-cluster/network.md
           - nodes/talos-cluster/howto/interact.md
           - nodes/talos-cluster/howto/update-argocd.md
           - nodes/talos-cluster/howto/deploy-application-with-argocd.md

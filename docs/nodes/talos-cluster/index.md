@@ -132,35 +132,75 @@ skinparam linetype polyline
 skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
 skinparam arrowColor #E2E4E9
+skinparam ArrowFontColor #E2E4E9
 
 skinparam activity {
     'FontName Ubuntu
     FontName Roboto
 }
 
-component ws as "Workstation"
 component Router
 component Repeater
 component Switch
-component adm as "admin-pi" <<RasPi Node>>
-component pi0 as "talos-cp" <<RasPi Node>>
-component pi1 as "talos-w1" <<RasPi Node>>
-component pi2 as "talos-w2" <<RasPi Node>>
-component pi3 as "talos-w3" <<RasPi Node>>
 
-ws <-down- Router
-Router -right-> Repeater
-Router -down-> pi3
-Router -down-> adm
-Repeater -right-> Switch
-Switch -down-> pi0
-Switch -down-> pi1
-Switch -down-> pi2
+Router -right-> Repeater: Wifi
+Repeater -right-> Switch: Ethernet
 
 @enduml
 ```
 
+```kroki-plantuml
+@startuml
+
+skinparam backgroundColor transparent
+skinparam arrowColor #E2E4E9
+
+
+nwdiag {
+  group router_wifi {
+    color = "#999";
+    description = "Router\nWifi";
+    adm;
+  }
+
+  group switch_cable {
+    color = "#999";
+    description = "Switch\nEthernet";
+    cp;
+    w1;
+    w2;
+  }
+
+  group router_cable {
+    color = "#999";
+    description = "Router\nEthernet";
+    w3;
+  }
+
+  internet [shape = cloud];
+  internet -- router;
+
+  network fritz.box {
+      address = "192.168.178.x/24"
+
+      router;
+
+      adm [description = "admin-pi"];
+
+      cp [description = "talos-cp"];
+      w1 [description = "talos-w1"];
+      w2 [description = "talos-w2"];
+
+      w3 [description = "talos-w3"];
+  }
+}
+@enduml
+```
+
 The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP. The router should assign the same IP address to the same device every time. This is not mandatory but recommended.
+
+??? note "About the Kubernetes Network Setup"
+    For details about the Kubernetes Network Setup including the Nginx Gateway Fabric and DNS, see [Kubernetes Network Setup](network.md).
 
 ## RasPi Rack Setup
 
