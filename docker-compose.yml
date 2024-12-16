@@ -13,7 +13,7 @@ services:
 
   cleanup:
     container_name: ${COMPOSE_PROJECT_NAME}-cleanup
-    image: alpine:latest
+    image: &linux-image alpine:latest
     volumes: &volumes
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -24,37 +24,7 @@ services:
       - -c
       - |
         rm -rf target
-        rm -rf target/docs/site
     tty: &tty true
-
-  generate-docs:
-    container_name: ${COMPOSE_PROJECT_NAME}-generate-docs
-    image: sommerfeldio/shdoc:0.5.0
-    volumes: *volumes
-    working_dir: *default-workdir
-    command:
-      - /bin/bash
-      - -c
-      - |
-        rm -rf docs/generated
-
-        mkdir -p docs/generated
-        shdoc < .devcontainer/Dockerfile > docs/generated/devcontainer-dockerfile.md
-
-        mkdir -p docs/generated/scripts
-        shdoc < components/ansible-cli.sh > docs/generated/scripts/ansible-cli-sh.md
-        shdoc < components/docker-stacks-cli.sh > docs/generated/scripts/docker-stacks-cli-sh.md
-        shdoc < components/minikube-cli.sh > docs/generated/scripts/minikube-cli-sh.md
-        shdoc < components/bootstrap/install-basics.sh > docs/generated/scripts/bootstrap-install-basics-sh.md
-        shdoc < components/bootstrap/ssh-server.sh > docs/generated/scripts/bootstrap-ssh-server-sh.md
-
-        mkdir -p docs/generated/stacks
-        shdoc < components/docker-stacks/ops/docker-compose.yml > docs/generated/stacks/ops-docker-compose-yml.md
-        shdoc < components/docker-stacks/pihole/docker-compose.yml > docs/generated/stacks/pihole-docker-compose-yml.md
-        shdoc < components/docker-stacks/portainer/docker-compose.yml > docs/generated/stacks/portainer-docker-compose-yml.md
-
-        chown -R 1000:1000 docs
-    tty: *tty
 
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
@@ -103,6 +73,13 @@ services:
     command: lint components/minikube/admin-charts/portainer --with-subcharts
     tty: *tty
 
+  kroki:
+    container_name: ${COMPOSE_PROJECT_NAME}-kroki
+    image: yuzutech/kroki:0.26.0
+    ports:
+      - 8000:8000
+    tty: *tty
+
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
@@ -117,8 +94,15 @@ services:
   docs-dev-server:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
     image: *docs-image
+    environment:
+      - KROKI_SERVER_URL=http://localhost:8000
     volumes: *volumes
     working_dir: *default-workdir
     ports:
       - 3080:8000
     tty: *tty
+    depends_on:
+      cleanup:
+        condition: service_completed_successfully
+      kroki:
+        condition: service_started

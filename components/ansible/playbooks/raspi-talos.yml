@@ -1,0 +1,29 @@
+---
+- name: Import baseline playbook
+  ansible.builtin.import_playbook: raspi-baseline.yml
+
+- name: Setup for group raspi_talos_admin
+  hosts: raspi_talos_admin
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-node-exporter.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-k9s.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-argocd-autopilot.yml
+
+- name: Setup for group raspi_talos_admin (non-root)
+  hosts: raspi_talos_admin
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    # ! Must be last task in this play
+    # ! Local changes result in a failure for this task
+    # ! In case of failure, all other tasks for the affected node are skipped
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-clone-repos.yml

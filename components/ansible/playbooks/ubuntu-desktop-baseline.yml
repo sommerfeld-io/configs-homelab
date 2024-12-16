@@ -5,6 +5,7 @@
   become: true
   vars_files:
     - ../vars/global.yml
+    - ../vars/ubuntu.yml
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
@@ -27,7 +28,6 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
-    - ansible.builtin.import_tasks: ../tasks/common-jarvis.yml
 
 - name: Setup for group ubuntu_desktop (non-root)
   hosts: ubuntu_desktop
@@ -41,9 +41,7 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-copy-files.yml
 
-    #  +-----------------------------------------------------------------------------+
-    # !|    Must be last task in this play !!!                                       |
-    #  |    Local changes result in a failure for this task.                         |
-    #  |    In case of failure, all other tasks for the affected node are skipped    |
-    #  +-----------------------------------------------------------------------------+
+    # ! Must be last task in this play
+    # ! Local changes result in a failure for this task
+    # ! In case of failure, all other tasks for the affected node are skipped
     - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml

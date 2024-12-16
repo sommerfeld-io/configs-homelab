@@ -1,0 +1,13 @@
+---
+machine:
+  network:
+    hostname: talos-w1
+  install:
+    disk: /dev/mmcblk0
+  certSANs:
+    - talos-w1.fritz.box
+  nodeLabels:
+    node.network-connect: switch
+    node.device: raspi-4
+    node.storage: 32gb
+    node.type: worker

@@ -1,5 +1,5 @@
 ---
-- name: Config -> Create directories
+- name: Config  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory

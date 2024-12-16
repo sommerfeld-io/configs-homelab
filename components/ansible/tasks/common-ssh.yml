@@ -1,5 +1,5 @@
 ---
-- name: SSH Config -> Create ssh keypair
+- name: SSH Config  ----  Create ssh keypair
   community.crypto.openssh_keypair:
     path: "/home/{{ ansible_user }}/.ssh/id_rsa"
     owner: "{{ ansible_user }}"
@@ -9,7 +9,7 @@
     state: present
     force: false
 
-- name: SSH Config -> Write aliases to .bash_aliases
+- name: SSH Config  ----  Write aliases to .bash_aliases
   ansible.builtin.lineinfile:
     create: true
     mode: 0600
@@ -21,4 +21,4 @@
   with_items:
     - kobol
     - caprica
-    - pihole
+    - admin-pi

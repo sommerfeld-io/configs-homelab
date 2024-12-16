@@ -1,5 +1,5 @@
 ---
-- name: Install -> Basic packages
+- name: Install  ----  Basic packages
   ansible.builtin.apt:
     pkg:
       - apt-transport-https
@@ -11,9 +11,9 @@
       - make
       - ncdu
       - htop
-      - git
       - neofetch
       - python3-pip # python package manager
       - vim
+      - jq
     state: latest
     update_cache: true

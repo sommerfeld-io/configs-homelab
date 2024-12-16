@@ -87,9 +87,6 @@ jobs:
             echo "$content" > "$file"
           done
         shell: bash
-      - name: Run generate-docs from docker-compose.yml
-        run: docker compose up generate-docs --exit-code-from generate-docs
-        shell: bash
       - name: Build docs-build image
         run: docker compose build docs-build
         shell: bash
