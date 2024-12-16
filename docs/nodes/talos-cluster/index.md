@@ -142,7 +142,7 @@ component ws as "Workstation"
 component Router
 component Repeater
 component Switch
-component pi_mgmt as "admin-pi" <<RasPi Node>>
+component adm as "admin-pi" <<RasPi Node>>
 component pi0 as "talos-cp" <<RasPi Node>>
 component pi1 as "talos-w1" <<RasPi Node>>
 component pi2 as "talos-w2" <<RasPi Node>>
@@ -151,8 +151,8 @@ component pi3 as "talos-w3" <<RasPi Node>>
 ws <-down- Router
 Router -right-> Repeater
 Router -down-> pi3
+Router -down-> adm
 Repeater -right-> Switch
-Switch -down-> pi_mgmt
 Switch -down-> pi0
 Switch -down-> pi1
 Switch -down-> pi2
