@@ -18,14 +18,32 @@ export GIT_TOKEN
 echo
 
 
-echo "[INFO] Bootstrap ArgoCD with ArgoCD Autopilot -----------------"
-echo "[INFO] Bootstrap ArgoCD"
-sleep 5s
-argocd-autopilot repo bootstrap
+PS3='Please select the ation: '
+readonly OPTION_BOOTSTRAP="bootstrap"
+readonly OPTION_RECOVER="recover"
 
+select opt in "$OPTION_BOOTSTRAP" "$OPTION_RECOVER"; do
+  case $opt in
+    "$OPTION_BOOTSTRAP")
+      echo "[INFO] Bootstrap ArgoCD with ArgoCD Autopilot -----------------"
+      argocd-autopilot repo bootstrap
 
-echo "[INFO] Create Project"
-argocd-autopilot project create "$ARGO_PROJECT"
+      echo "[INFO] Create Project"
+      argocd-autopilot project create "$ARGO_PROJECT"
+
+      break
+      ;;
+    "$OPTION_RECOVER")
+      echo "[INFO] Recover ArgoCD with ArgoCD Autopilot -----------------"
+      argocd-autopilot repo bootstrap --recover
+
+      break
+      ;;
+    *)
+      echo "[ERROR] Invalid option, choose again ..."
+      ;;
+  esac
+done
 
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
