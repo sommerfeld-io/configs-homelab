@@ -33,7 +33,7 @@ Rel(workstation, talos, "Access", "talosctl\nkubectl")
 
 ## Containers
 
-The `talos-admin-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
+The `admin-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
 
 The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
@@ -54,12 +54,12 @@ Person(user, "User", "A person using a computer or mobile device")
 
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
-Container(mgmt, "talos-admin-pi", "Raspberry Pi 3A+", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
+Container(mgmt, "admin-pi", "Raspberry Pi 5", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
     Container(cp, "talos-cp", "RaspPi Model 4", "Control Plane Node for Kubernetes")
     Container(w1, "talos-w1", "RaspPi Model 4", "Worker Node for applications and services")
-    Container(w2, "talos-w2", "RaspPi Model 5", "Worker Node for applications and services")
+    Container(w2, "talos-w2", "RaspPi Model 4", "Worker Node for applications and services")
     Container(w3, "talos-w3", "RaspPi Model 4", "Worker Node for applications and services")
 }
 
@@ -73,7 +73,7 @@ Rel(cp, w3, "Manage")
 @enduml
 ```
 
-The setup features a `talos-admin-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `talos-admin-pi` we avoid possible conflicts with e.g. `kubectl`.
+The setup features a `admin-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `admin-pi` we avoid possible conflicts with e.g. `kubectl`.
 
 ## Components
 
@@ -142,7 +142,7 @@ component ws as "Workstation"
 component Router
 component Repeater
 component Switch
-component pi_mgmt as "talos-admin-pi" <<RasPi Node>>
+component pi_mgmt as "admin-pi" <<RasPi Node>>
 component pi0 as "talos-cp" <<RasPi Node>>
 component pi1 as "talos-w1" <<RasPi Node>>
 component pi2 as "talos-w2" <<RasPi Node>>
@@ -164,15 +164,15 @@ The Talos Raspberry Pi nodes should get their IP addresses from the router via D
 
 ## RasPi Rack Setup
 
-The `talos-admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
+The `admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
 
 ```kroki-rackdiag
 rackdiag {
   4U;
   4: talos-cp\nRasPi 4;
   3: talos-w1\nRasPi 4;
-  2: talos-admin-pi\nRasPi 4;
-  1: talos-w2\nRasPi 5;
+  2: talos-w2\nRasPi 4;
+  1: admin-pi\nRasPi 5;
 }
 ```
 
