@@ -53,13 +53,6 @@ function apply() {
 }
 
 
-echo "[INFO] Github Token for ArgoCD Autopilot ---------------------"
-echo "[INFO] Github Repo = $GIT_REPO"
-read -s -r -p "Enter Token: " GIT_TOKEN
-export GIT_TOKEN
-echo
-
-
 echo "[INFO] Create directories ------------------------------------"
 echo "[INFO] Create output directory -------------------------------"
 
