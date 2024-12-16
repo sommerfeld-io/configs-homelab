@@ -10,6 +10,7 @@ readonly CLUSTER_NAME="talos-cluster"
 readonly CLUSTER_ENDPOINT="https://talos-cp.fritz.box:6443"
 
 readonly OUTPUT_DIR="generated"
+readonly TALOS_CONF_DIR="$HOME/.talos"
 
 readonly CONTROL_PLANE_NODE="talos-cp"
 readonly WORKER_NODES=(
@@ -63,8 +64,17 @@ export GIT_TOKEN
 echo
 
 
+echo "[INFO] Create directories ------------------------------------"
 echo "[INFO] Create output directory -------------------------------"
-mkdir -p "$OUTPUT_DIR"
+
+readonly directories=(
+  "$OUTPUT_DIR"
+  "$TALOS_CONF_DIR"
+)
+for d in "${directories[@]}"; do
+  echo "[INFO] Create directory: $d"
+  mkdir -p "$d"
+done
 
 
 echo "[INFO] Generating Talos config --------------------------------"
@@ -88,8 +98,7 @@ done
 
 
 echo "[INFO] Copy talos config into home dir ------------------------"
-mkdir -p ~/.talos
-cp talosconfig ~/.talos/config
+cp talosconfig "$TALOS_CONF_DIR/config"
 
 
 echo "[INFO] Bootstrap cluster --------------------------------------"
@@ -99,6 +108,7 @@ talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
 
 
 echo "[INFO] Generate kubectl config --------------------------------"
+sleep 5s
 echo "[INFO] Add (merge) new cluster into local Kubernetes config"
 talosctl kubeconfig --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
@@ -113,6 +123,7 @@ kubectl get nodes
 
 echo "[INFO] Bootstrap ArgoCD with ArgoCD Autopilot -----------------"
 echo "[INFO] Bootstrap ArgoCD"
+sleep 5s
 argocd-autopilot repo bootstrap
 
 echo "[INFO] Create Project"
@@ -120,5 +131,5 @@ argocd-autopilot project create "$ARGO_PROJECT"
 
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
-sleep 5s
+sleep 15s
 kubectl get all --all-namespaces
