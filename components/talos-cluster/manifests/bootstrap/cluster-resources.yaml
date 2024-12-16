@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -8,17 +9,17 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - git:
-      files:
-      - path: components/talos-cluster/manifests/bootstrap/cluster-resources/*.json
-      repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
+    - git:
+        files:
+          - path: components/talos-cluster/manifests/bootstrap/cluster-resources/*.json
+        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+        requeueAfterSeconds: 20
+        revision: ""
+        template:
+          metadata: {}
+          spec:
+            destination: {}
+            project: ""
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:
@@ -32,10 +33,10 @@ spec:
       destination:
         server: '{{server}}'
       ignoreDifferences:
-      - group: argoproj.io
-        jsonPointers:
-        - /status
-        kind: Application
+        - group: argoproj.io
+          jsonPointers:
+            - /status
+          kind: Application
       project: default
       source:
         path: components/talos-cluster/manifests/bootstrap/cluster-resources/{{name}}

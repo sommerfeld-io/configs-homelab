@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -10,17 +11,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: '*'
+      kind: '*'
   description: talos-cluster project
   destinations:
-  - namespace: '*'
-    server: '*'
+    - namespace: '*'
+      server: '*'
   namespaceResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: '*'
+      kind: '*'
   sourceRepos:
-  - '*'
+    - '*'
 status: {}
 
 ---
@@ -34,35 +35,35 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - git:
-      files:
-      - path: components/talos-cluster/manifests/apps/**/talos-cluster/config.json
-      repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
-  - git:
-      files:
-      - path: components/talos-cluster/manifests/apps/**/talos-cluster/config_dir.json
-      repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
-          source:
-            directory:
-              exclude: '{{ exclude }}'
-              include: '{{ include }}'
-              jsonnet: {}
-              recurse: true
-            repoURL: ""
+    - git:
+        files:
+          - path: components/talos-cluster/manifests/apps/**/talos-cluster/config.json
+        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+        requeueAfterSeconds: 20
+        revision: ""
+        template:
+          metadata: {}
+          spec:
+            destination: {}
+            project: ""
+    - git:
+        files:
+          - path: components/talos-cluster/manifests/apps/**/talos-cluster/config_dir.json
+        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+        requeueAfterSeconds: 20
+        revision: ""
+        template:
+          metadata: {}
+          spec:
+            destination: {}
+            project: ""
+            source:
+              directory:
+                exclude: '{{ exclude }}'
+                include: '{{ include }}'
+                jsonnet: {}
+                recurse: true
+              repoURL: ""
   syncPolicy: {}
   template:
     metadata:
@@ -76,10 +77,10 @@ spec:
         namespace: '{{ destNamespace }}'
         server: '{{ destServer }}'
       ignoreDifferences:
-      - group: argoproj.io
-        jsonPointers:
-        - /status
-        kind: Application
+        - group: argoproj.io
+          jsonPointers:
+            - /status
+          kind: Application
       project: talos-cluster
       source:
         path: '{{ srcPath }}'
