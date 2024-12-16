@@ -54,7 +54,6 @@ function apply() {
 
 
 echo "[INFO] Create directories ------------------------------------"
-echo "[INFO] Create output directory -------------------------------"
 
 readonly directories=(
   "$OUTPUT_DIR"
