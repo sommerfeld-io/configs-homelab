@@ -77,6 +77,10 @@ echo "[INFO] Generating Talos config --------------------------------"
 talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT"
 
 
+echo "[INFO] Copy talos config into home dir ------------------------"
+cp talosconfig "$TALOS_CONF_DIR/config"
+
+
 echo "[INFO] Patch node configs -------------------------------------"
 patch "$CONTROL_PLANE_NODE" "controlplane.yaml"
 
@@ -91,10 +95,6 @@ apply "$CONTROL_PLANE_NODE"
 for worker in "${WORKER_NODES[@]}"; do
   apply "$worker"
 done
-
-
-echo "[INFO] Copy talos config into home dir ------------------------"
-cp talosconfig "$TALOS_CONF_DIR/config"
 
 
 echo "[INFO] Bootstrap cluster --------------------------------------"
