@@ -97,6 +97,8 @@ status: {}
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   name: app-of-apps
   namespace: argocd
 spec:
