@@ -39,3 +39,26 @@ status:
       source:
         repoURL: ""
     status: ""
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-application
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: components/talos-cluster/manifests/apps
+    repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true
