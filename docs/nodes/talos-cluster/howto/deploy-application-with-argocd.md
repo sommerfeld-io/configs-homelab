@@ -23,27 +23,26 @@ The `root.yaml` file is the entry point for the App of Apps pattern. It specifie
 
 ### Applications Directory
 
-The `components/talos-cluster/manifests/apps` directory contains all the child application definitions. These can be organized either as sub-folders (for applications with multiple resources) or as individual YAML files for simpler setups.
+The `components/talos-cluster/manifests/apps` directory contains all the child application definitions. These are organized sub-folders. The folder name will be used as the namespace for the application. Each application can have one or more YAML files that define the resources to deploy.
 
 ```plaintext
 components/talos-cluster/manifests/apps/
 ├── app1/
 │   └── app1.yaml
-├── app2.yaml
-├── app3/
+├── app2/
 │   ├── config.yaml
 │   └── deployment.yaml
 ```
 
 ## Adding a New Application
 
-To add a new application:
-
 1. Create the Application Manifest:
-    - Define your application's ArgoCD Application resource in a YAML file.
+    - Define your application's ArgoCD Application resource in YAML file(s).
     - Add the YAML file to the `apps` directory or create a subfolder for the application if it includes multiple resources.
+    - There is no need to define a dedicated ArgoCD `Application` resource for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/talos-cluster.yaml` will automatically create the `Application` resource.
+    - There is no need to define a dedicated namespace for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/talos-cluster.yaml` will automatically create the namespace for the application based on the folder name.
 1. Sync the Root Application:
-    - Sync the root-application.yaml in ArgoCD.
+    - Sync the `app-of-apps` in ArgoCD.
     - ArgoCD will automatically detect and deploy the new application.
 
 ## Conclusion
