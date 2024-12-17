@@ -108,7 +108,11 @@ spec:
           - path: components/talos-cluster/manifests/apps/*
   template:
     metadata:
+      labels:
+        app.kubernetes.io/managed-by: argocd-autopilot
+        app.kubernetes.io/name: '{{path.basename}}'
       name: '{{path.basename}}'
+      namespace: '{{path.basename}}'
     spec:
       project: default
       source:
