@@ -64,7 +64,6 @@ nav:
           - nodes/talos-cluster/howto/interact.md
           - nodes/talos-cluster/howto/update-argocd.md
           - nodes/talos-cluster/howto/deploy-application-with-argocd.md
-          - nodes/talos-cluster/howto/loadbalancing.md
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md

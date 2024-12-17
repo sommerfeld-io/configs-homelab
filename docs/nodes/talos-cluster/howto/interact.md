@@ -26,6 +26,9 @@ talosctl-w3 dashboard
 
 `kubectl` can be used from the `admin-pi` right away. The `kubeconfig` file is already configured to point to the Talos cluster. The `bootstrap-talos.sh` merged the config into `~/.kube/config`.
 
+!!! note "A word on Infrastructure as Code"
+    Keep in mind, that we treat everything as code. So we avoid running e.g. `kubectl apply` commands entirely. Instead, we use ArgoCD to manage the applications and configurations deployed to the Talos Cluster. There might be times when a PoC for e.g. Terraform establishes new ways to deploy applications to Kubernetes. But these PoCs still follow Infrastructure as Code principles.
+
 ## k9s
 
 `k9s` is a terminal-based UI to interact with Kubernetes clusters. The tool is installed on the `admin-pi` and uses the same `kubeconfig` file as `kubectl`.

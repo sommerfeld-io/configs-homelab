@@ -40,6 +40,8 @@ The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the
 - Raspberry Pi 4: 8 GB RAM and 32 GB SD-Card
 - Raspberry Pi 5: 8 GB RAM, Quad Core 2,4GHz and 128 GB SD-Card
 
+Since Talos Linux is designed to be immutable and secure, there is no way and no need to provision the nodes with Ansible. Talos Linux is managed entirely through an API with `talosctl`. So the Talos nodes are treated as some sort of appliance.
+
 ```kroki-c4plantuml
 @startuml
 !include C4_Container.puml

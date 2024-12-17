@@ -42,7 +42,7 @@ These steps need to be done for each Raspberry Pi node that should join the Talo
     - [ ] Assign a name to the device. This should be the same as the hostname of the RasPi node itself.
     - [ ] Also ensure that the device always gets the same IP address (not mandatory but recommended).
 
-### Configure and Bootstrap the Talos Cluster (including ArgoCD)
+### Configure and Bootstrap the Talos Cluster
 
 These steps only need to be done once when the initial setup is done or when the cluster is re-installed from scratch. The steps are not necessary when the cluster is already running and a new node is added.
 
@@ -70,7 +70,10 @@ These steps only need to be done once when the initial setup is done or when the
     ```
 
 - [ ] Push the configuration files to the remote repository
-- [ ] Bootstrap ArgoCD on the `admin-pi` node. Only needs to be done once. Run:
+
+### Bootstrap ArgoCD
+
+- [ ] Bootstrap ArgoCD on the `admin-pi` node. Only needs to be done once.
 
     ```bash
     # Run on admin-pi
@@ -82,6 +85,8 @@ These steps only need to be done once when the initial setup is done or when the
     ```
 
     The `bootstrap-argocd.sh` installs ArgoCD with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable/Getting-Started). To do this, it prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope.
+
+- [ ] In case the ArgoCD setup is broken, the `bootstrap-argocd.sh` script offers a recovery-option to re-install ArgoCD with all the configuration stored in the repository. So there is no need to re-configure everything manually or to backup the Talos Cluster (other than data that should explicitly be backed up). The cluster can be re-built from this configuration at any time.
 
 ## References / External Links
 
