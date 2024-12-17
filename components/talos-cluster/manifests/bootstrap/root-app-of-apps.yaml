@@ -21,7 +21,7 @@ spec:
       name: '{{path.basename}}'
       namespace: '{{path.basename}}'
     spec:
-      project: default
+      project: talos-cluster
       source:
         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
         targetRevision: HEAD

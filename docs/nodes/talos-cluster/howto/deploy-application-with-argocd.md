@@ -6,8 +6,6 @@ This guide explains how to deploy applications into the Talos Cluster with ArgoC
 
 The App of Apps pattern is a strategy where a single ArgoCD Application resource manages other Application resources. This approach allows you to organize and deploy multiple applications efficiently. By using a parent application to define and synchronize other applications, you achieve a hierarchical structure that simplifies management and scalability. Each child application can reside in its own folder or YAML file, making it modular and easier to maintain.
 
-### Benefits of the App-of-Apps Pattern
-
 - **Centralized Management:** The parent application acts as a single point of control for all child applications.
 - **Modularity:** Each application can be managed independently, allowing for granular updates and configurations.
 - **Scalability:** Easily add or remove applications without impacting the parent configuration.
@@ -15,11 +13,11 @@ The App of Apps pattern is a strategy where a single ArgoCD Application resource
 
 ## Configuration Overview
 
-In this setup, the `components/talos-cluster/manifests/projects/talos-cluster.yaml` file is the key to establishing the app-of-apps pattern. This file was set up by the ArgoCD Autopilot and now also contains the config to define the parent application, which manages all child applications located within the `components/talos-cluster/manifests/apps` directory. All apps from this directory are synchronized automatically.
+In this setup, the `components/talos-cluster/manifests/bootstrap/root-app-of-apps.yaml` file is the key to establishing the app-of-apps pattern. This file was set up by the ArgoCD Autopilot and now also contains the config to define the parent application, which manages all child applications located within the `components/talos-cluster/manifests/apps` directory. All apps from this directory are synchronized automatically.
 
 ### Root Application
 
-The `root.yaml` file is the entry point for the App of Apps pattern. It specifies the child applications by pointing to their manifests within the `apps` directory. When ArgoCD syncs this root application, it automatically discovers and applies the configurations of all defined child applications.
+The `components/talos-cluster/manifests/bootstrap/root-app-of-apps.yaml` file is the entry point for the App of Apps pattern. It specifies the child applications by pointing to their manifests within the `apps` directory. When ArgoCD syncs this root application, it automatically discovers and applies the configurations of all defined child applications.
 
 ### Applications Directory
 
@@ -36,14 +34,11 @@ components/talos-cluster/manifests/apps/
 
 ## Adding a New Application
 
-1. Create the Application Manifest:
-    - Define your application's ArgoCD Application resource in YAML file(s).
-    - Add the YAML file to the `apps` directory or create a subfolder for the application if it includes multiple resources.
-    - There is no need to define a dedicated ArgoCD `Application` resource for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/talos-cluster.yaml` will automatically create the `Application` resource.
-    - There is no need to define a dedicated namespace for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/talos-cluster.yaml` will automatically create the namespace for the application based on the folder name.
-1. Sync the Root Application:
-    - Sync the `app-of-apps` in ArgoCD.
-    - ArgoCD will automatically detect and deploy the new application.
+- [ ] Define your application's ArgoCD Application resource in YAML file(s).
+- [ ] Add the YAML file to the `apps` directory or create a subfolder for the application if it includes multiple resources.
+- [ ] There is no need to define a dedicated ArgoCD `Application` resource for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/bootstrap/root-app-of-apps.yaml` will automatically create the `Application` resource.
+- [ ] There is no need to define a dedicated namespace for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/bootstrap/root-app-of-apps.yaml` will automatically create the namespace for the application based on the folder name.
+- [ ] ArgoCD will automatically detect and deploy the new application.
 
 ## Conclusion
 
