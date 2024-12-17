@@ -29,3 +29,8 @@ talosctl-w3 dashboard
 ## k9s
 
 `k9s` is a terminal-based UI to interact with Kubernetes clusters. The tool is installed on the `admin-pi` and uses the same `kubeconfig` file as `kubectl`.
+
+## ArgoCD
+
+!!! warning "TODO"
+    How to login? User/Pass? URL?
