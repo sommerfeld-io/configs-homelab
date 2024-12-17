@@ -24,71 +24,93 @@ spec:
     - '*'
 status: {}
 
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "0"
+#   creationTimestamp: null
+#   name: talos-cluster
+#   namespace: argocd
+# spec:
+#   generators:
+#     - git:
+#         files:
+#           - path: components/talos-cluster/manifests/apps/**/talos-cluster/config.json
+#         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+#         requeueAfterSeconds: 20
+#         revision: ""
+#         template:
+#           metadata: {}
+#           spec:
+#             destination: {}
+#             project: ""
+#     - git:
+#         files:
+#           - path: components/talos-cluster/manifests/apps/**/talos-cluster/config_dir.json
+#         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+#         requeueAfterSeconds: 20
+#         revision: ""
+#         template:
+#           metadata: {}
+#           spec:
+#             destination: {}
+#             project: ""
+#             source:
+#               directory:
+#                 exclude: '{{ exclude }}'
+#                 include: '{{ include }}'
+#                 jsonnet: {}
+#                 recurse: true
+#               repoURL: ""
+#   syncPolicy: {}
+#   template:
+#     metadata:
+#       labels:
+#         app.kubernetes.io/managed-by: argocd-autopilot
+#         app.kubernetes.io/name: '{{ appName }}'
+#       name: talos-cluster-{{ userGivenName }}
+#       namespace: argocd
+#     spec:
+#       destination:
+#         namespace: '{{ destNamespace }}'
+#         server: '{{ destServer }}'
+#       ignoreDifferences:
+#         - group: argoproj.io
+#           jsonPointers:
+#             - /status
+#           kind: Application
+#       project: talos-cluster
+#       source:
+#         path: '{{ srcPath }}'
+#         repoURL: '{{ srcRepoURL }}'
+#         targetRevision: '{{ srcTargetRevision }}'
+#       syncPolicy:
+#         automated:
+#           allowEmpty: true
+#           prune: true
+#           selfHeal: true
+# status: {}
+
 ---
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-  creationTimestamp: null
-  name: talos-cluster
+  name: root-application
   namespace: argocd
 spec:
-  generators:
-    - git:
-        files:
-          - path: components/talos-cluster/manifests/apps/**/talos-cluster/config.json
-        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-        requeueAfterSeconds: 20
-        revision: ""
-        template:
-          metadata: {}
-          spec:
-            destination: {}
-            project: ""
-    - git:
-        files:
-          - path: components/talos-cluster/manifests/apps/**/talos-cluster/config_dir.json
-        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-        requeueAfterSeconds: 20
-        revision: ""
-        template:
-          metadata: {}
-          spec:
-            destination: {}
-            project: ""
-            source:
-              directory:
-                exclude: '{{ exclude }}'
-                include: '{{ include }}'
-                jsonnet: {}
-                recurse: true
-              repoURL: ""
-  syncPolicy: {}
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/managed-by: argocd-autopilot
-        app.kubernetes.io/name: '{{ appName }}'
-      name: talos-cluster-{{ userGivenName }}
-      namespace: argocd
-    spec:
-      destination:
-        namespace: '{{ destNamespace }}'
-        server: '{{ destServer }}'
-      ignoreDifferences:
-        - group: argoproj.io
-          jsonPointers:
-            - /status
-          kind: Application
-      project: talos-cluster
-      source:
-        path: '{{ srcPath }}'
-        repoURL: '{{ srcRepoURL }}'
-        targetRevision: '{{ srcTargetRevision }}'
-      syncPolicy:
-        automated:
-          allowEmpty: true
-          prune: true
-          selfHeal: true
-status: {}
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: components/talos-cluster/manifests/apps
+    repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+  project: default
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true

@@ -15,7 +15,7 @@ The App of Apps pattern is a strategy where a single ArgoCD Application resource
 
 ## Configuration Overview
 
-In this setup, the `components/talos-cluster/manifests/bootstrap/root.yaml` file is the key to establishing the app-of-apps pattern. This file was set up by the ArgoCD Autopilot and now also contains the config to define the parent application, which manages all child applications located within the `components/talos-cluster/manifests/apps` directory. All apps from this directory are synchronized automatically.
+In this setup, the `components/talos-cluster/manifests/projects/talos-cluster.yaml` file is the key to establishing the app-of-apps pattern. This file was set up by the ArgoCD Autopilot and now also contains the config to define the parent application, which manages all child applications located within the `components/talos-cluster/manifests/apps` directory. All apps from this directory are synchronized automatically.
 
 ### Root Application
 
@@ -48,4 +48,4 @@ To add a new application:
 
 ## Conclusion
 
-By using the App of Apps pattern with ArgoCD, you can streamline application deployments and manage multiple applications with ease. The `components/talos-cluster/manifests/bootstrap/root.yaml` file acts as the central orchestrator, providing a scalable and modular approach to Kubernetes application management.
+By using the App of Apps pattern with ArgoCD, you can streamline application deployments and manage multiple applications with ease. The `components/talos-cluster/manifests/projects/talos-cluster.yaml` file acts as the central orchestrator, providing a scalable and modular approach to Kubernetes application management.
