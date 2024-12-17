@@ -70,7 +70,7 @@ nav:
           - api-docs/docker/portainer-docker-compose-yml.md
       - Scripts:
           - api-docs/scripts/ansible-cli.md
-          - api-docs/scripts/docker-stacks.md
+          - api-docs/scripts/docker-stacks-cli.md
           - api-docs/scripts/minikube-cli.md
   - About this Project:
       - about/development-guide.md
