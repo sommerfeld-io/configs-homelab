@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: root-app-of-apps
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+        revision: HEAD
+        directories:
+          - path: components/talos-cluster/manifests/apps/*
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: argocd-autopilot
+        app.kubernetes.io/name: '{{path.basename}}'
+      name: '{{path.basename}}'
+      namespace: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          allowEmpty: true
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
