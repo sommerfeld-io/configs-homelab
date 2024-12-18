@@ -42,7 +42,7 @@ These steps need to be done for each Raspberry Pi node that should join the Talo
     - [ ] Assign a name to the device. This should be the same as the hostname of the RasPi node itself.
     - [ ] Also ensure that the device always gets the same IP address (not mandatory but recommended).
 
-### Configure and Bootstrap the Talos Cluster
+### Bootstrap the Talos Cluster
 
 These steps only need to be done once when the initial setup is done or when the cluster is re-installed from scratch. The steps are not necessary when the cluster is already running and a new node is added.
 

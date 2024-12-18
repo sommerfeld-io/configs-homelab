@@ -1,10 +1,10 @@
-# How to interact with the Talos Cluster
+# Interact with the Talos Cluster
 
 This guide provides an overview of how to interact with a Talos-managed Kubernetes cluster using talosctl and kubectl, the primary tools for managing and interacting with Talos nodes and Kubernetes workloads respectively.
 
 ## `talosctl`
 
-`talosctl` expects flags to identify the targeted node and the cluster management endpoint.
+`talosctl` is available on the `admin-pi` node. The tool expects flags to identify the targeted node and the cluster management endpoint.
 
 ```bash
 talosctl --nodes talos-cp.fritz.box --endpoints talos-cp.fritz.box dashboard
@@ -29,7 +29,7 @@ talosctl-w3 dashboard
 !!! note "A word on Infrastructure as Code"
     Keep in mind, that we treat everything as code. So we avoid running e.g. `kubectl apply` commands entirely. Instead, we use ArgoCD to manage the applications and configurations deployed to the Talos Cluster. There might be times when a PoC for e.g. Terraform establishes new ways to deploy applications to Kubernetes. But these PoCs still follow Infrastructure as Code principles.
 
-## k9s
+## `k9s`
 
 `k9s` is a terminal-based UI to interact with Kubernetes clusters. The tool is installed on the `admin-pi` and uses the same `kubeconfig` file as `kubectl`.
 
