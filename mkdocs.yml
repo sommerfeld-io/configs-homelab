@@ -64,6 +64,7 @@ nav:
           - Kubernetes Network Setup: nodes/talos-cluster/network.md
           - nodes/talos-cluster/howto/update-argocd.md
           - nodes/talos-cluster/howto/deploy-application-with-argocd.md
+          - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
   - Api Docs:
       - Docker:
           - api-docs/docker/ops-docker-compose-yml.md
