@@ -89,7 +89,8 @@ These steps only need to be done once when the initial setup is done or when the
     !!! note "Personal Access Token"
         To bootstrap ArgoCD this, the script prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope. The token must be valid for as long as ArgoCD is used. This means that the token probably should never expire (unless you want to recover ArgoCD regularly with a new token).
 
-- [ ] In case the ArgoCD setup is broken, the `bootstrap-argocd.sh` script offers a recovery-option to re-install ArgoCD with all the configuration stored in the repository. So there is no need to re-configure everything manually or to backup the Talos Cluster (other than data that should explicitly be backed up). The cluster can be re-built from this configuration at any time.
+    ??? note "Recover an ArgoCD Installation"
+        In case the ArgoCD setup is broken, the `bootstrap-argocd.sh` script offers a recovery-option to re-install ArgoCD with all the configuration stored in the repository. So there is no need to re-configure everything manually or to backup the Talos Cluster (other than data that should explicitly be backed up). The cluster can be re-built from this configuration at any time.
 
 ## References / External Links
 
