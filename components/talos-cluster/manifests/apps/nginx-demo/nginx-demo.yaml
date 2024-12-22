@@ -53,8 +53,6 @@ kind: HTTPRoute
 metadata:
   name: nginx-demo-route
   namespace: nginx-demo
-  annotations:
-    link.argocd.argoproj.io/link: http://nginx-demo.talos.fritz.box
 spec:
   parentRefs:
     - kind: Gateway
