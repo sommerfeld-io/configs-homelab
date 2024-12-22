@@ -9,12 +9,18 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: https://github.com/nginxinc/nginx-gateway-fabric
+    - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
       targetRevision: v1.5.1
-      path: deploy/crds.yaml
-    - repoURL: https://github.com/mycompany/common-settings.git
+      path: deploy
+      directory:
+        recurse: false
+        include: crds.yaml
+    - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
       targetRevision: v1.5.1
-      path: deploy/default/deploy.yaml
+      path: deploy/default
+      directory:
+        recurse: false
+        include: deploy.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: gateway
