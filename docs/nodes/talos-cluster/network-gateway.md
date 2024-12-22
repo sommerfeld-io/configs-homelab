@@ -9,7 +9,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur elit sed
 
 ## Nginx Gateway Fabric
 
-We use [Nginx Gateway Fabric](https://docs.nginx.com/nginx-gateway-fabric/overview/gateway-architecture) to expose services through human-readable URLs.
+We use [Nginx Gateway Fabric](https://docs.nginx.com/nginx-gateway-fabric/overview/gateway-architecture) to expose services through human-readable URLs. We adopted the [Installation with Kubernetes manifests](https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/manifests) approach to deploy Nginx Gateway Fabric on the Talos Cluster because using the Helm chart did not work as expected.
 
 Nginx Gateway Fabric is an open source project that provides an implementation of the [Gateway API](https://gateway-api.sigs.k8s.io) using [Nginx](https://nginx.org) as the data plane. The goal of this project is to implement the core Gateway APIs – Gateway, GatewayClass, HTTPRoute, GRPCRoute, TCPRoute, TLSRoute, and UDPRoute – to configure an HTTP or TCP/UDP load balancer, reverse proxy, or API gateway for applications running on Kubernetes. Nginx Gateway Fabric supports a subset of the Gateway API.
 

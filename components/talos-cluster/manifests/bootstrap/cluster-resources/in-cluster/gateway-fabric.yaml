@@ -9,16 +9,13 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: oci://ghcr.io/nginxinc/charts
-    targetRevision: 1.5.1
-    chart: nginx-gateway-fabric
-    # helm:
-    #   values: |
-    #     # Customize values as needed
-    #     controller:
-    #       replicaCount: 2
-    #       service:
-    #         type: LoadBalancer
+    repoURL: https://github.com/nginxinc/nginx-gateway-fabric
+    targetRevision: v1.5.1
+    directory:
+      recurse: false
+      paths:
+        - deploy/crds.yaml
+        - deploy/default/deploy.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: gateway
