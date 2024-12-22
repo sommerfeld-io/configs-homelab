@@ -34,16 +34,16 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
-      targetRevision: v1.5.1
+      targetRevision: &version v1.5.1
       path: config/crd/gateway-api/standard
     - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
-      targetRevision: v1.5.1
+      targetRevision: *version
       path: deploy
       directory:
         recurse: false
         include: crds.yaml
     - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
-      targetRevision: v1.5.1
+      targetRevision: *version
       path: deploy/default
       directory:
         recurse: false
