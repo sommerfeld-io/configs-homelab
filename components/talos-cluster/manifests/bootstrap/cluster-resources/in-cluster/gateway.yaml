@@ -4,11 +4,14 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
-  name: gateway-fabric
+  name: nginx-gateway-fabric
   namespace: argocd
 spec:
   project: default
   sources:
+    - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
+      targetRevision: v1.5.1
+      path: config/crd/gateway-api/standard
     - repoURL: https://github.com/nginxinc/nginx-gateway-fabric.git
       targetRevision: v1.5.1
       path: deploy
@@ -29,4 +32,5 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
+      - ApplyOutOfSyncOnly=true
       - CreateNamespace=true
