@@ -8,14 +8,13 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://github.com/nginxinc/nginx-gateway-fabric
-    targetRevision: v1.5.1
-    directory:
-      recurse: false
-      paths:
-        - deploy/crds.yaml
-        - deploy/default/deploy.yaml
+  sources:
+    - repoURL: https://github.com/nginxinc/nginx-gateway-fabric
+      targetRevision: v1.5.1
+      path: deploy/crds.yaml
+    - repoURL: https://github.com/mycompany/common-settings.git
+      targetRevision: v1.5.1
+      path: deploy/default/deploy.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: gateway
