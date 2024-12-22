@@ -46,25 +46,3 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
-
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: nginx-demo-route
-  namespace: nginx-demo
-spec:
-  parentRefs:
-    - kind: Gateway
-      name: nginx-gateway
-      namespace: nginx-demo
-  hostnames:
-    - nginx-demo.talos.fritz.box
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: nginx-demo-svc
-          port: 80
