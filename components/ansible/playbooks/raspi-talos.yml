@@ -23,7 +23,8 @@
     - ../vars/global.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/talos-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/raspi-talos-copy-files.yml
 
     # ! Must be last task in this play
     # ! Local changes result in a failure for this task

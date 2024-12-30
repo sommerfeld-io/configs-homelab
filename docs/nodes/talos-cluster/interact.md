@@ -37,17 +37,7 @@ talosctl-w3 dashboard
 
 To interact with your Talos Cluster through ArgoCD, follow these steps:
 
-1. **Retrieve the Default Admin Password:** On the `admin-pi.fritz.box`, you can retrieve the password for the default ArgoCD user admin by running the following command:
-
-    ```bash
-    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-    ```
-
-1. **Access the ArgoCD UI via Port Forwarding:** To access the ArgoCD UI, use the following command on the `admin-pi.fritz.box` to port-forward the ArgoCD server's service:
-
-    ```bash
-    kubectl port-forward -n argocd svc/argocd-server 8080:80 --address 0.0.0.0
-    ```
+1. Run `~/argocd-port-forward.sh` on the `admin-pi.fritz.box` to retrieve the default admin password and to port-forward the ArgoCD server's service.
 
 1. **Access ArgoCD from a Browser:** Once port-forwarding is active, open a web browser and navigate to <https://admin-pi.fritz.box:8080>. You will likely see a security warning due to the self-signed certificate. You can safely ignore this warning and proceed to the login page.
 
