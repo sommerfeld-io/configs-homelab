@@ -5,7 +5,6 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-
 readonly CHART_ADMIN="admin-charts"
 
 readonly OPTION_START="start"
@@ -18,7 +17,6 @@ readonly OPTION_HELP="help"
 readonly OPTION_DESTROY="destroy"
 readonly OPTION_DEPLOY_ADMIN="deploy-$CHART_ADMIN"
 readonly OPTION_UNDEPLOY_ADMIN="undeploy-$CHART_ADMIN"
-
 
 # @description Utility function to startup minikube.
 function startup() {
@@ -34,13 +32,11 @@ function startup() {
   minikube addons enable ingress
 }
 
-
 # @description Utility function to shutdown minikube.
 function shutdown() {
   echo -e "$LOG_INFO Shutdown minikube on ${P}${HOSTNAME}${D}"
   minikube stop
 }
-
 
 # @description Utility function to expose the minikube dashboad.
 function dashboard() {
@@ -48,20 +44,17 @@ function dashboard() {
   minikube dashboard
 }
 
-
 # @description Utility function to list pods.
 function pods() {
   echo -e "$LOG_INFO List pods from all namespaces"
   minikube kubectl -- get po -A
 }
 
-
 # @description Utility function to list services from all namespaces.
 function services() {
   echo -e "$LOG_INFO List services from all namespaces"
   minikube service list # --namespace apps
 }
-
 
 # @description Utility function to display minikube status and some metadata.
 function status() {
@@ -75,7 +68,6 @@ function status() {
   minikube status
 }
 
-
 # @description Utility function to display the minikube help.
 function help() {
   echo -e "$LOG_INFO minikube help"
@@ -85,7 +77,6 @@ function help() {
   minikube
 }
 
-
 # @description Utility function to delete the minkube instance and clean everything up.
 function destroy() {
   echo -e "$LOG_INFO minikube destroy"
@@ -94,7 +85,6 @@ function destroy() {
   echo -e "$LOG_WARN ----------------------------------------------------------------------------------------------"
   minikube delete
 }
-
 
 # @description Utility function to deploy a Helm chart.
 #
@@ -108,7 +98,6 @@ function deploy() {
     helm install "$2" "./$2"
   )
 }
-
 
 # @description Utility function to undeploy a Helm chart.
 #
@@ -126,46 +115,55 @@ echo -e "$LOG_INFO ------------------------------------------"
 
 echo -e "$LOG_INFO Select the action"
 select s in "$OPTION_START" \
-            "$OPTION_STOP" \
-            "$OPTION_DASHBOARD" \
-            "$OPTION_DEPLOY_ADMIN" \
-            "$OPTION_UNDEPLOY_ADMIN" \
-            "$OPTION_PODS" \
-            "$OPTION_SERVICES" \
-            "$OPTION_STATUS" \
-            "$OPTION_HELP" \
-            "$OPTION_DESTROY"
-  do
-    case "$s" in
-    "$OPTION_START" )
-        startup
-        break;;
-    "$OPTION_STOP" )
-        shutdown
-        break;;
-    "$OPTION_DASHBOARD" )
-        dashboard
-        break;;
-    "$OPTION_DEPLOY_ADMIN" )
-        deploy "$CHART_ADMIN" portainer
-        break;;
-    "$OPTION_UNDEPLOY_ADMIN" )
-        undeploy portainer
-        break;;
-    "$OPTION_PODS" )
-        pods
-        break;;
-    "$OPTION_SERVICES" )
-        services
-        break;;
-    "$OPTION_STATUS" )
-        status
-        break;;
-    "$OPTION_HELP" )
-        help
-        break;;
-    "$OPTION_DESTROY" )
-        destroy
-        break;;
-    esac
+  "$OPTION_STOP" \
+  "$OPTION_DASHBOARD" \
+  "$OPTION_DEPLOY_ADMIN" \
+  "$OPTION_UNDEPLOY_ADMIN" \
+  "$OPTION_PODS" \
+  "$OPTION_SERVICES" \
+  "$OPTION_STATUS" \
+  "$OPTION_HELP" \
+  "$OPTION_DESTROY"; do
+  case "$s" in
+  "$OPTION_START")
+    startup
+    break
+    ;;
+  "$OPTION_STOP")
+    shutdown
+    break
+    ;;
+  "$OPTION_DASHBOARD")
+    dashboard
+    break
+    ;;
+  "$OPTION_DEPLOY_ADMIN")
+    deploy "$CHART_ADMIN" portainer
+    break
+    ;;
+  "$OPTION_UNDEPLOY_ADMIN")
+    undeploy portainer
+    break
+    ;;
+  "$OPTION_PODS")
+    pods
+    break
+    ;;
+  "$OPTION_SERVICES")
+    services
+    break
+    ;;
+  "$OPTION_STATUS")
+    status
+    break
+    ;;
+  "$OPTION_HELP")
+    help
+    break
+    ;;
+  "$OPTION_DESTROY")
+    destroy
+    break
+    ;;
+  esac
 done

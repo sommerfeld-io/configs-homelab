@@ -14,9 +14,7 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-
 readonly ANSIBLE_USER="sebastian"
-
 
 # Write a title to stdout.
 #
@@ -33,7 +31,6 @@ function title() {
   ansible --version
   echo -e "$LOG_INFO ------------------------------------------"
 }
-
 
 title 'Ansible CLI'
 
@@ -52,7 +49,6 @@ title 'Ansible CLI'
     echo -e "$LOG_ERROR +-----------------------------------------------------------------------------+"
     echo -e "$LOG_ERROR exit" && exit 8
   fi
-
 
   echo -e "$LOG_INFO Select playbook"
   select playbook in playbooks/*.yml; do

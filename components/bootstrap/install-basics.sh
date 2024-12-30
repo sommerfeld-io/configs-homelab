@@ -10,12 +10,10 @@
 #
 #   The script does not accept any parameters.
 
-
 set -o errexit
 set -o pipefail
 set -o nounset
 # set -o xtrace
-
 
 # readonly LOG_DONE="[\e[32mDONE\e[0m]"
 # readonly LOG_ERROR="[\e[1;31mERROR\e[0m]"
@@ -25,13 +23,11 @@ readonly Y="\e[93m"
 readonly P="\e[35m"
 readonly D="\e[0m"
 
-
 echo -e "$LOG_INFO +---------------------------------------------------+"
 echo -e "$LOG_INFO |    Install basic tools and apply basic configs    |"
 echo -e "$LOG_INFO |    to allow further setup using Ansible.          |"
 echo -e "$LOG_INFO +---------------------------------------------------+"
 echo -e "$LOG_INFO Running on host ${P}$HOSTNAME${D}"
-
 
 echo -e "$LOG_INFO ${Y}Update apt cache${D}"
 sudo apt-get -y update

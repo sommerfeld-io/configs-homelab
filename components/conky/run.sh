@@ -9,7 +9,6 @@
 #   ### Script Arguments
 #   The script does not accept any parameters.
 
-
 readonly BASE_PATH="$HOME/work/repos/sommerfeld-io/configs-homelab/components/conky"
 readonly CONKYRC_PATH="$BASE_PATH/conkyrc-$HOSTNAME"
 readonly DELAY="2m"

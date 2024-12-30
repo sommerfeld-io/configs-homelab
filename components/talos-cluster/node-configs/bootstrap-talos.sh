@@ -5,7 +5,6 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-
 readonly CLUSTER_NAME="talos-cluster"
 readonly CLUSTER_ENDPOINT="https://talos-cp.fritz.box:6443"
 
@@ -28,7 +27,6 @@ if [ -f "$OUTPUT_DIR/$CONTROL_PLANE_NODE.yaml" ]; then
   exit 8
 fi
 
-
 # Patch the config for the given node.
 #
 # @args $1: The node name
@@ -39,7 +37,6 @@ function patch() {
     --patch "@$1-patch.yml" \
     --output "$OUTPUT_DIR/$1.yaml"
 }
-
 
 # Apply the config for the given node.
 #
@@ -52,7 +49,6 @@ function apply() {
     --file "$OUTPUT_DIR/$1.yaml"
 }
 
-
 echo "[INFO] Create directories ------------------------------------"
 readonly directories=(
   "$OUTPUT_DIR"
@@ -63,18 +59,14 @@ for d in "${directories[@]}"; do
   mkdir -p "$d"
 done
 
-
 echo "[INFO] Cleanup kube config -----------------------------------"
 rm .kube/config
-
 
 echo "[INFO] Generating Talos config --------------------------------"
 talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT"
 
-
 echo "[INFO] Copy talos config into home dir ------------------------"
 cp talosconfig "$TALOS_CONF_DIR/config"
-
 
 echo "[INFO] Patch node configs -------------------------------------"
 patch "$CONTROL_PLANE_NODE" "controlplane.yaml"
@@ -83,7 +75,6 @@ for worker in "${WORKER_NODES[@]}"; do
   patch "$worker" "worker.yaml"
 done
 
-
 echo "[INFO] Apply node configs -------------------------------------"
 apply "$CONTROL_PLANE_NODE"
 
@@ -91,12 +82,10 @@ for worker in "${WORKER_NODES[@]}"; do
   apply "$worker"
 done
 
-
 echo "[INFO] Bootstrap cluster --------------------------------------"
 sleep 15s
 talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
-
 
 echo "[INFO] Generate kubectl config --------------------------------"
 sleep 5s
@@ -104,16 +93,13 @@ echo "[INFO] Add (merge) new cluster into local Kubernetes config"
 talosctl kubeconfig --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
 
-
 echo "[INFO] Cleanup ------------------------------------------------"
 mv controlplane.yaml "$OUTPUT_DIR/controlplane.yaml"
 mv worker.yaml "$OUTPUT_DIR/worker.yaml"
 mv talosconfig "$OUTPUT_DIR/talosconfig.yaml"
 
-
 echo "[INFO] kubectl get nodes --------------------------------------"
 kubectl get nodes
-
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
 sleep 15s
