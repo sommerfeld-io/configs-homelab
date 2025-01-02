@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-options: PruneLast=true
     argocd.argoproj.io/sync-wave: "-2"
   creationTimestamp: null
-  name: apps
+  name: app-of-apps
   namespace: argocd
 spec:
   clusterResourceWhitelist:
@@ -47,7 +47,7 @@ spec:
       name: '{{path.basename}}'
       namespace: '{{path.basename}}'
     spec:
-      project: apps
+      project: app-of-apps
       source:
         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
         targetRevision: HEAD
