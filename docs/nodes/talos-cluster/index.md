@@ -77,6 +77,9 @@ Rel(cp, w3, "Manage")
 
 The setup features a `admin-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `admin-pi` we avoid possible conflicts with e.g. `kubectl`.
 
+!!! note "Stateless Cluster"
+    The whole cluster is intended to be stateless. This means that no data is stored on any of the nodes. The only storage is the SD-Card which is used for the Talos OS itself. There are no external storage solutions.
+
 ## Components
 
 To deploy applications and services to the Talos Kubernetes Cluster, we use [ArgoCD](https://argo-cd.readthedocs.io/en/stable). ArgoCD is a GitOps tool that helps to manage all deployments, applications, and services in a GitOps way. Applications and services are **never directly deployed to the cluster (e.g. through `kubectl`). Everything is managed by ArgoCD.

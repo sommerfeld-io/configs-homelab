@@ -63,9 +63,9 @@ nav:
           - Overview: nodes/talos-cluster/index.md
           - Installation: nodes/talos-cluster/installation.md
           - nodes/talos-cluster/interact.md
-          - Routing Requests to Services: nodes/talos-cluster/request-routing.md
-          - nodes/talos-cluster/howto/update-argocd.md
           - nodes/talos-cluster/howto/deploy-application-with-argocd.md
+          - nodes/talos-cluster/howto/request-routing.md
+          - nodes/talos-cluster/howto/update-argocd.md
       - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
   - Api Docs:

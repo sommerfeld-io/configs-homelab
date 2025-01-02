@@ -1,4 +1,4 @@
-# Talos Cluster - Routing Requests to Services
+# How to route Requests to Services
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur elit sed nunc luctus tincidunt. Nullam nec pur elit sed nunc luctus tincidunt. Nullam nec pur elit sed non luctus tincidunt. Nullam nec pur elit sed nunc luctus tincidunt. Nullam nec pur elit sed nunc luctus tincidunt. Nullam nec pur elit sed non luctus tincidunt. Nullam nec pur elit sed nunc luctus tincidunt.
 
