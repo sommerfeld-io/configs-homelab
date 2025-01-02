@@ -15,7 +15,7 @@ The second step is to install the actual Talos nodes. These nodes are Raspberry 
 
 The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://admin-pi.fritz.box:9100>.
 
-The Management Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
+The Admin Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
 
 ## Install Cluster with Control Plane and Worker Nodes
 
@@ -87,7 +87,7 @@ These steps only need to be done once when the initial setup is done or when the
     The `bootstrap-argocd.sh` installs ArgoCD with the help of the [ArgoCD Autopilot](https://argocd-autopilot.readthedocs.io/en/stable/Getting-Started).
 
     !!! note "Personal Access Token"
-        To bootstrap ArgoCD this, the script prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope. The token must be valid for as long as ArgoCD is used. This means that the token probably should never expire (unless you want to recover ArgoCD regularly with a new token).
+        To bootstrap ArgoCD the script prompts for a Github personal access token to write the ArgoCD configuration to this repository. The token needs to have the `repo` scope. The token must be valid for as long as ArgoCD is used. This means that the token probably should never expire (unless you want to recover ArgoCD regularly with a new token).
 
     ??? note "Recover an ArgoCD Installation"
         In case the ArgoCD setup is broken, the `bootstrap-argocd.sh` script offers a recovery-option to re-install ArgoCD with all the configuration stored in the repository. So there is no need to re-configure everything manually or to backup the Talos Cluster (other than data that should explicitly be backed up). The cluster can be re-built from this configuration at any time.

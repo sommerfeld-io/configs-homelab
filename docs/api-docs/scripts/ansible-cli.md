@@ -43,4 +43,4 @@ This Ansible playbook is designed to configure basic settings, directory structu
 
 This Ansible playbook is designed to configure basic settings, directory structure, and software packages for Raspberry Pi machines that are part of the Talos Cluster. This playbook includes the `raspi-baseline.yml` playbook and adds tasks to setup the Talos Cluster nodes.
 
-The Raspberry Pi nodes that run Talos Linux are not provisioned by Ansible. They are managed by the `talosctl` command line tool. The management Pi is provisioned by Ansible and runs the `talosctl` and `kubectl` commands line tool.
+The Raspberry Pi nodes that run Talos Linux are not provisioned by Ansible. They are managed by the `talosctl` command line tool. The Admin Pi is provisioned by Ansible and runs the `talosctl` and `kubectl` commands line tool.

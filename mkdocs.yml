@@ -63,7 +63,7 @@ nav:
           - Overview: nodes/talos-cluster/index.md
           - Installation: nodes/talos-cluster/installation.md
           - nodes/talos-cluster/interact.md
-          - Network & Gateway Setup: nodes/talos-cluster/network-gateway.md
+          - Routing Requests to Services: nodes/talos-cluster/request-routing.md
           - nodes/talos-cluster/howto/update-argocd.md
           - nodes/talos-cluster/howto/deploy-application-with-argocd.md
       - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
