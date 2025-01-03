@@ -45,7 +45,9 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: ClusterIP
+      nodePort: 30080
+  type: NodePort
+  # type: ClusterIP
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -53,8 +55,8 @@ kind: Ingress
 metadata:
   name: nginx-demo-ingress
   namespace: nginx-demo
-  # annotations:
-  #   nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: nginx-demo.talos.fritz.box
