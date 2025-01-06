@@ -28,8 +28,8 @@ spec:
                 topologyKey: kubernetes.io/hostname
       initContainers:
         - name: clean-document-root
-          image: busybox:1.35
-          command: ["sh", "-c", "rm -f /usr/share/nginx/html/index.html"]
+          image: alpine:3.21.0
+          command: ["/bin/ash", "-c", "rm -f /usr/share/nginx/html/index.html"]
           volumeMounts:
             - name: nginx-document-root
               mountPath: /usr/share/nginx/html
@@ -42,12 +42,18 @@ spec:
             - name: index-md
               mountPath: /usr/share/nginx/html/index.md
               subPath: index.md
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
       volumes:
         - name: nginx-document-root
           emptyDir: {}
         - name: index-md
           configMap:
             name: cluster-bookmarks-index-md
+        - name: nginx-config
+          configMap:
+            name: cluster-bookmarks-nginx-config
 
 ---
 apiVersion: v1
@@ -65,6 +71,25 @@ spec:
       nodePort: 30080
   type: NodePort
   # type: ClusterIP
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-bookmarks-nginx-config
+  namespace: cluster-bookmarks
+data:
+  default.conf: |
+    server {
+        listen 80;
+        root /usr/share/nginx/html;
+
+        index index.md;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+    }
 
 ---
 apiVersion: v1
