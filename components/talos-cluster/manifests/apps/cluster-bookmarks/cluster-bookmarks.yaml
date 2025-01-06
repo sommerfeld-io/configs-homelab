@@ -39,18 +39,18 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: index-md
-              mountPath: /usr/share/nginx/html/index.md
-              subPath: index.md
+            - name: index-html
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
       volumes:
         - name: nginx-document-root
           emptyDir: {}
-        - name: index-md
+        - name: index-html
           configMap:
-            name: cluster-bookmarks-index-md
+            name: cluster-bookmarks-index-html
         - name: nginx-config
           configMap:
             name: cluster-bookmarks-nginx-config
@@ -86,15 +86,7 @@ data:
 
         location / {
           root /usr/share/nginx/html;
-          index index.md;
-
-          try_files $uri $uri/ =404;
-
-          types {
-            text/plain md;
-          }
-
-          default_type text/plain;
+          index index.html;
         }
     }
 
@@ -102,11 +94,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cluster-bookmarks-index-md
+  name: cluster-bookmarks-index-html
   namespace: cluster-bookmarks
 data:
   # TODO move into dedicated markdown file and reference it here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  index.md: |
+  index.html: |
     # Cluster Bookmarks
 
     - [Cluster Bookmarks](http://talos-cp.fritz.box:30080)
