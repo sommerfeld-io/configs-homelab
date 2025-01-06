@@ -49,9 +49,3 @@ To interact with your Talos Cluster through ArgoCD, follow these steps:
     ```
 
     Once logged in, you will have access to the ArgoCD dashboard where you can manage your applications and configurations deployed to the Talos Cluster.
-
-## Access Applications through the Browser
-
-The cluster offers an application which provides links to the services running on the cluster. Point your browser to <http://talos-cp.fritz.box:30080> to see all the bookmarks. Keep in mind that this list is not auto-generated and needs to be maintained manually (see `components/talos-cluster/manifests/apps/cluster-bookmarks/cluster-bookmarks.yaml`).
-
-Services are exposed as NodePorts. We do not use Ingress controllers or e.g. Nginx Gateway Fabric because accessing services through named URLs requires additional DNS configuration. Using NodePorts is a simpler way to access services.
