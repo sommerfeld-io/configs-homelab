@@ -87,7 +87,7 @@ data:
         index index.md;
 
         location / {
-          default_type text/plain;
+          default_type text/html;
           try_files $uri $uri/ =404;
         }
     }
@@ -99,6 +99,7 @@ metadata:
   name: cluster-bookmarks-index-md
   namespace: cluster-bookmarks
 data:
+  # TODO move into dedicated markdown file and reference it here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   index.md: |
     # Cluster Bookmarks
 
