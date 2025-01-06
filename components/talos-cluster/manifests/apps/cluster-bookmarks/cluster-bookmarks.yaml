@@ -82,16 +82,19 @@ data:
   default.conf: |
     server {
         listen 80;
+        server_name talos-cp.fritz.box;
 
         location / {
           root /usr/share/nginx/html;
           index index.md;
 
+          try_files $uri $uri/ =404;
+
           types {
             text/plain md;
           }
 
-          add_header Content-Type text/plain;
+          default_type text/plain;
         }
     }
 
