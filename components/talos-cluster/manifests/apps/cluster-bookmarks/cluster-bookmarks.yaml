@@ -82,13 +82,16 @@ data:
   default.conf: |
     server {
         listen 80;
-        root /usr/share/nginx/html;
-
-        index index.md;
 
         location / {
-          default_type text/html;
-          try_files $uri $uri/ =404;
+          root /usr/share/nginx/html;
+          index index.md;
+
+          types {
+            text/plain md;
+          }
+
+          add_header Content-Type text/plain;
         }
     }
 
