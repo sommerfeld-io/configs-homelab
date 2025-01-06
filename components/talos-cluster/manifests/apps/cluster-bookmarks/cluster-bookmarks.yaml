@@ -86,15 +86,9 @@ data:
 
         index index.md;
 
-        # Serve markdown files as plain text
-        location ~* \.md$ {
-            default_type text/plain;
-            try_files $uri =404;
-        }
-
-        # Serve all other files
         location / {
-            try_files $uri $uri/ =404;
+          default_type text/plain;
+          try_files $uri $uri/ =404;
         }
     }
 
