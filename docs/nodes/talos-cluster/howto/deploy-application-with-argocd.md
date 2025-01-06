@@ -39,6 +39,7 @@ components/talos-cluster/manifests/apps/
 - [ ] There is no need to define a dedicated ArgoCD `Application` resource for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/app-of-apps.yaml` will automatically create the `Application` resource.
 - [ ] There is no need to define a dedicated namespace for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/app-of-apps.yaml` will automatically create the namespace for the application based on the folder name.
 - [ ] ArgoCD will automatically detect and deploy the new application.
+- [ ] To convienently access the application, add a Bookmark to `components/talos-cluster/manifests/apps/cluster-bookmarks/cluster-bookmarks.yaml`.
 
 ## Conclusion
 

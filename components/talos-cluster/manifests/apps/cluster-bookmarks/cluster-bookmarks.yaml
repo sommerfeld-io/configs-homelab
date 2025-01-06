@@ -67,4 +67,6 @@ data:
   index.md: |
     # Cluster Bookmarks
 
-    This is your rendered Markdown served by Nginx.
+    - [Cluster Bookmarks](http://talos-cp.fritz.box:30080)
+    - [Nginx Demo](http://talos-cp.fritz.box:30081)
+    - [Apache Demo](http://talos-cp.fritz.box:30082)
