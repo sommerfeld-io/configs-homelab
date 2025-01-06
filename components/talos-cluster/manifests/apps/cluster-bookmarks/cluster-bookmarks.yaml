@@ -26,6 +26,13 @@ spec:
                       values:
                         - cluster-bookmarks
                 topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: clean-document-root
+          image: busybox:1.35
+          command: ["sh", "-c", "rm -f /usr/share/nginx/html/index.html"]
+          volumeMounts:
+            - name: nginx-document-root
+              mountPath: /usr/share/nginx/html
       containers:
         - name: nginx
           image: nginx:1.27.2
@@ -36,6 +43,8 @@ spec:
               mountPath: /usr/share/nginx/html/index.md
               subPath: index.md
       volumes:
+        - name: nginx-document-root
+          emptyDir: {}
         - name: index-md
           configMap:
             name: cluster-bookmarks-index-md
