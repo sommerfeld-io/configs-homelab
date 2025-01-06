@@ -26,6 +26,7 @@ spec:
                       values:
                         - cluster-bookmarks
                 topologyKey: kubernetes.io/hostname
+      # !!! Still needed when I write a new index.html ????????????????????????????????????????????
       initContainers:
         - name: clean-document-root
           image: alpine:3.21.0
@@ -97,7 +98,8 @@ metadata:
   name: cluster-bookmarks-index-html
   namespace: cluster-bookmarks
 data:
-  # TODO move into dedicated markdown file and reference it here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # !!! move into dedicated markdown file and reference it here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # !!! Convert into markdown again !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   index.html: |
     # Cluster Bookmarks
 
