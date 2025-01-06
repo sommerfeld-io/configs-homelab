@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-demo
-  namespace: nginx-demo
+  name: cluster-bookmarks
+  namespace: cluster-bookmarks
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: nginx-demo
+      app: cluster-bookmarks
   template:
     metadata:
       labels:
-        app: nginx-demo
+        app: cluster-bookmarks
     spec:
       affinity:
         podAntiAffinity:
@@ -24,49 +24,47 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - nginx-demo
+                        - cluster-bookmarks
                 topologyKey: kubernetes.io/hostname
       containers:
         - name: nginx
           image: nginx:1.27.2
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: index-md
+              mountPath: /usr/share/nginx/html/index.md
+              subPath: index.md
+      volumes:
+        - name: index-md
+          configMap:
+            name: cluster-bookmarks-index-md
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-demo-svc
-  namespace: nginx-demo
+  name: cluster-bookmarks-svc
+  namespace: cluster-bookmarks
 spec:
   selector:
-    app: nginx-demo
+    app: cluster-bookmarks
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 30081
+      nodePort: 30080
   type: NodePort
   # type: ClusterIP
 
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: nginx-demo-ingress
-#   namespace: nginx-demo
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   rules:
-#     - host: nginx-demo.talos.fritz.box
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: nginx-demo-svc
-#                 port:
-#                   number: 80
-#   ingressClassName: nginx
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-bookmarks-index-md
+  namespace: cluster-bookmarks
+data:
+  index.md: |
+    # Cluster Bookmarks
+
+    This is your rendered Markdown served by Nginx.
