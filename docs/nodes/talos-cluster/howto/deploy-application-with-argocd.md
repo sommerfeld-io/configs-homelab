@@ -47,6 +47,9 @@ The cluster offers an application which provides links to the services running o
 
 Services are exposed as NodePorts. We do not use Ingress controllers or e.g. Nginx Gateway Fabric because accessing services through named URLs requires additional DNS configuration. Using NodePorts is a simpler way to access services.
 
+??? note "Valid Port Range for NodePorts"
+    The NodePort range is limited to 30000-32767.
+
 ## Conclusion
 
 By using the App of Apps pattern with ArgoCD, you can streamline application deployments and manage multiple applications with ease. The `components/talos-cluster/manifests/projects/app-of-apps.yaml` file acts as the central orchestrator, providing a scalable and modular approach to Kubernetes application management.
