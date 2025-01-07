@@ -109,6 +109,7 @@ data:
 
     ## Monitoring
 
-    - [Node Exporter `talos-w1.fritz.box`](http://talos-w1.fritz.box:39100)
-    - [Node Exporter `talos-w2.fritz.box`](http://talos-w2.fritz.box:39100)
-    - [Node Exporter `talos-w3.fritz.box`](http://talos-w3.fritz.box:39100)
+    - [Node Exporter `talos-w1.fritz.box`](http://talos-cp.fritz.box:30091)
+    - [Node Exporter `talos-w1.fritz.box`](http://talos-w1.fritz.box:30091)
+    - [Node Exporter `talos-w2.fritz.box`](http://talos-w2.fritz.box:30091)
+    - [Node Exporter `talos-w3.fritz.box`](http://talos-w3.fritz.box:30091)

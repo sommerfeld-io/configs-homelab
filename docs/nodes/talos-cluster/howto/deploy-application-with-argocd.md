@@ -48,7 +48,7 @@ The cluster offers an application which provides links to the services running o
 Services are exposed as NodePorts. We do not use Ingress controllers or e.g. Nginx Gateway Fabric because accessing services through named URLs requires additional DNS configuration. Using NodePorts is a simpler way to access services.
 
 ??? note "Valid Port Range for NodePorts"
-    The NodePort range is limited to 30000-32767.
+    The NodePort range is limited to `30000`-`32767`.
 
 ## Conclusion
 
