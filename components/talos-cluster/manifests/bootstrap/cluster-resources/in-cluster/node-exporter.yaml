@@ -3,10 +3,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   name: node-exporter
-  namespace: monitoring
+  namespace: argocd
 spec:
-  project: app-of-apps
+  project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 4.43.1
@@ -18,9 +20,10 @@ spec:
         service:
           type: NodePort
           nodePort: 39100
+        namespaceOverride: &namespace monitoring-logging
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: *namespace
   syncPolicy:
     automated:
       prune: true
