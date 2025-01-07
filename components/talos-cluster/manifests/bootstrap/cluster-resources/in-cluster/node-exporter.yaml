@@ -1,5 +1,6 @@
 ---
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
+# https://github.com/prometheus-community/helm-charts/pkgs/container/charts%2Fprometheus-node-exporter
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,14 +20,21 @@ spec:
         # !!! Once Prometheus reads the metrics, we switch to the default which is ClusterIP
         service:
           type: NodePort
-          nodePort: 39100
+          nodePort: 30091
+          # Default node exporter port = 9100
+          port: 9100
+          targetPort: 9100
         namespaceOverride: &namespace monitoring-logging
   destination:
     server: https://kubernetes.default.svc
     namespace: *namespace
   syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
