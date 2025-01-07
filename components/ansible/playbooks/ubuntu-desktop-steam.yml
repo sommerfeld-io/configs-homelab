@@ -6,11 +6,10 @@
   tasks:
 
     - name: Install  ----  Steam
-      ansible.builtin.apt:
-        pkg:
+      community.general.snap:
+        name:
           - steam
-        state: latest
-        update_cache: true
+        state: present
 
     - name: Info  ----  Post installation message
       ansible.builtin.debug:
