@@ -1,0 +1,29 @@
+---
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-exporter
+  namespace: monitoring
+spec:
+  project: app-of-apps
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 4.43.1
+    chart: prometheus-node-exporter
+    helm:
+      valuesObject:
+        # !!! NodePort is only for testing
+        # !!! Once Prometheus reads the metrics, we switch to the default which is ClusterIP
+        service:
+          type: NodePort
+          nodePort: 39100
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -106,3 +106,9 @@ data:
     - [Cluster Bookmarks](http://talos-cp.fritz.box:30080)
     - [Nginx Demo](http://talos-cp.fritz.box:30081)
     - [Apache Demo](http://talos-cp.fritz.box:30082)
+
+    ## Monitoring
+
+    - [Node Exporter `talos-w1.fritz.box`](http://talos-w1.fritz.box:39100)
+    - [Node Exporter `talos-w2.fritz.box`](http://talos-w2.fritz.box:39100)
+    - [Node Exporter `talos-w3.fritz.box`](http://talos-w3.fritz.box:39100)
