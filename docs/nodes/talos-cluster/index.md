@@ -204,9 +204,6 @@ nwdiag {
 
 The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP. The router should assign the same IP address to the same device every time. This is not mandatory but recommended.
 
-??? note "About the Kubernetes Network Setup"
-    For details about the Kubernetes Network Setup including the Nginx Gateway Fabric and DNS, see [Kubernetes Network Setup](network.md).
-
 ## RasPi Rack Setup
 
 The `admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
