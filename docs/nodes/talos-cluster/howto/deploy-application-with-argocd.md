@@ -1,4 +1,4 @@
-# How to deploy an Application with ArgoCD
+# How to deploy Applications with ArgoCD
 
 This guide explains how to deploy applications into the Talos Cluster with ArgoCD using the [App of Apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#app-of-apps) pattern.
 
@@ -28,8 +28,8 @@ components/talos-cluster/manifests/apps/
 ├── app1/
 │   └── app1.yaml
 ├── app2/
-│   ├── config.yaml
-│   └── deployment.yaml
+│   ├── deployment.yaml
+│   └── service.yaml
 ```
 
 ## Adding a New Application

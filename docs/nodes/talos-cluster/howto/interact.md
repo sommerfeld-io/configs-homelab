@@ -1,4 +1,4 @@
-# Interact with the Talos Cluster
+# How to interact with the Talos Cluster
 
 This guide provides an overview of how to interact with a Talos-managed Kubernetes cluster using talosctl and kubectl, the primary tools for managing and interacting with Talos nodes and Kubernetes workloads respectively.
 
