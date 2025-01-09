@@ -2,11 +2,7 @@
 
 In this document, we will explore the monitoring and logging setup for the Talos Kubernetes Cluster. Monitoring and logging are crucial aspects of managing and maintaining a healthy and performant cluster. By implementing effective monitoring and logging solutions, we can gain insights into the cluster's performance and (hopefully) detect possible issues.
 
-We rely on Grafana Cloud as much as possible to provide a managed monitoring solution. Since we only want to monitor our homelab, we rely on the Free Tier.
-
-- [Sommerfeld.io on Grafana Cloud](https://sommerfeldio.grafana.net)
-
-Relying on Grafana as an external cloud service has the advantage of not having to manage the monitoring infrastructure ourselves. Plus, in case of an outage, we can still access the monitoring data from outside the cluster to analyze the issue. For more details on why we chose Grafana Cloud, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
+For details on out setup of choice, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
 
 ## Monitoring
 

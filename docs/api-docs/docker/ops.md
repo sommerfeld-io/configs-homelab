@@ -1,8 +1,9 @@
-# Ops Compose Config
+---
+hide:
+  - toc
+---
 
-Docker stack for monitoring system metrics with Prometheus and Grafana.
-
-## Overview
+# Docker Stack - Ops
 
 The `ops` Docker stack is a Docker Compose configuration that manages
 all of the needed exporters to monitor system metrics with Prometheus and Grafana. By
@@ -12,5 +13,5 @@ metrics, such as CPU usage, disk usage, and network activity.
 
 | Component     | Port | URL                   |
 | ------------- | ---- | --------------------- |
-| node_exporter | 9100 | http://localhost:9100 |
-| cAdvisor      | 9110 | http://localhost:9110 |
+| node_exporter | 9100 | <http://localhost:9100> |
+| cAdvisor      | 9110 | <http://localhost:9110> |
