@@ -31,7 +31,9 @@ note top of node_exporter: Running on all worker nodes and control plane
 @enduml
 ```
 
-- [Grafana on `admin-pi.fritz.box`](http://admin-pi.fritz.box)
+To start and stop the monitoring stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
+
+- [Grafana Web-Interface on `admin-pi.fritz.box`](http://admin-pi.fritz.box)
 - For more information about the monitoring stack itself, see [Docker Stack - Monitoring and Logging](../../api-docs/docker/monitoring-logging.md).
 - For details on our configuration of choice an why we set up a dedicated monitoring stack on the `admin-pi`, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
 
