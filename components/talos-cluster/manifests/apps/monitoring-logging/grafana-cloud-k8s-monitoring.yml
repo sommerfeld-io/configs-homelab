@@ -1,0 +1,88 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-cloud-k8s-monitoring
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: k8s-monitoring
+    targetRevision: "^1"
+    helm:
+      valuesObject:
+        cluster:
+          name: talos-cluster
+        externalServices:
+          prometheus:
+            host: https://prometheus-prod-24-prod-eu-west-2.grafana.net
+            basicAuth:
+              username: "2000138"
+              password: &token glc_eyJvIjoiMTMyMDM1MiIsIm4iOiJzdGFjay0xMTQwNTQ1LWludGVncmF0aW9uLXRhbG9zLWNsdXN0ZXItdGFsb3MtY2x1c3RlciIsImsiOiIyTEgxd1BRdTU0V3RaZDZvblI1OTRsMDAiLCJtIjp7InIiOiJwcm9kLWV1LXdlc3QtMiJ9fQ==
+          loki:
+            host: https://logs-prod-012.grafana.net
+            basicAuth:
+              username: "1098324"
+              password: *token
+          tempo:
+            host: https://tempo-prod-10-prod-eu-west-2.grafana.net:443
+            basicAuth:
+              username: "1092639"
+              password: *token
+        metrics:
+          enabled: true
+          alloy:
+            metricsTuning:
+              useIntegrationAllowList: true
+          cost:
+            enabled: true
+          kepler:
+            enabled: true
+          node-exporter:
+            enabled: true
+        logs:
+          enabled: true
+          pod_logs:
+            enabled: true
+          cluster_events:
+            enabled: true
+        traces:
+          enabled: true
+        receivers:
+          grpc:
+            enabled: true
+          http:
+            enabled: true
+          zipkin:
+            enabled: true
+          grafanaCloudMetrics:
+            enabled: false
+        opencost:
+          enabled: true
+          opencost:
+            exporter:
+              defaultClusterId: talos-cluster
+            prometheus:
+              external:
+                url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom
+        kube-state-metrics:
+          enabled: true
+        prometheus-node-exporter:
+          enabled: true
+        prometheus-operator-crds:
+          enabled: true
+        kepler:
+          enabled: true
+        alloy: {}
+        alloy-events: {}
+        alloy-logs: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
