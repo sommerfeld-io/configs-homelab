@@ -58,9 +58,10 @@ scrape_configs:
       module: [http_2xx]  # Look for a HTTP 200 response.
     static_configs:
       - targets:
-          - admin-pi.fritz.box:9090
           - admin-pi.fritz.box:3000
           - admin-pi.fritz.box:80
+          - admin-pi.fritz.box:9090
+          - admin-pi.fritz.box:9990
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
