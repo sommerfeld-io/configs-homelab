@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Docker Stack - Monitoring and Logging
 
 This Docker Compose configuration represents the comprehensive monitoring stack for the homelab environment. The stack should provide the following features:
@@ -6,11 +11,7 @@ This Docker Compose configuration represents the comprehensive monitoring stack 
 - Visualize website and service status (up / down)
 - Collect and visualize metrics from the Talos Kubernetes Cluster
 
-## Runtime Environment
-
 The entire monitoring stack is intended to run on a Raspberry Pi node named `admin-pi.fritz.box`. This means that the Raspberry Pi serves as the central hub for the monitoring infrastructure.
-
-## Components
 
 | Component         | Port | URL                     | Info          |
 | ----------------- | ---- | ----------------------- | ------------- |

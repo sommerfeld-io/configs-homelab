@@ -16,17 +16,19 @@ skinparam NoteBackgroundColor #1E2129
 
 LAYOUT_LEFT_RIGHT()
 
-Component(prometheus, "Prometheus", "admin-pi", "On-Premise Monitoring Stack")
-Component(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
+Component_Ext(prometheus, "Prometheus", "admin-pi", "On-Premise Monitoring Stack")
+Component_Ext(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
-    Component(node_exporter, "Node Exporter", "Base Component", "Metrics for Monitoring")
+    Component(node_exporter, "Node Exporter", "Base Component", "System metrics like CPU, Memory, Disk, Network")
+    ' Component(metrics_server, "Metrics Server", "Base Component", "Metrics from Kubernetes")
 }
 
 Rel(node_exporter, prometheus, "HTTP")
+' Rel(metrics_server, prometheus, "HTTP")
 Rel_Neighbor(prometheus, grafana, "HTTP")
 
-note right of talos: Running on all worker nodes and control plane
+note right of talos: Running on all worker nodes and the control plane node
 
 @enduml
 ```
