@@ -24,9 +24,9 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
 }
 
 Rel(node_exporter, prometheus, "HTTP")
-Rel(prometheus, grafana, "HTTP")
+Rel_Neighbor(prometheus, grafana, "HTTP")
 
-note top of talos: Running on all worker nodes and control plane
+note right of talos: Running on all worker nodes and control plane
 
 @enduml
 ```
