@@ -6,6 +6,7 @@ In this document, we will explore the monitoring and logging setup for the Talos
 @startuml
 !include C4_Component.puml
 
+skinparam linetype ortho
 skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
 skinparam arrowColor #E2E4E9
@@ -20,18 +21,26 @@ Component_Ext(prometheus, "Prometheus", "admin-pi", "On-Premise Monitoring Stack
 Component_Ext(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
-    Component(node_exporter, "Node Exporter", "Base Component", "System metrics like CPU, Memory, Disk, Network")
-    ' Component(metrics_server, "Metrics Server", "Base Component", "Metrics from Kubernetes")
+    Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
+    ' Component(metrics_server, "Metrics Server", "Application", "Metrics from Kubernetes")
+    Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Built-in Metrics from ArgoCD")
+    Component(argo_service, "ArgoCD Metrics Service", "Service", "Expose without port forwarding")
 }
 
 Rel(node_exporter, prometheus, "HTTP")
 ' Rel(metrics_server, prometheus, "HTTP")
+Rel(argo_metrics, argo_service, "HTTP")
+Rel(argo_service, prometheus, "HTTP")
+
 Rel_Neighbor(prometheus, grafana, "HTTP")
 
 note right of talos: Running on all worker nodes and the control plane node
 
 @enduml
 ```
+
+!!! warning "TODO"
+    Setup Argocd Metrics and update docs accordingly (if needed).
 
 To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
 
@@ -54,3 +63,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor in
 ## References / External Links
 
 - For details on why we set up a dedicated monitoring stack on the `admin-pi`, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
+- Official docs about [Argo CD exposing different sets of Prometheus metrics](https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics)
