@@ -65,11 +65,6 @@ services:
     volumes:
       - ./assets/config/nginx:/etc/nginx/conf.d:ro
     privileged: true
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     depends_on:
       grafana:
         condition: service_healthy
