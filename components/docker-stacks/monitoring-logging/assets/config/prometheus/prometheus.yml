@@ -45,6 +45,8 @@ scrape_configs:
       - targets:
           - kobol.fritz.box:9990
           - caprica.fritz.box:9990
+          - talos-cp.fritz.box:30081
+          - talos-cp.fritz.box:30082
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
