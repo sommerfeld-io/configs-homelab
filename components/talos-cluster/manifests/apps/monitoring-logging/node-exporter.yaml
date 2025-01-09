@@ -1,40 +1,40 @@
-# ---
-# # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
-# # https://github.com/prometheus-community/helm-charts/pkgs/container/charts%2Fprometheus-node-exporter
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "0"
-#   name: node-exporter
-#   namespace: argocd
-# spec:
-#   project: talos-cluster
-#   source:
-#     repoURL: https://prometheus-community.github.io/helm-charts
-#     targetRevision: 4.43.1
-#     chart: prometheus-node-exporter
-#     helm:
-#       valuesObject:
-#         # !!! NodePort is only for testing
-#         # !!! Once Prometheus reads the metrics, we switch to the default which is ClusterIP
-#         service:
-#           type: NodePort
-#           nodePort: 30091
-#           # Default node exporter port = 9100
-#           port: 9100
-#           targetPort: 9100
-#         namespaceOverride: &namespace monitoring-logging
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: *namespace
-#   syncPolicy:
-#     managedNamespaceMetadata:
-#       labels:
-#         pod-security.kubernetes.io/enforce: privileged
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - ServerSideApply=true
+---
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
+# https://github.com/prometheus-community/helm-charts/pkgs/container/charts%2Fprometheus-node-exporter
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: node-exporter
+  namespace: argocd
+spec:
+  project: talos-cluster
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 4.43.1
+    chart: prometheus-node-exporter
+    helm:
+      valuesObject:
+        # !!! NodePort is only for testing
+        # !!! Once Prometheus reads the metrics, we switch to the default which is ClusterIP
+        service:
+          type: NodePort
+          nodePort: 30091
+          # Default node exporter port = 9100
+          port: 9100
+          targetPort: 9100
+        namespaceOverride: &namespace monitoring-logging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: *namespace
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
