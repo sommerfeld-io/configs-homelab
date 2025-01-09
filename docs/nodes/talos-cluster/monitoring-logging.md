@@ -26,29 +26,29 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
 Rel(node_exporter, prometheus, "HTTP")
 Rel(prometheus, grafana, "HTTP")
 
-note top of node_exporter: Running on all worker nodes and control plane
+note top of talos: Running on all worker nodes and control plane
 
 @enduml
 ```
 
-To start and stop the monitoring stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
+To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
 
 - [Grafana Web-Interface on `admin-pi.fritz.box`](http://admin-pi.fritz.box)
 - For more information about the monitoring stack itself, see [Docker Stack - Monitoring and Logging](../../api-docs/docker/monitoring-logging.md).
-- For details on our configuration of choice an why we set up a dedicated monitoring stack on the `admin-pi`, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
 
 ## Monitoring
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `node_exporter` is a Prometheus exporter for hardware and OS metrics. It exposes a wide variety of metrics, including CPU, memory, disk, and network usage.
 
 - [Node Exporter on `talos-cp.fritz.box`](http://talos-cp.fritz.box:30091)
 - [Node Exporter on `talos-w1.fritz.box`](http://talos-w1.fritz.box:30091)
 - [Node Exporter on `talos-w2.fritz.box`](http://talos-w2.fritz.box:30091)
 - [Node Exporter on `talos-w3.fritz.box`](http://talos-w3.fritz.box:30091)
 
-## Logging
+<!-- ## Logging
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. -->
 
-!!! warning "TODO"
-    - Diagram with all components
+## References / External Links
+
+- For details on why we set up a dedicated monitoring stack on the `admin-pi`, see [ADR-002 - Talos RasPi: Prometheus and Grafana inside Kubernetes vs outside on the admin-pi vs Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/issues/35) on GitHub.
