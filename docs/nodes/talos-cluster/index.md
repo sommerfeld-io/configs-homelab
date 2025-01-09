@@ -99,17 +99,17 @@ ContainerDb(repo, "Repository", "Github", "Configuration and Manifest files (for
 System_Boundary(talos, "Talos Kubernetes Cluster") {
     Component(argo, "ArgoCD", "Base Component", "Manage all deployments, applications, and services in a GitOps way")
 
-    Component(node_exporter, "Node Exporter", "Base Component", "Metrics for Monitoring")
-    Component(prometheus, "Prometheus", "Base Component", "Monitoring Application")
-    Component(grafana, "Grafana", "Base Component", "Monitoring Application")
-    Component(etc, "etc", "Base Component", "Possible other applications")
+    Component(node_exporter, "Node Exporter", "Application", "Metrics for Monitoring")
+    Component(etc1, "etc", "Application", "Some other application")
+    Component(etc2, "etc", "Application", "Some other application")
+    Component(etc3, "etc", "Application", "Some other application")
 }
 
 Rel(repo, argo, "Observed by ArgoCD")
 Rel(argo, node_exporter, "Deploy", "sync")
-Rel(argo, prometheus, "Deploy", "sync")
-Rel(argo, grafana, "Deploy", "sync")
-Rel(argo, etc, "Deploy", "sync")
+Rel(argo, etc1, "Deploy", "sync")
+Rel(argo, etc2, "Deploy", "sync")
+Rel(argo, etc3, "Deploy", "sync")
 
 @enduml
 ```

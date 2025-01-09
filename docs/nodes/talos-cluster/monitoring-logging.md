@@ -6,40 +6,29 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor in
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
-```kroki-plantuml
+```kroki-c4plantuml
 @startuml
+!include C4_Component.puml
 
-skinparam linetype ortho
 skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
-skinparam arrowColor #3C72CE
-skinparam ArrowFontColor #E2E4E9
+skinparam arrowColor #E2E4E9
 
-skinparam FrameFontColor #E2E4E9
-skinparam FrameBorderColor #E2E4E9
-skinparam NodeBackgroundColor #e2e4e9
+skinparam NoteFontColor #E2E4E9
+skinparam NoteBorderColor #E2E4E9
+skinparam NoteBackgroundColor #1E2129
 
-skinparam activity {
-    'FontName Ubuntu
-    FontName Roboto
+LAYOUT_LEFT_RIGHT()
+
+Component(grafana, "Grafana Cloud", "SaaS", "Monitoring Solution as a Service")
+
+System_Boundary(talos, "Talos Kubernetes Cluster") {
+    Component(node_exporter, "Node Exporter", "Base Component", "Metrics for Monitoring")
 }
 
-frame k8s as "Talos Cluster" <<Kubernetes>> {
-    node cp as "Control Plane" <<Single Node>> {
-        rectangle n_cp as "Node Exporter"
-    }
+Rel(grafana, node_exporter, "Consume", "HTTPS")
 
-    node w as "Worker Nodes" <<Multiple Nodes>> {
-        rectangle w_cp as "Node Exporter"
-    }
-
-    cp -[hidden]down- w_cp
-}
-
-component g as "Grafana Cloud" <<SaaS>>
-
-n_cp -right-> g
-w_cp -right-> g
+note top of node_exporter: Running on all worker nodes and control plane
 
 @enduml
 ```
