@@ -35,6 +35,11 @@ components/talos-cluster/manifests/apps/
 ## Adding a New Application
 
 - [ ] Define your application's ArgoCD Application resource in YAML file(s).
+
+    ??? warning "Namespace for `Applications`"
+        - Keep in mind, that ArgoCD only watches its own namespace. When you define an `Application` resource, make sure to set its namespace to `argocd`.
+        - `Services`, `Deployments`, and other resources should be defined in their own namespace (which is determined through the folder name).
+
 - [ ] Add the YAML file to the `apps` directory or create a subfolder for the application if it includes multiple resources.
 - [ ] There is no need to define a dedicated ArgoCD `Application` resource for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/app-of-apps.yaml` will automatically create the `Application` resource.
 - [ ] There is no need to define a dedicated namespace for the application in the `apps` directory because the `app-of-apps` `ApplicationSet` from `components/talos-cluster/manifests/projects/app-of-apps.yaml` will automatically create the namespace for the application based on the folder name.
