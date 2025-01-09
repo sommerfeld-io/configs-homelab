@@ -8,3 +8,4 @@
     mode: u=rwx,g=rx,o=rx
   with_items:
     - argocd-port-forward.sh
+    - docker-stacks-cli.sh

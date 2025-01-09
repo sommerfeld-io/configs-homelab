@@ -1,5 +1,5 @@
 ---
-version: "3.3"
+# see docs/api-docs/docker/monitoring-logging.md
 services:
   prometheus:
     image: prom/prometheus:v3.0.1
