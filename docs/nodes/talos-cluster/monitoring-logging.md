@@ -23,7 +23,7 @@ Component_Ext(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
 System_Boundary(talos, "Talos Kubernetes Cluster") {
     Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
     ' Component(metrics_server, "Metrics Server", "Application", "Metrics from Kubernetes")
-    Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Built-in Metrics from ArgoCD")
+    Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Default Metrics Endpoints from ArgoCD")
     Component(argo_service, "ArgoCD Metrics Service", "Service", "Expose without port forwarding")
 }
 
