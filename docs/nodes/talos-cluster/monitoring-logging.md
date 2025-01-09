@@ -33,7 +33,7 @@ note top of node_exporter: Running on all worker nodes and control plane
 @enduml
 ```
 
-- [Node Exporter on `talos-w1.fritz.box`](http://talos-cp.fritz.box:30091)
+- [Node Exporter on `talos-cp.fritz.box`](http://talos-cp.fritz.box:30091)
 - [Node Exporter on `talos-w1.fritz.box`](http://talos-w1.fritz.box:30091)
 - [Node Exporter on `talos-w2.fritz.box`](http://talos-w2.fritz.box:30091)
 - [Node Exporter on `talos-w3.fritz.box`](http://talos-w3.fritz.box:30091)
