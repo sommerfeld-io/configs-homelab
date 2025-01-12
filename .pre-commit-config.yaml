@@ -50,7 +50,7 @@ repos:
         name: lint-folders
         language: script
         entry: /bin/bash -c 'docker compose up lint-folders --exit-code-from lint-folders'
-      - id: lint-folders
+      - id: lint-markdown-links
         name: lint-markdown-links
         language: script
         entry: /bin/bash -c 'docker compose up lint-markdown-links --exit-code-from lint-markdown-links'
