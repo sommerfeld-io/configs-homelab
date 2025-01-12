@@ -58,10 +58,10 @@ services:
 
   lint-markdown-links:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-markdown-links
-    image: ghcr.io/tcort/markdown-link-check:3.13.6
+    image: lycheeverse/lychee:sha-a11d515-alpine
     volumes: *volumes
     working_dir: *default-workdir
-    command: ./docs
+    command: --config .lychee.toml .
     tty: *tty
 
   lint-ansible:

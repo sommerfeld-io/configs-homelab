@@ -6,7 +6,7 @@
 
 We're thrilled that you'd like to contribute to this project. You can do this by submitting a pull request.
 
-- Take a look at our [Development Guide](development-guide.md) to get an idea of how we work
+- Take a look at our [Development Guide](https://sommerfeld-io.github.io/configs-homelab/about/development-guide) to get an idea of how we work
 - Fork and clone the repository
 - Create a new branch: `git checkout -b my-branch-name`
 - Make your changes and include tests (preferably by using TDD and maybe BDD)

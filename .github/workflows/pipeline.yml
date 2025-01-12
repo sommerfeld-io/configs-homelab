@@ -36,7 +36,7 @@ jobs:
     name: ${{ matrix.linter }}
     strategy:
       matrix:
-        linter: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'helm']
+        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -80,7 +80,7 @@ jobs:
           for file in *.md; do
             content=$(cat "$file")
 
-            old="(about/development-guide.md)"
+            old="(development-guide.md)"
             new="(https://sommerfeld-io.github.io/configs-homelab/about/development-guide)"
             content="${content//$old/$new}"
 

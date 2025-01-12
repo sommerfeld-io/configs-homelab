@@ -11,6 +11,7 @@ ls:
   .tf: kebab-case
   .yml: kebab-case
   .yaml: kebab-case
+  .toml: kebab-case
   .feature: kebab-case
 
   .java: PascalCase
@@ -51,6 +52,7 @@ ignore:
   - .ansible-lint.yml
   - .hadolint.yml
   - .ls-lint.yml
+  - .lychee.toml
   - .markdownlint.yml
   - .yamllint.yml
   - .pre-commit-config.yaml

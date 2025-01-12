@@ -19,12 +19,6 @@ This section outlines the basic requirements and features of the project. These 
 - Install all necessary software on workstations and servers. Follow Infrastructure as Code (IaC) principles. Ansible is used for this purpose.
 - Every machines run services (some of them are mandatory for every machine). These services run inside Docker containers. The containers are controlled through scripts from this project.
 
-## Usage
-
-This project contains several [scripts](generated/scripts) to control the respective function set.
-
-When developing, make sure to take a look at the [Dev Container Dockerfile](generated/devcontainer-dockerfile.md) docs.
-
 ## Scope and Context
 
 This configuration set is intended to work specifically for our machines. You might be able to adopt some stuff from this project, but using it "as is" most likely will result in failure.

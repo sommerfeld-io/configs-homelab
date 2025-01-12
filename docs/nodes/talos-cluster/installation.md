@@ -6,8 +6,8 @@ The second step is to install the actual Talos nodes. These nodes are Raspberry 
 
 ## Install Management Node
 
-- [ ] Flash Operating System [Ubuntu Server](https://ubuntu.com) via the [Raspberry Pi Imager](https://www.raspberrypi.com/software) onto an SD card.
-    - [ ] Configure the Raspberry Pi through the Raspberry Pi Imager to enable SSH, set a hostname and configure WiFi.
+- [ ] Flash Operating System [Ubuntu Server](https://ubuntu.com) via the Raspberry Pi Imager onto an SD card.
+    - [ ] Configure the Raspberry Pi through the "Raspberry Pi Imager" to enable SSH, set a hostname and configure WiFi.
 - [ ] Enable password-less SSH connections (from workstation, not the RasPi node)
     - [ ] `ssh sebastian@admin-pi.fritz.box`
     - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`

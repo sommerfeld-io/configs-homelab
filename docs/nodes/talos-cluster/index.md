@@ -120,7 +120,7 @@ Applications are organized in namespaces. The `Base Component` applications are 
 
 ## Code / Configuration
 
-According to our [Development Guide](about/development-guide.md), all code and configuration are stored in a Git repository. We treat everything as code.
+According to our [Development Guide](../../about/development-guide.md), all code and configuration are stored in a Git repository. We treat everything as code.
 
 Information about the replica count, resources, possible assignments to nodes, and other (kubernetes-related) configurations are part of the manifests config files.
 
