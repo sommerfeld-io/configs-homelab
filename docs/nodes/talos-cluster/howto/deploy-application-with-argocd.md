@@ -36,7 +36,7 @@ components/talos-cluster/manifests/apps/
 
 - [ ] Define your application's ArgoCD Application resource in YAML file(s).
 
-    ??? warning "Namespace for `Applications`"
+    ??? warning "Namespace for `Application` resources"
         - Keep in mind, that ArgoCD only watches its own namespace. When you define an `Application` resource, make sure to set its namespace to `argocd`.
         - `Services`, `Deployments`, and other resources should be defined in their own namespace (which is determined through the folder name).
 
@@ -48,12 +48,14 @@ components/talos-cluster/manifests/apps/
 
 ## Access Applications through the Browser
 
-The cluster offers an application which provides links to the services running on the cluster. Point your browser to <http://talos-cp.fritz.box:30080> to see all the bookmarks. Keep in mind that this list is not auto-generated and needs to be maintained manually (see `components/talos-cluster/manifests/apps/cluster-bookmarks/cluster-bookmarks.yaml`).
+Services are exposed as NodePorts. We do not use Ingress controllers or Nginx Gateway Fabric or other software because accessing services through named URLs requires additional DNS configuration. Using NodePorts is a simpler way to access services.
 
-Services are exposed as NodePorts. We do not use Ingress controllers or e.g. Nginx Gateway Fabric because accessing services through named URLs requires additional DNS configuration. Using NodePorts is a simpler way to access services.
-
-??? note "Valid Port Range for NodePorts"
+??? note "Valid port range for `NodePort`"
     The NodePort range is limited to `30000`-`32767`.
+
+### Overview of deployed Applications
+
+For an overview of all deployed applications, you can either look into ArgoCD or take a look at the [Blackbox Exporter Dashboard in Grafana on the `admin-pi` node](http://localhost/d/jEzutrbMk/blackbox-exporter-http-prober).
 
 ## Conclusion
 
