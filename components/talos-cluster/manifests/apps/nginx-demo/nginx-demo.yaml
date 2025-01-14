@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: nginx-demo
   namespace: nginx-demo
+  labels:
+    app: nginx-demo
 spec:
   replicas: 3
   selector:
@@ -31,6 +33,7 @@ spec:
           image: nginx:1.27.2
           ports:
             - containerPort: 80
+      restartPolicy: Always
 
 ---
 apiVersion: v1
@@ -38,6 +41,8 @@ kind: Service
 metadata:
   name: nginx-demo-svc
   namespace: nginx-demo
+  labels:
+    app: nginx-demo
 spec:
   selector:
     app: nginx-demo

@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: apache-demo-svc
   namespace: apache-demo
+  labels:
+    app: apache-demo
 spec:
   selector:
     app: apache-demo

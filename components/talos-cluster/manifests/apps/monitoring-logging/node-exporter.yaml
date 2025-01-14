@@ -16,8 +16,6 @@ spec:
     chart: prometheus-node-exporter
     helm:
       valuesObject:
-        # !!! NodePort is only for testing
-        # !!! Once Prometheus reads the metrics, we switch to the default which is ClusterIP
         service:
           type: NodePort
           nodePort: 30091

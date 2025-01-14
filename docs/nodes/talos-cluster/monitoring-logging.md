@@ -2,6 +2,13 @@
 
 In this document, we will explore the monitoring and logging setup for the Talos Kubernetes Cluster. Monitoring and logging are crucial aspects of managing and maintaining a healthy and performant cluster. By implementing effective monitoring and logging solutions, we can gain insights into the cluster's performance and (hopefully) detect possible issues.
 
+To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
+
+- [Grafana Web-Interface on `admin-pi.fritz.box`](http://admin-pi.fritz.box)
+- For more information about the monitoring stack itself, see [Docker Stack - Monitoring and Logging](../../api-docs/docker/monitoring-logging.md).
+
+## Monitoring
+
 ```kroki-c4plantuml
 @startuml
 !include C4_Component.puml
@@ -42,12 +49,7 @@ note right of talos: Running on all worker nodes and the control plane node
 !!! warning "TODO"
     Setup Argocd Metrics and update docs accordingly (if needed).
 
-To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.
-
-- [Grafana Web-Interface on `admin-pi.fritz.box`](http://admin-pi.fritz.box)
-- For more information about the monitoring stack itself, see [Docker Stack - Monitoring and Logging](../../api-docs/docker/monitoring-logging.md).
-
-## Monitoring
+### System Metrics
 
 Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `node_exporter` is a Prometheus exporter for hardware and OS metrics. It exposes a wide variety of metrics, including CPU, memory, disk, and network usage.
 
@@ -55,6 +57,9 @@ Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `
 - [Node Exporter on `talos-w1.fritz.box`](http://talos-w1.fritz.box:30091)
 - [Node Exporter on `talos-w2.fritz.box`](http://talos-w2.fritz.box:30091)
 - [Node Exporter on `talos-w3.fritz.box`](http://talos-w3.fritz.box:30091)
+
+### Kubernetes Metrics
+Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. -->
 
 <!-- ## Logging
 
