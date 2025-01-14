@@ -9,9 +9,15 @@
 
 		".vscode",
 
-		"components/ansible/**",
+		"components/ansible",
+		"components/ansible/assets/**",
+		"components/ansible/playbooks",
+		"components/ansible/tasks",
+		"components/ansible/vars",
+
+
 		"components/bootstrap",
-		"components/conky/**",
+		"components/conky/*",
 		"components/docker-stacks/**",
 		"components/minikube/**",
 
