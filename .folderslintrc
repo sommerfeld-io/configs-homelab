@@ -14,7 +14,16 @@
 		"components/conky/**",
 		"components/docker-stacks/**",
 		"components/minikube/**",
-		"components/talos-cluster/**",
+
+		"components/talos-cluster",
+		"components/talos-cluster/manifests",
+		"components/talos-cluster/manifests/apps/*",
+		"components/talos-cluster/manifests/bootstrap/argo-cd",
+		"components/talos-cluster/manifests/bootstrap/cluster-resources",
+		"components/talos-cluster/manifests/bootstrap/cluster-resources/in-cluster",
+		"components/talos-cluster/manifests/projects",
+		"components/talos-cluster/node-configs",
+		"components/talos-cluster/node-configs/generated",
 
 		"docs",
 		"docs/_assets/**",
