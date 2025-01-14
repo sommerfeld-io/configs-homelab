@@ -15,7 +15,6 @@
 		"components/ansible/tasks",
 		"components/ansible/vars",
 
-
 		"components/bootstrap",
 		"components/conky/*",
 		"components/docker-stacks/**",
