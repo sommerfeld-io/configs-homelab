@@ -15,4 +15,5 @@ configMapGenerator:
 kind: Kustomization
 namespace: argocd
 resources:
-  - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.18
+  # - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.18 # default line from argocd-autopilot
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.13.3/manifests/install.yaml
