@@ -28,7 +28,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
     volumes:
-      - ./assets/provisioning/grafana:/etc/grafana/provisioning:ro
+      - ./assets/config/grafana:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
       - /etc/timezone:/etc/timezone:ro
     ports:

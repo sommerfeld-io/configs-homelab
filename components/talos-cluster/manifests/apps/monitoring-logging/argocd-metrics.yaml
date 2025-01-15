@@ -1,6 +1,6 @@
 ---
 # Based on the `argocd-metrics` from ArgoCD (as seen in the ArgoCD UI)
-# This service is used to expose the metrics of the ArgoCD server on a NodePort.
+# This service is used to expose ArgoCD metrics on a NodePort.
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/name: argocd-metrics
     app.kubernetes.io/part-of: argocd
   name: argocd-metrics-svc
-  namespace: argocd # monitoring-logging
+  namespace: argocd
 spec:
   selector:
     app.kubernetes.io/name: argocd-application-controller
