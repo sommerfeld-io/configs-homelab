@@ -17,8 +17,8 @@ spec:
       kind: Application
   project: default
   source:
-    path: charts/kubernetes-dashboard
     repoURL: https://github.com/kubernetes/dashboard.git
+    path: charts/kubernetes-dashboard
     targetRevision: kubernetes-dashboard-7.10.1
     helm:
       valuesObject:
