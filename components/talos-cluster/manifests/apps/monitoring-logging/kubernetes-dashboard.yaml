@@ -1,0 +1,32 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-dashboard
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring-logging
+  ignoreDifferences:
+    - group: argoproj.io
+      jsonPointers:
+        - /status
+      kind: Application
+  project: default
+  source:
+    path: charts/kubernetes-dashboard
+    repoURL: https://github.com/kubernetes/dashboard.git
+    targetRevision: kubernetes-dashboard-7.10.1
+    helm:
+      valuesObject:
+        metrics-server:
+          enabled: true
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true
+      - CreateNamespace=true
