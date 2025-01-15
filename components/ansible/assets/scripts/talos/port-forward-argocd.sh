@@ -1,7 +1,7 @@
 #!/bin/bash
 
 readonly NAMESPACE="argocd"
-readonly PORT="8000"
+readonly PORT="8080"
 
 echo "[INFO] ArgoCD Admin Password --------------------"
 echo -e "${Y}"
