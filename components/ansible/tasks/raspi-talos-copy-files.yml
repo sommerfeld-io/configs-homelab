@@ -7,5 +7,6 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - argocd-port-forward.sh
     - docker-stacks-cli.sh
+    - port-forward-argocd.sh
+    - port-forward-kubernetes-dashboard.sh

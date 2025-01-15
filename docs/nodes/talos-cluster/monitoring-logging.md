@@ -104,13 +104,10 @@ Prometheus scrapes these endpoints to collect metrics and Grafana visualizes the
 
 The Kubernetes Dashboard is a general-purpose, web-based UI for Kubernetes clusters. It allows users to manage applications running in the cluster and troubleshoot them, as well as manage the cluster itself.
 
-The Kubernetes Dashboard is not accessible from outside the cluster. To expose it, we have set up our own service as a NodePort service. Additionally we expose the metrics-server, which is shipped with the dashboard as a NodePort service as well.
-
-- Kubernetes Dashboard: <http://talos-cp.fritz.box:30001>
-    - To log in with a Bear Token, run `kubectl -n monitoring-logging create token kubernetes-dashboard-web` on the admin-pi to get the token.
-<!-- - metrics-server: <http://talos-cp.fritz.box:30002> -->
-
 The Kubernetes Dashboard is deployed inside the Kubernetes cluster. In case the Prometheus-Grafana stack is down, we still have access to the Kubernetes Dashboard to inspect the cluster.
+
+- Run `~/port-forward-kubernetes-dashboard.sh` on the `admin-pi.fritz.box` to retrieve a Bearer Token and to port-forward the Kubernetes Dashboards web interface.
+<!-- - metrics-server: <http://talos-cp.fritz.box:30002> -->
 
 <!-- ## Logging
 
