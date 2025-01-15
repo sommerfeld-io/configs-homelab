@@ -13,7 +13,7 @@ To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh`
 @startuml
 !include C4_Component.puml
 
-skinparam linetype ortho
+' skinparam linetype ortho
 skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
 skinparam arrowColor #E2E4E9
@@ -31,15 +31,15 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
     Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
     Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Default Metrics Endpoints from ArgoCD")
     Component(argo_service, "ArgoCD Metrics Services", "Services", "Expose as NodePort")
-    ' Component(kube_metrics, "kube-state-metrics", "Deployment", "Kubernetes Metrics")
-    ' Component(kube_service, "kube-state-metrics", "Service", "Expose as NodePort")
+    Component(metrics_server, "metrics-server", "Service", "Shipped with the Kubernetes Dashboard")
+    Component(kube_dashboard, "k8s-dashboard", "Application", "Web Interface")
 }
 
 Rel(node_exporter, prometheus, "HTTP")
 Rel(argo_metrics, argo_service, "HTTP")
 Rel(argo_service, prometheus, "HTTP")
-' Rel(kube_metrics, kube_service, "HTTP")
-' Rel(kube_service, prometheus, "HTTP")
+Rel(metrics_server, prometheus, "HTTP")
+Rel(metrics_server, kube_dashboard, "HTTP")
 
 Rel_Neighbor(prometheus, grafana, "HTTP")
 
@@ -86,6 +86,15 @@ Prometheus scrapes these endpoints to collect metrics and Grafana visualizes the
 
 ??? note "Namespace for custom services to expose ArgoCD metrics"
     Even though our own monitoring and logging deployments are inside the `monitoring-logging` namespace, the custom services to expose ArgoCD metrics must be in the `argocd` namespace.
+
+### Kubernetes Dashboard
+
+The Kubernetes Dashboard is a general-purpose, web-based UI for Kubernetes clusters. It allows users to manage applications running in the cluster and troubleshoot them, as well as manage the cluster itself.
+
+The Kubernetes Dashboard is not accessible from outside the cluster. To expose it, we have set up our own service as a NodePort service. Addtionally we expose the metrics-server, which is shipped with the dashboard as a NodePort service as well.
+
+- <http://talos-cp.fritz.box:30001>
+- <http://talos-cp.fritz.box:30002>
 
 <!-- ## Logging
 
