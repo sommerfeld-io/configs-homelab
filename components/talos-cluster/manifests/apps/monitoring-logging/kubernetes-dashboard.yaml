@@ -54,29 +54,6 @@ spec:
     - name: web
       port: 8000
       protocol: TCP
-      targetPort: 8083
+      targetPort: 8000
       nodePort: 30001
-  type: NodePort
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/instance: kubernetes-dashboard
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: metrics-server
-  name: kubernetes-dashboard-metrics-server-svc
-  namespace: monitoring-logging
-spec:
-  selector:
-    app.kubernetes.io/instance: kubernetes-dashboard
-    app.kubernetes.io/name: metrics-server
-  ports:
-    - appProtocol: https
-      name: https
-      port: 443
-      protocol: TCP
-      targetPort: https
-      nodePort: 30002
   type: NodePort

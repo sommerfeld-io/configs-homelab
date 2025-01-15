@@ -38,7 +38,7 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
 Rel(node_exporter, prometheus, "HTTP")
 Rel(argo_metrics, argo_service, "HTTP")
 Rel(argo_service, prometheus, "HTTP")
-Rel(metrics_server, prometheus, "HTTP")
+' Rel(metrics_server, prometheus, "HTTP")
 Rel(metrics_server, kube_dashboard, "HTTP")
 
 Rel_Neighbor(prometheus, grafana, "HTTP")
