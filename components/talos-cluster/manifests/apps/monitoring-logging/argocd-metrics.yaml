@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/name: argocd-metrics
     app.kubernetes.io/part-of: argocd
   name: argocd-metrics-svc
-  namespace: monitoring-logging # argocd
+  namespace: argocd # monitoring-logging
 spec:
   selector:
     app.kubernetes.io/name: argocd-application-controller
