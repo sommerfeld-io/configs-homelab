@@ -29,19 +29,17 @@ Component_Ext(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
     Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
-    ' Component(metrics_server, "Metrics Server", "Application", "Metrics from Kubernetes")
     Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Default Metrics Endpoints from ArgoCD")
     Component(argo_service, "ArgoCD Metrics Services", "Services", "Expose as NodePort")
-    Component(kube_metrics, "kube-state-metrics", "Deployment", "Kubernetes Metrics")
-    Component(kube_service, "kube-state-metrics", "Service", "Expose as NodePort")
+    ' Component(kube_metrics, "kube-state-metrics", "Deployment", "Kubernetes Metrics")
+    ' Component(kube_service, "kube-state-metrics", "Service", "Expose as NodePort")
 }
 
 Rel(node_exporter, prometheus, "HTTP")
-' Rel(metrics_server, prometheus, "HTTP")
 Rel(argo_metrics, argo_service, "HTTP")
 Rel(argo_service, prometheus, "HTTP")
-Rel(kube_metrics, kube_service, "HTTP")
-Rel(kube_service, prometheus, "HTTP")
+' Rel(kube_metrics, kube_service, "HTTP")
+' Rel(kube_service, prometheus, "HTTP")
 
 Rel_Neighbor(prometheus, grafana, "HTTP")
 
@@ -59,11 +57,11 @@ Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `
 - <http://talos-w2.fritz.box:30091>
 - <http://talos-w3.fritz.box:30091>
 
-### Kubernetes Metrics
+<!-- ### Kubernetes Metrics
 
 [`kube-state-metrics`](https://github.com/kubernetes/kube-state-metrics) provides Kubernetes resource-level metrics, such as pod counts, namespace counts, and pod distribution.
 
-- <http://talos-cp.fritz.box:30090>
+- <http://talos-cp.fritz.box:30090> -->
 
 ### ArgoCD Metrics
 
