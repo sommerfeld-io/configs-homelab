@@ -107,8 +107,7 @@ The Kubernetes Dashboard is a general-purpose, web-based UI for Kubernetes clust
 The Kubernetes Dashboard is not accessible from outside the cluster. To expose it, we have set up our own service as a NodePort service. Additionally we expose the metrics-server, which is shipped with the dashboard as a NodePort service as well.
 
 - Kubernetes Dashboard: <http://talos-cp.fritz.box:30001>
-    - To allow logging in with a BearToken, we have [set up a service account and a cluster role binding](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md) in the `monitoring-logging` namespace (see `components/talos-cluster/manifests/apps/monitoring-logging/kubernetes-dashboard.yaml`).
-    - Run `kubectl -n monitoring-logging create token kubernetes-dashboard-admin-user` on the admin-pi to get the token.
+    - To log in with a Bear Token, run `kubectl -n monitoring-logging create token kubernetes-dashboard-web` on the admin-pi to get the token.
 <!-- - metrics-server: <http://talos-cp.fritz.box:30002> -->
 
 The Kubernetes Dashboard is deployed inside the Kubernetes cluster. In case the Prometheus-Grafana stack is down, we still have access to the Kubernetes Dashboard to inspect the cluster.
