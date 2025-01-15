@@ -2,15 +2,16 @@
 global:
   scrape_interval: 5s
   external_labels:
-    monitor: 'prometheus-grafana-stack'
+    monitor: prometheus-grafana-stack
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: prometheus
     static_configs:
-      - targets: ['localhost:9090']
+      - targets:
+          - localhost:9090
   ##############################################################################
   #    node exporter                                                           #
   ##############################################################################
-  - job_name: 'node-metrics'
+  - job_name: node-metrics
     scrape_interval: 5s
     static_configs:
       - targets:
@@ -18,13 +19,13 @@ scrape_configs:
           - kobol.fritz.box:9100
           - admin-pi.fritz.box:9100
         labels:
-          group: "node-metrics"
+          group: node-metrics
       - targets:
           - caprica.fritz.box:9110
           - kobol.fritz.box:9110
         labels:
-          group: "docker-metrics"
-  - job_name: 'talos-cluster-metrics'
+          group: docker-metrics
+  - job_name: talos-cluster-metrics
     scrape_interval: 5s
     static_configs:
       - targets:
@@ -33,11 +34,11 @@ scrape_configs:
           - talos-w2.fritz.box:30091
           - talos-w3.fritz.box:30091
         labels:
-          group: "node-metrics"
+          group: node-metrics
   ##############################################################################
   #    blackbox exporter                                                       #
   ##############################################################################
-  - job_name: 'homelab-services'
+  - job_name: homelab-services
     metrics_path: /probe
     params:
       module: [http_2xx]  # Look for a HTTP 200 response.
@@ -55,7 +56,7 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox_exporter:9115
-  - job_name: 'monitoring-logging'
+  - job_name: monitoring-logging
     metrics_path: /probe
     params:
       module: [http_2xx] # Look for a HTTP 200 response.
@@ -72,7 +73,7 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox_exporter:9115
-  - job_name: 'websites'
+  - job_name: websites
     metrics_path: /probe
     params:
       module: [http_2xx]
@@ -91,11 +92,20 @@ scrape_configs:
   ##############################################################################
   #    ArgoCD metrics                                                          #
   ##############################################################################
-  - job_name: 'argocd-metrics'
+  - job_name: argocd-metrics
     static_configs:
       - targets:
           - talos-cp.fritz.box:30092
           - talos-cp.fritz.box:30093
           - talos-cp.fritz.box:30094
         labels:
-          instance: 'argocd'
+          instance: argocd
+  ##############################################################################
+  #    Kubernetes metrics                                                      #
+  ##############################################################################
+  - job_name: kube-state-metrics
+    static_configs:
+      - targets:
+          - talos-cp.fritz.box:30090
+        labels:
+          instance: argocd

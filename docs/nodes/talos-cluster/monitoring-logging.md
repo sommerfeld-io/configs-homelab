@@ -31,13 +31,17 @@ System_Boundary(talos, "Talos Kubernetes Cluster") {
     Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
     ' Component(metrics_server, "Metrics Server", "Application", "Metrics from Kubernetes")
     Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Default Metrics Endpoints from ArgoCD")
-    Component(argo_service, "ArgoCD Metrics Service", "Service", "Expose without port forwarding")
+    Component(argo_service, "ArgoCD Metrics Services", "Services", "Expose as NodePort")
+    Component(kube_metrics, "kube-state-metrics", "Deployment", "Kubernetes Metrics")
+    Component(kube_service, "kube-state-metrics", "Service", "Expose as NodePort")
 }
 
 Rel(node_exporter, prometheus, "HTTP")
 ' Rel(metrics_server, prometheus, "HTTP")
 Rel(argo_metrics, argo_service, "HTTP")
 Rel(argo_service, prometheus, "HTTP")
+Rel(kube_metrics, kube_service, "HTTP")
+Rel(kube_service, prometheus, "HTTP")
 
 Rel_Neighbor(prometheus, grafana, "HTTP")
 
@@ -45,9 +49,6 @@ note right of talos: Running on all worker nodes and the control plane node
 
 @enduml
 ```
-
-!!! warning "TODO"
-    Setup Argocd Metrics and update docs accordingly (if needed).
 
 ### System Metrics (Node Exporter)
 
@@ -59,11 +60,10 @@ Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `
 - <http://talos-w3.fritz.box:30091>
 
 ### Kubernetes Metrics
-Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. -->
 
-<!-- ## Logging
+[`kube-state-metrics`](https://github.com/kubernetes/kube-state-metrics) provides Kubernetes resource-level metrics, such as pod counts, namespace counts, and pod distribution.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. -->
+- <http://talos-cp.fritz.box:30090>
 
 ### ArgoCD Metrics
 
@@ -86,8 +86,12 @@ The default metrics services from ArgoCD are not accessible from outside the clu
 
 Prometheus scrapes these endpoints to collect metrics and Grafana visualizes them though the example dashboard provided by ArgoCD. The example dashboard is linked in the [Dashboard section on the official Metrics Docs page](https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#dashboards).
 
-??? note "Namespace for custom services"
+??? note "Namespace for custom services to expose ArgoCD metrics"
     Even though our own monitoring and logging deployments are inside the `monitoring-logging` namespace, the custom services to expose ArgoCD metrics must be in the `argocd` namespace.
+
+<!-- ## Logging
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. -->
 
 ## References / External Links
 
