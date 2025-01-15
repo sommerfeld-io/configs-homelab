@@ -9,41 +9,54 @@ To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh`
 
 ## Monitoring
 
-```kroki-c4plantuml
+```kroki-plantuml
 @startuml
-!include C4_Component.puml
 
-' skinparam linetype ortho
+skinparam linetype ortho
 skinparam backgroundColor transparent
 skinparam fontColor #E2E4E9
+
 skinparam arrowColor #E2E4E9
+skinparam ArrowFontColor #E2E4E9
+
+skinparam RectangleFontColor #ccc
+skinparam RectangleBorderColor #85BBF0
 
 skinparam NoteFontColor #E2E4E9
 skinparam NoteBorderColor #E2E4E9
 skinparam NoteBackgroundColor #1E2129
 
-LAYOUT_LEFT_RIGHT()
-
-Component_Ext(prometheus, "Prometheus", "admin-pi", "On-Premise Monitoring Stack")
-Component_Ext(grafana, "Grafana", "admin-pi", "On-Premise Monitoring Stack")
-
-System_Boundary(talos, "Talos Kubernetes Cluster") {
-    Component(node_exporter, "Node Exporter", "Application", "System metrics like CPU, Memory, Disk, Network")
-    Component(argo_metrics, "ArgoCD Metrics", "Endpoint", "Default Metrics Endpoints from ArgoCD")
-    Component(argo_service, "ArgoCD Metrics Services", "Services", "Expose as NodePort")
-    Component(metrics_server, "metrics-server", "Service", "Shipped with the Kubernetes Dashboard")
-    Component(kube_dashboard, "k8s-dashboard", "Application", "Web Interface")
+skinparam activity {
+    'FontName Ubuntu
+    FontName Roboto
 }
 
-Rel(node_exporter, prometheus, "HTTP")
-Rel(argo_metrics, argo_service, "HTTP")
-Rel(argo_service, prometheus, "HTTP")
-' Rel(metrics_server, prometheus, "HTTP")
-Rel(metrics_server, kube_dashboard, "HTTP")
+rectangle k8s as "Kubernetes Cluster" <<Talos>> {
+    component node_exporter <<Metrics>> #85BBF0
+    component argo as "ArgoCD" <<Metrics>> #85BBF0
+    component argo_svc as "ArgoCD Service" <<NodePort>>
+    component ms as "metrics-server" <<Metrics>> #85BBF0
+    component dash as "kubernetes-dashboard" <<Application>>
 
-Rel_Neighbor(prometheus, grafana, "HTTP")
+    node_exporter -[hidden]down- argo
+    argo -[hidden]down- ms
 
-note right of talos: Running on all worker nodes and the control plane node
+    argo -right-> argo_svc
+    ms -right-> dash
+
+    note right of node_exporter: Running on all\nworker nodes and the\ncontrol plane node
+}
+
+component p as "Prometheus" <<Docker Container>>
+component g as "Grafana" <<Docker Container>>
+component be as "blackbox_exporter" <<Docker Container>>
+
+node_exporter -right-> p
+argo_svc -right-> p
+ms -right-> p
+
+be -down--> p
+p -down-> g
 
 @enduml
 ```
@@ -91,10 +104,14 @@ Prometheus scrapes these endpoints to collect metrics and Grafana visualizes the
 
 The Kubernetes Dashboard is a general-purpose, web-based UI for Kubernetes clusters. It allows users to manage applications running in the cluster and troubleshoot them, as well as manage the cluster itself.
 
-The Kubernetes Dashboard is not accessible from outside the cluster. To expose it, we have set up our own service as a NodePort service. Addtionally we expose the metrics-server, which is shipped with the dashboard as a NodePort service as well.
+The Kubernetes Dashboard is not accessible from outside the cluster. To expose it, we have set up our own service as a NodePort service. Additionally we expose the metrics-server, which is shipped with the dashboard as a NodePort service as well.
 
-- <http://talos-cp.fritz.box:30001>
-- <http://talos-cp.fritz.box:30002>
+- Kubernetes Dashboard: <http://talos-cp.fritz.box:30001>
+    - To allow logging in with a BearToken, we have [set up a service account and a cluster role binding](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md) in the `monitoring-logging` namespace (see `components/talos-cluster/manifests/apps/monitoring-logging/kubernetes-dashboard.yaml`).
+    - Run `kubectl -n monitoring-logging create token kubernetes-dashboard-admin-user` on the admin-pi to get the token.
+<!-- - metrics-server: <http://talos-cp.fritz.box:30002> -->
+
+The Kubernetes Dashboard is deployed inside the Kubernetes cluster. In case the Prometheus-Grafana stack is down, we still have access to the Kubernetes Dashboard to inspect the cluster.
 
 <!-- ## Logging
 
