@@ -10,7 +10,7 @@ metadata:
 spec:
   project: talos-cluster
   source:
-    repoURL: https://prometheus-community.github.io/helm-charts.git
+    repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-state-metrics
     targetRevision: 5.28.0
     helm:
