@@ -35,10 +35,12 @@ rectangle k8s as "Kubernetes Cluster" <<Talos>> {
     component node_exporter <<Metrics>> #85BBF0
     component argo as "ArgoCD" <<Metrics>> #85BBF0
     component argo_svc as "ArgoCD Service" <<NodePort>>
+    component ksm as "kube-state-metrics" <<Metrics>> #85BBF0
     component ms as "metrics-server" <<Metrics>> #85BBF0
     component dash as "kubernetes-dashboard" <<Application>>
 
-    node_exporter -[hidden]down- argo
+    node_exporter -[hidden]down- ksm
+    ksm -[hidden]down- argo
     argo -[hidden]down- ms
 
     argo -right-> argo_svc
@@ -53,7 +55,7 @@ component be as "blackbox_exporter" <<Docker Container>>
 
 node_exporter -right-> p
 argo_svc -right-> p
-ms -right-> p
+ksm -right-> p
 
 be -down--> p
 p -down-> g
