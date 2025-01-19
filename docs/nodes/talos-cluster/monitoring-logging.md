@@ -47,6 +47,8 @@ rectangle k8s as "Kubernetes Cluster" <<Talos>> {
     ms -right-> dash
 
     note right of node_exporter: Running on all\nworker nodes and the\ncontrol plane node
+    note left of node_exporter: NodePort config via Helm Chart
+    note left of ksm: NodePort config via Helm Chart
 }
 
 component p as "Prometheus" <<Docker Container>>
@@ -72,11 +74,14 @@ Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `
 - <http://talos-w2.fritz.box:30091>
 - <http://talos-w3.fritz.box:30091>
 
-<!-- ### Kubernetes Metrics
+### Kubernetes Metrics
 
 [`kube-state-metrics`](https://github.com/kubernetes/kube-state-metrics) provides Kubernetes resource-level metrics, such as pod counts, namespace counts, and pod distribution.
 
-- <http://talos-cp.fritz.box:30090> -->
+- <http://talos-cp.fritz.box:30095>
+
+??? note "Metrics Server is not the way to expose metrics"
+    **From the official docs:** The [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is meant only for autoscaling purposes. For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. In such cases please collect metrics from Kubelet `/metrics/resource` endpoint directly.
 
 ### ArgoCD Metrics
 

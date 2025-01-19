@@ -111,6 +111,4 @@ scrape_configs:
   - job_name: kube-state-metrics
     static_configs:
       - targets:
-          - talos-cp.fritz.box:30090
-        labels:
-          instance: argocd
+          - talos-cp.fritz.box:30095
