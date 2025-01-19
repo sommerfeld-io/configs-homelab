@@ -7,6 +7,7 @@ set -o nounset
 
 readonly OPTION_START="start"
 readonly OPTION_STOP="stop"
+readonly OPTION_REMOVE_IMAGES="stop-and-remove-images"
 readonly OPTION_RESTART="restart"
 readonly OPTION_LOGS="logs"
 
@@ -21,6 +22,12 @@ function startup() {
 # Utility function to shutdown docker compose services.
 function shutdown() {
   echo -e "$LOG_INFO Shutdown stack $P$STACK$D on $P$HOSTNAME$D"
+  docker compose down --volumes --remove-orphans
+}
+
+# Utility function to shutdown docker compose services.
+function removeImages() {
+  echo -e "$LOG_INFO Remove images for stack $P$STACK$D on $P$HOSTNAME$D"
   docker compose down --rmi all --volumes --remove-orphans
 }
 
@@ -49,7 +56,7 @@ echo -e "$LOG_INFO ------------------------------------------"
     cd "$STACK" || exit
 
     echo -e "$LOG_INFO Select the action"
-    select s in "$OPTION_START" "$OPTION_STOP" "$OPTION_RESTART" "$OPTION_LOGS"; do
+    select s in "$OPTION_START" "$OPTION_STOP" "$OPTION_REMOVE_IMAGES" "$OPTION_RESTART" "$OPTION_LOGS"; do
       case "$s" in
       "$OPTION_START")
         startup
@@ -57,6 +64,10 @@ echo -e "$LOG_INFO ------------------------------------------"
         ;;
       "$OPTION_STOP")
         shutdown
+        break
+        ;;
+      "$OPTION_REMOVE_IMAGES")
+        removeImages
         break
         ;;
       "$OPTION_RESTART")
