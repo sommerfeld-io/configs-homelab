@@ -109,6 +109,7 @@ scrape_configs:
   #    Kubernetes metrics                                                      #
   ##############################################################################
   - job_name: kube-state-metrics
+    metrics_path: /metrics
     static_configs:
       - targets:
           - talos-cp.fritz.box:30095
