@@ -1,0 +1,33 @@
+---
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-state-metrics
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: kube-state-metrics
+  namespace: argocd
+spec:
+  project: talos-cluster
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-state-metrics
+    targetRevision: kube-state-metrics-5.28.0
+    helm:
+      valuesObject:
+        service:
+          type: NodePort
+          nodePort: 30095
+        namespaceOverride: &namespace monitoring-logging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: *namespace
+  syncPolicy:
+    # managedNamespaceMetadata:
+    #   labels:
+    #     pod-security.kubernetes.io/enforce: privileged
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
