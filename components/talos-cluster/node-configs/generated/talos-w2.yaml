@@ -31,9 +31,9 @@ machine:
             enabled: true
             forwardKubeDNSToHost: true
     nodeLabels:
-        node.device: raspi-5
+        node.device: raspi-4
         node.network-connect: switch
-        node.storage: 128gb
+        node.storage: 32gb
         node.type: worker
 cluster:
     id: UVPb2ofVionrGqozMUUKOBJfXwRVs2U6pzMtpVOlU9s=
