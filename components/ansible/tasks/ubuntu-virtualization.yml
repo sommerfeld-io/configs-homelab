@@ -21,6 +21,7 @@
 - name: Virtualbox Setup  ----  Set virtual machines folder
   ansible.builtin.command: "vboxmanage setproperty machinefolder /home/{{ ansible_user }}/virtualmachines"
   become_user: "{{ ansible_user }}"
+  become: true
 
 - name: Virtualbox Setup  ----  Add user to group
   ansible.builtin.user:

@@ -1,13 +1,14 @@
 ---
-profile: null # min, basic, moderate,safety, shared, production
+# See https://ansible.readthedocs.io/projects/lint/configuring
+profile: basic # https://ansible.readthedocs.io/projects/lint/profiles
 
 var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 
-use_default_rules: true
+use_default_rules: false
 
 enable_list:
-  - no-log-password # opt-in
-  - no-same-owner # opt-in
+  - no-log-password
+  - no-same-owner
   - yaml
 
 warn_list:
@@ -18,7 +19,6 @@ warn_list:
   - name[missing]
   - no-changed-when
   - package-latest
-
 
 skip_list:
   - yaml[line-length]

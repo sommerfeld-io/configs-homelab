@@ -66,10 +66,10 @@ services:
 
   lint-ansible:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-ansible
-    image: cytopia/ansible-lint:latest
+    image: pipelinecomponents/ansible-lint:0.76.0
     volumes: *volumes
     working_dir: *default-workdir
-    command: components/ansible/playbooks -c .ansible-lint.yml
+    command: ansible-lint components/ansible/playbooks -c .ansible-lint.yml
     tty: *tty
 
   lint-helm:
