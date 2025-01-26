@@ -44,9 +44,8 @@ ignore:
   - target/docs/site
   - target
 
-  # Helm expects this specific filename in this specific case
-  - Chart.yaml
-  - components/minikube/admin-charts/portainer/Chart.yaml
+  # Helm
+  - components/helm-charts/hello-world-nginx/Chart.yaml
 
   # linter definitions etc.
   - .ansible-lint.yml

@@ -5,8 +5,6 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-readonly CHART_ADMIN="admin-charts"
-
 readonly OPTION_START="start"
 readonly OPTION_STOP="stop"
 readonly OPTION_DASHBOARD="open-dashboard"
@@ -15,8 +13,6 @@ readonly OPTION_SERVICES="list-services"
 readonly OPTION_STATUS="status"
 readonly OPTION_HELP="help"
 readonly OPTION_DESTROY="destroy"
-readonly OPTION_DEPLOY_ADMIN="deploy-$CHART_ADMIN"
-readonly OPTION_UNDEPLOY_ADMIN="undeploy-$CHART_ADMIN"
 
 # @description Utility function to startup minikube.
 function startup() {
@@ -117,8 +113,6 @@ echo -e "$LOG_INFO Select the action"
 select s in "$OPTION_START" \
   "$OPTION_STOP" \
   "$OPTION_DASHBOARD" \
-  "$OPTION_DEPLOY_ADMIN" \
-  "$OPTION_UNDEPLOY_ADMIN" \
   "$OPTION_PODS" \
   "$OPTION_SERVICES" \
   "$OPTION_STATUS" \
@@ -135,14 +129,6 @@ select s in "$OPTION_START" \
     ;;
   "$OPTION_DASHBOARD")
     dashboard
-    break
-    ;;
-  "$OPTION_DEPLOY_ADMIN")
-    deploy "$CHART_ADMIN" portainer
-    break
-    ;;
-  "$OPTION_UNDEPLOY_ADMIN")
-    undeploy portainer
     break
     ;;
   "$OPTION_PODS")

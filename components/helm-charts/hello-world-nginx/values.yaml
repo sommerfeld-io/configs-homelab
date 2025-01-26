@@ -1,0 +1,3 @@
+---
+nodePort: 32080
+replicas: 3

@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: &name hello-world-nginx
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sommerfeld-io/configs-homelab.git
+    targetRevision: main
+    path: components/helm-charts/hello-world-nginx
+    helm:
+      valuesObject:
+        nodePort: 32080
+        replicas: 2
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: *name
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

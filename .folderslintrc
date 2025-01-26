@@ -16,9 +16,13 @@
 		"components/ansible/vars",
 
 		"components/bootstrap",
+
 		"components/conky/*",
+
 		"components/docker-stacks/**",
-		"components/minikube/**",
+
+		"components/helm-charts/hello-world-nginx/*",
+		"components/helm-charts/hello-world-nginx/*/templates",
 
 		"components/talos-cluster",
 		"components/talos-cluster/manifests",

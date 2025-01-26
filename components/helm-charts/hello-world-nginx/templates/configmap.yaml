@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-html"
+  labels:
+    app: {{ .Release.Name }}
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Hello World from {{ .Release.Name }}</title>
+    </head>
+    <body>
+        <h1>Hello, World!</h1>
+        <p>This is a demo site served by Nginx!</p>
+    </body>
+    </html>

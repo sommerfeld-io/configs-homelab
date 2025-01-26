@@ -77,7 +77,7 @@ services:
     image: alpine/helm:3.16.1
     volumes: *volumes
     working_dir: *default-workdir
-    command: lint components/minikube/admin-charts/portainer --with-subcharts
+    command: lint components/helm-charts/hello-world-nginx # --with-subcharts
     tty: *tty
 
   kroki:
