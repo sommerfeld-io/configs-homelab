@@ -10,10 +10,11 @@ data:
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Hello World from {{ .Release.Name }}</title>
+        <title>Hello World</title>
     </head>
     <body>
         <h1>Hello, World!</h1>
         <p>This is a demo site served by Nginx!</p>
+        <p>.Release.Name = {{ .Release.Name }}</p>
     </body>
     </html>
