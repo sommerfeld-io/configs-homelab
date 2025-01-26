@@ -50,6 +50,7 @@ ignore:
   # linter definitions etc.
   - .ansible-lint.yml
   - .hadolint.yml
+  - .kube-linter.yml
   - .ls-lint.yml
   - .lychee.toml
   - .markdownlint.yml

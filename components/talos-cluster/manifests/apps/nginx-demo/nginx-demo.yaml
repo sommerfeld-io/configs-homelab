@@ -32,7 +32,19 @@ spec:
         - name: nginx
           image: nginx:1.27.2
           ports:
-            - containerPort: 80
+            - containerPort: &containerPort 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: *containerPort
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: *containerPort
+            initialDelaySeconds: 10
+            periodSeconds: 15
       restartPolicy: Always
 
 ---
