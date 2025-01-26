@@ -63,6 +63,10 @@ repos:
         name: lint-helm
         language: script
         entry: /bin/bash -c 'docker compose up lint-helm --exit-code-from lint-helm'
+      - id: lint-k8s-manifests
+        name: lint-k8s-manifests
+        language: script
+        entry: /bin/bash -c 'docker compose up lint-k8s-manifests --exit-code-from lint-k8s-manifests'
       # - id: lint-dockerfile
       #   name: lint-dockerfile
       #   language: script
