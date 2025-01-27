@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 12,
+  "id": 5,
   "links": [],
   "panels": [
     {
@@ -1348,7 +1348,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
+        "w": 6,
         "x": 3,
         "y": 27
       },
@@ -1571,8 +1571,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
-        "x": 10,
+        "w": 6,
+        "x": 9,
         "y": 27
       },
       "id": 29,
@@ -1714,8 +1714,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
-        "x": 17,
+        "w": 9,
+        "x": 15,
         "y": 27
       },
       "id": 30,
@@ -2131,7 +2131,6 @@
         "wideLayout": true
       },
       "pluginVersion": "11.4.0",
-      "repeatDirection": "h",
       "targets": [
         {
           "datasource": {
@@ -3988,9 +3987,7 @@
       {
         "allValue": ".*",
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -4208,13 +4205,13 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Summary / Talos Cluster",
   "uid": "90-summary-talos-cluster",
-  "version": "0.1.0",
+  "version": 2,
   "weekStart": ""
 }
