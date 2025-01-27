@@ -50,6 +50,7 @@ scrape_configs:
           - talos-cp.fritz.box:30081
           - talos-cp.fritz.box:30082
           - talos-cp.fritz.box:30083
+          - talos-cp.fritz.box:32080
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -66,11 +67,10 @@ scrape_configs:
           - admin-pi.fritz.box:80
           - admin-pi.fritz.box:3000
           - admin-pi.fritz.box:9090
-          - talos-cp.fritz.box:30001
-          - talos-cp.fritz.box:30002
-          - talos-cp.fritz.box:30092
-          - talos-cp.fritz.box:30093
-          - talos-cp.fritz.box:30094
+          - talos-cp.fritz.box:30092/metrics
+          - talos-cp.fritz.box:30093/metrics
+          - talos-cp.fritz.box:30094/metrics
+          - talos-cp.fritz.box:30095
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

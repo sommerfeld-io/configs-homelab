@@ -4128,9 +4128,11 @@
         "type": "row"
       }
     ],
-    "refresh": "",
+    "refresh": "10s",
     "schemaVersion": 39,
-    "tags": [],
+    "tags": [
+      "kubernetes"
+    ],
     "templating": {
       "list": [
         {

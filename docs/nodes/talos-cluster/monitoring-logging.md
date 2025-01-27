@@ -44,7 +44,7 @@ rectangle k8s as "Kubernetes Cluster" <<Talos>> {
     argo -[hidden]down- ms
 
     argo -right-> argo_svc
-    ms -right-> dash
+    ms -left-> dash
 
     note right of node_exporter: Running on all\nworker nodes and the\ncontrol plane node
     note left of node_exporter: NodePort config via Helm Chart
@@ -80,6 +80,19 @@ Each node in the Talos Kubernetes Cluster runs a `node_exporter` instance. The `
 
 - <http://talos-cp.fritz.box:30095>
 
+The Kubernetes dashboards originate from <https://github.com/dotdc/grafana-dashboards-kubernetes?tab=readme-ov-file>. They carry the numeric prefix `30` inside this repository (the rest of the name remains unchanged).
+
+| Dashboard                      | ID    |
+|--------------------------------|------:|
+| k8s-addons-prometheus.json     | 19105 |
+| k8s-addons-trivy-operator.json | 16337 |
+| k8s-system-api-server.json     | 15761 |
+| k8s-system-coredns.json        | 15762 |
+| k8s-views-global.json          | 15757 |
+| k8s-views-namespaces.json      | 15758 |
+| k8s-views-nodes.json           | 15759 |
+| k8s-views-pods.json            | 15760 |
+
 ??? note "Metrics Server is not the way to expose metrics"
     **From the official docs:** The [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is meant only for autoscaling purposes. For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. In such cases please collect metrics from Kubelet `/metrics/resource` endpoint directly.
 
@@ -103,6 +116,8 @@ The default metrics services from ArgoCD are not accessible from outside the clu
     - <http://talos-cp.fritz.box:30094/metrics>
 
 Prometheus scrapes these endpoints to collect metrics and Grafana visualizes them though the example dashboard provided by ArgoCD. The example dashboard is linked in the [Dashboard section on the official Metrics Docs page](https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#dashboards).
+
+The example dashboard is linked on the official Metrics Docs page: <https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#dashboards>
 
 ??? note "Namespace for custom services to expose ArgoCD metrics"
     Even though our own monitoring and logging deployments are inside the `monitoring-logging` namespace, the custom services to expose ArgoCD metrics must be in the `argocd` namespace.

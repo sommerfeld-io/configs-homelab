@@ -7973,7 +7973,7 @@
   "refresh": "10s",
   "schemaVersion": 40,
   "tags": [
-    "talos"
+    "summary"
   ],
   "templating": {
     "list": [
@@ -8189,8 +8189,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Talos Summary",
-  "uid": "talos-summary",
+  "title": "DEPRECATED / Summary / Talos",
+  "uid": "summary-talos",
   "version": "0.1.0",
   "weekStart": ""
 }

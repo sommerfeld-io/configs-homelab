@@ -779,7 +779,6 @@
   "schemaVersion": 30,
   "style": "dark",
   "tags": [
-    "blackbox",
     "prometheus"
   ],
   "templating": {
