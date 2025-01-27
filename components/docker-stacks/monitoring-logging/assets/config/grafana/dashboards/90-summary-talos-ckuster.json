@@ -3968,8 +3968,8 @@
       },
       {
         "current": {
-          "text": "30s",
-          "value": "30s"
+          "text": "10s",
+          "value": "10s"
         },
         "description": "k8s",
         "hide": 2,
@@ -3977,11 +3977,11 @@
         "options": [
           {
             "selected": true,
-            "text": "30s",
-            "value": "30s"
+            "text": "10s",
+            "value": "10s"
           }
         ],
-        "query": "30s",
+        "query": "10s",
         "type": "custom"
       },
       {
