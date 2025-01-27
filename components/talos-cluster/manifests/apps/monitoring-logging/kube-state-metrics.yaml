@@ -15,6 +15,7 @@ spec:
     targetRevision: 5.28.0
     helm:
       valuesObject:
+        replicas: 3
         service:
           type: NodePort
           nodePort: 30095
