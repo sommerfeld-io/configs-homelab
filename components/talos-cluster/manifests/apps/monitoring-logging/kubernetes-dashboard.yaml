@@ -24,14 +24,6 @@ spec:
       valuesObject:
         metrics-server:
           enabled: true
-        auth:
-          containers:
-            args: &args
-              - --enable-insecure-login
-              - --disable-auth
-        web:
-          containers:
-            args: *args
   syncPolicy:
     automated:
       allowEmpty: true
