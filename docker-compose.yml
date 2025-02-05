@@ -100,7 +100,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-kroki
     image: yuzutech/kroki:0.26.0
     ports:
-      - 8000:8000
+      - 3000:8000
     tty: *tty
 
   docs-build:
@@ -118,7 +118,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
     image: *docs-image
     environment:
-      - KROKI_SERVER_URL=http://localhost:8000
+      - KROKI_SERVER_URL=http://localhost:3000
     volumes: *volumes
     working_dir: *default-workdir
     ports:
