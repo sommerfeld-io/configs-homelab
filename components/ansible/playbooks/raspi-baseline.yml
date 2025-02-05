@@ -5,6 +5,7 @@
   become: true
   vars_files:
     - ../vars/global.yml
+    - ../vars/raspi.yml
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml

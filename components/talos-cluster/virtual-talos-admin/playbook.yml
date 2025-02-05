@@ -1,0 +1,50 @@
+---
+- name: Setup for group raspi_talos_admin
+  hosts: all
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../../ansible/vars/global.yml
+    - vars.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../../ansible/tasks/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../../ansible/tasks/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin.yml
+    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin-k9s.yml
+    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin-argocd-autopilot.yml
+
+- name: Setup for group raspi_talos_admin (non-root)
+  hosts: all
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../../ansible/vars/global.yml
+    - vars.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-copy-files.yml
+
+    - name: Config  ----  Create directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - "/home/{{ ansible_user }}/.talos"
+
+    - name: Talos  ----  Copy scripts for user {{ ansible_user }}
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - { src: "../node-configs/generated/talosconfig.yaml", dest: "/home/{{ ansible_user }}/.talos/config" }
+
+    - name: Talos  ----  Generate kubeconfig
+      command: talosctl kubeconfig --nodes "{{ control_plane_node }}" --endpoints "{{ control_plane_node }}"

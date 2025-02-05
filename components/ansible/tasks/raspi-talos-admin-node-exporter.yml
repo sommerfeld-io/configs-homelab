@@ -6,7 +6,6 @@
     mode: "0644"
   vars:
     version: 1.8.2
-    architecture: arm64
 
 - name: Talos  ----  Node Exporter  ----  Extract Archive
   ansible.builtin.unarchive:

@@ -49,3 +49,14 @@ To interact with your Talos Cluster through ArgoCD, follow these steps:
     ```
 
     Once logged in, you will have access to the ArgoCD dashboard where you can manage your applications and configurations deployed to the Talos Cluster.
+
+## `virtual-talos-admin`
+
+Alternatively to the `admin-pi`, you can use the `virtual-talos-admin` Vagrantbox to interact with the Talos Cluster. The `virtual-talos-admin` Vagrantbox is pre-configured with `talosctl`, `kubectl`, and `k9s`. The `kubeconfig` file is already configured to point to the Talos cluster. The provisioning is done by Ansible and the playbook for the Vagrantbox uses the same tasks as the playbook for the `admin-pi`.
+
+```bash
+vagrant destroy -f
+
+vagrant up
+vagrant ssh
+```

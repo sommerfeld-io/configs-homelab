@@ -1,5 +1,5 @@
 ---
-- name: Wallpaper  ----  Copy scripts for user {{ ansible_user }}
+- name: Talos  ----  Copy scripts for user {{ ansible_user }}
   ansible.builtin.copy:
     src: "../assets/scripts/talos/{{ item }}"
     dest: "/home/{{ ansible_user }}/{{ item }}"

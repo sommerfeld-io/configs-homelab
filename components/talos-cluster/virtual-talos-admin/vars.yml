@@ -1,0 +1,4 @@
+---
+architecture: amd64
+ansible_user: vagrant
+control_plane_node: talos-cp.fritz.box
