@@ -33,6 +33,7 @@
 		"components/talos-cluster/manifests/projects",
 		"components/talos-cluster/node-configs",
 		"components/talos-cluster/node-configs/generated",
+		"components/talos-cluster/virtual-talos-admin",
 
 		"docs",
 		"docs/_assets/**",
