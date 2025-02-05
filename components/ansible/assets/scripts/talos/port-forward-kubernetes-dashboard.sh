@@ -3,8 +3,9 @@
 # Kubernetes Docs: Authentication
 # https://github.com/kubernetes/dashboard/blob/v2.0.0/docs/user/access-control/README.md#authentication
 
-readonly PORT="8000"
-readonly PROTOCOL="http"
+readonly PORT="8443"
+readonly SVC_PORT="443"
+readonly PROTOCOL="https"
 
 readonly NAMESPACE="monitoring-logging"
 readonly SERVICE_ACCOUNT="kubernetes-dashboard-web"
@@ -16,4 +17,5 @@ echo -e "${D}"
 
 echo "[INFO] Port Forward -----------------------------"
 echo -e "[INFO]   ${Y}$PROTOCOL://$HOSTNAME.fritz.box:$PORT${D}"
-kubectl port-forward -n "$NAMESPACE" svc/kubernetes-dashboard-web "$PORT:$PORT" --address 0.0.0.0
+echo -e "[INFO]   ${Y}$PROTOCOL://localhost:$PORT${D}"
+kubectl -n "$NAMESPACE" port-forward svc/kubernetes-dashboard-kong-proxy "$PORT:$SVC_PORT" --address 0.0.0.0
