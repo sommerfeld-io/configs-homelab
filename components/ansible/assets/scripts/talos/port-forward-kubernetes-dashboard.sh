@@ -8,7 +8,7 @@ readonly SVC_PORT="443"
 readonly PROTOCOL="https"
 
 readonly NAMESPACE="monitoring-logging"
-readonly SERVICE_ACCOUNT="kubernetes-dashboard-web"
+readonly SERVICE_ACCOUNT="kubernetes-dashboard-kong"
 
 echo "[INFO] Bearer Token -----------------------------"
 echo -e "${Y}"

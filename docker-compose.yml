@@ -90,11 +90,12 @@ services:
       - -c
       - |
         echo "[INFO] ----- Install ----------------------------"
-        go install golang.stackrox.io/kube-linter/cmd/kube-linter@v0.6.8
+        go install golang.stackrox.io/kube-linter/cmd/kube-linter@v0.7.1
 
         echo "[INFO] ----- Lint -------------------------------"
         kube-linter lint components/talos-cluster/manifests --with-color --config .kube-linter.yml
     tty: *tty
+    # https://github.com/stackrox/kube-linter/blob/main/docs/generated/checks.md
 
   kroki:
     container_name: ${COMPOSE_PROJECT_NAME}-kroki
