@@ -8,8 +8,8 @@ spec:
   project: default
   source:
     repoURL: https://mojo2600.github.io/pihole-kubernetes
-    targetRevision: pihole-2.27.0
-    path: charts/pihole
+    targetRevision: 2.27.0
+    chart: pihole
     helm:
       valuesObject:
         replicaCount: 1
