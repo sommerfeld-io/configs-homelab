@@ -24,7 +24,7 @@ spec:
             - name: WEBPASSWORD
               value: "admin"
             - name: PIHOLE_WEB
-              value: true
+              value: "true" # must be string
           volumeMounts:
             - name: pihole-config
               mountPath: /etc/pihole
