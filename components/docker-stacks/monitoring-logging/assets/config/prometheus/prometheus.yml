@@ -51,6 +51,8 @@ scrape_configs:
           - talos-cp.fritz.box:30082
           - talos-cp.fritz.box:30083
           - talos-cp.fritz.box:32080
+          - talos-cp.fritz.box:30080/admin # pihole
+          - talos-w3.fritz.box:30080/admin # pihole
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
