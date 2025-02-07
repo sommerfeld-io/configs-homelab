@@ -13,8 +13,7 @@ VERSION="$1"
 ## @arg $1 string The version that should be written to the files.
 function incrementVersionsInYaml() {
   yaml_files=(
-    #"docs/antora.yml"
-    #"components/test-compliance/configs-homelab/inspec.yml"
+    "components/helm-charts/hello-world-nginx/Chart.yaml"
   )
 
   for file in "${yaml_files[@]}"; do
