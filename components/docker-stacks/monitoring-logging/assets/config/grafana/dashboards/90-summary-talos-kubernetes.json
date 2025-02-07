@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -29,9 +29,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 11,
+      "id": 5,
       "panels": [],
-      "title": "Summary",
+      "title": "Kubernetes Resources",
       "type": "row"
     },
     {
@@ -75,7 +75,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 7,
+        "w": 3,
         "x": 0,
         "y": 1
       },
@@ -154,7 +154,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 7,
+        "x": 3,
         "y": 1
       },
       "id": 1,
@@ -212,7 +212,7 @@
           "mappings": [],
           "noValue": "0",
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "blue",
@@ -225,8 +225,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 7,
-        "x": 10,
+        "w": 9,
+        "x": 6,
         "y": 1
       },
       "id": 2,
@@ -294,8 +294,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 7,
-        "x": 17,
+        "w": 9,
+        "x": 15,
         "y": 1
       },
       "id": 3,
@@ -338,19 +338,6 @@
       ],
       "title": "Running Pods",
       "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 5
-      },
-      "id": 5,
-      "panels": [],
-      "title": "Kubernetes Resources",
-      "type": "row"
     },
     {
       "datasource": {
@@ -426,7 +413,7 @@
         "h": 10,
         "w": 9,
         "x": 0,
-        "y": 6
+        "y": 5
       },
       "id": 6,
       "options": {
@@ -553,7 +540,7 @@
         "h": 10,
         "w": 9,
         "x": 9,
-        "y": 6
+        "y": 5
       },
       "id": 8,
       "options": {
@@ -672,7 +659,7 @@
         "h": 20,
         "w": 6,
         "x": 18,
-        "y": 6
+        "y": 5
       },
       "id": 10,
       "options": {
@@ -921,7 +908,7 @@
         "h": 10,
         "w": 9,
         "x": 0,
-        "y": 16
+        "y": 15
       },
       "id": 7,
       "options": {
@@ -1052,7 +1039,7 @@
         "h": 10,
         "w": 9,
         "x": 9,
-        "y": 16
+        "y": 15
       },
       "id": 9,
       "options": {
@@ -1113,7 +1100,246 @@
         "h": 1,
         "w": 24,
         "x": 0,
+        "y": 25
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Node Information",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "node"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "internal_ip"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "os_image"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kernel_version"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kubelet_version"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kubeproxy_version"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 13,
+        "x": 0,
         "y": 26
+      },
+      "id": 31,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "kube_node_info",
+          "format": "table",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "container_runtime_version": true,
+              "instance": true,
+              "job": true,
+              "node": false,
+              "pod_cidr": true,
+              "system_uuid": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 6,
+              "Value": 13,
+              "__name__": 7,
+              "container_runtime_version": 8,
+              "instance": 9,
+              "internal_ip": 1,
+              "job": 10,
+              "kernel_version": 3,
+              "kubelet_version": 4,
+              "kubeproxy_version": 5,
+              "node": 0,
+              "os_image": 2,
+              "pod_cidr": 11,
+              "system_uuid": 12
+            },
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "internal_ip": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "kernel_version": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "kubelet_version": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "kubeproxy_version": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "node": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "os_image": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "node"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
       },
       "id": 27,
       "panels": [],
@@ -1164,7 +1390,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 27
+        "y": 33
       },
       "id": 25,
       "links": [
@@ -1365,7 +1591,7 @@
         "h": 8,
         "w": 6,
         "x": 3,
-        "y": 27
+        "y": 33
       },
       "id": 28,
       "links": [
@@ -1594,7 +1820,7 @@
         "h": 8,
         "w": 6,
         "x": 9,
-        "y": 27
+        "y": 33
       },
       "id": 29,
       "links": [
@@ -1743,7 +1969,7 @@
         "h": 8,
         "w": 9,
         "x": 15,
-        "y": 27
+        "y": 33
       },
       "id": 30,
       "links": [
@@ -1828,7 +2054,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 31
+        "y": 37
       },
       "id": 26,
       "links": [
@@ -1877,7 +2103,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 41
       },
       "id": 12,
       "panels": [],
@@ -1907,10 +2133,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 0,
-        "y": 36
+        "y": 42
       },
       "id": 13,
       "options": {
@@ -2051,10 +2277,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 21,
         "x": 3,
-        "y": 36
+        "y": 42
       },
       "id": 14,
       "options": {
@@ -2077,11 +2303,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "editorMode": "code",
           "exemplar": true,
           "expr": "kube_pod_info{node=\"$node\", cluster=\"$cluster\"}",
           "format": "table",
           "interval": "",
           "legendFormat": "",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -2450,6 +2678,6 @@
   "timezone": "browser",
   "title": "Summary / Talos Kubernetes",
   "uid": "90-summary-talos-kubernetes",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "weekStart": ""
 }
