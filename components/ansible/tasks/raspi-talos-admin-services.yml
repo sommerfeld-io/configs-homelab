@@ -1,0 +1,5 @@
+---
+- name: Talos  ----  Admin Pi  ----  Stop systemd-resolved (prepare for Pihole)
+  systemd:
+    name: systemd-resolved
+    state: stopped
