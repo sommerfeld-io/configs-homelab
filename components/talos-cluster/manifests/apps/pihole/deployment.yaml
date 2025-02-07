@@ -18,6 +18,8 @@ spec:
           image: pihole/pihole:2024.07.0
           ports:
             - containerPort: 80
+            - containerPort: 53
+              hostPort: 53
           env:
             - name: PIHOLE_PASSWORD
               value: "admin"
