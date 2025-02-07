@@ -15,7 +15,6 @@
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-node-exporter.yml
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-k9s.yml
     - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-argocd-autopilot.yml
-    - ansible.builtin.import_tasks: ../tasks/raspi-talos-admin-services.yml
 
 - name: Setup for group raspi_talos_admin (non-root)
   hosts: raspi_talos_admin
