@@ -5,14 +5,14 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
-  name: node-exporter
+  name: prometheus-operator
   namespace: argocd
 spec:
   project: talos-cluster
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 4.43.1
+    targetRevision: 69.2.0
     helm:
       valuesObject:
         namespaceOverride: &namespace telemetry
