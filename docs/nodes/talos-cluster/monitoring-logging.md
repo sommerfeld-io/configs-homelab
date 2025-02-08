@@ -1,5 +1,8 @@
 # Talos Cluster - Monitoring + Logging
 
+!!! failure "Deprecared"
+    This document and its corresponding monitoring and logging setup are deprecated. The monitoring and logging stack is now deployed inside the Kubernetes cluster itself. For more information, see [Observe the cluster](telemetry.md).
+
 In this document, we will explore the monitoring and logging setup for the Talos Kubernetes Cluster. Monitoring and logging are crucial aspects of managing and maintaining a healthy and performant cluster. By implementing effective monitoring and logging solutions, we can gain insights into the cluster's performance and (hopefully) detect possible issues.
 
 To start and stop the Monitoring and Logging stack, run `~/docker-stacks-cli.sh` on the `admin-pi.fritz.box`.

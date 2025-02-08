@@ -22,7 +22,7 @@ spec:
           # Default node exporter port = 9100
           port: 9100
           targetPort: 9100
-        namespaceOverride: &namespace monitoring-logging
+        namespaceOverride: &namespace telemetry
   destination:
     server: https://kubernetes.default.svc
     namespace: *namespace
