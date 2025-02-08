@@ -19,7 +19,7 @@ spec:
         service:
           type: NodePort
           nodePort: 30095
-        namespaceOverride: &namespace monitoring-logging
+        namespaceOverride: &namespace telemetry
   destination:
     server: https://kubernetes.default.svc
     namespace: *namespace
