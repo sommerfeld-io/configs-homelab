@@ -9,7 +9,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring-logging
+    namespace: telemetry
   ignoreDifferences:
     - group: argoproj.io
       jsonPointers:

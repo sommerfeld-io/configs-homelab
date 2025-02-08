@@ -1,6 +1,5 @@
 ---
-# https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
-# https://github.com/prometheus-community/helm-charts/pkgs/container/charts%2Fprometheus-node-exporter
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -12,15 +11,19 @@ spec:
   project: talos-cluster
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus-node-exporter
+    chart: kube-prometheus-stack
     targetRevision: 4.43.1
     helm:
       valuesObject:
-        service:
-          type: ClusterIP
-          port: 9100
-          targetPort: 9100
         namespaceOverride: &namespace telemetry
+        grafana:
+          namespaceOverride: *namespace
+          adminUser: admin
+          adminPassword: admin
+        kube-state-metrics:
+          namespaceOverride: *namespace
+        prometheus-node-exporter:
+          namespaceOverride: *namespace
   destination:
     server: https://kubernetes.default.svc
     namespace: *namespace
