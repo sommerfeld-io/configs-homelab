@@ -17,8 +17,8 @@ spec:
       valuesObject:
         replicas: 3
         service:
-          type: NodePort
-          nodePort: 30095
+          type: ClusterIP
+          port: 8080
         namespaceOverride: &namespace telemetry
   destination:
     server: https://kubernetes.default.svc
