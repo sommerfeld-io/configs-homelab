@@ -25,7 +25,7 @@ checks:
     - host-pid
     - hpa-minimum-three-replicas
     - invalid-target-ports
-    # - latest-tag
+    - latest-tag
     - liveness-port
     # - minimum-three-replicas
     - mismatching-selector
@@ -56,6 +56,6 @@ checks:
     - unsafe-sysctls
     # - unset-cpu-requirements
     # - unset-memory-requirements
-    # - use-namespace
+    - use-namespace
     - wildcard-in-rules
     - writable-host-mount
