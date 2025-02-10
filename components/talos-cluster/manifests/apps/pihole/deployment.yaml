@@ -3,9 +3,6 @@ kind: Deployment
 metadata:
   name: pihole
   namespace: pihole
-  metadata:
-  annotations:
-    ignore-check.kube-linter.io/host-network: "Need port 53 for DNS so that FritzBox can use it"
 spec:
   replicas: 1
   selector:
@@ -16,7 +13,6 @@ spec:
       labels:
         app: pihole
     spec:
-      hostNetwork: true
       nodeSelector:
         kubernetes.io/hostname: talos-w3
       containers:
@@ -25,8 +21,6 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: PIHOLE_PASSWORD
-              value: "admin"
             - name: WEBPASSWORD
               value: "admin"
           volumeMounts:
