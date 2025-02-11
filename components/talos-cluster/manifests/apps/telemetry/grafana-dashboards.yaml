@@ -1,0 +1,14 @@
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: custom-dashboard
+  namespace: telemetry
+spec:
+  json:
+    configMapRef:
+      name: grafana-dashboards
+      key: grafana/dashboards/10-node-exporter-full.json
+  # datasourceSelector:
+  #   matchLabels:
+  #     grafana_datasource: "true"

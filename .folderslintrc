@@ -27,6 +27,7 @@
 		"components/talos-cluster",
 		"components/talos-cluster/manifests",
 		"components/talos-cluster/manifests/apps/*",
+		"components/talos-cluster/manifests/apps/telemetry/grafana/dashboards",
 		"components/talos-cluster/manifests/bootstrap/argo-cd",
 		"components/talos-cluster/manifests/bootstrap/cluster-resources",
 		"components/talos-cluster/manifests/bootstrap/cluster-resources/in-cluster",
