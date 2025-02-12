@@ -12,7 +12,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-metrics
-  # namespaceSelector:
+  namespaceSelector:
+    any: true
   #   matchNames:
   #     - argocd
   endpoints:
