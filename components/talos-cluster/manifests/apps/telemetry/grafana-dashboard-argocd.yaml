@@ -5,7 +5,7 @@ metadata:
   name: grafana-dashboard-argocd
   namespace: telemetry
   labels:
-    grafana_dashboard: "auto-discover"
+    grafana_dashboard: "1"
 data:
   grafana-dashboard-argocd.json: |
     {

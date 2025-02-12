@@ -13,7 +13,7 @@
 #   name: grafana-dashboard-node-exporter
 #   namespace: telemetry
 #   labels:
-#     grafana_dashboard: "auto-discover"
+#     grafana_dashboard: "1"
 # data:
 #   grafana-dashboard-node-exporter: |
 #     {

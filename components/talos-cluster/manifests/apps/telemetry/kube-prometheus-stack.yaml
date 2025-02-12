@@ -27,8 +27,6 @@ spec:
         sidecar:
           dashboards:
             enabled: true
-            label: grafana_dashboard
-            labelValue: "auto-discover"
             searchNamespace: *namespace
   destination:
     server: https://kubernetes.default.svc
