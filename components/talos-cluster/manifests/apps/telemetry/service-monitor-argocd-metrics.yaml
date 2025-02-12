@@ -14,6 +14,8 @@ spec:
       # app.kubernetes.io/name: argocd-metrics
       app.kubernetes.io/instance: argo-cd
       app.kubernetes.io/part-of: argocd
+  namespaceSelector:
+    any: true
   endpoints:
     - port: metrics
       interval: 5s
