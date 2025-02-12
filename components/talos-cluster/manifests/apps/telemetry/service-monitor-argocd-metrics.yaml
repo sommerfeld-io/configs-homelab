@@ -1,0 +1,30 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-metrics
+  namespace: telemetry
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for prometheus metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: argocd
+  namespaceSelector:
+    matchNames:
+      - argocd
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 5s
+    - port: server-metrics
+      path: /metrics
+      interval: 5s
+    - port: repo-server
+      path: /metrics
+      interval: 5s
+    - port: notifications-controller-metrics
+      path: /metrics
+      interval: 5s
