@@ -2,6 +2,10 @@
 # ! or more objects failed to apply, reason: ConfigMap "grafana-dashboard-node-exporter"
 # ! is invalid: metadata.annotations: Too long: must have at most 262144 bytes
 #
+# TODO find another way to load the data into a config map load from file? avoid a
+# TODO dedicated helm chart. Or place the whole kube-prometheus-stack into a custom helm
+# TODO  chart. But avoiding a helm chart is better. Do NOT use kustomize
+#
 # ---
 # apiVersion: v1
 # kind: ConfigMap
