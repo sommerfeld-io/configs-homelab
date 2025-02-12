@@ -11,11 +11,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: argocd-metrics
-  namespaceSelector:
-    matchNames:
-      - argocd
+      # app.kubernetes.io/name: argocd-metrics
+      app.kubernetes.io/instance: argo-cd
+      app.kubernetes.io/part-of: argocd
   endpoints:
     - port: metrics
-      path: /metrics
       interval: 5s
