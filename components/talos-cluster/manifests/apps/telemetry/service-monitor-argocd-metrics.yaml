@@ -11,6 +11,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-metrics
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
 
@@ -27,6 +30,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-server-metrics
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
 
@@ -43,6 +49,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-repo-server
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
 
@@ -59,6 +68,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-applicationset-controller
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
 
@@ -75,6 +87,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-dex-server
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
 
@@ -91,6 +106,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-redis-ha-haproxy
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: http-exporter-port
 
@@ -107,5 +125,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-notifications-controller-metrics
+  namespaceSelector:
+    matchNames:
+      - argocd
   endpoints:
     - port: metrics
