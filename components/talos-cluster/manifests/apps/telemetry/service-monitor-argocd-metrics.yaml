@@ -17,6 +17,7 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
