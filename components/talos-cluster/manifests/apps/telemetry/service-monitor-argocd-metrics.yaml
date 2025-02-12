@@ -3,20 +3,109 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-metrics
-  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
-    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for prometheus metrics"
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
 spec:
   selector:
     matchLabels:
-      # app.kubernetes.io/name: argocd-metrics
-      app.kubernetes.io/instance: argo-cd
-      app.kubernetes.io/part-of: argocd
-  namespaceSelector:
-    any: true
+      app.kubernetes.io/name: argocd-metrics
   endpoints:
     - port: metrics
-      path: /metrics
-      interval: 5s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-server-metrics
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server-metrics
+  endpoints:
+    - port: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-repo-server-metrics
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server
+  endpoints:
+    - port: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-applicationset-controller-metrics
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-applicationset-controller
+  endpoints:
+    - port: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-dex-server
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-dex-server
+  endpoints:
+    - port: metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-redis-haproxy-metrics
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-redis-ha-haproxy
+  endpoints:
+    - port: http-exporter-port
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-argocd-notifications-controller
+  labels:
+    release: kube-prometheus-stack
+  annotations:
+    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-notifications-controller-metrics
+  endpoints:
+    - port: metrics
