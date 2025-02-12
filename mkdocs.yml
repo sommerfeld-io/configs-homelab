@@ -58,7 +58,10 @@ nav:
       - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
   - Workstations and RasPi Nodes:
+      - nodes/index.md
       - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
+      - Raspberry Pi Nodes:
+          - nodes/raspi/admin-pi.md
       - Talos Cluster:
           - Overview: nodes/talos-cluster/index.md
           - Installation: nodes/talos-cluster/installation.md
