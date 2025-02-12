@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-metrics
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -22,6 +23,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-server-metrics
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -41,6 +43,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-repo-server-metrics
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -60,6 +63,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-applicationset-controller-metrics
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -79,6 +83,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-dex-server
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -98,6 +103,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-redis-haproxy-metrics
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -117,6 +123,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-notifications-controller
+  namespace: telemetry
   labels:
     release: kube-prometheus-stack
   annotations:
