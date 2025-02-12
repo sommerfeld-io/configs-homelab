@@ -12,11 +12,12 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-metrics
-  namespaceSelector:
-    matchNames:
-      - argocd
+  # namespaceSelector:
+  #   matchNames:
+  #     - argocd
   endpoints:
     - port: metrics
+      path: /metrics
       interval: 5s
 
 ---
