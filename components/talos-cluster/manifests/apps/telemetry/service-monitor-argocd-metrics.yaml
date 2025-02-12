@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-metrics
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -12,13 +12,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: argocd-metrics
-  namespaceSelector:
-    any: true
-  #   matchNames:
-  #     - argocd
   endpoints:
     - port: metrics
-      path: /metrics
       interval: 5s
 
 ---
@@ -26,7 +21,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-server-metrics
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -40,13 +35,14 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-repo-server-metrics
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -60,13 +56,14 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-applicationset-controller-metrics
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -80,13 +77,14 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-dex-server
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -100,13 +98,14 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-redis-haproxy-metrics
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -120,13 +119,14 @@ spec:
       - argocd
   endpoints:
     - port: http-exporter-port
+      interval: 5s
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: service-monitor-argocd-notifications-controller
-  namespace: telemetry
+  namespace: argocd
   labels:
     release: kube-prometheus-stack
   annotations:
@@ -140,3 +140,4 @@ spec:
       - argocd
   endpoints:
     - port: metrics
+      interval: 5s
