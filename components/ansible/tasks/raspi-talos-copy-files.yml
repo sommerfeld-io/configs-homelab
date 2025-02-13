@@ -10,3 +10,4 @@
     - docker-stacks-cli.sh
     - port-forward-argocd.sh
     - port-forward-kubernetes-dashboard.sh
+    - port-forward-prometheus.sh
