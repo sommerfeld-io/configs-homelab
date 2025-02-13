@@ -18,9 +18,6 @@ spec:
         grafana:
           adminUser: admin
           adminPassword: admin
-        sidecar:
-          dashboards:
-            enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: telemetry
