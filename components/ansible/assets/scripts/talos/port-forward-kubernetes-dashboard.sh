@@ -8,8 +8,9 @@ readonly SVC_PORT="443"
 readonly PROTOCOL="https"
 
 readonly NAMESPACE="kubernetes-dashboard"
-readonly SERVICE_ACCOUNT="kubernetes-dashboard-kong"
-readonly CLUSTER_ROLE_NAME="kubernetes-dashboard-read-only"
+readonly APP_NAME="$NAMESPACE-helm-chart"
+readonly SERVICE_ACCOUNT="$APP_NAME-kong"
+readonly CLUSTER_ROLE_NAME="$APP_NAME-read-only"
 
 echo "[INFO] Setup ------------------------------------"
 echo "[INFO] ClusterRole"
@@ -32,4 +33,4 @@ echo -e "${D}"
 echo "[INFO] Port Forward -----------------------------"
 echo -e "[INFO]   ${Y}$PROTOCOL://$HOSTNAME.fritz.box:$PORT${D}"
 echo -e "[INFO]   ${Y}$PROTOCOL://localhost:$PORT${D}"
-kubectl -n "$NAMESPACE" port-forward svc/kubernetes-dashboard-kong-proxy "$PORT:$SVC_PORT" --address 0.0.0.0
+kubectl -n "$NAMESPACE" port-forward "svc/$APP_NAME-kong-proxy" "$PORT:$SVC_PORT" --address 0.0.0.0
