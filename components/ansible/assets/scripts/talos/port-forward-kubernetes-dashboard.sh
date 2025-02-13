@@ -7,7 +7,7 @@ readonly PORT="8443"
 readonly SVC_PORT="443"
 readonly PROTOCOL="https"
 
-readonly NAMESPACE="telemetry"
+readonly NAMESPACE="kubernetes-dashboard"
 readonly SERVICE_ACCOUNT="kubernetes-dashboard-kong"
 readonly CLUSTER_ROLE_NAME="kubernetes-dashboard-read-only"
 
