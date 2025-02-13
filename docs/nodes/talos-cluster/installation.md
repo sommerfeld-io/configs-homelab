@@ -94,5 +94,5 @@ These steps only need to be done once when the initial setup is done or when the
 
 ## References / External Links
 
-- Talos Documentation on [Talos Documentation for the Raspberry Pi Series](https://www.talos.dev/v1.8/talos-guides/install/single-board-computers/rpi_generic) with (amont others) instructions on "Installing Talos on Raspberry Pi SBC’s using raw disk image".
+- Talos Documentation on [Talos Documentation for the Raspberry Pi Series](https://www.talos.dev/v1.8/talos-guides/install/single-board-computers/rpi_generic) with (amont others) instructions on "Installing Talos on Raspberry Pi SBC's using raw disk image".
 - After the Talos image was written to the SD card, the [Getting started &raquo; Modifying the Machine configs](https://www.talos.dev/v1.8/introduction/getting-started/#modifying-the-machine-configs) were followed. However, the install instructions above cover the necessary steps, the this link is listed purely for informational purposes.
