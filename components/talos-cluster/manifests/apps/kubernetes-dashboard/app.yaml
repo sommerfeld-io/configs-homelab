@@ -4,7 +4,7 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
-  name: kubernetes-dashboard
+  name: kubernetes-dashboard-helm-chart
   namespace: argocd
 spec:
   destination:
