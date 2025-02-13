@@ -9,7 +9,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: telemetry
+    namespace: kubernetes-dashboard
   ignoreDifferences:
     - group: argoproj.io
       jsonPointers:
