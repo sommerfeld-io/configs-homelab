@@ -21,16 +21,7 @@ To access the Grafana UI, we added a `NodePort` service to the Grafana deploymen
 
 ### ArgoCD metrics
 
-Argo CD exposes different sets of Prometheus metrics per server. The "Application Controller Metrics" about applications can be scraped at the `argocd-metrics:8082/metrics` endpoint.
-
-The default metrics services from ArgoCD are not accessible from outside the cluster. To expose them, we have set up our own services that basically are a copy of the default services but as a NodePort service.
-
-- **Application Controller Metrics**: The Application Controller in ArgoCD is responsible for managing and reconciling the desired state of applications.
-- **ArgoCD Server**: The ArgoCD Server is the core component that provides the web-based user interface and API for managing applications and GitOps workflows.
-- **Repo Server**: The Repo Server in ArgoCD is responsible for interacting with Git repositories to fetch application manifests and sync application states.
-
-!!! warning "Work in Progress"
-    Still to do ... as of now there are no argo metrics
+Argo CD exposes different sets of Prometheus metrics per server. The Prometheus Operator scrapes the metrics from the Argo CD server through `ServiceMonitor` resources.
 
 ## Kubernetes Dashboard
 
