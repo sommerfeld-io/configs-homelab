@@ -107,27 +107,6 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: service-monitor-argocd-redis-haproxy-metrics
-  namespace: telemetry
-  labels:
-    release: kube-prometheus-stack
-  annotations:
-    ignore-check.kube-linter.io/dangling-servicemonitor: "ArgoCD automatically exposes services for metrics"
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: argocd-redis-ha-haproxy
-  namespaceSelector:
-    matchNames:
-      - argocd
-  endpoints:
-    - port: http-exporter-port
-      interval: 5s
-
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
   name: service-monitor-argocd-notifications-controller
   namespace: telemetry
   labels:
