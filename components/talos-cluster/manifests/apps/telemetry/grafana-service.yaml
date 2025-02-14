@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: kube-prometheus-stack
+    app.kubernetes.io/name: grafana
+  name: kube-prometheus-stack-grafana-nodeport
+  namespace: telemetry
+spec:
+  ports:
+    - name: http-web
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+      nodePort: 30000
+  selector:
+    app.kubernetes.io/instance: kube-prometheus-stack
+    app.kubernetes.io/name: grafana
+  sessionAffinity: None
+  type: NodePort

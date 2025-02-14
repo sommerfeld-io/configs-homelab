@@ -13586,7 +13586,8 @@
 #       "schemaVersion": 22,
 #       "style": "dark",
 #       "tags": [
-#         "linux"
+#         "linux",
+#         "kubernetes"
 #       ],
 #       "templating": {
 #         "list": [
