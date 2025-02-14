@@ -16,12 +16,15 @@ spec:
     helm:
       valuesObject:
         grafana:
-          # additionalDataSources:
-          #   - name: Prometheus
-          #     type: prometheus
-          #     url: http://kube-prometheus-stack-prometheus:9090
           adminUser: admin
           adminPassword: admin
+        prometheus:
+          additionalRulesForClusterRole:
+            - apiGroups: [""]
+              resources:
+                - pods
+                - services
+              verbs: [ "get", "list", "watch" ]
   destination:
     server: https://kubernetes.default.svc
     namespace: telemetry
