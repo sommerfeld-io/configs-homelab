@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-k8s-views-pods
+  name: grafana-dashboard-k8s-views-global
   namespace: telemetry
   labels:
     grafana_dashboard: "1"
 data:
-  grafana-dashboard-k8s-views-pods.json: |
+  grafana-dashboard-k8s-views-global.json: |
     {
       "annotations": {
         "list": [
@@ -3465,7 +3465,7 @@ data:
       "timepicker": {},
       "timezone": "",
       "title": "kube-state-metrics / Views / Global",
-      "uid": "grafana-dashboard-k8s-views-pods",
+      "uid": "grafana-dashboard-k8s-views-global",
       "version": 2,
       "weekStart": ""
     }
