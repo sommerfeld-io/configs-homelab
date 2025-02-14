@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/sommerfeld-io/configs-homelab.git
     targetRevision: main
-    path: components/helm-charts/hello-world-nginx
+    path: components/talos-cluster/helm-charts/hello-world-nginx
     helm:
       valuesObject:
         nodePort: 32080

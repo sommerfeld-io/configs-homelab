@@ -45,7 +45,7 @@ ignore:
   - target
 
   # Helm
-  - components/helm-charts/hello-world-nginx/Chart.yaml
+  - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
 
   # linter definitions etc.
   - .ansible-lint.yml

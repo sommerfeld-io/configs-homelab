@@ -21,8 +21,8 @@
 
 		"components/docker-stacks/**",
 
-		"components/helm-charts/hello-world-nginx/*",
-		"components/helm-charts/hello-world-nginx/*/templates",
+		"components/talos-cluster/helm-charts/hello-world-nginx/*",
+		"components/talos-cluster/helm-charts/hello-world-nginx/*/templates",
 
 		"components/talos-cluster",
 		"components/talos-cluster/manifests",
