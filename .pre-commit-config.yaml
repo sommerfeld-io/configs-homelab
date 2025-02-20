@@ -18,7 +18,8 @@ repos:
         exclude: ^components/talos-cluster/node-configs/generated$
       - id: end-of-file-fixer
       - id: check-added-large-files
-        exclude: ^components/talos-cluster/manifests/apps/telemetry/dashboard-.*$
+        exclude_types:
+          - jpeg
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
       - id: check-json

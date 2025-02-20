@@ -5,9 +5,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
-    app.kubernetes.io/instance: grafana
-    app.kubernetes.io/name: grafana
-    dashboards: "grafana"
+    dashboards: grafana
   name: grafana
   namespace: telemetry
 spec:
