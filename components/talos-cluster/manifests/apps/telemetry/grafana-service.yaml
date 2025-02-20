@@ -31,6 +31,7 @@ metadata:
 spec:
   ports:
     - name: grafana
+      port: 3000
       protocol: TCP
       targetPort: grafana-http
       nodePort: 30000
