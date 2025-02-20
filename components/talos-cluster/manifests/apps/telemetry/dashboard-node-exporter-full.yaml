@@ -4,10 +4,10 @@ kind: GrafanaDashboard
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+    grafana.integreatly.org/folder: node-exporter
   namespace: telemetry
   name: dashboard-node-exporter
 spec:
-  folder: node-exporter
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
