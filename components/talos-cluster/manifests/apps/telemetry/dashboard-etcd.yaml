@@ -5,12 +5,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   namespace: telemetry
-  name: dashboard-argocd
+  name: dashboard-etcd
 spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  json:
+  json: >
     {
       "annotations": {
         "list": [

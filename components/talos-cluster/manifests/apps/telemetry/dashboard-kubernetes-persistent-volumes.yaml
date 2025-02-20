@@ -10,7 +10,7 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  json:
+  json: >
     {
       "annotations": {
         "list": [
