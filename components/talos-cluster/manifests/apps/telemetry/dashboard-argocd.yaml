@@ -4,10 +4,9 @@ kind: GrafanaDashboard
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  name: dashboard-argocd
   namespace: telemetry
+  name: dashboard-argocd
 spec:
-  resyncPeriod: 30s
   instanceSelector:
     matchLabels:
       dashboards: "grafana"

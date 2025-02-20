@@ -4,11 +4,11 @@ kind: GrafanaDashboard
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  name: dashboard-node-exporter
   namespace: telemetry
+  name: dashboard-kube-state-metrics-system-api-server
 spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
   grafanaCom:
-    id: 1860
+    id: 1515761757
