@@ -2,7 +2,10 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: prometheus
+  namespace: telemetry
 spec:
   instanceSelector:
     matchLabels:
