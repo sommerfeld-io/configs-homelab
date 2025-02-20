@@ -2,10 +2,10 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaFolder
 metadata:
-  name: dashboard-folder-kube-state-metrics
+  name: folder-k8s
   namespace: telemetry
 spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  title: kube-state-metrics
+  title: k8s

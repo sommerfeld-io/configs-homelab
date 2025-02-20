@@ -7,9 +7,9 @@ metadata:
   namespace: telemetry
   name: dashboard-kube-state-metrics-system-api-server
 spec:
-  folderRef: dashboard-folder-kube-state-metrics
+  folderRef: folder-kube-state-metrics
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
   grafanaCom:
-    id: 1515761757
+    id: 15761

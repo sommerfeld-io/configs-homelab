@@ -7,6 +7,7 @@ metadata:
   namespace: telemetry
   name: dashboard-etcd
 spec:
+  folderRef: folder-k8s
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
