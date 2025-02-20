@@ -1,0 +1,31 @@
+---
+# https://github.com/grafana/grafana-operator/tree/master/deploy/helm/grafana-operator
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: grafana-operator
+  namespace: argocd
+spec:
+  project: talos-cluster
+  source:
+    repoURL: ghcr.io
+    chart: grafana/helm-charts/grafana-operator
+    targetRevision: v5.16.0
+    helm:
+      valuesObject:
+        securityContext:
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: telemetry
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
