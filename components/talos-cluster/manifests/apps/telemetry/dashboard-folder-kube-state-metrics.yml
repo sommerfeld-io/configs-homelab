@@ -1,14 +1,11 @@
 ---
 apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDashboard
+kind: GrafanaFolder
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
+  name: dashboard-folder-kube-state-metrics
   namespace: telemetry
-  name: dashboard-node-exporter-full
 spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  grafanaCom:
-    id: 1860
+  title: kube-state-metrics
