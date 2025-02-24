@@ -33,9 +33,6 @@ These steps need to be done for each Raspberry Pi node that should join the Talo
 
 These steps only need to be done once when the initial setup is done or when the cluster is re-installed from scratch. The steps are not necessary when the cluster is already running and a new node is added.
 
-??? note "Re-use of existing configurations"
-    Installing a new cluster should also be possible with re-using the existing configurations for the management node and the talos cluster nodes. The cluster would need freshly flashed SD cards. But then the existing configurations can be re-used without having to generate new ones. Simply applying the configurations to the new nodes and bootstrapping the cluster should be sufficient.
-
 - [ ] Make sure you generated the Talos configuration from  the Admin VM node. Only needs to be done once. Run:
 
     ```bash
