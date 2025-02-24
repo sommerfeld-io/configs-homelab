@@ -12,7 +12,7 @@ The Prometheus Operator is installed through a [Helm Chart](https://github.com/p
 
 To access the Grafana UI, we added a `NodePort` service to the Grafana deployment. The service is exposed on port `30000`. We created a copy of the `kube-prometheus-stack-grafana` service inside the `telemetry` namespace and changed the service type to `NodePort`. The copy is named `kube-prometheus-stack-grafana-nodeport`.
 
-??? note "Not included in the default setup"
+??? note "Not included in this setup"
     - **Data Persistence:** By default, the operator configures Pods to store data on emptyDir volumes which aren't persisted when the Pods are redeployed. See <https://prometheus-operator.dev/docs/platform/storage>.
     - **Absent components**: The helm chart does not install all components of kube-prometheus, notably excluding the Prometheus Adapter and Prometheus black-box exporter. They may be added later if needed.
 

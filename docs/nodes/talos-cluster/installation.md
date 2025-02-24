@@ -1,25 +1,12 @@
 # Talos Cluster - Installation
 
-The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to install the `admin-pi` node. This node is used to manage the Talos Kubernetes Cluster. The `admin-pi` node is installed and provisioned by Ansible.
+The installation of the Talos Kubernetes Cluster is done in multiple steps. The first step is to startup the Admin VM from this repo (`components/talos-cluster/virtual-talos-admin/Vagrantfile`). This VM is used to manage the Talos Kubernetes Cluster.
 
 The second step is to install the actual Talos nodes. These nodes are Raspberry Pi devices running Talos Linux. The nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
-## Install Management Node
-
-- [ ] Flash Operating System [Ubuntu Server](https://ubuntu.com) via the Raspberry Pi Imager onto an SD card.
-    - [ ] Configure the Raspberry Pi through the "Raspberry Pi Imager" to enable SSH, set a hostname and configure WiFi.
-- [ ] Enable password-less SSH connections (from workstation, not the RasPi node)
-    - [ ] `ssh sebastian@admin-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`
-- [ ] Run the Ansible Playbook `raspi-talos.yml` to install all necessary tools and configurations. This playbook generates the Talos configuration files - on the management node as well as the for the Talos Kubernetes nodes. See playbook `components/ansible/playbooks/raspi-talos.yml` for more details.
-
-The Ansible Playbook `raspi-talos.yml` (among others) installs and starts Node Exporter as `systemd` service. The Node Exporter can be reached at <http://admin-pi.fritz.box:9100>.
-
-The Admin Pi also runs all necessary tools like `kubectl` and `talosctl` to manage the Talos Kubernetes Cluster.
-
 ## Install Cluster with Control Plane and Worker Nodes
 
-The config files inside this repo are auto-generated and downloaded from the `admin-pi`. The `*-patch.yml` files however are manually created and are used to patch the Talos config files (meaning the are an input for generating the Talos config files).
+The config files inside this repo are auto-generated from `talosctl`. The `*-patch.yml` files however are manually created and are used to patch the Talos config files (meaning the are an input for generating the Talos config files).
 
 ### Setup SD Cards for Raspberry Pi Nodes
 
@@ -49,38 +36,22 @@ These steps only need to be done once when the initial setup is done or when the
 ??? note "Re-use of existing configurations"
     Installing a new cluster should also be possible with re-using the existing configurations for the management node and the talos cluster nodes. The cluster would need freshly flashed SD cards. But then the existing configurations can be re-used without having to generate new ones. Simply applying the configurations to the new nodes and bootstrapping the cluster should be sufficient.
 
-- [ ] Make sure you generated the Talos configuration on the `admin-pi` node. Only needs to be done once. Run:
+- [ ] Make sure you generated the Talos configuration from  the Admin VM node. Only needs to be done once. Run:
 
     ```bash
-    # Run on admin-pi
-    cd work/repos/sommerfeld-io/configs-homelab
-    git pull
-
-    cd components/talos-cluster/node-configs
+    # Run from home-dir in Admin VM
     ./bootstrap-talos.sh
     ```
 
-- [ ] Download config files from the `admin-pi`. Run:
-
-    ```bash
-    # Run on the host with the cloned repository
-    cd work/repos/sommerfeld-io/configs-homelab
-    cd components/talos-cluster/node-configs
-    ./download-config.sh
-    ```
-
+- [ ] Copy the generated config to `components/talos-cluster/node-configs/generated`
 - [ ] Push the configuration files to the remote repository
 
 ### Bootstrap ArgoCD
 
-- [ ] Bootstrap ArgoCD on the `admin-pi` node. Only needs to be done once.
+- [ ] Bootstrap ArgoCD from the Admin VM. Only needs to be done once.
 
     ```bash
-    # Run on admin-pi
-    cd work/repos/sommerfeld-io/configs-homelab
-    git pull
-
-    cd components/talos-cluster/node-configs
+    # Run from home-dir in Admin VM
     ./bootstrap-argocd.sh
     ```
 
@@ -91,6 +62,18 @@ These steps only need to be done once when the initial setup is done or when the
 
     ??? note "Recover an ArgoCD Installation"
         In case the ArgoCD setup is broken, the `bootstrap-argocd.sh` script offers a recovery-option to re-install ArgoCD with all the configuration stored in the repository. So there is no need to re-configure everything manually or to backup the Talos Cluster (other than data that should explicitly be backed up). The cluster can be re-built from this configuration at any time.
+
+## Re-Install a fresh Talos Cluster
+
+In case you want to re-install the cluster from scratch, this repo will already contain a cluste configuration. When installing a fresh cluster, the public and private keys will no longer match the new cluster.
+
+- [ ] Startup the Vagrantbox from `components/talos-cluster/virtual-talos-admin/Vagrantfile`.
+- [ ] On the host, remove the configuration files from `components/talos-cluster/node-configs/generated` (`talosctl`generates new configs while installing the new cluster).
+- [ ] Inside the Vagrantbox, remove `.kube` and `.talos` directories from the home directory.
+- [ ] Install the Talos OS onto SD cards and boot the Raspberry Pi nodes.
+- [ ] Run the `bootstrap-talos.sh` script to generate new configurations.
+- [ ] Copy the config files back to `components/talos-cluster/node-configs/generated`.
+- [ ] Recover the ArgoCD installation with the `bootstrap-argocd.sh` script. Remember to ue a valid Github personal access token.
 
 ## References / External Links
 

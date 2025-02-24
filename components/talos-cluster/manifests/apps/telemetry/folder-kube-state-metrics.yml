@@ -2,6 +2,8 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaFolder
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: folder-kube-state-metrics
   namespace: telemetry
 spec:

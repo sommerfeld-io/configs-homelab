@@ -4,27 +4,27 @@
   gather_facts: true
   become: true
   vars_files:
-    - ../../ansible/vars/global.yml
+    - ../../../ansible/vars/global.yml
     - vars.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../../ansible/tasks/common-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../../ansible/tasks/common-bash-prompt.yml
-    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin.yml
-    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin-k9s.yml
-    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-admin-argocd-autopilot.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-create-directories.yml
+    - ansible.builtin.import_tasks: tasks/install-packages.yml
+    - ansible.builtin.import_tasks: tasks/install-k9s.yml
+    - ansible.builtin.import_tasks: tasks/argocd-autopilot.yml
 
 - name: Setup for group raspi_talos_admin (non-root)
   hosts: all
   gather_facts: true
   become: false
   vars_files:
-    - ../../ansible/vars/global.yml
+    - ../../../ansible/vars/global.yml
     - vars.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../../ansible/tasks/raspi-talos-copy-files.yml
+    - ansible.builtin.import_tasks: tasks/bash-aliases.yml
 
     - name: Config  ----  Create directories
       ansible.builtin.file:
@@ -35,6 +35,10 @@
         mode: u=rwx,g=rx,o=rx
       with_items:
         - "/home/{{ ansible_user }}/.talos"
+        - "/home/{{ ansible_user }}/bootstrap"
+
+    - ansible.builtin.import_tasks: tasks/copy-files.yml
+    - ansible.builtin.import_tasks: tasks/clone-repos.yml
 
     - name: Talos  ----  Copy scripts for user {{ ansible_user }}
       ansible.builtin.copy:
@@ -44,7 +48,7 @@
         group: "{{ ansible_user }}"
         mode: u=rwx,g=rx,o=rx
       with_items:
-        - { src: "../node-configs/generated/talosconfig.yaml", dest: "/home/{{ ansible_user }}/.talos/config" }
+        - { src: "assets/node-configs/generated/talosconfig.yaml", dest: "/home/{{ ansible_user }}/.talos/config" }
 
     - name: Talos  ----  Generate kubeconfig
       command: talosctl kubeconfig --nodes "{{ control_plane_node }}" --endpoints "{{ control_plane_node }}"

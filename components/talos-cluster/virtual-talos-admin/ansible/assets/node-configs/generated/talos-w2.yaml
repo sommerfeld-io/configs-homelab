@@ -1,0 +1,59 @@
+version: v1alpha1
+debug: false
+persist: true
+machine:
+    type: worker
+    token: xda7de.yc5zihniea7b8juu
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEEvTldoVDhnQmw2czVhZk9RdTh3KzlNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5UQXlNalF4T1RVNE1qZGFGdzB6TlRBeU1qSXhPVFU0TWpkYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBYis3MXI1d3B3SDhrR09iY1lMQmxEeTZ6bTVsamxXOS91NjJSCkR2T0xoQTJqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVNXVIOXE4Tk5YeDZHRldmSQpZdEQzenB1U3FYa3dCUVlESzJWd0EwRUE0ZmpmUW5JQkJiNURUSFZpM1pOWWwxTlI5MVdCNmZOVDd4R0ZBT0RCCnZOL3ZCaTNBZ1l4ZldHMDlRK04rS3liYTcwRkRLc1hLWmErOXpnUXByU3dpQUE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    certSANs:
+        - talos-w2.fritz.box
+    kubelet:
+        image: ghcr.io/siderolabs/kubelet:v1.31.1
+        defaultRuntimeSeccompProfileEnabled: true
+        disableManifestsDirectory: true
+    network:
+        hostname: talos-w2
+    install:
+        disk: /dev/mmcblk0
+        image: ghcr.io/siderolabs/installer:v1.8.0
+        wipe: false
+    features:
+        rbac: true
+        stableHostname: true
+        apidCheckExtKeyUsage: true
+        diskQuotaSupport: true
+        kubePrism:
+            enabled: true
+            port: 7445
+        hostDNS:
+            enabled: true
+            forwardKubeDNSToHost: true
+    nodeLabels:
+        node.device: raspi-4
+        node.network-connect: switch
+        node.storage: 32gb
+        node.type: worker
+cluster:
+    id: nvC4S1UzbTcUB7rUES6nfMDhOedgTRBVPDYGauL96iw=
+    secret: qsCmUXt8/i7k/6bdSQ+mI8u08zSYUspweip0lyuNI5w=
+    controlPlane:
+        endpoint: https://talos-cp.fritz.box:6443
+    clusterName: talos-cluster
+    network:
+        dnsDomain: cluster.local
+        podSubnets:
+            - 10.244.0.0/16
+        serviceSubnets:
+            - 10.96.0.0/12
+    token: sfqeeq.tihj2y7yahu4mh64
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRR3JMZXdtVGxtUWkrazZqdXVzb3gvakFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTFNREl5TkRFNU5UZ3lOMW9YRFRNMU1ESXlNakU1TlRneQpOMW93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCRlo3dVZjR0FlVTVaSUMxOG56aTBadGM2WnRZcitudlNqYUYyek1BcHVLWXpKcTYrakt3YXg3STAveUEKOTdtSnFORGViMk9GbUtSRVlxNUxEVThzT3MrallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVU1TFd5RXBpYXpMT1NYVjFnZ2laSFY4VFlYc2d3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnVm5HeERJN2kKdklmc3FKRzBYdnFmWmZjMUE3a0l5WkxrYWxtSGt4SnFOc2tDSUdzQ2pvdzZENHhyZVYzQ1A5Tmw5aXM2T3Y5YQpZbE1vL0hzVEJoNnd3ejFJCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+        key: ""
+    discovery:
+        enabled: true
+        registries:
+            kubernetes:
+                disabled: true
+            service: {}

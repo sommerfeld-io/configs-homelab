@@ -7,11 +7,11 @@ ignore: |
   .vagrant
   target
   components/minikube
-  components/talos-cluster/node-configs/generated
+  components/talos-cluster/virtual-talos-admin/ansible/assets/node-configs/generated
 
 rules:
   line-length:
-    max: 100
+    max: 1024
     allow-non-breakable-inline-mappings: true
     level: warning
   new-lines:

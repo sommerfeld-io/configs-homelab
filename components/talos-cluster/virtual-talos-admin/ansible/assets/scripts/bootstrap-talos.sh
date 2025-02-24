@@ -60,7 +60,7 @@ for d in "${directories[@]}"; do
 done
 
 echo "[INFO] Cleanup kube config -----------------------------------"
-rm .kube/config
+rm -f .kube/config
 
 echo "[INFO] Generating Talos config --------------------------------"
 talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT"
@@ -83,12 +83,12 @@ for worker in "${WORKER_NODES[@]}"; do
 done
 
 echo "[INFO] Bootstrap cluster --------------------------------------"
-sleep 15s
+sleep 5s
 talosctl bootstrap --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
+sleep 60s
 
 echo "[INFO] Generate kubectl config --------------------------------"
-sleep 5s
 echo "[INFO] Add (merge) new cluster into local Kubernetes config"
 talosctl kubeconfig --nodes "$CONTROL_PLANE_NODE.fritz.box" \
   --endpoints "$CONTROL_PLANE_NODE.fritz.box"
@@ -102,5 +102,9 @@ echo "[INFO] kubectl get nodes --------------------------------------"
 kubectl get nodes
 
 echo "[INFO] kubectl get all --all-namespaces -----------------------"
-sleep 15s
+sleep 5s
 kubectl get all --all-namespaces
+
+echo "[INFO] Copy talos node config files ---------------------------"
+rm /vagrant/ansible/assets/node-configs/generated/*
+cp -a generated /vagrant/ansible/assets/node-configs

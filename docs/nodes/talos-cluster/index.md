@@ -33,9 +33,7 @@ Rel(workstation, talos, "Access", "talosctl\nkubectl")
 
 ## Containers
 
-The `admin-pi` setup is done by Ansible. The Ansible Playbook are run from one of the `Ubuntu Workstations`.
-
-The actual Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
+The Talos Raspberry Pi Nodes are not provisioned by Ansible. They run the Talos variant for Raspberry Pi directly.
 
 - Raspberry Pi 4: 8 GB RAM and 32 GB SD-Card
 - Raspberry Pi 5: 8 GB RAM, Quad Core 2,4GHz and 128 GB SD-Card
@@ -56,13 +54,14 @@ Person(user, "User", "A person using a computer or mobile device")
 
 System_Ext(workstation, "Ubuntu Workstations", "Workstations and laptops used for everyday work\n\nTraditional computers")
 
-Container(mgmt, "admin-pi", "Raspberry Pi 5", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
+Container(mgmt, "Admin VM", "Vagrantbox", "Management Node for Kubernetes providing tools (kubectl, talosctl, ...)")
 
 System_Boundary(talos, "Talos Kubernetes Cluster") {
     Container(cp, "talos-cp", "RaspPi Model 4", "Control Plane Node for Kubernetes")
     Container(w1, "talos-w1", "RaspPi Model 4", "Worker Node for applications and services")
     Container(w2, "talos-w2", "RaspPi Model 4", "Worker Node for applications and services")
     Container(w3, "talos-w3", "RaspPi Model 4", "Worker Node for applications and services")
+    Container(w4, "talos-w4", "RaspPi Model 5", "Worker Node for applications and services")
 }
 
 Rel(user, workstation, "Uses")
@@ -71,11 +70,12 @@ Rel_Neighbor(mgmt, talos, "Manage", "talosctl\nkubectl")
 Rel(cp, w1, "Manage")
 Rel(cp, w2, "Manage")
 Rel(cp, w3, "Manage")
+Rel(cp, w4, "Manage")
 
 @enduml
 ```
 
-The setup features a `admin-pi` to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated `admin-pi` we avoid possible conflicts with e.g. `kubectl`.
+The setup features an Admin VM to avoid conflicts with other tool installations on the `Ubuntu Workstations`. The `Ubuntu Workstations` are used for everyday work, proof of concepts, and development. So there might run other Kuberenetes variants like `minikube`. By establishing a dedicated Admin VM we avoid possible conflicts with e.g. `kubectl`.
 
 !!! note "Stateless Cluster"
     The whole cluster is intended to be stateless. This means that no data is stored on any of the nodes. The only storage is the SD-Card which is used for the Talos OS itself. There are no external storage solutions.
@@ -162,18 +162,13 @@ skinparam arrowColor #E2E4E9
 
 
 nwdiag {
-  group router_wifi {
-    color = "#999";
-    description = "Router\nWifi";
-    adm;
-  }
-
   group switch_cable {
     color = "#999";
     description = "Switch\nEthernet";
     cp;
     w1;
     w2;
+    w4;
   }
 
   group router_cable {
@@ -190,11 +185,10 @@ nwdiag {
 
       router;
 
-      adm [description = "admin-pi"];
-
       cp [description = "talos-cp"];
       w1 [description = "talos-w1"];
       w2 [description = "talos-w2"];
+      w4 [description = "talos-w4"];
 
       w3 [description = "talos-w3"];
   }
@@ -214,7 +208,7 @@ rackdiag {
   4: talos-cp\nRasPi 4;
   3: talos-w1\nRasPi 4;
   2: talos-w2\nRasPi 4;
-  1: admin-pi\nRasPi 5;
+  1: talos-w4\nRasPi 5;
 }
 ```
 
