@@ -32,7 +32,7 @@ spec:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 44,
+      "id": 18,
       "links": [],
       "panels": [
         {
@@ -621,7 +621,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "60ce14db-e636-47d1-8523-0a3597a99ade"
+            "uid": "${datasource}"
           },
           "fieldConfig": {
             "defaults": {
@@ -686,7 +686,8 @@ spec:
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${datasource}"
               },
               "expr": "count(count by (server) (argocd_cluster_info{namespace=~\"$namespace\"}))",
               "format": "time_series",
@@ -3065,7 +3066,7 @@ spec:
           {
             "current": {
               "text": "Prometheus",
-              "value": "60ce14db-e636-47d1-8523-0a3597a99ade"
+              "value": "5b555593-747a-4237-b3fc-a254af8e7720"
             },
             "name": "datasource",
             "options": [],
@@ -3522,13 +3523,13 @@ spec:
         ]
       },
       "time": {
-        "from": "now-6h",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {},
       "timezone": "browser",
       "title": "Talos Cluster Overview",
       "uid": "dashboard-talos-cluster-overview",
-      "version": 4,
+      "version": 5,
       "weekStart": ""
     }
