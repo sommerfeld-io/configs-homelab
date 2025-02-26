@@ -1,99 +1,99 @@
----
-# https://open-policy-agent.github.io/gatekeeper/website/docs/install/#deploying-via-helm
-# https://github.com/open-policy-agent/gatekeeper/tree/master/charts/gatekeeper
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-  name: gatekeeper
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://open-policy-agent.github.io/gatekeeper/charts
-    chart: gatekeeper
-    targetRevision: 3.19.0-beta.1
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: gatekeeper
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+# ---
+# # https://open-policy-agent.github.io/gatekeeper/website/docs/install/#deploying-via-helm
+# # https://github.com/open-policy-agent/gatekeeper/tree/master/charts/gatekeeper
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "-1"
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+#   name: gatekeeper
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://open-policy-agent.github.io/gatekeeper/charts
+#     chart: gatekeeper
+#     targetRevision: 3.19.0-beta.1
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: gatekeeper
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
 
----
-apiVersion: templates.gatekeeper.sh/v1beta1
-kind: ConstraintTemplate
-metadata:
-  name: gatekeeper-template-require-sync-wave
-spec:
-  crd:
-    spec:
-      names:
-        kind: RequireSyncWave
-      validation:
-        openAPIV3Schema:
-          properties:
-            labels:
-              type: array
-              items:
-                type: string
-  targets:
-    - target: admission.k8s.gatekeeper.sh
-      rego: |
-        package syncwave
-        violation["sync-wave annotation is required"] {
-          not input.metadata.annotations["argocd.argoproj.io/sync-wave"]
-        }
+# ---
+# apiVersion: templates.gatekeeper.sh/v1beta1
+# kind: ConstraintTemplate
+# metadata:
+#   name: gatekeeper-template-require-sync-wave
+# spec:
+#   crd:
+#     spec:
+#       names:
+#         kind: RequireSyncWave
+#       validation:
+#         openAPIV3Schema:
+#           properties:
+#             labels:
+#               type: array
+#               items:
+#                 type: string
+#   targets:
+#     - target: admission.k8s.gatekeeper.sh
+#       rego: |
+#         package syncwave
+#         violation["sync-wave annotation is required"] {
+#           not input.metadata.annotations["argocd.argoproj.io/sync-wave"]
+#         }
 
----
-apiVersion: templates.gatekeeper.sh/v1beta1
-kind: ConstraintTemplate
-metadata:
-  name: gatekeeper-template-require-finalizer
-spec:
-  crd:
-    spec:
-      names:
-        kind: RequireFinalizer
-      validation:
-        openAPIV3Schema:
-          properties:
-            finalizers:
-              type: array
-              items:
-                type: string
-  targets:
-    - target: admission.k8s.gatekeeper.sh
-      rego: |
-        package finalizer
-        violation["finalizer is required"] {
-          not input.metadata.finalizers[_]
-        }
+# ---
+# apiVersion: templates.gatekeeper.sh/v1beta1
+# kind: ConstraintTemplate
+# metadata:
+#   name: gatekeeper-template-require-finalizer
+# spec:
+#   crd:
+#     spec:
+#       names:
+#         kind: RequireFinalizer
+#       validation:
+#         openAPIV3Schema:
+#           properties:
+#             finalizers:
+#               type: array
+#               items:
+#                 type: string
+#   targets:
+#     - target: admission.k8s.gatekeeper.sh
+#       rego: |
+#         package finalizer
+#         violation["finalizer is required"] {
+#           not input.metadata.finalizers[_]
+#         }
 
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: RequireSyncWave
-metadata:
-  name: gatekeeper-constraint-require-sync-wave
-spec:
-  match:
-    kinds:
-      - apiGroups: ["argoproj.io"]
-        kinds: ["Application"]
+# ---
+# apiVersion: constraints.gatekeeper.sh/v1beta1
+# kind: RequireSyncWave
+# metadata:
+#   name: gatekeeper-constraint-require-sync-wave
+# spec:
+#   match:
+#     kinds:
+#       - apiGroups: ["argoproj.io"]
+#         kinds: ["Application"]
 
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: RequireFinalizer
-metadata:
-  name: gatekeeper-constraint-require-finalizer
-spec:
-  match:
-    kinds:
-      - apiGroups: ["argoproj.io"]
-        kinds: ["Application"]
+# ---
+# apiVersion: constraints.gatekeeper.sh/v1beta1
+# kind: RequireFinalizer
+# metadata:
+#   name: gatekeeper-constraint-require-finalizer
+# spec:
+#   match:
+#     kinds:
+#       - apiGroups: ["argoproj.io"]
+#         kinds: ["Application"]
