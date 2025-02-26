@@ -1,5 +1,9 @@
 # Gatekeeper
 
+<!-- TODO ============== -->
+<!-- TODO move into docs -->
+<!-- TODO ============== -->
+
 ??? note "Gatekeeper resources are cluster-scoped resources"
     - ConstraintTemplate and Constraint resources are generally designed to be cluster-scoped. This means they apply to all namespaces within the Kubernetes cluster.
     - Their purpose is to enforce policies at a cluster level, affecting resources regardless of which namespace they reside in.
