@@ -370,7 +370,180 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "How many percent of requests (both read and write) in 30 days have been answered successfully and fast enough?",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false,
+                "minWidth": 100
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 9,
+            "x": 15,
+            "y": 1
+          },
+          "id": 42,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "expr": "kube_node_info",
+              "format": "table",
+              "legendFormat": "",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Node Information",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "Value #A": false,
+                  "__name__": true,
+                  "container": true,
+                  "container_runtime_version": true,
+                  "endpoint": true,
+                  "instance": true,
+                  "job": true,
+                  "kernel_version": true,
+                  "kubeproxy_version": true,
+                  "namespace": true,
+                  "pod": true,
+                  "pod_cidr": true,
+                  "service": true,
+                  "system_uuid": true
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 6,
+                  "Value #A": 4,
+                  "Value #B": 19,
+                  "__name__": 7,
+                  "container": 8,
+                  "container_runtime_version": 9,
+                  "endpoint": 10,
+                  "instance": 11,
+                  "internal_ip": 1,
+                  "job": 12,
+                  "kernel_version": 13,
+                  "kubelet_version": 3,
+                  "kubeproxy_version": 5,
+                  "namespace": 14,
+                  "node": 0,
+                  "os_image": 2,
+                  "pod": 15,
+                  "pod_cidr": 16,
+                  "service": 17,
+                  "system_uuid": 18
+                },
+                "renameByName": {
+                  "Value #A": "",
+                  "internal_ip": "Node IP",
+                  "kubelet_version": "Kubelet",
+                  "kubeproxy_version": "Kube Proxy",
+                  "node": "Node Name",
+                  "os_image": "OS"
+                }
+              }
+            },
+            {
+              "id": "groupBy",
+              "options": {
+                "fields": {
+                  "Kube Proxy": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "Kubelet": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "Node IP": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "Node Name": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "OS": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "Value #A": {
+                    "aggregations": []
+                  },
+                  "Value #B": {
+                    "aggregations": []
+                  }
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": {},
+                "sort": [
+                  {
+                    "desc": false,
+                    "field": "Node Name"
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "",
           "fieldConfig": {
             "defaults": {
               "mappings": [
@@ -405,10 +578,10 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 15,
-            "y": 1
+            "x": 6,
+            "y": 4
           },
-          "id": 21,
+          "id": 23,
           "options": {
             "colorMode": "background",
             "graphMode": "none",
@@ -435,14 +608,14 @@ spec:
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "sum(up{cluster=\"$cluster_controller_manager\", job=\"kube-controller-manager\"})",
+              "expr": "sum(up{cluster=\"$cluster_scheduler\", job=\"kube-scheduler\"})",
               "interval": "",
               "legendFormat": "{{ instance }}",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Controller Manager - Health",
+          "title": "Kube Scheduler - Health",
           "type": "stat"
         },
         {
@@ -485,8 +658,8 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 18,
-            "y": 1
+            "x": 9,
+            "y": 4
           },
           "id": 22,
           "options": {
@@ -530,7 +703,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "",
+          "description": "How many percent of requests (both read and write) in 30 days have been answered successfully and fast enough?",
           "fieldConfig": {
             "defaults": {
               "mappings": [
@@ -565,10 +738,10 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 21,
-            "y": 1
+            "x": 12,
+            "y": 4
           },
-          "id": 23,
+          "id": 21,
           "options": {
             "colorMode": "background",
             "graphMode": "none",
@@ -595,14 +768,14 @@ spec:
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "sum(up{cluster=\"$cluster_scheduler\", job=\"kube-scheduler\"})",
+              "expr": "sum(up{cluster=\"$cluster_controller_manager\", job=\"kube-controller-manager\"})",
               "interval": "",
               "legendFormat": "{{ instance }}",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Kube Scheduler - Health",
+          "title": "Controller Manager - Health",
           "type": "stat"
         },
         {
@@ -611,7 +784,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 4
+            "y": 7
           },
           "id": 6,
           "panels": [],
@@ -661,7 +834,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 5
+            "y": 8
           },
           "id": 1,
           "maxDataPoints": 100,
@@ -856,7 +1029,7 @@ spec:
             "h": 6,
             "w": 10,
             "x": 3,
-            "y": 5
+            "y": 8
           },
           "id": 4,
           "options": {
@@ -917,7 +1090,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 5
+            "y": 8
           },
           "id": 7,
           "options": {
@@ -1022,7 +1195,7 @@ spec:
             "h": 12,
             "w": 8,
             "x": 16,
-            "y": 5
+            "y": 8
           },
           "id": 10,
           "options": {
@@ -1274,7 +1447,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 9
+            "y": 12
           },
           "id": 2,
           "maxDataPoints": 100,
@@ -1337,7 +1510,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 9
+            "y": 12
           },
           "id": 9,
           "options": {
@@ -1563,7 +1736,7 @@ spec:
             "h": 6,
             "w": 10,
             "x": 3,
-            "y": 11
+            "y": 14
           },
           "id": 5,
           "options": {
@@ -1641,7 +1814,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 13
+            "y": 16
           },
           "id": 3,
           "maxDataPoints": 100,
@@ -1703,7 +1876,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 13
+            "y": 16
           },
           "id": 8,
           "options": {
@@ -1748,7 +1921,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 17
+            "y": 20
           },
           "id": 11,
           "panels": [],
@@ -1829,7 +2002,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 18
+            "y": 21
           },
           "id": 12,
           "options": {
@@ -1959,7 +2132,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 18
+            "y": 21
           },
           "id": 13,
           "options": {
@@ -2091,7 +2264,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 25
+            "y": 28
           },
           "id": 14,
           "options": {
@@ -2210,7 +2383,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 25
+            "y": 28
           },
           "id": 15,
           "options": {
@@ -2271,7 +2444,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 32
+            "y": 35
           },
           "id": 34,
           "panels": [],
@@ -2307,7 +2480,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 33
+            "y": 36
           },
           "id": 36,
           "options": {
@@ -2383,7 +2556,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 33
+            "y": 36
           },
           "id": 37,
           "options": {
@@ -2459,7 +2632,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 33
+            "y": 36
           },
           "id": 38,
           "options": {
@@ -2512,7 +2685,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 41
+            "y": 44
           },
           "id": 35,
           "panels": [],
@@ -2548,7 +2721,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 42
+            "y": 45
           },
           "id": 39,
           "options": {
@@ -2626,7 +2799,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 42
+            "y": 45
           },
           "id": 40,
           "options": {
@@ -2704,7 +2877,7 @@ spec:
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 42
+            "y": 45
           },
           "id": 41,
           "options": {
@@ -2759,7 +2932,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 50
+            "y": 53
           },
           "id": 24,
           "panels": [],
@@ -2794,7 +2967,7 @@ spec:
             "h": 2,
             "w": 3,
             "x": 0,
-            "y": 51
+            "y": 54
           },
           "id": 27,
           "options": {
@@ -2861,7 +3034,7 @@ spec:
             "h": 2,
             "w": 3,
             "x": 3,
-            "y": 51
+            "y": 54
           },
           "id": 29,
           "options": {
@@ -2927,7 +3100,7 @@ spec:
             "h": 8,
             "w": 3,
             "x": 6,
-            "y": 51
+            "y": 54
           },
           "id": 25,
           "options": {
@@ -3074,7 +3247,7 @@ spec:
             "h": 8,
             "w": 12,
             "x": 9,
-            "y": 51
+            "y": 54
           },
           "id": 31,
           "options": {
@@ -3228,7 +3401,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 21,
-            "y": 51
+            "y": 54
           },
           "id": 32,
           "options": {
@@ -3294,7 +3467,7 @@ spec:
             "h": 2,
             "w": 3,
             "x": 0,
-            "y": 53
+            "y": 56
           },
           "id": 26,
           "options": {
@@ -3361,7 +3534,7 @@ spec:
             "h": 2,
             "w": 3,
             "x": 3,
-            "y": 53
+            "y": 56
           },
           "id": 28,
           "options": {
@@ -3436,7 +3609,7 @@ spec:
             "h": 4,
             "w": 6,
             "x": 0,
-            "y": 55
+            "y": 58
           },
           "id": 30,
           "options": {
@@ -3513,7 +3686,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 21,
-            "y": 55
+            "y": 58
           },
           "id": 33,
           "options": {
@@ -4028,6 +4201,6 @@ spec:
       "timezone": "browser",
       "title": "Talos Cluster Overview",
       "uid": "dashboard-talos-cluster-overview",
-      "version": 3,
+      "version": 6,
       "weekStart": ""
     }
