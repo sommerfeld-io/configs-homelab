@@ -4,10 +4,10 @@ kind: GrafanaFolder
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  name: folder-k8s
+  name: folder-prometheus-operator
   namespace: telemetry
 spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  title: k8s
+  title: prometheus-operator
