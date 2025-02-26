@@ -4,6 +4,8 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   name: &name hello-world-nginx-helm-chart
   namespace: argocd
 spec:
