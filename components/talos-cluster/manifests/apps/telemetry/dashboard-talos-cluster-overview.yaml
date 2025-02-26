@@ -2772,6 +2772,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -2838,6 +2839,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -2904,6 +2906,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -2969,6 +2972,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -3103,7 +3107,7 @@ spec:
               "refId": "A"
             }
           ],
-          "title": "List of pods on node ($node)",
+          "title": "List of pods on node",
           "transformations": [
             {
               "id": "organize",
@@ -3192,6 +3196,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "decimals": 2,
@@ -3266,6 +3271,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "decimals": 3,
@@ -3333,6 +3339,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -3399,6 +3406,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -3473,6 +3481,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
+          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "decimals": 2,
