@@ -1,0 +1,79 @@
+---
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: gatekeeper-template-application
+spec:
+  crd:
+    spec:
+      names:
+        kind: GatekeeperConstraintApplication
+      validation:
+        openAPIV3Schema:
+          properties:
+            requiredAnnotations:
+              type: array
+              items:
+                type: string
+            requiredFinalizers:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package gatekeeper-template-application
+
+        violation[{"msg": msg}] {
+          input.kind.kind == "Application"
+          input.kind.group == "argoproj.io"
+          required_annotations := input.parameters.requiredAnnotations
+          required_finalizers := input.parameters.requiredFinalizers
+          missing_annotation := [annotation |
+            annotation := required_annotations[_]
+            not has_annotation(input.object.metadata.annotations, annotation)
+          ]
+          count(missing_annotation) > 0
+          msg := sprintf("Application '%v' is missing required annotations: %v", [input.object.metadata.name, missing_annotation])
+        }
+
+        violation[{"msg": msg}] {
+          input.kind.kind == "Application"
+          input.kind.group == "argoproj.io"
+          required_annotations := input.parameters.requiredAnnotations
+          required_finalizers := input.parameters.requiredFinalizers
+          missing_finalizer := [finalizer |
+            finalizer := required_finalizers[_]
+            not has_finalizer(input.object.metadata.finalizers, finalizer)
+          ]
+          count(missing_finalizer) > 0
+          msg := sprintf("Application '%v' is missing required finalizers: %v", [input.object.metadata.name, missing_finalizer])
+        }
+
+        has_annotation(annotations, annotation) {
+          annotations[annotation]
+        }
+
+        has_finalizer(finalizers, finalizer) {
+          finalizers[_] == finalizer
+        }
+
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: GatekeeperConstraintApplication
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: gatekeeper-constraint-application
+spec:
+  match:
+    kinds:
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Application"]
+  parameters:
+    requiredAnnotations:
+      - argocd.argoproj.io/sync-wave
+    requiredFinalizers:
+      - resources-finalizer.argocd.argoproj.io
