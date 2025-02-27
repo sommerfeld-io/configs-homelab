@@ -688,7 +688,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
-              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+              "url": "/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
             }
           ],
           "options": {
@@ -816,7 +816,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
-              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+              "url": "/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
             }
           ],
           "options": {
@@ -1009,7 +1009,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
-              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+              "url": "/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
             }
           ],
           "options": {
@@ -1137,7 +1137,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
-              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+              "url": "/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
             }
           ],
           "options": {
@@ -3462,7 +3462,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Views / Nodes",
-              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+              "url": "/d/k8s_views_nodes/kubernetes-views-nodes"
             }
           ],
           "options": {
@@ -3617,7 +3617,7 @@ spec:
           "links": [
             {
               "title": "Details in Dashboard: Kubernetes / Views / Nodes",
-              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+              "url": "/d/k8s_views_nodes/kubernetes-views-nodes"
             }
           ],
           "options": {
@@ -3790,7 +3790,7 @@ spec:
             {
               "targetBlank": true,
               "title": "Details in Dashboard: Kubernetes / Views / Nodes",
-              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+              "url": "/d/k8s_views_nodes/kubernetes-views-nodes"
             }
           ],
           "options": {
@@ -4307,6 +4307,6 @@ spec:
       "timezone": "browser",
       "title": "Talos Cluster Overview",
       "uid": "dashboard-talos-cluster-overview",
-      "version": 2,
+      "version": 3,
       "weekStart": ""
     }
