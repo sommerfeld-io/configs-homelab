@@ -32,7 +32,7 @@ spec:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 39,
+      "id": 73,
       "links": [],
       "panels": [
         {
@@ -86,8 +86,167 @@ spec:
           },
           "gridPos": {
             "h": 3,
-            "w": 6,
+            "w": 3,
             "x": 0,
+            "y": 1
+          },
+          "id": 18,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "vertical",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": true,
+              "expr": "up{job=~\"kubernetes-apiservers|apiserver\", cluster=~\"$cluster_ksm\"}",
+              "interval": "",
+              "legendFormat": "{{ instance }}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "API Server - Health",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "How many percent of requests (both read and write) in 30 days have been answered successfully and fast enough?",
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "text": "DOWN"
+                    },
+                    "1": {
+                      "text": "UP"
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 3,
+            "y": 1
+          },
+          "id": 20,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": true,
+              "expr": "apiserver_request:availability30d{verb=\"all\", cluster=\"$cluster_api\"}",
+              "interval": "",
+              "legendFormat": "{{ instance }}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "API Server Availability (30d) > 99.000%",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "text": "DOWN"
+                    },
+                    "1": {
+                      "text": "UP"
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 6,
+            "x": 6,
             "y": 1
           },
           "id": 17,
@@ -166,86 +325,7 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 6,
-            "y": 1
-          },
-          "id": 18,
-          "options": {
-            "colorMode": "background",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "horizontal",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "value_and_name",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": true,
-              "expr": "up{job=~\"kubernetes-apiservers|apiserver\", cluster=~\"$cluster_ksm\"}",
-              "interval": "",
-              "legendFormat": "{{ instance }}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "API Server - Health",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [
-                {
-                  "options": {
-                    "0": {
-                      "text": "DOWN"
-                    },
-                    "1": {
-                      "text": "UP"
-                    }
-                  },
-                  "type": "value"
-                }
-              ],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "red",
-                    "value": null
-                  },
-                  {
-                    "color": "green",
-                    "value": 1
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 3,
-            "w": 3,
-            "x": 9,
+            "x": 12,
             "y": 1
           },
           "id": 19,
@@ -290,259 +370,6 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "How many percent of requests (both read and write) in 30 days have been answered successfully and fast enough?",
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [
-                {
-                  "options": {
-                    "0": {
-                      "text": "DOWN"
-                    },
-                    "1": {
-                      "text": "UP"
-                    }
-                  },
-                  "type": "value"
-                }
-              ],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "red",
-                    "value": null
-                  },
-                  {
-                    "color": "green",
-                    "value": 1
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 3,
-            "w": 3,
-            "x": 12,
-            "y": 1
-          },
-          "id": 20,
-          "options": {
-            "colorMode": "background",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "horizontal",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "value_and_name",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": true,
-              "expr": "apiserver_request:availability30d{verb=\"all\", cluster=\"$cluster_api\"}",
-              "interval": "",
-              "legendFormat": "{{ instance }}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "API Server Availability (30d) > 99.000%",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false,
-                "minWidth": 100
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 6,
-            "w": 9,
-            "x": 15,
-            "y": 1
-          },
-          "id": 42,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "showHeader": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "expr": "kube_node_info",
-              "format": "table",
-              "legendFormat": "",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "Node Information",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "Value #A": false,
-                  "__name__": true,
-                  "container": true,
-                  "container_runtime_version": true,
-                  "endpoint": true,
-                  "instance": true,
-                  "job": true,
-                  "kernel_version": true,
-                  "kubeproxy_version": true,
-                  "namespace": true,
-                  "pod": true,
-                  "pod_cidr": true,
-                  "service": true,
-                  "system_uuid": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 6,
-                  "Value #A": 4,
-                  "Value #B": 19,
-                  "__name__": 7,
-                  "container": 8,
-                  "container_runtime_version": 9,
-                  "endpoint": 10,
-                  "instance": 11,
-                  "internal_ip": 1,
-                  "job": 12,
-                  "kernel_version": 13,
-                  "kubelet_version": 3,
-                  "kubeproxy_version": 5,
-                  "namespace": 14,
-                  "node": 0,
-                  "os_image": 2,
-                  "pod": 15,
-                  "pod_cidr": 16,
-                  "service": 17,
-                  "system_uuid": 18
-                },
-                "renameByName": {
-                  "Value #A": "",
-                  "internal_ip": "Node IP",
-                  "kubelet_version": "Kubelet",
-                  "kubeproxy_version": "Kube Proxy",
-                  "node": "Node Name",
-                  "os_image": "OS"
-                }
-              }
-            },
-            {
-              "id": "groupBy",
-              "options": {
-                "fields": {
-                  "Kube Proxy": {
-                    "aggregations": [],
-                    "operation": "groupby"
-                  },
-                  "Kubelet": {
-                    "aggregations": [],
-                    "operation": "groupby"
-                  },
-                  "Node IP": {
-                    "aggregations": [],
-                    "operation": "groupby"
-                  },
-                  "Node Name": {
-                    "aggregations": [],
-                    "operation": "groupby"
-                  },
-                  "OS": {
-                    "aggregations": [],
-                    "operation": "groupby"
-                  },
-                  "Value #A": {
-                    "aggregations": []
-                  },
-                  "Value #B": {
-                    "aggregations": []
-                  }
-                }
-              }
-            },
-            {
-              "id": "sortBy",
-              "options": {
-                "fields": {},
-                "sort": [
-                  {
-                    "desc": false,
-                    "field": "Node Name"
-                  }
-                ]
-              }
-            }
-          ],
-          "type": "table"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -578,8 +405,8 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 6,
-            "y": 4
+            "x": 15,
+            "y": 1
           },
           "id": 23,
           "options": {
@@ -658,8 +485,8 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 9,
-            "y": 4
+            "x": 18,
+            "y": 1
           },
           "id": 22,
           "options": {
@@ -703,7 +530,7 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "How many percent of requests (both read and write) in 30 days have been answered successfully and fast enough?",
+          "description": "",
           "fieldConfig": {
             "defaults": {
               "mappings": [
@@ -738,8 +565,8 @@ spec:
           "gridPos": {
             "h": 3,
             "w": 3,
-            "x": 12,
-            "y": 4
+            "x": 21,
+            "y": 1
           },
           "id": 21,
           "options": {
@@ -784,7 +611,648 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 7
+            "y": 4
+          },
+          "id": 285,
+          "panels": [],
+          "title": "CPU Requests + Limits",
+          "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "noValue": "n/a",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 3
+                  },
+                  {
+                    "color": "red",
+                    "value": 3.5
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pending / not scheduled"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "purple",
+                          "value": 0
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 5
+          },
+          "id": 407,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
+              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+            }
+          ],
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
+              },
+              "editorMode": "code",
+              "expr": "sum(kube_pod_container_resource_requests{resource=\"cpu\"}) by (node) # Sum CPU Requests",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Requests per Node",
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "valueLabel": "node"
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(.*Value)",
+                "renamePattern": "pending / not scheduled"
+              }
+            }
+          ],
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "noValue": "n/a",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 3
+                  },
+                  {
+                    "color": "red",
+                    "value": 3.5
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pending / not schedued"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "purple",
+                          "value": 0
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 5
+          },
+          "id": 408,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
+              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+            }
+          ],
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
+              },
+              "editorMode": "code",
+              "expr": "sum(kube_pod_container_resource_limits{resource=\"cpu\"}) by (node) # Sum CPU Requests",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Limits per Node",
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "valueLabel": "node"
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(.*Value)",
+                "renamePattern": "pending / not schedued"
+              }
+            }
+          ],
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 12,
+            "x": 0,
+            "y": 12
+          },
+          "id": 413,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "In some situations there is one more stat that existing worker nodes. This indicates that there are resource requests that are not associated with any specific node (almost always due to pods in pending state).",
+            "mode": "markdown"
+          },
+          "pluginVersion": "11.3.0",
+          "title": "",
+          "transparent": true,
+          "type": "text"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 12,
+            "x": 12,
+            "y": 12
+          },
+          "id": 409,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "When all pods on a node do **not** have any limit configured, the node does not appear in the widget above. Also a stat for pending pods applies here as well.",
+            "mode": "markdown"
+          },
+          "pluginVersion": "11.3.0",
+          "title": "",
+          "transparent": true,
+          "type": "text"
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 14
+          },
+          "id": 346,
+          "panels": [],
+          "title": "Memory Requests + Limits",
+          "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "noValue": "n/a",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 6
+                  },
+                  {
+                    "color": "red",
+                    "value": 7
+                  }
+                ]
+              },
+              "unit": "gbytes"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pending / not scheduled"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "purple",
+                          "value": 0
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 15
+          },
+          "id": 284,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
+              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+            }
+          ],
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
+              },
+              "editorMode": "code",
+              "expr": "sum(kube_pod_container_resource_requests{resource=\"memory\"}) by (node) / (1024*1024*1024) # Sum Memory Requests / from bites to GiB",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Requests per Node",
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "valueLabel": "node"
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(.*Value)",
+                "renamePattern": "pending / not scheduled"
+              }
+            }
+          ],
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "min": 0,
+              "noValue": "n/a",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 6
+                  },
+                  {
+                    "color": "red",
+                    "value": 7
+                  }
+                ]
+              },
+              "unit": "gbytes"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pending / not scheduled"
+                },
+                "properties": [
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "purple",
+                          "value": 0
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 15
+          },
+          "id": 412,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Compute Resources / Node (Pods)",
+              "url": "https://grafana.dc1.cpa-sf.de/d/200ac8fdbfbb74b39aff88118e4d1c2c/kubernetes-compute-resources-node-pods"
+            }
+          ],
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
+              },
+              "editorMode": "code",
+              "expr": "sum(kube_pod_container_resource_limits{resource=\"memory\"}) by (node) / (1024*1024*1024) # Sum Memory Limits / from bytes to GiB",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Limits per Node",
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "valueLabel": "node"
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(.*Value)",
+                "renamePattern": "pending / not scheduled"
+              }
+            }
+          ],
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 12,
+            "x": 0,
+            "y": 22
+          },
+          "id": 414,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "In some situations there is one more stat that existing worker nodes. This indicates that there are resource requests that are not associated with any specific node (almost always due to pods in pending state).",
+            "mode": "markdown"
+          },
+          "pluginVersion": "11.3.0",
+          "title": "",
+          "transparent": true,
+          "type": "text"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 12,
+            "x": 12,
+            "y": 22
+          },
+          "id": 411,
+          "options": {
+            "code": {
+              "language": "plaintext",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "When all pods on a node do **not** have any limit configured, the node does not appear in the widget above. Also a stat for pending pods applies here as well.",
+            "mode": "markdown"
+          },
+          "pluginVersion": "11.3.0",
+          "title": "",
+          "transparent": true,
+          "type": "text"
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 24
           },
           "id": 6,
           "panels": [],
@@ -834,7 +1302,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 8
+            "y": 25
           },
           "id": 1,
           "maxDataPoints": 100,
@@ -1029,7 +1497,7 @@ spec:
             "h": 6,
             "w": 10,
             "x": 3,
-            "y": 8
+            "y": 25
           },
           "id": 4,
           "options": {
@@ -1090,7 +1558,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 8
+            "y": 25
           },
           "id": 7,
           "options": {
@@ -1195,7 +1663,7 @@ spec:
             "h": 12,
             "w": 8,
             "x": 16,
-            "y": 8
+            "y": 25
           },
           "id": 10,
           "options": {
@@ -1447,7 +1915,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 12
+            "y": 29
           },
           "id": 2,
           "maxDataPoints": 100,
@@ -1510,7 +1978,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 12
+            "y": 29
           },
           "id": 9,
           "options": {
@@ -1736,7 +2204,7 @@ spec:
             "h": 6,
             "w": 10,
             "x": 3,
-            "y": 14
+            "y": 31
           },
           "id": 5,
           "options": {
@@ -1814,7 +2282,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 0,
-            "y": 16
+            "y": 33
           },
           "id": 3,
           "maxDataPoints": 100,
@@ -1876,7 +2344,7 @@ spec:
             "h": 4,
             "w": 3,
             "x": 13,
-            "y": 16
+            "y": 33
           },
           "id": 8,
           "options": {
@@ -1921,7 +2389,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 20
+            "y": 37
           },
           "id": 11,
           "panels": [],
@@ -2002,7 +2470,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 21
+            "y": 38
           },
           "id": 12,
           "options": {
@@ -2132,7 +2600,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 21
+            "y": 38
           },
           "id": 13,
           "options": {
@@ -2264,7 +2732,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 28
+            "y": 45
           },
           "id": 14,
           "options": {
@@ -2383,7 +2851,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 28
+            "y": 45
           },
           "id": 15,
           "options": {
@@ -2444,9 +2912,9 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 35
+            "y": 52
           },
-          "id": 34,
+          "id": 155,
           "panels": [],
           "title": "CPU Usage by Namespace / Deployment / Pod",
           "type": "row"
@@ -2480,9 +2948,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 36
+            "y": 53
           },
-          "id": 36,
+          "id": 220,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2556,9 +3024,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 36
+            "y": 53
           },
-          "id": 37,
+          "id": 221,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2632,9 +3100,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 36
+            "y": 53
           },
-          "id": 38,
+          "id": 222,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2685,9 +3153,9 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 44
+            "y": 61
           },
-          "id": 35,
+          "id": 156,
           "panels": [],
           "title": "Memory Usage by Namespace / Deployment / Pod",
           "type": "row"
@@ -2721,9 +3189,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 45
+            "y": 62
           },
-          "id": 39,
+          "id": 217,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2799,9 +3267,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 45
+            "y": 62
           },
-          "id": 40,
+          "id": 218,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2877,9 +3345,9 @@ spec:
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 45
+            "y": 62
           },
-          "id": 41,
+          "id": 219,
           "options": {
             "displayMode": "gradient",
             "legend": {
@@ -2932,12 +3400,11 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 53
+            "y": 70
           },
-          "id": 24,
+          "id": 415,
           "panels": [],
-          "repeat": "node_ksm_nodes",
-          "title": "Nodes: $node_ksm_nodes",
+          "title": "Node Information",
           "type": "row"
         },
         {
@@ -2945,145 +3412,16 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "$node_ksm_nodes",
+          "description": "In some situations there is one more stat that existing worker nodes. This indicates that there are resource requests that are not associated with any specific node (almost always due to pods in pending state).",
           "fieldConfig": {
             "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
               "mappings": [],
-              "noValue": "0",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "rgb(255, 255, 255)",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 2,
-            "w": 3,
-            "x": 0,
-            "y": 54
-          },
-          "id": 27,
-          "options": {
-            "colorMode": "none",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {},
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": true,
-              "expr": "sum(machine_cpu_cores{node=\"$node_ksm_nodes\", cluster=\"$cluster_ksm\"})",
-              "interval": "$resolution",
-              "legendFormat": "",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "CPU Total",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [],
-              "noValue": "0",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "rgb(255, 255, 255)",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 2,
-            "w": 3,
-            "x": 3,
-            "y": 54
-          },
-          "id": 29,
-          "options": {
-            "colorMode": "none",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {},
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": true,
-              "expr": "machine_memory_bytes{node=\"$node_ksm_nodes\", cluster=\"$cluster_ksm\"}",
-              "instant": false,
-              "interval": "",
-              "legendFormat": "",
-              "refId": "A"
-            }
-          ],
-          "title": "RAM Total",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [],
-              "noValue": "0",
+              "min": 0,
+              "noValue": "n/a",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
@@ -3092,21 +3430,45 @@ spec:
                     "value": null
                   }
                 ]
-              }
+              },
+              "unit": "none"
             },
-            "overrides": []
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pending / not schedued"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
           },
           "gridPos": {
-            "h": 8,
-            "w": 3,
-            "x": 6,
-            "y": 54
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 71
           },
-          "id": 25,
+          "id": 416,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Views / Nodes",
+              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+            }
+          ],
           "options": {
-            "colorMode": "value",
-            "graphMode": "none",
-            "justifyMode": "auto",
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
             "orientation": "auto",
             "percentChangeColorMode": "standard",
             "reduceOptions": {
@@ -3117,8 +3479,11 @@ spec:
               "values": false
             },
             "showPercentChange": false,
-            "text": {},
-            "textMode": "value",
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
             "wideLayout": true
           },
           "pluginVersion": "11.3.0",
@@ -3126,18 +3491,37 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
               },
               "editorMode": "code",
-              "exemplar": true,
-              "expr": "sum(kube_pod_info{node=\"$node_ksm_nodes\", cluster=\"$cluster_ksm\"})",
-              "interval": "",
-              "legendFormat": "",
+              "expr": "sum(kube_pod_info) by (node)",
+              "instant": false,
+              "legendFormat": "__auto",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Pods on node",
+          "title": "Running Pods per Node",
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "keepLabels": [
+                  "__name__",
+                  "instance",
+                  "node"
+                ],
+                "valueLabel": "node"
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(.*Value)",
+                "renamePattern": "pending / not schedued"
+              }
+            }
+          ],
           "type": "stat"
         },
         {
@@ -3145,7 +3529,6 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -3156,15 +3539,9 @@ spec:
                 "cellOptions": {
                   "type": "auto"
                 },
-                "inspect": false
+                "inspect": false,
+                "minWidth": 100
               },
-              "links": [
-                {
-                  "targetBlank": true,
-                  "title": "Pod details",
-                  "url": "/d/k8s_views_pods/kubernetes-views-pods?${datasource:queryparam}&var-namespace=${__data.fields.namespace}&${cluster:queryparam}&var-pod=${__data.fields.pod}&${resolution:queryparam}&${__url_time_range}"
-                }
-              ],
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
@@ -3184,19 +3561,30 @@ spec:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "pod"
+                  "options": "Node Name"
                 },
                 "properties": [
                   {
-                    "id": "custom.width",
-                    "value": 416
+                    "id": "custom.width"
                   }
                 ]
               },
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "priority_class"
+                  "options": "Node IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 130
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "OS"
                 },
                 "properties": [
                   {
@@ -3208,48 +3596,30 @@ spec:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "pod_ip"
+                  "options": "Kubelet"
                 },
                 "properties": [
                   {
                     "id": "custom.width",
-                    "value": 157
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "created_by_kind"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 160
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "namespace"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 160
+                    "value": 190
                   }
                 ]
               }
             ]
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 9,
-            "y": 54
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 77
           },
-          "id": 31,
+          "id": 223,
+          "links": [
+            {
+              "title": "Details in Dashboard: Kubernetes / Views / Nodes",
+              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+            }
+          ],
           "options": {
             "cellHeight": "sm",
             "footer": {
@@ -3260,8 +3630,7 @@ spec:
               ],
               "show": false
             },
-            "showHeader": true,
-            "sortBy": []
+            "showHeader": true
           },
           "pluginVersion": "11.3.0",
           "targets": [
@@ -3271,16 +3640,14 @@ spec:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "exemplar": true,
-              "expr": "kube_pod_info{node=\"$node_ksm_nodes\", cluster=\"$cluster_ksm\"}",
+              "expr": "kube_node_info",
               "format": "table",
-              "interval": "",
               "legendFormat": "",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "List of pods on node",
+          "title": "Node Information",
           "transformations": [
             {
               "id": "organize",
@@ -3288,77 +3655,98 @@ spec:
                 "excludeByName": {
                   "Time": true,
                   "Value": true,
+                  "Value #A": false,
                   "__name__": true,
                   "container": true,
-                  "created_by_kind": false,
-                  "created_by_name": true,
+                  "container_runtime_version": true,
                   "endpoint": true,
-                  "env": true,
-                  "host_ip": true,
-                  "host_network": true,
                   "instance": true,
                   "job": true,
-                  "node": true,
-                  "project": true,
-                  "prometheus_replica": true,
+                  "kernel_version": true,
+                  "kubeproxy_version": true,
+                  "namespace": true,
+                  "pod": true,
+                  "pod_cidr": true,
+                  "provider_id": true,
                   "service": true,
-                  "uid": true
+                  "system_uuid": true
                 },
                 "includeByName": {},
                 "indexByName": {
                   "Time": 6,
-                  "Value": 17,
+                  "Value #A": 4,
+                  "Value #B": 19,
                   "__name__": 7,
                   "container": 8,
-                  "created_by_kind": 2,
-                  "created_by_name": 9,
+                  "container_runtime_version": 9,
                   "endpoint": 10,
-                  "host_ip": 5,
-                  "host_network": 11,
-                  "instance": 12,
-                  "job": 13,
-                  "namespace": 1,
-                  "node": 14,
-                  "pod": 0,
-                  "pod_ip": 3,
-                  "priority_class": 4,
-                  "service": 15,
-                  "uid": 16
+                  "instance": 11,
+                  "internal_ip": 1,
+                  "job": 12,
+                  "kernel_version": 13,
+                  "kubelet_version": 3,
+                  "kubeproxy_version": 5,
+                  "namespace": 14,
+                  "node": 0,
+                  "os_image": 2,
+                  "pod": 15,
+                  "pod_cidr": 16,
+                  "service": 17,
+                  "system_uuid": 18
                 },
-                "renameByName": {}
+                "renameByName": {
+                  "Value #A": "",
+                  "internal_ip": "Node IP",
+                  "kubelet_version": "Kubelet",
+                  "kubeproxy_version": "Kube Proxy",
+                  "node": "Node Name",
+                  "os_image": "OS"
+                }
               }
             },
             {
               "id": "groupBy",
               "options": {
                 "fields": {
-                  "created_by_kind": {
+                  "Kube Proxy": {
                     "aggregations": [],
                     "operation": "groupby"
                   },
-                  "host_ip": {
+                  "Kubelet": {
                     "aggregations": [],
                     "operation": "groupby"
                   },
-                  "namespace": {
-                    "aggregations": [
-                      "last"
-                    ],
-                    "operation": "groupby"
-                  },
-                  "pod": {
+                  "Node IP": {
                     "aggregations": [],
                     "operation": "groupby"
                   },
-                  "pod_ip": {
+                  "Node Name": {
                     "aggregations": [],
                     "operation": "groupby"
                   },
-                  "priority_class": {
+                  "OS": {
                     "aggregations": [],
                     "operation": "groupby"
+                  },
+                  "Value #A": {
+                    "aggregations": []
+                  },
+                  "Value #B": {
+                    "aggregations": []
                   }
                 }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": {},
+                "sort": [
+                  {
+                    "desc": false,
+                    "field": "Node Name"
+                  }
+                ]
               }
             }
           ],
@@ -3369,235 +3757,21 @@ spec:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "$node_ksm_nodes",
           "fieldConfig": {
             "defaults": {
-              "decimals": 2,
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
               "mappings": [],
-              "max": 1,
               "min": 0,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "orange",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 70
-                  }
-                ]
-              },
-              "unit": "percentunit"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 3,
-            "x": 21,
-            "y": 54
-          },
-          "id": 32,
-          "options": {
-            "minVizHeight": 75,
-            "minVizWidth": 75,
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showThresholdLabels": false,
-            "showThresholdMarkers": true,
-            "sizing": "auto",
-            "text": {}
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "avg(sum by (cpu) (rate(node_cpu_seconds_total{mode!~\"idle|iowait|steal\", instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"}[$__rate_interval])))",
-              "instant": true,
-              "interval": "$resolution",
-              "legendFormat": "",
-              "refId": "A"
-            }
-          ],
-          "title": "CPU  Usage",
-          "type": "gauge"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "decimals": 3,
-              "mappings": [],
-              "noValue": "0",
+              "noValue": "n/a",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "rgb(255, 255, 255)",
+                    "color": "blue",
                     "value": null
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 2,
-            "w": 3,
-            "x": 0,
-            "y": 56
-          },
-          "id": 26,
-          "options": {
-            "colorMode": "none",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {},
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "sum(rate(node_cpu_seconds_total{mode!~\"idle|iowait|steal\", instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"}[$__rate_interval]))",
-              "instant": true,
-              "interval": "$resolution",
-              "legendFormat": "",
-              "refId": "A"
-            }
-          ],
-          "title": "CPU Used",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [],
-              "noValue": "0",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "rgb(255, 255, 255)",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 2,
-            "w": 3,
-            "x": 3,
-            "y": 56
-          },
-          "id": 28,
-          "options": {
-            "colorMode": "none",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showPercentChange": false,
-            "text": {},
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "sum(node_memory_MemTotal_bytes{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"} - node_memory_MemAvailable_bytes{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"})",
-              "instant": true,
-              "interval": "",
-              "legendFormat": "",
-              "refId": "A"
-            }
-          ],
-          "title": "RAM Used",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [],
-              "noValue": "0",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "#EAB839",
-                    "value": 25228800
-                  },
-                  {
-                    "color": "red",
-                    "value": 31536000
                   }
                 ]
               },
@@ -3606,16 +3780,23 @@ spec:
             "overrides": []
           },
           "gridPos": {
-            "h": 4,
-            "w": 6,
+            "h": 6,
+            "w": 24,
             "x": 0,
-            "y": 58
+            "y": 83
           },
-          "id": 30,
+          "id": 417,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Details in Dashboard: Kubernetes / Views / Nodes",
+              "url": "https://grafana.dc1.cpa-sf.de/d/k8s_views_nodes/kubernetes-views-nodes"
+            }
+          ],
           "options": {
-            "colorMode": "value",
-            "graphMode": "none",
-            "justifyMode": "auto",
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "center",
             "orientation": "auto",
             "percentChangeColorMode": "standard",
             "reduceOptions": {
@@ -3626,8 +3807,11 @@ spec:
               "values": false
             },
             "showPercentChange": false,
-            "text": {},
-            "textMode": "auto",
+            "text": {
+              "titleSize": 12,
+              "valueSize": 32
+            },
+            "textMode": "value_and_name",
             "wideLayout": true
           },
           "pluginVersion": "11.3.0",
@@ -3635,98 +3819,34 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "b1c75c55-fda2-41d5-85c6-c3518d6e9842"
               },
               "editorMode": "code",
-              "exemplar": true,
-              "expr": "node_time_seconds{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"} - node_boot_time_seconds{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"}",
+              "expr": "node_time_seconds - node_boot_time_seconds",
               "instant": false,
-              "interval": "",
-              "legendFormat": "",
+              "legendFormat": "__auto",
+              "range": true,
               "refId": "A"
             }
           ],
-          "title": "uptime",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "$node_ksm_nodes",
-          "fieldConfig": {
-            "defaults": {
-              "decimals": 2,
-              "mappings": [],
-              "max": 1,
-              "min": 0,
-              "thresholds": {
-                "mode": "percentage",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "orange",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 70
-                  }
-                ]
-              },
-              "unit": "percentunit"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 3,
-            "x": 21,
-            "y": 58
-          },
-          "id": 33,
-          "options": {
-            "minVizHeight": 75,
-            "minVizWidth": 75,
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showThresholdLabels": false,
-            "showThresholdMarkers": true,
-            "sizing": "auto",
-            "text": {}
-          },
-          "pluginVersion": "11.3.0",
-          "targets": [
+          "title": "Uptime per Node",
+          "transformations": [
             {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "sum(node_memory_MemTotal_bytes{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"} - node_memory_MemAvailable_bytes{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"}) / sum(node_memory_MemTotal_bytes{instance=\"$instance_ksm_nodes\", cluster=\"$cluster_ksm\"})",
-              "instant": true,
-              "interval": "$resolution",
-              "legendFormat": "",
-              "refId": "A"
+              "id": "labelsToFields",
+              "options": {
+                "keepLabels": [
+                  "__name__",
+                  "instance"
+                ],
+                "valueLabel": "instance"
+              }
             }
           ],
-          "title": "RAM Usage",
-          "type": "gauge"
+          "type": "stat"
         }
       ],
       "preload": false,
-      "refresh": "10s",
+      "refresh": "",
       "schemaVersion": 40,
       "tags": [
         "kubernetes",
@@ -3739,6 +3859,7 @@ spec:
               "text": "Prometheus",
               "value": "bf813352-8232-42bc-a018-3fc52b472c7f"
             },
+            "includeAll": false,
             "name": "datasource",
             "options": [],
             "query": "prometheus",
@@ -3802,6 +3923,7 @@ spec:
               "value": "namespace"
             },
             "description": "ArgoCD",
+            "includeAll": false,
             "name": "grouping",
             "options": [
               {
@@ -3908,6 +4030,7 @@ spec:
             "definition": "label_values(kube_node_info,cluster)",
             "description": "kube-state-metrics",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_ksm",
             "options": [],
             "query": {
@@ -3936,6 +4059,7 @@ spec:
             "definition": "label_values(node_cpu_seconds_total{cluster=\"$cluster_ksm\"},job)",
             "description": "kube-state-metrics",
             "hide": 2,
+            "includeAll": false,
             "multi": true,
             "name": "job",
             "options": [],
@@ -3955,6 +4079,7 @@ spec:
             },
             "description": "kube-state-metrics",
             "hide": 2,
+            "includeAll": false,
             "name": "resolution",
             "options": [
               {
@@ -4008,6 +4133,7 @@ spec:
             "definition": "label_values(coredns_build_info{cluster=\"$cluster_ksm\"},job)",
             "description": "kube-state-metrics",
             "hide": 2,
+            "includeAll": false,
             "multi": true,
             "name": "job_coredns",
             "options": [],
@@ -4033,6 +4159,7 @@ spec:
             "definition": "label_values(etcd_server_has_leader{job=~\".*etcd.*\"},job)",
             "description": "k8s metrics",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_etcd",
             "options": [],
             "query": {
@@ -4057,6 +4184,7 @@ spec:
             "definition": "label_values(up{job=\"apiserver\"},cluster)",
             "description": "k8s metrics",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_api",
             "options": [],
             "query": {
@@ -4081,6 +4209,7 @@ spec:
             "definition": "label_values(up{job=\"kube_controller_manager\"},cluster)",
             "description": "kus",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_controller_manager",
             "options": [],
             "query": {
@@ -4105,6 +4234,7 @@ spec:
             "definition": "label_values(up{job=\"kube-proxy\"},cluster)",
             "description": "k8s",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_proxy",
             "options": [],
             "query": {
@@ -4129,6 +4259,7 @@ spec:
             "definition": "label_values(up{job=\"kube-scheduler\"},cluster)",
             "description": "k8s",
             "hide": 2,
+            "includeAll": false,
             "name": "cluster_scheduler",
             "options": [],
             "query": {
@@ -4142,7 +4273,6 @@ spec:
             "type": "query"
           },
           {
-            "allValue": ".*",
             "current": {
               "text": "All",
               "value": "$__all"
@@ -4151,44 +4281,20 @@ spec:
               "type": "prometheus",
               "uid": "${datasource}"
             },
-            "definition": "label_values(kube_node_info{cluster=\"$cluster_ksm\"},node)",
-            "description": "kube-state-metrics",
+            "definition": "label_values(nginx_gateway_fabric_up,instance)",
+            "description": "nginx-gateway-fabric",
             "includeAll": true,
-            "label": "nodes",
-            "name": "node_ksm_nodes",
+            "label": "nginx-gateway",
+            "multi": true,
+            "name": "instance_gateway",
             "options": [],
             "query": {
               "qryType": 1,
-              "query": "label_values(kube_node_info{cluster=\"$cluster_ksm\"},node)",
+              "query": "label_values(nginx_gateway_fabric_up,instance)",
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             },
             "refresh": 1,
             "regex": "",
-            "sort": 1,
-            "type": "query"
-          },
-          {
-            "current": {
-              "text": "192.168.178.128:9100",
-              "value": "192.168.178.128:9100"
-            },
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${datasource}"
-            },
-            "definition": "label_values(node_uname_info{nodename=~\"(?i:($node_ksm_nodes))\"},instance)",
-            "description": "kube-state-metrics",
-            "hide": 2,
-            "name": "instance_ksm_nodes",
-            "options": [],
-            "query": {
-              "qryType": 1,
-              "query": "label_values(node_uname_info{nodename=~\"(?i:($node_ksm_nodes))\"},instance)",
-              "refId": "PrometheusVariableQueryEditor-VariableQuery"
-            },
-            "refresh": 1,
-            "regex": "",
-            "sort": 1,
             "type": "query"
           }
         ]
@@ -4201,6 +4307,6 @@ spec:
       "timezone": "browser",
       "title": "Talos Cluster Overview",
       "uid": "dashboard-talos-cluster-overview",
-      "version": 6,
+      "version": 2,
       "weekStart": ""
     }
