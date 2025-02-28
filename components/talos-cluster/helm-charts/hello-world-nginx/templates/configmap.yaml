@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: "{{ .Release.Name }}-html"
+  namespace: {{ .Values.overrideNamespace }}
   labels:
     app: {{ .Release.Name }}
 data:

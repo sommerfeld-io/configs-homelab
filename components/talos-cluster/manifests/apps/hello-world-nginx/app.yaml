@@ -18,6 +18,7 @@ spec:
       valuesObject:
         nodePort: 32080
         replicas: 2
+        overrideNamespace: hello-world-nginx
   destination:
     server: https://kubernetes.default.svc
     namespace: hello-world-nginx
