@@ -16,6 +16,6 @@ spec:
         cpu: 250m
         memory: 256Mi
       min:
-        cpu: 010m
+        cpu: 001m
         memory: 64Mi
       type: Container
