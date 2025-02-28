@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: cpu-resource-constraint
+  name: resource-constraint
+  namespace: kroki
 spec:
   limits:
     - default: # default limits
