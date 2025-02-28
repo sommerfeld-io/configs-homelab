@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: resource-constraint
-  namespace: apache-demo
+  name: resource-constraints
+  namespace: hello-world-nginx
 spec:
   limits:
     - default: # default limits
