@@ -35,7 +35,7 @@ module.exports = {
       {
         assets: ['package.json', 'package-lock.json'],
         message:
-          'refactor(release): bump version to ${nextRelease.version} [Actions Bot]\n\n${nextRelease.notes}'
+          'refactor(release): bump version to ${nextRelease.version} [Actions Bot]'
       }
     ],
     '@semantic-release/github'
