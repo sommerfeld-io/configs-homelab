@@ -155,4 +155,4 @@ jobs:
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
-          message: "docs: [Actions Bot] bump version to ${{ steps.get-version.outputs.VERSION }}"
+          message: "refactor(release): bump version to ${{ steps.get-version.outputs.VERSION }} [Actions Bot]"
