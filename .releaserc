@@ -5,7 +5,9 @@
 		[
             "@semantic-release/release-notes-generator",
             {
-                "template": ".github/workflows/assets/release-template.hbs",
+				"writerOpts": {
+					"headerPartial": ".github/workflows/assets/release-notes-header.hbs"
+				}
             }
         ],
 		[
