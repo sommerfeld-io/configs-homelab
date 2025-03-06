@@ -56,5 +56,4 @@ ignore:
   - .markdownlint.yml
   - .yamllint.yml
   - .pre-commit-config.yaml
-  - .releaserc
   - .releaserc.js
