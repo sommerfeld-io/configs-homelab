@@ -146,10 +146,10 @@ jobs:
           # Get the latest tag and strip the 'v' prefix if present
           VERSION="$(git describe --tags --abbrev=0 | sed 's/^v//')"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-
-          echo "=================================="
-          echo "VERSION=$VERSION"
-          echo "=================================="
+        shell: bash
+      - name: Get the latest git tag (freshly created by semantic-release)
+        run: echo "freshly created tag ${{ steps.get-version.outputs.VERSION }}"
+        shell: bash
       - name: Commit and push
         uses: EndBug/add-and-commit@v9.1.4
         with:
