@@ -13,7 +13,7 @@ VERSION="$1"
 ## @arg $1 string The version that should be written to the files.
 function incrementVersionsInYaml() {
   yaml_files=(
-    "../../../components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml"
+    "components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml"
   )
 
   for file in "${yaml_files[@]}"; do
