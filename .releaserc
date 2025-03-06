@@ -5,10 +5,7 @@
 		[
             "@semantic-release/release-notes-generator",
             {
-                "writerOpts": {
-                    "mainTemplate": "Tagged on {{date}}\n\nCompare {{previousTag}}...{{currentTag}}\n\n{{> header}}{{> commits}}{{> footer}}",
-                    "commitTemplate": "* {{commit.message}} ([{{commit.short}}]({{commit.href}}))"
-                }
+                "template": ".github/workflows/assets/release-template.hbs",
             }
         ],
 		[
@@ -20,7 +17,7 @@
 		[
 			"@semantic-release/exec",
 			{
-				"prepareCmd": "./.release.sh ${nextRelease.version}"
+				"prepareCmd": ".github/workflows/assets/release.sh ${nextRelease.version}"
 			}
 		],
 		[
