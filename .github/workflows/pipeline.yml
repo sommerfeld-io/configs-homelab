@@ -131,10 +131,19 @@ jobs:
           npm install --save-dev @semantic-release/git
           npm install --save-dev @semantic-release/github
         shell: bash
-      - name: semantic-release - Run
+      # - name: semantic-release - Run
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
+      #   run: npx semantic-release
+      #   shell: bash
+      - name: semantic-release - Run and Capture Version
+        id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
-        run: npx semantic-release
+        run: |
+          NEXT_VERSION=$(npx semantic-release --dry-run | jq -r '.nextRelease.version')
+          echo "NEXT_VERSION=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+          npx semantic-release
         shell: bash
       - name: Info - package.json
         run: cat package.json
@@ -144,4 +153,4 @@ jobs:
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
-          message: 'docs: [Actions Bot] bump version'
+          message: "docs: [Actions Bot] bump version to ${{ steps.semantic-release.outputs.NEXT_VERSION }}"
