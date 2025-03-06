@@ -13,3 +13,4 @@
     - alias talosctl-w1="talosctl --nodes talos-w1.fritz.box --endpoints {{ control_plane_node }}"
     - alias talosctl-w2="talosctl --nodes talos-w2.fritz.box --endpoints {{ control_plane_node }}"
     - alias talosctl-w3="talosctl --nodes talos-w3.fritz.box --endpoints {{ control_plane_node }}"
+    - alias k="kubectl"
