@@ -1,5 +1,3 @@
-Tagged {{version}}
-{{~#if title}} ("{{title}}") {{~/if~}}
-{{~#if date}} on {{date}} {{~/if~}}
-
-Compare {{previousTag}}...{{currentTag}}
+| Version     | {{~#if date}} Tagged on  |{{~/if~}} Compare                                                                            |
+| ----------- | {{~#if date}}----------- |{{~/if~}} ---------------------------------------------------------------------------------- |
+| {{version}} | {{~#if date}} {{date}}   |{{~/if~}} [{{previousTag}}...{{currentTag}}](../../compare/{{previousTag}}...{{currentTag}}) |
