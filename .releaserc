@@ -2,7 +2,16 @@
 	"branches": ["main"],
 	"plugins": [
 		"@semantic-release/commit-analyzer",
-		"@semantic-release/release-notes-generator",
+		[
+            "@semantic-release/release-notes-generator",
+            {
+                "preset": "conventionalcommits",
+                "writerOpts": {
+                    "mainTemplate": "Tagged on {{date}}\n\nCompare {{previousTag}}...{{currentTag}}\n\n{{> header}}{{> commits}}{{> footer}}",
+                    "commitTemplate": "* {{commit.message}} ([{{commit.short}}]({{commit.href}}))"
+                }
+            }
+        ],
 		[
 			"@semantic-release/npm",
 			{
