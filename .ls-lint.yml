@@ -57,4 +57,4 @@ ignore:
   - .yamllint.yml
   - .pre-commit-config.yaml
   - .releaserc
-  - .release.sh
+  - .releaserc.js
