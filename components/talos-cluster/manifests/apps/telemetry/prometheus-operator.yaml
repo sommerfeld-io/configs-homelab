@@ -28,6 +28,10 @@ spec:
                 - pods
                 - services
               verbs: [ "get", "list", "watch" ]
+          prometheusSpec:
+            additionalScrapeConfigs:
+              name: prometheus-blackbox-exporter-targets
+              key: targets.json
   destination:
     server: https://kubernetes.default.svc
     namespace: telemetry
