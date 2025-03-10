@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}
-  namespace: {{ .Values.overrideNamespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Release.Name }}
 spec:

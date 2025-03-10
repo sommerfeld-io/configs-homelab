@@ -1,6 +1,3 @@
 ---
 nodePort: 32080
 replicas: 3
-
-# The namespace to deploy the application to
-overrideNamespace: hello-world-nginx
