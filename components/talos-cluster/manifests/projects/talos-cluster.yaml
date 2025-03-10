@@ -36,7 +36,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-        revision: main
+        revision: &git-ref blackbox-exporter # main # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         directories:
           - path: components/talos-cluster/manifests/apps/*
   template:
@@ -50,7 +50,7 @@ spec:
       project: talos-cluster
       source:
         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-        targetRevision: main
+        targetRevision: *git-ref
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
