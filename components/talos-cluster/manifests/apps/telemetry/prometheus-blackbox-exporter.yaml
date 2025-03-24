@@ -66,6 +66,8 @@ spec:
           targetLabel: instance
         - targetLabel: __address__
           replacement: prometheus-blackbox-exporter:9115
+        - sourceLabels: [target_name]
+          targetLabel: job
       staticConfigs:
         - targets:
             - https://www.sommerfeld.io
