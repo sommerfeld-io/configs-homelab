@@ -5,7 +5,7 @@ metadata:
   name: prometheus-blackbox-exporter
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: talos-cluster
   source:
@@ -66,63 +66,30 @@ spec:
           targetLabel: instance
         - targetLabel: __address__
           replacement: prometheus-blackbox-exporter:9115
+      staticConfigs:
+        - targets:
+            - https://www.sommerfeld.io
+            - https://www.minifigs.de
+            - https://www.fb-brunnenbau.de
+          labels:
+            target_name: public-websites
+        - targets:
+            - http://grafana-nodeport-service.telemetry.svc.cluster.local
+            - http://talos-cp.fritz.box:30000
+          labels:
+            job: talos-essentials
+        - targets:
+            - http://kroki-svc.kroki.svc.cluster.local
+            - http://talos-cp.fritz.box:30083
+          labels:
+            job: kroki
+        - targets:
+            - http://hello-world-nginx-helm-chart.hello-world-nginx.svc.cluster.local
+            - http://talos-cp.fritz.box:32080
+            - http://nginx-demo-svc.nginx-demo.svc.cluster.local
+            - http://talos-cp.fritz.box:30081
+            - http://apache-demo-svc.apache-demo.svc.cluster.local
+            - http://talos-cp.fritz.box:30082
+          labels:
+            job: talos-demos
   jobLabel: job
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-blackbox-exporter-targets
-  namespace: telemetry
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-data:
-  targets.json: |
-    [
-      {
-        "labels": {
-          "job": "public-websites
-        },
-        "targets": [
-          "https://www.sommerfeld.io",
-          "https://www.minifigs.de",
-          "https://www.fb-brunnenbau.de"
-        ]
-      },
-      {
-        "labels": {
-          "job": "talos-essentials"
-        },
-        "targets": [
-          "http://grafana-nodeport-service.telemetry.svc.cluster.local",
-          "http://talos-cp.fritz.box:30000"
-        ]
-      },
-      {
-        "labels": {
-          "job": "kroki"
-        },
-        "targets": [
-          "http://kroki-svc.kroki.svc.cluster.local",
-          "http://talos-cp.fritz.box:30083"
-        ]
-      },
-      {
-        "labels": {
-          "job": "talos-demos"
-        },
-        "targets": [
-          "http://kroki-svc.kroki.svc.cluster.local",
-          "http://talos-cp.fritz.box:30083",
-
-          "http://hello-world-nginx-helm-chart.hello-world-nginx.svc.cluster.local",
-          "http://talos-cp.fritz.box:32080",
-
-          "http://nginx-demo-svc.nginx-demo.svc.cluster.local",
-          "http://talos-cp.fritz.box:30081",
-
-          "http://apache-demo-svc.apache-demo.svc.cluster.local",
-          "http://talos-cp.fritz.box:30082"
-        ]
-      }
-    ]

@@ -22,16 +22,13 @@ spec:
           # adminUser: admin
           # adminPassword: admin
         prometheus:
+          enabled: true
           additionalRulesForClusterRole:
             - apiGroups: [""]
               resources:
                 - pods
                 - services
               verbs: [ "get", "list", "watch" ]
-          prometheusSpec:
-            additionalScrapeConfigs:
-              name: prometheus-blackbox-exporter-targets
-              key: targets.json
   destination:
     server: https://kubernetes.default.svc
     namespace: telemetry
