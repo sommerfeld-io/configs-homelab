@@ -8,7 +8,7 @@ metadata:
   namespace: telemetry
   name: dashboard-blackbox-exporter
 spec:
-  folderRef: folder-blackbox-exporter
+  folderRef: folder-overview
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
@@ -915,7 +915,7 @@ spec:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Blackbox Exporter (HTTP prober)",
+      "title": "Blackbox Exporter Overview",
       "uid": "13659",
       "version": 1,
       "weekStart": ""
