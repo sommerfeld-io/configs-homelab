@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: prometheus-blackbox-exporter
-    targetRevision: 9.3.0
+    targetRevision: 9.4.0
     helm:
       valuesObject:
         releaseLabel: true
@@ -42,7 +42,7 @@ metadata:
   labels:
     release: kube-prometheus-stack
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
     ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
 spec:
   selector:
