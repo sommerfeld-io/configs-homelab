@@ -34,13 +34,13 @@ spec:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 48,
+      "id": 46,
       "links": [],
       "panels": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+            "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
           },
           "description": "",
           "fieldConfig": {
@@ -450,7 +450,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "probe_success{job=~\"$job\", instance=~\"$instance\"}",
               "format": "table",
@@ -462,7 +462,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "probe_http_ssl{job=~\"$job\", instance=~\"$instance\"} > 0",
               "format": "table",
@@ -474,7 +474,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "(probe_ssl_earliest_cert_expiry{job=~\"$job\", instance=~\"$instance\"} - time()) / 3600 / 24",
               "format": "table",
@@ -486,7 +486,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "probe_http_status_code{job=~\"$job\", instance=~\"$instance\"} > 0",
               "format": "table",
@@ -498,7 +498,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "avg_over_time(probe_duration_seconds{job=~\"$job\", instance=~\"$instance\"}[1m])",
               "format": "table",
@@ -512,7 +512,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "probe_tls_version_info{job=~\"$job\", instance=~\"$instance\"}",
               "format": "table",
@@ -524,7 +524,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "avg_over_time(probe_dns_lookup_time_seconds{job=~\"$job\", instance=~\"$instance\"}[1m])",
               "format": "table",
@@ -646,7 +646,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+            "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
           },
           "description": "Returns how long the probe took to complete in seconds",
           "fieldConfig": {
@@ -734,7 +734,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "expr": "sum(probe_http_duration_seconds{job=~\"$job\", instance=~\"$instance\"}) by (instance)",
               "instant": false,
@@ -760,62 +760,12 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
               },
               "description": "Duration of http request by phase, summed over all redirects",
               "fieldConfig": {
                 "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 100,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 0,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "normal"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": null
-                      },
-                      {
-                        "color": "red",
-                        "value": 80
-                      }
-                    ]
-                  },
-                  "unit": "s"
+                  "custom": {}
                 },
                 "overrides": []
               },
@@ -823,28 +773,18 @@ spec:
                 "h": 7,
                 "w": 24,
                 "x": 0,
-                "y": 19
+                "y": 27
               },
               "id": 6,
               "options": {
-                "alertThreshold": true,
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "right",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-                }
+                "alertThreshold": true
               },
-              "pluginVersion": "11.3.0",
+              "pluginVersion": "7.3.5",
               "targets": [
                 {
                   "datasource": {
                     "type": "prometheus",
-                    "uid": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2"
+                    "uid": "31a86299-c33c-4628-b9e9-b9f552795029"
                   },
                   "expr": "probe_http_duration_seconds{job=~\"$job\", instance=~\"$instance\"}",
                   "interval": "",
@@ -867,7 +807,7 @@ spec:
       "schemaVersion": 40,
       "tags": [
         "blackbox",
-        "prometheus"
+        "overview"
       ],
       "templating": {
         "list": [
@@ -877,7 +817,7 @@ spec:
               "text": "All",
               "value": "$__all"
             },
-            "datasource": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2",
+            "datasource": "31a86299-c33c-4628-b9e9-b9f552795029",
             "definition": "label_values(probe_success, job)",
             "includeAll": true,
             "label": "Job",
@@ -895,7 +835,7 @@ spec:
               "text": "All",
               "value": "$__all"
             },
-            "datasource": "4ba30b3f-a5af-408b-9e1b-783fdd2094c2",
+            "datasource": "31a86299-c33c-4628-b9e9-b9f552795029",
             "definition": "label_values(probe_success{job=~\"$job\"}, instance)",
             "includeAll": true,
             "label": "Instance",
@@ -910,13 +850,13 @@ spec:
         ]
       },
       "time": {
-        "from": "now-1h",
+        "from": "now-5m",
         "to": "now"
       },
       "timepicker": {},
       "timezone": "",
       "title": "Blackbox Exporter Overview",
-      "uid": "13659",
-      "version": 1,
+      "uid": "NEzutrbMk",
+      "version": 2,
       "weekStart": ""
     }
