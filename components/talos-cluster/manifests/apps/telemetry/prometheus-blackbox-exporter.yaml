@@ -35,10 +35,12 @@ spec:
 
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind:
 metadata:
   name: prometheus-blackbox-exporter-service-monitor
   namespace: telemetry
+  labels:
+    release: kube-prometheus-stack
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
@@ -48,6 +50,9 @@ spec:
       app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
       release: prometheus-blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - telemetry
   endpoints:
     - port: http
       interval: 30s
