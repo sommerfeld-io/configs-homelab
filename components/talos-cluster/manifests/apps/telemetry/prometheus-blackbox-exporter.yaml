@@ -60,7 +60,7 @@ spec:
         - sourceLabels: [__param_target]
           targetLabel: instance
         - targetLabel: __address__
-          replacement: blackbox-exporter.telemetry.svc:9115
+          replacement: prometheus-blackbox-exporter:9115
   jobLabel: job
 
 ---
