@@ -4,8 +4,6 @@ kind: GrafanaFolder
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
   name: folder-overview
   namespace: telemetry
 spec:
