@@ -6,7 +6,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: kubernetes-dashboard-helm-chart
+  name: kubernetes-dashboard-app
   namespace: argocd
 spec:
   destination:
