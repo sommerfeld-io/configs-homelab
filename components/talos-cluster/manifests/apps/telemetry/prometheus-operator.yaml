@@ -19,10 +19,20 @@ spec:
       valuesObject:
         grafana:
           enabled: false
-          # adminUser: admin
-          # adminPassword: admin
         prometheus:
           enabled: true
+          prometheusSpec:
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 2Gi
+            retention: 30d
+            requests:
+              cpu: 100m
+              memory: 256Mi
           additionalRulesForClusterRole:
             - apiGroups: [""]
               resources:
