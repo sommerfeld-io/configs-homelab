@@ -8,6 +8,7 @@ metadata:
   namespace: apache-demo
   labels:
     app: apache-demo
+    monitoring.sommerfeld.io/blackbox: enabled
 spec:
   selector:
     app: apache-demo

@@ -8,6 +8,7 @@ metadata:
   namespace: kroki
   labels:
     app: kroki
+    monitoring.sommerfeld.io/blackbox: enabled
 spec:
   selector:
     app: kroki
