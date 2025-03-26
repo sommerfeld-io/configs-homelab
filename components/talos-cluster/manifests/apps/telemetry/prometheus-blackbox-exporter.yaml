@@ -83,7 +83,8 @@ spec:
   selector:
     matchLabels:
       monitoring.sommerfeld.io/blackbox: enabled
-  namespaceSelector: {}
+  namespaceSelector:
+    any: true
   endpoints:
     - interval: 30s
       path: /probe
