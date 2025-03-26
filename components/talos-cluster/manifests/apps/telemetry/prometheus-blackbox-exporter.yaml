@@ -53,8 +53,7 @@ spec:
     matchNames:
       - argocd
   endpoints:
-    - port: http
-      interval: 30s
+    - interval: 30s
       path: /probe
       params:
         module:
@@ -86,8 +85,7 @@ spec:
       monitoring.sommerfeld.io/blackbox: enabled
   namespaceSelector: {}
   endpoints:
-    - port: http
-      interval: 30s
+    - interval: 30s
       path: /probe
       params:
         module:
