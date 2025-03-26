@@ -55,7 +55,7 @@ kind: Service
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
-  name: nginx-demo-svc
+  name: nginx-demo
   namespace: nginx-demo
   labels:
     app: nginx-demo
