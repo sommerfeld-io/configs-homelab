@@ -92,7 +92,7 @@ spec:
         module:
           - http_2xx
       relabelings:
-        - sourceLabels: [__meta_kubernetes_service_address] # [__address__]
+        - sourceLabels: [__address__]
           targetLabel: __param_target
         - sourceLabels: [__param_target]
           targetLabel: instance
