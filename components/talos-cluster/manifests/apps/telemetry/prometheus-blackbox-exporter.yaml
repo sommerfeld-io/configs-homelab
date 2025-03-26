@@ -71,6 +71,11 @@ spec:
           targetLabel: instance
         - targetLabel: __address__
           replacement: prometheus-blackbox-exporter:9115
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: job
+          replacement: "service-{{ . }}"
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
   #! Static configs are not the way to go in a service monitor
   #       - sourceLabels: [target_name]
   #         targetLabel: job
