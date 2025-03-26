@@ -47,12 +47,16 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/instance: prometheus-blackbox-exporter
-      app.kubernetes.io/name: prometheus-blackbox-exporter
-      release: prometheus-blackbox-exporter
+      # app.kubernetes.io/instance: prometheus-blackbox-exporter
+      # app.kubernetes.io/name: prometheus-blackbox-exporter
+      # release: prometheus-blackbox-exporter
+      app.kubernetes.io/part-of: argocd
+      app.kubernetes.io/instance: argo-cd
   namespaceSelector:
     matchNames:
-      - telemetry
+      # - telemetry
+      - argocd
+  # namespaceSelector: {} # All namespaces
   endpoints:
     - port: http
       interval: 30s
