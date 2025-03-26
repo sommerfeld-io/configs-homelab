@@ -22,13 +22,13 @@ spec:
         prometheus:
           enabled: true
           prometheusSpec:
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 2Gi
+            # storageSpec:
+            #   volumeClaimTemplate:
+            #     spec:
+            #       accessModes: ["ReadWriteOnce"]
+            #       resources:
+            #         requests:
+            #           storage: 2Gi
             retention: 30d
             requests:
               cpu: 100m
