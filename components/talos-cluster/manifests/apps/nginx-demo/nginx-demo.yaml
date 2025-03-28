@@ -59,7 +59,6 @@ metadata:
   namespace: nginx-demo
   labels:
     app: nginx-demo
-    monitoring.sommerfeld.io/blackbox: enabled
 spec:
   selector:
     app: nginx-demo
