@@ -1,4 +1,5 @@
 ---
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-blackbox-exporter
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -15,6 +16,15 @@ spec:
     helm:
       valuesObject:
         releaseLabel: true
+        config:
+          modules: # this is the default
+            http_2xx:
+              prober: http
+              timeout: 5s
+              http:
+                valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+                follow_redirects: true
+                preferred_ip_protocol: "ip4"
         resources:
           limits:
             memory: 300Mi
@@ -33,73 +43,73 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
 
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: prometheus-blackbox-service-monitor-argocd
-  namespace: telemetry
-  labels:
-    release: kube-prometheus-stack
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-    ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/part-of: argocd
-      app.kubernetes.io/instance: argo-cd
-  namespaceSelector:
-    matchNames:
-      - argocd
-  endpoints:
-    - interval: 30s
-      path: /probe
-      params:
-        module:
-          - http_2xx
-      relabelings:
-        - sourceLabels: [__address__]
-          targetLabel: __param_target
-        - sourceLabels: [__param_target]
-          targetLabel: instance
-        - targetLabel: __address__
-          replacement: prometheus-blackbox-exporter:9115
-        - sourceLabels: [__meta_kubernetes_namespace]
-          targetLabel: job
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: prometheus-blackbox-service-monitor-argocd
+#   namespace: telemetry
+#   labels:
+#     release: kube-prometheus-stack
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "2"
+#     ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
+# spec:
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/part-of: argocd
+#       app.kubernetes.io/instance: argo-cd
+#   namespaceSelector:
+#     matchNames:
+#       - argocd
+#   endpoints:
+#     - interval: 30s
+#       path: /probe
+#       params:
+#         module:
+#           - http_2xx
+#       relabelings:
+#         - sourceLabels: [__address__]
+#           targetLabel: __param_target
+#         - sourceLabels: [__param_target]
+#           targetLabel: instance
+#         - targetLabel: __address__
+#           replacement: prometheus-blackbox-exporter:9115
+#         - sourceLabels: [__meta_kubernetes_namespace]
+#           targetLabel: job
 
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: prometheus-blackbox-service-monitor-generic
-  namespace: telemetry
-  labels:
-    release: kube-prometheus-stack
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-    ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
-spec:
-  selector:
-    matchLabels:
-      monitoring.sommerfeld.io/blackbox: enabled
-  namespaceSelector:
-    any: true
-  endpoints:
-    - interval: 30s
-      path: /probe
-      params:
-        module:
-          - http_2xx
-      relabelings:
-        - sourceLabels: [__address__]
-          targetLabel: __param_target
-        - sourceLabels: [__param_target]
-          targetLabel: instance
-        - targetLabel: __address__
-          replacement: prometheus-blackbox-exporter:9115
-        - sourceLabels: [__meta_kubernetes_namespace]
-          targetLabel: job
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: prometheus-blackbox-service-monitor-generic
+#   namespace: telemetry
+#   labels:
+#     release: kube-prometheus-stack
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "2"
+#     ignore-check.kube-linter.io/dangling-servicemonitor: "Targeted labels for matchLabels selector are managed through the blackbox-exporter helm chart and already present"
+# spec:
+#   selector:
+#     matchLabels:
+#       monitoring.sommerfeld.io/blackbox: enabled
+#   namespaceSelector:
+#     any: true
+#   endpoints:
+#     - interval: 30s
+#       path: /probe
+#       params:
+#         module:
+#           - http_2xx
+#       relabelings:
+#         - sourceLabels: [__address__]
+#           targetLabel: __param_target
+#         - sourceLabels: [__param_target]
+#           targetLabel: instance
+#         - targetLabel: __address__
+#           replacement: prometheus-blackbox-exporter:9115
+#         - sourceLabels: [__meta_kubernetes_namespace]
+#           targetLabel: job
 
   #! Static configs are not the way to go in a service monitor
   #       - sourceLabels: [target_name]

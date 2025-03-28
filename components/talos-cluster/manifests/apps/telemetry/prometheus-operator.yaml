@@ -29,6 +29,21 @@ spec:
             #       resources:
             #         requests:
             #           storage: 2Gi
+            additionalScrapeConfigs:
+              - job_name: 'blackbox-public-websites'
+                metrics_path: /probe
+                params:
+                  module: [http_2xx]
+                static_configs:
+                  - targets:
+                      - https://www.sommerfeld.io
+                relabel_configs:
+                  - source_labels: [__address__]
+                    target_label: __param_target
+                  - source_labels: [__param_target]
+                    target_label: instance
+                  - target_label: __address__
+                    replacement: prometheus-blackbox-exporter:9115
             retention: 30d
             requests:
               cpu: 100m
