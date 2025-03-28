@@ -1,6 +1,6 @@
 {
   "name": "configs-homelab",
-  "version": "0.39.3",
+  "version": "0.40.0",
   "directories": {
     "doc": "docs"
   },
