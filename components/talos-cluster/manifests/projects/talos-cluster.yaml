@@ -36,7 +36,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/sommerfeld-io/configs-homelab.git
-        revision: &git-ref blackbox-exporter # main # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        revision: &git-ref main
         directories:
           - path: components/talos-cluster/manifests/apps/*
   template:

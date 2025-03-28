@@ -6,7 +6,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "4"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: hello-world-nginx-helm-chart
+  name: hello-world-nginx-app
   namespace: argocd
 spec:
   project: default

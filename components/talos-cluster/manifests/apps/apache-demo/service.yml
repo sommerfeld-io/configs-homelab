@@ -4,7 +4,7 @@ kind: Service
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
-  name: apache-demo-svc
+  name: apache-demo
   namespace: apache-demo
   labels:
     app: apache-demo
