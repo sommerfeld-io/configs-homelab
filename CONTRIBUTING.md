@@ -1,7 +1,5 @@
 # Contribute to this Project
 
-[file-issues]: https://github.com/sommerfeld-io/configs-homelab/issues
-
 ## Code
 
 We're thrilled that you'd like to contribute to this project. You can do this by submitting a pull request.
