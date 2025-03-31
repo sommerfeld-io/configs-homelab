@@ -59,10 +59,13 @@ jobs:
       - name: Copy files from docs to project root
         run: |
           cp docs/index.md README.md
-          cp docs/about/code-of-conduct.md CODE_OF_CONDUCT.md
-          cp docs/about/contribute.md CONTRIBUTING.md
-          cp docs/about/license.md LICENSE.md
-          cp docs/about/security.md SECURITY.md
+          cp docs/license.md LICENSE.md
+        shell: bash
+      - name: Download files from .github repository to project root
+        run: |
+          curl -o CODE_OF_CONDUCT.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/code-of-conduct.md
+          curl -o CONTRIBUTING.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/contribute.md
+          curl -o SECURITY.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/security.md
         shell: bash
       - name: Add do-not-edit remark to Markdown files in project root
         run: |
