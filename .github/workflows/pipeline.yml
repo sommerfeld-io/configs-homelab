@@ -48,6 +48,10 @@ jobs:
 
   generate-docs:
     runs-on: ubuntu-latest
+    needs: [
+      'lint',
+      'shellcheck',
+    ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       contents: write
@@ -105,8 +109,6 @@ jobs:
   release-code:
     runs-on: ubuntu-latest
     needs: [
-      'lint',
-      'shellcheck',
       'generate-docs',
     ]
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
