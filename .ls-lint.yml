@@ -49,6 +49,7 @@ ignore:
 
   # linter definitions etc.
   - .ansible-lint.yml
+  - .editorconfig
   - .hadolint.yml
   - .kube-linter.yml
   - .ls-lint.yml

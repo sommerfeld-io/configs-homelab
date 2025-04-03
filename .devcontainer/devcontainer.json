@@ -20,6 +20,7 @@
                 "golang.go",
                 "alexkrechik.cucumberautocomplete",
                 "DavidAnson.vscode-markdownlint",
+                "EditorConfig.EditorConfig",
                 "tamasfe.even-better-toml"
             ]
         }
