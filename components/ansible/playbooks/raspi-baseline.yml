@@ -8,13 +8,13 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
-    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/common-git.yml
-    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-create-directories.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-git.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-ssh.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-docker.yml
 
 - name: Setup for group raspi (non-root)
   hosts: raspi
@@ -25,4 +25,4 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-atuin.yml

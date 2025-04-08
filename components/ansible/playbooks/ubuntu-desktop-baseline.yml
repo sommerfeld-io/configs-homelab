@@ -8,26 +8,26 @@
     - ../vars/ubuntu.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
-    - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
-    - ansible.builtin.import_tasks: ../tasks/common-git.yml
-    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
-    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-ansible.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-github-cli.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-virtualization.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
-    - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
-    - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-create-directories.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-git.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-chrome.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-media-players.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-ssh.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-ansible.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-sublime.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-github-cli.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-virtualization.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-docker.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-minikube.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-docker-wrapper-scripts.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-scripts.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-uninstall.yml
 
 - name: Setup for group ubuntu_desktop (non-root)
   hosts: ubuntu_desktop
@@ -38,12 +38,12 @@
     - ../vars/ubuntu.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
-    - ansible.builtin.import_tasks: ../tasks/common-cron-jobs.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-copy-files.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-atuin.yml
+    - ansible.builtin.import_tasks: ../tasks/main/common-cron-jobs.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-vscode-plugins.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-copy-files.yml
 
     # ! Must be last task in this play
     # ! Local changes result in a failure for this task
     # ! In case of failure, all other tasks for the affected node are skipped
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
+    - ansible.builtin.import_tasks: ../tasks/main/ubuntu-clone-repos.yml

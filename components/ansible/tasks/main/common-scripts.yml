@@ -11,7 +11,7 @@
 
 - name: Config  ----  Copy scripts
   ansible.builtin.copy:
-    src: "../assets/scripts/{{ item }}.sh"
+    src: "../../assets/scripts/{{ item }}.sh"
     dest: "/opt/scripts/{{ item }}.sh"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
