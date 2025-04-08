@@ -50,7 +50,7 @@ To interact with your Talos Cluster through ArgoCD, follow these steps:
 
 1. Run `~/port-forward-argocd.sh` on the Admin VM to retrieve the default admin password and to port-forward the ArgoCD server's service.
 
-1. **Access ArgoCD from a Browser:** Once port-forwarding is active, open a web browser and navigate to <https://admin-pi.fritz.box:8080>. You will likely see a security warning due to the self-signed certificate. You can safely ignore this warning and proceed to the login page.
+1. **Access ArgoCD from a Browser:** Once port-forwarding is active, open a web browser and navigate to <https://localhost:8080>. You will likely see a security warning due to the self-signed certificate. You can safely ignore this warning and proceed to the login page.
 
 1. **Login to ArgoCD:** On the login page, use the default credentials to log in:
 

@@ -200,7 +200,7 @@ The Talos Raspberry Pi nodes should get their IP addresses from the router via D
 
 ## RasPi Rack Setup
 
-The `admin-pi` is not mounted inside the rack. It is placed next to the rack. The other nodes are sorted in the rack as follows (top to bottom):
+The nodes are sorted in the rack as follows (top to bottom):
 
 ```kroki-rackdiag
 rackdiag {

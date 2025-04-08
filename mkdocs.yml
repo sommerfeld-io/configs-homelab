@@ -63,10 +63,9 @@ nav:
       - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/code-of-conduct.md
       - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
   - Workstations and RasPi Nodes:
-      - nodes/index.md
       - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
-      - Raspberry Pi Nodes:
-          - nodes/raspi/admin-pi.md
+      # - Raspberry Pi Nodes:
+      #     - nodes/raspi/SOME_PI.md
       - Talos Cluster:
           - Overview: nodes/talos-cluster/index.md
           - Installation: nodes/talos-cluster/installation.md
@@ -78,7 +77,6 @@ nav:
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
   - Api Docs:
       - Docker:
-          - Monitoring and Logging: api-docs/docker/monitoring-logging.md
           - Ops: api-docs/docker/ops.md
           - Portainer: api-docs/docker/portainer.md
       - Scripts:

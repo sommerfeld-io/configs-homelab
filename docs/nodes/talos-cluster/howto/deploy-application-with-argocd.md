@@ -53,10 +53,6 @@ Services are exposed as NodePorts. We do not use Ingress controllers or Nginx Ga
 ??? note "Valid port range for `NodePort`"
     The NodePort range is limited to `30000`-`32767`.
 
-### Overview of deployed Applications
-
-For an overview of all deployed applications, you can either look into ArgoCD or take a look at the [Blackbox Exporter Dashboard in Grafana on the `admin-pi` node](http://localhost/d/jEzutrbMk/blackbox-exporter-http-prober).
-
 ## Conclusion
 
 By using the App of Apps pattern with ArgoCD, you can streamline application deployments and manage multiple applications with ease. The `components/talos-cluster/manifests/projects/talos-cluster` file acts as the central orchestrator, providing a scalable and modular approach to Kubernetes application management.
