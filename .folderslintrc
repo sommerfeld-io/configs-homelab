@@ -1,7 +1,5 @@
 {
 	"rules": [
-		"tests/**",
-
 		".devcontainer",
 		".devcontainer/ops",
 		".devcontainer/ops/assets",
@@ -16,8 +14,7 @@
 		"components/ansible/assets/**",
 		"components/ansible/playbooks",
 		"components/ansible/tasks",
-        "components/ansible/tasks/main",
-        "components/ansible/tasks/test",
+        "components/ansible/tests/inspec/**",
 		"components/ansible/vars",
 
 		"components/bootstrap",

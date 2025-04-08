@@ -15,6 +15,9 @@ function incrementVersionsInYaml() {
   yaml_files=(
     "components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml"
   )
+  for file in components/ansible/tests/inspec/*/inspec.yml; do
+    yaml_files+=("$file")
+  done
 
   for file in "${yaml_files[@]}"; do
     sed -i "s/version: .*/version: $VERSION/" "$file"

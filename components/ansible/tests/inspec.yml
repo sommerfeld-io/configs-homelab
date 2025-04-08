@@ -1,0 +1,58 @@
+---
+- name: Test  ----  Inspec  ----  Prepare Profile
+  ansible.builtin.shell: |
+    rm -rf {{ inventory_dir }}/tests/inspec/{{ inspec_profile }}/inspec.lock
+    rm -rf {{ inventory_dir }}/tests/inspec/{{ inspec_profile }}/vendor
+
+    docker run --rm \
+      --volume "{{ inventory_dir }}/tests/inspec:/inspec" \
+      --workdir "/inspec" \
+      {{ inspec_image }} vendor {{ inspec_profile }} \
+        --overwrite \
+        --no-color \
+        --chef-license=accept
+
+    docker run --rm \
+      --volume "{{ inventory_dir }}/tests/inspec:/inspec" \
+      --workdir "/inspec" \
+      {{ inspec_image }} check {{ inspec_profile }} \
+        --no-color \
+        --chef-license=accept
+  args:
+    executable: /bin/bash
+  register: inspec
+  failed_when: false  # Capture failure, do not fail immediately
+
+- name: Test  ----  Inspec  ----  Prepare Profile  ----  Output
+  ansible.builtin.debug:
+    msg: "{{ inspec.stdout_lines }}"
+
+- name: Test  ----  Inspec  ----  Prepare Profile  ----  Fail play if preparing failed
+  ansible.builtin.fail:
+    msg: "Preparing Inspec failed"
+  when: inspec.rc != 0
+
+- name: Test  ----  Inspec  ----  Run profile
+  ansible.builtin.shell: |
+    docker run --rm \
+      --env SSH_AUTH_SOCK=/ssh-auth.sock \
+      --volume "{{ lookup('env', 'SSH_AUTH_SOCK') }}:/ssh-auth.sock" \
+      --volume "{{ inventory_dir }}/tests/inspec:/inspec" \
+      --workdir "/inspec" \
+      {{ inspec_image }} exec {{ inspec_profile }} \
+        --target ssh://{{ ansible_user }}@{{ ansible_host }} \
+        --no-color \
+        --chef-license=accept
+  args:
+    executable: /bin/bash
+  register: inspec
+  failed_when: false  # Capture failure, do not fail immediately
+
+- name: Test  ----  Inspec  ----  Run profile  ----  Output
+  ansible.builtin.debug:
+    msg: "{{ inspec.stdout_lines }}"
+
+- name: Test  ----  Inspec  ----  Run profile  ----  Fail play if profile exec failed
+  ansible.builtin.fail:
+    msg: "Inspec tests failed"
+  when: inspec.rc != 0

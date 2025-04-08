@@ -41,8 +41,8 @@ ignore:
   - .idea
   - .vscode
   - node_modules
-  - target/docs/site
   - target
+  - components/ansible/tests/inspec/ansible-baseline/vendor
 
   # Helm
   - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
