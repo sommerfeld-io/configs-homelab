@@ -15,3 +15,14 @@
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+
+- name: Setup for group raspi (non-root)
+  hosts: raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+    - ../vars/raspi.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
