@@ -70,7 +70,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Run Inspec profile tests
+      - name: Validate Inspec profile
         run: |
           docker run --rm \
             --volume "./components/ansible/tests/inspec:/inspec" \
