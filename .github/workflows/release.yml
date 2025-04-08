@@ -1,5 +1,5 @@
 ---
-name: Release Pipeline
+name: "Pipeline: Release"
 
 on:
   release:
