@@ -16,6 +16,9 @@ on:
   schedule:
     - cron: '0 1 * * 2'
 
+env:
+  REGISTRY: docker.io
+
 permissions:
   contents: read
 
@@ -40,6 +43,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
       - name: Run lint-${{ matrix.linter }} from docker-compose.yml
         run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
@@ -58,12 +63,12 @@ jobs:
       - name: Run Inspec profile tests
         run: |
           docker run --rm \
-            --volume "components/ansible/tests/inspec:/inspec" \
+            --volume "./components/ansible/tests/inspec:/inspec" \
             --workdir "/inspec" \
             ${{ env.INSPEC_IMAGE }} vendor ${{ matrix.profile }} --overwrite --chef-license=accept
 
           docker run --rm \
-            --volume "components/ansible/tests/inspec:/inspec" \
+            --volume "./components/ansible/tests/inspec:/inspec" \
             --workdir "/inspec" \
             ${{ env.INSPEC_IMAGE }} check ${{ matrix.profile }} --chef-license=accept
         shell: bash
