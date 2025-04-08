@@ -44,6 +44,30 @@ jobs:
         run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
 
+  check-inspec-profile:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.profile }}
+    env:
+      INSPEC_IMAGE: chef/inspec:5.22.76
+    strategy:
+      matrix:
+        profile: ['ansible-baseline']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Inspec profile tests
+        run: |
+          docker run --rm \
+            --volume "components/ansible/tests/inspec:/inspec" \
+            --workdir "/inspec" \
+            ${{ env.INSPEC_IMAGE }} vendor ${{ matrix.profile }} --overwrite --chef-license=accept
+
+          docker run --rm \
+            --volume "components/ansible/tests/inspec:/inspec" \
+            --workdir "/inspec" \
+            ${{ env.INSPEC_IMAGE }} check ${{ matrix.profile }} --chef-license=accept
+        shell: bash
+
   # ----- Build Docs stage ------------------------------------------------------------------------
 
   generate-docs:
@@ -51,6 +75,7 @@ jobs:
     needs: [
       'lint',
       'shellcheck',
+      'check-inspec-profile',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
