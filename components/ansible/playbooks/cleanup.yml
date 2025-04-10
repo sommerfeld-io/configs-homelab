@@ -7,7 +7,38 @@
     - ../vars/global.yml
   tasks:
 
+    - name: Cleanup  ----  Logs  ----  Clean system logs older than 30 days
+      ansible.builtin.shell: sudo journalctl --vacuum-time=30d
+      args:
+        executable: /bin/bash
+
+- name: Run cleanup tasks for all groups (non-root)
+  hosts: ubuntu_desktop:raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
     - name: Cleanup  ----  Docker  ----  Remove all build caches
       ansible.builtin.shell: docker buildx prune --all -f
+      args:
+        executable: /bin/bash
+
+    - name: Cleanup  ----  Docker  ----  Remove stopped containers, unused networks, dangling images/volumes
+      ansible.builtin.shell: docker system prune --all -f --volumes
+      args:
+        executable: /bin/bash
+
+- name: Run cleanup tasks for group ubuntu_desktop
+  hosts: ubuntu_desktop
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    - name: Cleanup  ----  Vagrant  ----  Remove stale vagrant box images
+      ansible.builtin.shell: vagrant box prune
       args:
         executable: /bin/bash
