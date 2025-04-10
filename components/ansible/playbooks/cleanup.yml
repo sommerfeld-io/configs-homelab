@@ -1,0 +1,13 @@
+---
+- name: Run cleanup tasks for all groups
+  hosts: ubuntu_desktop:raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    - name: Cleanup  ----  Docker  ----  Remove all build caches
+      ansible.builtin.shell: docker buildx prune --all -f
+      args:
+        executable: /bin/bash
