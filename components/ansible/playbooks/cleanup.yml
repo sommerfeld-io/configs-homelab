@@ -1,17 +1,4 @@
 ---
-- name: Run cleanup tasks for all groups
-  hosts: ubuntu_desktop:raspi
-  gather_facts: true
-  become: false
-  vars_files:
-    - ../vars/global.yml
-  tasks:
-
-    - name: Cleanup  ----  Logs  ----  Clean system logs older than 30 days
-      ansible.builtin.shell: sudo journalctl --vacuum-time=30d
-      args:
-        executable: /bin/bash
-
 - name: Run cleanup tasks for all groups (non-root)
   hosts: ubuntu_desktop:raspi
   gather_facts: true
