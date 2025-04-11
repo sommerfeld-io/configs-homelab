@@ -1,3 +1,0 @@
----
-inspec_image: chef/inspec:5.22.76
-inspec_profile: ansible-baseline

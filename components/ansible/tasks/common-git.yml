@@ -8,7 +8,7 @@
 
 - name: Config  ----  Copy git configuration
   ansible.builtin.copy:
-    src: ../../assets/.gitconfig
+    src: ../assets/.gitconfig
     dest: "/home/{{ ansible_user }}/.gitconfig"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"

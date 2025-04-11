@@ -26,6 +26,7 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-semaphore-ui.yml
     - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
 

@@ -1,0 +1,14 @@
+# ---
+# - name: Semaphore UI Setup  ----  Download
+#   ansible.builtin.get_url:
+#     url: "https://www.semaphoreui.com/uploads/v{{ version }}/534fa0c2-bcf9-45d6-bb2b-c02eea0cea8f/semaphorepro_{{ version }}_linux_{{ architecture }}.deb"
+#     dest: /tmp/semaphore.deb
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: u=rwx,g=rx,o=rx
+#   vars:
+#     version: 2.13.12
+
+# - name: Semaphore UI Setup  ----  Install
+#   ansible.builtin.apt:
+#     deb: /tmp/semaphore.deb

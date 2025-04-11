@@ -21,16 +21,18 @@
 
 - name: Minikube Setup  ----  Download
   ansible.builtin.get_url:
-    # url: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
-    url: "https://github.com/kubernetes/minikube/releases/download/v{{ minikube_version }}/minikube_{{ minikube_version }}-0_amd64.deb"
-    dest: /tmp/minikube_amd64.deb
+    # url: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_{{ architecture }}.deb
+    url: "https://github.com/kubernetes/minikube/releases/download/v{{ version }}/minikube_{{ version }}-0_{{ architecture }}.deb"
+    dest: /tmp/minikube_{{ architecture }}.deb
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
+  vars:
+    version: 1.34.0
 
 - name: Minikube Setup  ----  Install Minikube
   ansible.builtin.apt:
-    deb: /tmp/minikube_amd64.deb
+    deb: /tmp/minikube_{{ architecture }}.deb
     state: present
 
 - name: Minikube Setup  ----  Write aliases to .bash_aliases
@@ -48,23 +50,25 @@
 
 - name: Minikube Setup  ----  Verify installation
   ansible.builtin.command: minikube version
-  register: minikube_version_output
+  register: minikube_output
 
 - name: Minikube Setup  ----  Print version
   ansible.builtin.debug:
-    msg: "{{ minikube_version_output.stdout }}"
+    msg: "{{ minikube_output.stdout }}"
 
 - name: Helm Setup  ----  Download
   ansible.builtin.get_url:
-    url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
-    dest: /tmp/helm-linux-amd64.tar.gz
+    url: "https://get.helm.sh/helm-v{{ version }}-linux-{{ architecture }}.tar.gz"
+    dest: /tmp/helm-linux-{{ architecture }}.tar.gz
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
+  vars:
+    version: 3.15.2
 
 - name: Helm Setup  ----  Extract tarball
   ansible.builtin.unarchive:
-    src: /tmp/helm-linux-amd64.tar.gz
+    src: /tmp/helm-linux-{{ architecture }}.tar.gz
     dest: /tmp
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -72,14 +76,14 @@
     # extra_opts: [--strip-components=1]
 
 - name: Helm Setup  ----  Move to /usr/local/bin
-  ansible.builtin.command: mv /tmp/linux-amd64/helm /usr/local/bin/helm
+  ansible.builtin.command: mv /tmp/linux-{{ architecture }}/helm /usr/local/bin/helm
   args:
     creates: /usr/local/bin/helm
 
 - name: Helm Setup  ----  Verify installation
   ansible.builtin.command: helm version
-  register: helm_version_output
+  register: helm_output
 
 - name: Helm Setup  ----  Print version
   ansible.builtin.debug:
-    msg: "{{ helm_version_output.stdout }}"
+    msg: "{{ helm_output.stdout }}"

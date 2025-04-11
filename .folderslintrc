@@ -14,7 +14,6 @@
 		"components/ansible/assets/**",
 		"components/ansible/playbooks",
 		"components/ansible/tasks",
-        "components/ansible/tests/inspec/**",
 		"components/ansible/vars",
 
 		"components/bootstrap",
@@ -40,6 +39,8 @@
 		"components/talos-cluster/virtual-talos-admin/ansible/assets/node-configs/generated",
 		"components/talos-cluster/virtual-talos-admin/ansible/assets/scripts",
 		"components/talos-cluster/virtual-talos-admin/ansible/tasks",
+
+        "components/tests/inspec/**",
 
 		"docs",
 		"docs/_assets/**",

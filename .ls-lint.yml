@@ -42,9 +42,8 @@ ignore:
   - .vscode
   - node_modules
   - target
-  - components/ansible/tests/inspec/ansible-baseline/vendor
 
-  # Helm
+  - components/tests/inspec/ansible-baseline/vendor
   - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
 
   # linter definitions etc.
