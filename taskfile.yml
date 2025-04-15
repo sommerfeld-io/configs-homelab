@@ -1,5 +1,10 @@
 ---
 version: '3'
+
+vars:
+  INSPEC_IMAGE: chef/inspec:5.22.76
+  INSPEC_PROFILES: ['ansible-baseline']
+
 tasks:
 
   cleanup:
@@ -7,6 +12,8 @@ tasks:
     cmds:
       - docker compose up cleanup
       - docker compose down --remove-orphans
+
+  # ===============================================================================================
 
   lint:
     desc: 'Run all project linters outside of Dockerfile linters'
@@ -16,10 +23,14 @@ tasks:
             LINTER: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
         cmd: docker compose up lint-{{.ITEM.LINTER}} --exit-code-from lint-{{.ITEM.LINTER}}
 
+  # ===============================================================================================
+
   docs:run:
     desc: 'Run the documentation server'
     cmds:
       - docker compose up docs-dev-server
+
+  # ===============================================================================================
 
   host:conky:
     desc: 'HOST ONLY | (Re-)start conky'
@@ -28,33 +39,47 @@ tasks:
       - killall conky || true
       - ./run.sh
 
-  host:inspec:
-    desc: 'HOST ONLY | Run InSpec tests against nodes on the homelab'
+  # ===============================================================================================
+
+  host:inspec:run:
+    desc: 'HOST ONLY | Run InSpec tests against all nodes'
     dir: &inspec-dir tests/inspec
-    env:
-      IMAGE: "chef/inspec:5.22.76"
+    deps:
+      - task: host:inspec:check
+    cmds:
+      - for: ['caprica.fritz.box', 'kobol.fritz.box']
+        task: host:inspec:run:{{.ITEM}}
+
+  host:inspec:check:
+    desc: 'HOST ONLY | Check InSpec profile validity'
+    dir: *inspec-dir
     cmds:
       - for:
-          matrix:
-            PROFILE: ['ansible-baseline']
+          var: INSPEC_PROFILES
         cmd: |
           docker run --rm \
             --volume "$(pwd):$(pwd)" \
             --workdir "$(pwd)" \
-            "$IMAGE" check "{{.ITEM.PROFILE}}" --chef-license=accept
+            "{{.INSPEC_IMAGE}}" check "{{.ITEM}}" --chef-license=accept
+
+  host:inspec:run:*:
+    desc: 'HOST ONLY | Run InSpec tests against a single node | Replace * with FQDN'
+    dir: *inspec-dir
+    vars:
+      HOST: '{{index .MATCH 0}}'
+      USER: sebastian
+    cmds:
       - for:
-          matrix:
-            USER: ['sebastian']
-            HOST: ['caprica.fritz.box', 'kobol.fritz.box']
-            # HOST: ['caprica.fritz.box']
-            PROFILE: ['ansible-baseline']
+          var: INSPEC_PROFILES
         cmd: |
           docker run --rm \
             --env SSH_AUTH_SOCK=/ssh-auth.sock \
             --volume "$SSH_AUTH_SOCK:/ssh-auth.sock" \
             --volume "$(pwd):$(pwd)" \
             --workdir "$(pwd)" \
-            "$IMAGE" exec "{{.ITEM.PROFILE}}" --target "ssh://{{.ITEM.USER}}@{{.ITEM.HOST}}" --chef-license=accept
+            "{{.INSPEC_IMAGE}}" exec "{{.ITEM}}" --target "ssh://{{.USER}}@{{.HOST}}" --chef-license=accept
+
+  # ===============================================================================================
 
   host:virtual-talos-admin:start:
     desc: 'HOST ONLY | Startup the Talos Administration Vagrantbox'
