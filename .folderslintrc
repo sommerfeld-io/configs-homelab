@@ -40,14 +40,15 @@
 		"components/talos-cluster/virtual-talos-admin/ansible/assets/scripts",
 		"components/talos-cluster/virtual-talos-admin/ansible/tasks",
 
-        "components/tests/inspec/**",
-
-		"docs",
+        "docs",
 		"docs/_assets/**",
 		"docs/api-docs/**",
 		"docs/about/**",
 		"docs/nodes/**",
-		"target/docs/site/**",
+
+        "target/docs/site/**",
+
+        "tests/inspec/**",
 
 		"node_modules/**",
 		"public/**",

@@ -1,0 +1,22 @@
+---
+version: '3'
+tasks:
+
+  cleanup:
+    desc: 'Cleanup the environment'
+    cmds:
+      - docker compose up cleanup
+      - docker compose down --remove-orphans
+
+  lint:
+    desc: 'Run all project linters outside of Dockerfile linters'
+    cmds:
+      - for:
+          matrix:
+            LINTER: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
+        cmd: docker compose up lint-{{.ITEM.LINTER}} --exit-code-from lint-{{.ITEM.LINTER}}
+
+  docs:run:
+    desc: 'Run the documentation server'
+    cmds:
+      - docker compose up docs-dev-server

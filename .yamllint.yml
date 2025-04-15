@@ -8,7 +8,7 @@ ignore: |
   target
   components/minikube
   components/talos-cluster/virtual-talos-admin/ansible/assets/node-configs/generated
-  components/tests/inspec/*/vendor
+  tests/inspec/*/vendor
 
 rules:
   line-length:

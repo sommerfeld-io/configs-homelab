@@ -15,6 +15,7 @@
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/common-task.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
@@ -26,7 +27,6 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-semaphore-ui.yml
     - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
 

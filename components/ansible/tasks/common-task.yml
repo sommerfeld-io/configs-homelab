@@ -1,0 +1,23 @@
+---
+- name: Task Setup  ----  Download
+  ansible.builtin.get_url:
+    url: "https://github.com/go-task/task/releases/download/v{{ version }}/task_linux_{{ architecture }}.deb"
+    dest: /tmp/task_{{ architecture }}.deb
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  vars:
+    version: 3.42.1
+
+- name: Task Setup  ----  Install
+  ansible.builtin.apt:
+    deb: /tmp/task_{{ architecture }}.deb
+    state: present
+
+- name: Task Setup  ----  Verify installation
+  ansible.builtin.command: task --version
+  register: task_output
+
+- name: Task Setup  ----  Print version
+  ansible.builtin.debug:
+    msg: "{{ task_output.stdout }}"

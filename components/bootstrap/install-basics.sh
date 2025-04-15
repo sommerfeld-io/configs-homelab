@@ -46,3 +46,10 @@ sudo apt-get update
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository -y --update ppa:ansible/ansible
 sudo apt-get install -y ansible
+
+readonly TASK_VERSION="3.42.1"
+readonly TASK_DEB="/tmp/task.deb"
+echo -e "$LOG_INFO ${Y}Install Task v${TASK_VERSION}${D}"
+curl -L -o "$TASK_DEB" "https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.deb"
+dpkg -i "$TASK_DEB"
+rm "$TASK_DEB"
