@@ -20,3 +20,59 @@ tasks:
     desc: 'Run the documentation server'
     cmds:
       - docker compose up docs-dev-server
+
+  host:conky:
+    desc: 'HOST ONLY | (Re-)start conky'
+    dir: components/conky
+    cmds:
+      - killall conky || true
+      - ./run.sh
+
+  host:inspec:
+    desc: 'HOST ONLY | Run InSpec tests against nodes on the homelab'
+    dir: &inspec-dir tests/inspec
+    env:
+      IMAGE: "chef/inspec:5.22.76"
+    cmds:
+      - for:
+          matrix:
+            PROFILE: ['ansible-baseline']
+        cmd: |
+          docker run --rm \
+            --volume "$(pwd):$(pwd)" \
+            --workdir "$(pwd)" \
+            "$IMAGE" check "{{.ITEM.PROFILE}}" --chef-license=accept
+      - for:
+          matrix:
+            USER: ['sebastian']
+            HOST: ['caprica.fritz.box', 'kobol.fritz.box']
+            # HOST: ['caprica.fritz.box']
+            PROFILE: ['ansible-baseline']
+        cmd: |
+          docker run --rm \
+            --env SSH_AUTH_SOCK=/ssh-auth.sock \
+            --volume "$SSH_AUTH_SOCK:/ssh-auth.sock" \
+            --volume "$(pwd):$(pwd)" \
+            --workdir "$(pwd)" \
+            "$IMAGE" exec "{{.ITEM.PROFILE}}" --target "ssh://{{.ITEM.USER}}@{{.ITEM.HOST}}" --chef-license=accept
+
+  host:virtual-talos-admin:start:
+    desc: 'HOST ONLY | Startup the Talos Administration Vagrantbox'
+    dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
+    cmds:
+      - vagrant validate
+      - vagrant up
+      - vagrant ssh
+
+  host:virtual-talos-admin:stop:
+    desc: 'HOST ONLY | Shutdown the Talos Administration Vagrantbox'
+    dir: *talos-vm-dir
+    cmds: &talos-vm-stop
+      - vagrant halt
+
+  host:virtual-talos-admin:remove:
+    desc: 'HOST ONLY | Remove the Talos Administration Vagrantbox'
+    dir: *talos-vm-dir
+    cmds:
+      - vagrant halt
+      - vagrant destroy --force
