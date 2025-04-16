@@ -73,12 +73,12 @@ jobs:
       - name: Validate Inspec profile
         run: |
           docker run --rm \
-            --volume "./components/ansible/tests/inspec:/inspec" \
+            --volume "./tests/inspec:/inspec" \
             --workdir "/inspec" \
             ${{ env.INSPEC_IMAGE }} vendor ${{ matrix.profile }} --overwrite --chef-license=accept
 
           docker run --rm \
-            --volume "./components/ansible/tests/inspec:/inspec" \
+            --volume "./tests/inspec:/inspec" \
             --workdir "/inspec" \
             ${{ env.INSPEC_IMAGE }} check ${{ matrix.profile }} --chef-license=accept
         shell: bash
