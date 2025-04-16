@@ -10,7 +10,6 @@
 
     - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
     - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-bash-aliases.yml
     - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml
@@ -27,7 +26,6 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
-    - ansible.builtin.import_tasks: ../tasks/common-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
 
 - name: Setup for group ubuntu_desktop (non-root)
@@ -47,4 +45,4 @@
     # ! Must be last task in this play
     # ! Local changes result in a failure for this task
     # ! In case of failure, all other tasks for the affected node are skipped
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
+    # - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml

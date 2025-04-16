@@ -41,6 +41,37 @@ tasks:
 
   # ===============================================================================================
 
+  host:ansible:cleanup:
+    vars:
+      PLAYBOOK: cleanup.yml
+    desc: &ansible-desc 'HOST ONLY | Run Ansible playbook | {{.PLAYBOOK}}'
+    dir: &ansible-dir components/ansible
+    cmds: &ansible-cmd
+      - ansible-playbook "playbooks/{{.PLAYBOOK}}" --inventory hosts.yml --ask-become-pass
+
+  host:ansible:raspi:baseline:
+    vars:
+      PLAYBOOK: raspi-baseline.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  host:ansible:ubuntu:desktop-baseline:
+    vars:
+      PLAYBOOK: ubuntu-desktop-baseline.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  host:ansible:ubuntu:desktop-steam:
+    vars:
+      PLAYBOOK: ubuntu-desktop-steam.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  # ===============================================================================================
+
   host:test:inspec:run:
     desc: 'HOST ONLY | Run InSpec against all nodes'
     dir: &inspec-dir tests/inspec
@@ -92,7 +123,7 @@ tasks:
   host:virtual-talos-admin:stop:
     desc: 'HOST ONLY | Shutdown the Talos Administration Vagrantbox'
     dir: *talos-vm-dir
-    cmds: &talos-vm-stop
+    cmds:
       - vagrant halt
 
   host:virtual-talos-admin:remove:

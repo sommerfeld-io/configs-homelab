@@ -11,6 +11,7 @@
     - export LOG_WARN="[\e[93mWARN\e[0m]"
     - export Y="\e[93m"
     - export P="\e[35m"
+    - export B="\e[94m"
     - export D="\e[0m"
     - export G='\033[1;30m'
 

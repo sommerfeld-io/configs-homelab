@@ -8,16 +8,3 @@
     size: 4096
     state: present
     force: false
-
-- name: SSH Config  ----  Write aliases to .bash_aliases
-  ansible.builtin.lineinfile:
-    create: true
-    mode: 0600
-    dest: "/home/{{ ansible_user }}/.bash_aliases"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    line: alias ssh-connect-{{ item }}="ssh sebastian@{{ item }}.fritz.box"
-    state: present
-  with_items:
-    - kobol
-    - caprica

@@ -79,7 +79,3 @@ nav:
       - Docker:
           - Ops: api-docs/docker/ops.md
           - Portainer: api-docs/docker/portainer.md
-      - Scripts:
-          - api-docs/scripts/ansible-cli.md
-          - api-docs/scripts/docker-stacks-cli.md
-          - api-docs/scripts/minikube-cli.md
