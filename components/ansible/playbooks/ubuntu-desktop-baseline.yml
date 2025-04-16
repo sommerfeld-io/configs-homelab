@@ -45,4 +45,4 @@
     # ! Must be last task in this play
     # ! Local changes result in a failure for this task
     # ! In case of failure, all other tasks for the affected node are skipped
-    # - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
