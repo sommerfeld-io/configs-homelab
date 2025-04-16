@@ -121,7 +121,7 @@ tasks:
   ssh:connect:caprica:
     vars:
       USER: sebastian
-      HOST: kobol.fritz.box
+      HOST: caprica.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
