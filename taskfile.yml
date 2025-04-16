@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '3.42.1'
 
 vars:
   INSPEC_IMAGE: chef/inspec:5.22.76
