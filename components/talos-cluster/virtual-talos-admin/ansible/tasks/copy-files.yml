@@ -9,9 +9,6 @@
   with_items:
     - { src: "../assets/scripts/bootstrap-argocd.sh", dest: "bootstrap/bootstrap-argocd.sh" }
     - { src: "../assets/scripts/bootstrap-talos.sh", dest: "bootstrap/bootstrap-talos.sh" }
-    - { src: "../assets/scripts/port-forward-argocd.sh", dest: "port-forward-argocd.sh" }
-    - { src: "../assets/scripts/port-forward-kubernetes-dashboard.sh", dest: "port-forward-kubernetes-dashboard.sh" }
-    - { src: "../assets/scripts/port-forward-prometheus.sh", dest: "port-forward-prometheus.sh" }
 
 - name: Talos  ----  Copy node configs
   ansible.builtin.copy:
