@@ -61,7 +61,7 @@ tasks:
     cmds: *docker-stack-cmd-stop
 
   docker:stack:portainer:logs:
-    vars: *docker-stack-ops
+    vars: *docker-stack-portainer
     desc: *docker-stack-desc
     dir: *docker-stack-dir
     cmds: *docker-stack-cmd-logs
