@@ -1,0 +1,28 @@
+---
+version: '3.42.1'
+
+tasks:
+
+  system:info:
+    desc: 'Show system information'
+    cmds:
+      - hostnamectl
+      - 'echo -e " ${B}Ubuntu Codename:${D} $(lsb_release -c | cut -f2)"'
+    silent: true
+
+  # ===============================================================================================
+
+  port-forward:argocd:
+    desc: 'Forward port for ArgoCD'
+    cmds:
+      - 'echo "Todo ..."'
+
+  port-forward:kubernetes-dashboard:
+    desc: 'Forward port for Kubernetes Dashboard'
+    cmds:
+      - 'echo "Todo ..."'
+
+  port-forward:prometheus:
+    desc: 'Forward port for Prometheus'
+    cmds:
+      - 'echo "Todo ..."'

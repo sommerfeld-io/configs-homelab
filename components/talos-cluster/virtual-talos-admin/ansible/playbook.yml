@@ -11,6 +11,7 @@
     - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-aliases.yml
     - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-prompt.yml
     - ansible.builtin.import_tasks: ../../../ansible/tasks/common-create-directories.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-task-setup.yml
     - ansible.builtin.import_tasks: tasks/install-packages.yml
     - ansible.builtin.import_tasks: tasks/install-k9s.yml
     - ansible.builtin.import_tasks: tasks/argocd-autopilot.yml
@@ -25,6 +26,7 @@
   tasks:
 
     - ansible.builtin.import_tasks: tasks/bash-aliases.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-atuin.yml
 
     - name: Config  ----  Create directories
       ansible.builtin.file:
@@ -40,7 +42,7 @@
     - ansible.builtin.import_tasks: tasks/copy-files.yml
     - ansible.builtin.import_tasks: tasks/clone-repos.yml
 
-    - name: Talos  ----  Copy scripts for user {{ ansible_user }}
+    - name: Talos  ----  Copy scripts, files and configs for user {{ ansible_user }}
       ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -49,6 +51,7 @@
         mode: u=rwx,g=rx,o=rx
       with_items:
         - { src: "assets/node-configs/generated/talosconfig.yaml", dest: "/home/{{ ansible_user }}/.talos/config" }
+        - { src: "assets/taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
 
     - name: Talos  ----  Generate kubeconfig
       command: talosctl kubeconfig --nodes "{{ control_plane_node }}" --endpoints "{{ control_plane_node }}"
