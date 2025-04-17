@@ -1,6 +1,6 @@
 title "Checks for devcontainer image"
 
-include_controls 'lib' do
+include_controls 'linux-essentials' do
 end
 
 include_controls 'linux-baseline' do

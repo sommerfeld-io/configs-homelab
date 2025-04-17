@@ -82,9 +82,16 @@ tasks:
         task: host:test:inspec:run:{{.ITEM}}
 
   host:test:inspec:check:
-    desc: 'HOST ONLY | Check InSpec profile validity'
+    desc: 'HOST ONLY | Vendor and check InSpec profile validity'
     dir: *inspec-dir
     cmds:
+      - for:
+          var: INSPEC_PROFILES
+        cmd: |
+          docker run --rm \
+            --volume "$(pwd):$(pwd)" \
+            --workdir "$(pwd)" \
+            "{{.INSPEC_IMAGE}}" vendor "{{.ITEM}}" --overwrite --chef-license=accept
       - for:
           var: INSPEC_PROFILES
         cmd: |
