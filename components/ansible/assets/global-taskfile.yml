@@ -3,6 +3,28 @@ version: '3.42.1'
 
 tasks:
 
+  repository:new:sommerfeld-io:*:
+    vars:
+      ORG: sommerfeld-io
+      TEMPLATE_REPO_NAME: template-repository
+      NEW_REPO_NAME: '{{index .MATCH 0}}'
+      REPO_DIR: ~/work/repos/{{.ORG}}
+    desc: 'Create a new repository on GitHub (* = repository name without organization)'
+    summary: |
+      Create a new GitHub repository under {{.ORG}}, based on the template {{.ORG}}/{{.TEMPLATE_REPO_NAME}}.
+      The repository is also cloned locally, configured remotely on GitHub, and opened in VS Code.
+      Repositories are cloned into {{.REPO_DIR}}.
+    dir: '{{.REPO_DIR}}'
+    cmds:
+      - 'gh auth login'
+      - 'gh repo create {{.ORG}}/{{.NEW_REPO_NAME}} --template {{.ORG}}/{{.TEMPLATE_REPO_NAME}} --public'
+      - 'sleep 3'
+      - 'git clone git@github.com:{{.ORG}}/{{.NEW_REPO_NAME}}.git'
+      - 'gh repo edit {{.ORG}}/{{.NEW_REPO_NAME}} --enable-discussions --enable-issues --enable-projects --enable-wiki=false'
+      - 'code {{.NEW_REPO_NAME}}'
+
+  # ===============================================================================================
+
   docker:stack:ops:start:
     vars: &docker-stack-ops
       STACK: ops
