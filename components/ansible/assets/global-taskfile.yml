@@ -16,7 +16,7 @@ tasks:
       Repositories are cloned into {{.REPO_DIR}}.
     dir: '{{.REPO_DIR}}'
     cmds:
-      - 'gh auth login'
+      - 'gh auth login -w'
       - 'gh repo create {{.ORG}}/{{.NEW_REPO_NAME}} --template {{.ORG}}/{{.TEMPLATE_REPO_NAME}} --public'
       - 'sleep 3'
       - 'git clone git@github.com:{{.ORG}}/{{.NEW_REPO_NAME}}.git'
