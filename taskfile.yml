@@ -88,6 +88,10 @@ tasks:
       - for:
           var: INSPEC_PROFILES
         cmd: |
+          rm -f "{{.ITEM}}/inspec.lock"
+      - for:
+          var: INSPEC_PROFILES
+        cmd: |
           docker run --rm \
             --volume "$(pwd):$(pwd)" \
             --workdir "$(pwd)" \

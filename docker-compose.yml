@@ -23,6 +23,8 @@ services:
       - -c
       - |
         rm -rf target
+        rm -rf tests/inspec/ansible-baseline/vendor
+        rm -rf tests/inspec/ansible-baseline/inspec.lock
     tty: &tty true
 
   lint-yaml:
