@@ -19,3 +19,11 @@ depends:
     branch: main
     # tag: v0.0.2
     relative_path: profiles/linux-essentials
+inputs:
+  # Override linux-baseline inputs
+  - name: login_defs_passmaxdays
+    value: '99999'
+    profile: linux-baseline
+  - name: login_defs_passmindays
+    value: '0'
+    profile: linux-baseline

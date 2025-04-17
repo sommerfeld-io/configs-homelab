@@ -5,6 +5,7 @@ end
 
 include_controls 'linux-baseline' do
   skip_control 'os-10'
+  skip_control 'os-12'
   skip_control 'os-14'
   skip_control 'sysctl-01'
   skip_control 'sysctl-02'

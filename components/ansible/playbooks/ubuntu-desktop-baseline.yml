@@ -8,18 +8,20 @@
     - ../vars/ubuntu.yml
   tasks:
 
+    - ansible.builtin.import_tasks: ../tasks/common-system-configs.yml
     - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
     - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
     - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/common-cron-config.yml
     - ansible.builtin.import_tasks: ../tasks/common-task-setup.yml
     - ansible.builtin.import_tasks: ../tasks/common-task-config.yml
+    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
-    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-ansible.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-github-cli.yml
@@ -46,4 +48,4 @@
     # ! Must be last task in this play
     # ! Local changes result in a failure for this task
     # ! In case of failure, all other tasks for the affected node are skipped
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml
+    # - ansible.builtin.import_tasks: ../tasks/ubuntu-clone-repos.yml

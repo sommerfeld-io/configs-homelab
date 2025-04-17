@@ -1,0 +1,14 @@
+---
+## UMASK controls the default file permissions for new files.
+## 027 ensures that:
+## * Owner: full access
+## * Group: read and execute only
+## * Others: no access
+- name: System  ----  Config  ----  Configure login.defs
+  ansible.builtin.lineinfile:
+    create: false
+    dest: "/etc/login.defs"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "UMASK 027"
