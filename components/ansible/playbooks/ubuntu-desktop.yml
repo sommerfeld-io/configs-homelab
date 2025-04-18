@@ -9,8 +9,7 @@
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-system-configs.yml
-    - ansible.builtin.import_tasks: ../tasks/common-bash-prompt.yml
-    - ansible.builtin.import_tasks: ../tasks/common-bash-aliases.yml
+    - ansible.builtin.import_tasks: ../tasks/common-bash.yml
     - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
     - ansible.builtin.import_tasks: ../tasks/common-git.yml
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml

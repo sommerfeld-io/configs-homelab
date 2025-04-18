@@ -49,16 +49,16 @@ tasks:
     cmds: &ansible-cmd
       - ansible-playbook "playbooks/{{.PLAYBOOK}}" --inventory hosts.yml --ask-become-pass
 
-  host:ansible:raspi:baseline:
+  host:ansible:raspi:
     vars:
-      PLAYBOOK: raspi-baseline.yml
+      PLAYBOOK: raspi.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  host:ansible:ubuntu:desktop-baseline:
+  host:ansible:ubuntu:desktop:
     vars:
-      PLAYBOOK: ubuntu-desktop-baseline.yml
+      PLAYBOOK: ubuntu-desktop.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
@@ -72,18 +72,9 @@ tasks:
 
   # ===============================================================================================
 
-  host:test:inspec:run:
-    desc: 'HOST ONLY | Run InSpec against all nodes'
-    dir: &inspec-dir tests/inspec
-    deps:
-      - task: host:test:inspec:check
-    cmds:
-      - for: ['caprica.fritz.box', 'kobol.fritz.box']
-        task: host:test:inspec:run:{{.ITEM}}
-
   host:test:inspec:check:
     desc: 'HOST ONLY | Vendor and check InSpec profile validity'
-    dir: *inspec-dir
+    dir: &inspec-dir tests/inspec
     cmds:
       - for:
           var: INSPEC_PROFILES
@@ -104,7 +95,16 @@ tasks:
             --workdir "$(pwd)" \
             "{{.INSPEC_IMAGE}}" check "{{.ITEM}}" --chef-license=accept
 
-  host:test:inspec:run:*:
+  host:test:inspec:ansible-baseline:
+    desc: 'HOST ONLY | Run InSpec against all nodes'
+    dir: *inspec-dir
+    deps:
+      - task: host:test:inspec:check
+    cmds:
+      - for: ['caprica.fritz.box', 'kobol.fritz.box']
+        task: host:test:inspec:ansible-baseline:{{.ITEM}}
+
+  host:test:inspec:ansible-baseline:*:
     desc: 'HOST ONLY | Run InSpec against single node | (* = FQDN)'
     dir: *inspec-dir
     vars:
