@@ -41,7 +41,8 @@ if os.arch == 'x86_64'
       * components/ansible/tasks/ubuntu-docker.yml
       * components/ansible/tasks/ubuntu-github-cli.yml
       * components/ansible/tasks/ubuntu-minikube.yml
-      * components/ansible/tasks/ubuntu-packages.yml'
+      * components/ansible/tasks/ubuntu-packages.yml
+      * components/ansible/tasks/ubuntu-sublime.yml'
 
     binaries = [
       '/usr/bin/ansible',
@@ -57,6 +58,7 @@ if os.arch == 'x86_64'
       '/usr/bin/p7zip',
       '/usr/bin/rar',
       '/usr/bin/rpi-imager',
+      '/usr/bin/subl', # sublime text
       '/usr/bin/tilix',
       '/usr/bin/unrar',
       '/usr/bin/vagrant',
@@ -88,6 +90,28 @@ if os.arch == 'x86_64'
       '/snap/bin/intellij-idea-ultimate',
       '/snap/bin/postman',
       '/snap/bin/spotify',
+    ]
+
+    binaries.each do |binary|
+      describe file(binary) do
+        it { should exist }
+        its('mode') { should cmp default_mode }
+      end
+    end
+  end
+
+  control 'packages-03a-amd64' do
+    impact 1.0
+    title 'Check for amd64 specific packages (media players etc.)'
+    desc 'Ensure amd64 specific packages (media players etc.) are installed
+      This applies to Ubuntu workstations
+      Ansible tasks
+      * components/ansible/tasks/ubuntu-media-players.yml'
+
+    binaries = [
+      '/usr/bin/asunder',
+      '/usr/bin/brasero',
+      '/usr/bin/vlc',
     ]
 
     binaries.each do |binary|
