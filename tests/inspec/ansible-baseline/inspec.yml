@@ -12,12 +12,10 @@ supports:
 depends:
   - name: linux-baseline
     git: https://github.com/dev-sec/linux-baseline.git
-    # branch: master
     tag: 2.9.0
   - name: linux-essentials
     git: https://github.com/sommerfeld-io/inspec-profiles.git
     branch: main
-    # tag: v0.0.2
     relative_path: profiles/linux-essentials
 inputs:
   - name: username
