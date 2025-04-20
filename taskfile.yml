@@ -2,7 +2,7 @@
 version: '3.42.1'
 
 vars:
-  INSPEC_IMAGE: chef/inspec:5.22.76
+  INSPEC_DIR: 'tests/inspec'
 
 tasks:
 
@@ -82,15 +82,14 @@ tasks:
     vars:
       PROFILE: '{{index .MATCH 0}}'
     cmds:
-      - rm -f "tests/inspec/{{.PROFILE}}/inspec.lock"
-      - docker compose run --rm inspec vendor "tests/inspec/{{.PROFILE}}" --overwrite --chef-license=accept
-      - docker compose run --rm inspec check "tests/inspec/{{.PROFILE}}" --chef-license=accept
+      - rm -f "{{.INSPEC_DIR}}/{{.PROFILE}}/inspec.lock"
+      - docker compose run --rm inspec vendor "{{.INSPEC_DIR}}/{{.PROFILE}}" --overwrite --chef-license=accept
+      - docker compose run --rm inspec check "{{.INSPEC_DIR}}/{{.PROFILE}}" --chef-license=accept
 
   host:test:inspec:ansible-baseline:all:
     desc: 'HOST ONLY | Run InSpec against all nodes'
-    dir: &inspec-dir tests/inspec
     deps:
-      - task: inspec:check
+      - task: inspec:check:all
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
         task: host:test:inspec:ansible-baseline:{{.ITEM}}
@@ -102,7 +101,7 @@ tasks:
       USER: sebastian
       PROFILE: ansible-baseline
     cmds:
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "tests/inspec/{{.PROFILE}}" --target "ssh://{{.USER}}@{{.HOST}}" --no-distinct-exit --chef-license=accept
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{.INSPEC_DIR}}/{{.PROFILE}}" --target "ssh://{{.USER}}@{{.HOST}}" --no-distinct-exit --chef-license=accept
 
   # ===============================================================================================
 
