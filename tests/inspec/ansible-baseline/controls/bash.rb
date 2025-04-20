@@ -1,4 +1,4 @@
-title "Bash Configuration Check"
+title 'Bash Configuration Check'
 
 username = input('username', value: 'default_user')
 emailAddress = input('emailAddress', value: 'noreply@example.com')

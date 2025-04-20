@@ -1,4 +1,4 @@
-title "Ensure atuin is installed"
+title 'Ensure atuin is installed'
 
 username = input('username', value: 'default_user')
 emailAddress = input('emailAddress', value: 'noreply@example.com')
@@ -8,7 +8,7 @@ control 'atuin-01' do
   impact 1.0
   title 'Check for atuin'
   desc 'Ensure atuin is installed
-    Ansible task
+    Ansible tasks:
     * components/ansible/tasks/common-packages.yml'
 
   binaries = [

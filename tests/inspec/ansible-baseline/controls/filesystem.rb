@@ -1,4 +1,4 @@
-title "Filesystem Check"
+title 'Filesystem Check'
 
 username = input('username', value: 'default_user')
 emailAddress = input('emailAddress', value: 'noreply@example.com')
@@ -8,7 +8,8 @@ control 'fs-01' do
   impact 1.0
   title 'Ensure essential directories and files are present'
   desc 'Check for the presence of essential directories and files and their permissions
-    Ansible task = components/ansible/tasks/common-create-directories.yml'
+    Ansible tasks:
+    * components/ansible/tasks/common-create-directories.yml'
 
   directories = [
     "/home/#{username}/.config",

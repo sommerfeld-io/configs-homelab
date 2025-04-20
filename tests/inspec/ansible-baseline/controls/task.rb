@@ -1,4 +1,4 @@
-title "Ensure task is installed and configured"
+title 'Ensure task is installed and configured'
 
 username = input('username', value: 'default_user')
 emailAddress = input('emailAddress', value: 'noreply@example.com')

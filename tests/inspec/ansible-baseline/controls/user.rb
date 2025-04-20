@@ -1,8 +1,10 @@
-title "User Existence"
+title 'User Existence'
 
 username = input('username', value: 'default_user')
 emailAddress = input('emailAddress', value: 'noreply@example.com')
 default_mode = input('default_mode', value: '0755')
+
+ssh_key_path = "/home/#{username}/.ssh/id_rsa"
 
 control 'user-01' do
   impact 1.0

@@ -1,4 +1,4 @@
-title "HTTP Service Check"
+title 'HTTP Service Check'
 
 control 'http-01' do
   impact 1.0
