@@ -8,8 +8,7 @@
     - vars.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-aliases.yml
-    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash-prompt.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-bash.yml
     - ansible.builtin.import_tasks: ../../../ansible/tasks/common-create-directories.yml
     - ansible.builtin.import_tasks: ../../../ansible/tasks/common-task-setup.yml
     - ansible.builtin.import_tasks: tasks/install-packages.yml

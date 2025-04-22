@@ -126,6 +126,12 @@ tasks:
     cmds:
       - vagrant halt
 
+  host:virtual-talos-admin:ssh:
+    desc: 'HOST ONLY | SSH into the Talos Administration Vagrantbox'
+    dir: *talos-vm-dir
+    cmds:
+      - vagrant ssh
+
   host:virtual-talos-admin:remove:
     desc: 'HOST ONLY | Remove the Talos Administration Vagrantbox'
     dir: *talos-vm-dir
