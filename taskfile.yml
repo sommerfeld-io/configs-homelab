@@ -74,7 +74,7 @@ tasks:
   inspec:check:all:
     desc: 'HOST ONLY | Vendor and check InSpec profile validity'
     cmds:
-      - for: ['ansible-baseline']
+      - for: ['ansible-baseline', 'talos-baseline']
         task: inspec:check:{{.ITEM}}
 
   inspec:check:*:
@@ -102,6 +102,13 @@ tasks:
       PROFILE: ansible-baseline
     cmds:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{.INSPEC_DIR}}/{{.PROFILE}}" --target "ssh://{{.USER}}@{{.HOST}}" --no-distinct-exit --chef-license=accept
+
+  host:test:inspec:talos-baseline:
+    desc: 'HOST ONLY | Run InSpec against Talos cluster'
+    vars:
+      PROFILE: talos-baseline
+    cmds:
+      - docker compose run --rm inspec exec "{{.INSPEC_DIR}}/{{.PROFILE}}" --no-distinct-exit --chef-license=accept
 
   # ===============================================================================================
 
