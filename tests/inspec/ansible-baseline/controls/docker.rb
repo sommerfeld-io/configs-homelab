@@ -1,6 +1,13 @@
-title 'Docker Image Checks'
+title 'Docker Checks'
 
-control 'docker-images-01' do
+control 'docker-01' do
+  describe docker.version do
+    its('Server.Version') { should cmp >= '28.1.1'}
+    its('Client.Version') { should cmp >= '28.1.1'}
+  end
+end
+
+control 'docker-02' do
   impact 1.0
   title 'Ensure Docker images are present'
   desc 'Mandatory Docker images used for e.g. exposing Prometheus metrics should be present'

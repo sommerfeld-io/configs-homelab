@@ -17,6 +17,12 @@ control 'http-01' do
       its('protocols') { should include 'tcp' }
     end
 
+    describe host('localhost', port: port, protocol: 'tcp') do
+      it { should be_reachable }
+      it { should be_resolvable }
+      its('protocol') { should eq 'tcp' }
+    end
+
     describe http("http://localhost:#{port}") do
       its('status') { should be_in [200, 307] }
     end
