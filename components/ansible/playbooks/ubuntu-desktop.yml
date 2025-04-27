@@ -20,15 +20,14 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-ansible.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-github-cli.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-virtualization.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-wrapper-scripts.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
 
 - name: Setup for group ubuntu_desktop (non-root)
   hosts: ubuntu_desktop
