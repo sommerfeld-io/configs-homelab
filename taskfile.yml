@@ -7,7 +7,7 @@ vars:
 tasks:
 
   cleanup:
-    desc: 'Cleanup the environment'
+    desc: Cleanup the development environment for this project
     cmds:
       - docker compose up cleanup
       - docker compose down --remove-orphans
@@ -15,35 +15,24 @@ tasks:
   # ===============================================================================================
 
   lint:
-    desc: 'Run all project linters outside of Dockerfile linters'
+    desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - for:
-          matrix:
-            LINTER: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
-        cmd: docker compose up lint-{{ .ITEM.LINTER }} --exit-code-from lint-{{ .ITEM.LINTER }}
+      - for: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
+        cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
 
   docs:run:
-    desc: 'Run the documentation server'
+    desc: Run the documentation server
     cmds:
       - docker compose up docs-dev-server
-
-  # ===============================================================================================
-
-  host:conky:
-    desc: 'HOST ONLY | (Re-)start conky'
-    dir: components/conky
-    cmds:
-      - killall conky || true
-      - ./run.sh
 
   # ===============================================================================================
 
   host:ansible:cleanup:
     vars:
       PLAYBOOK: cleanup.yml
-    desc: &ansible-desc 'HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}'
+    desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
     dir: &ansible-dir components/ansible
     cmds: &ansible-cmd
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
@@ -72,13 +61,13 @@ tasks:
   # ===============================================================================================
 
   inspec:check:all:
-    desc: 'Vendor and check InSpec profile validity'
+    desc: &inspec-check-desc Vendor and check InSpec profile validity
     cmds:
       - for: ['ansible-baseline', 'talos-baseline']
         task: inspec:check:{{ .ITEM }}
 
   inspec:check:*:
-    desc: 'Vendor and check InSpec profile validity'
+    desc: *inspec-check-desc
     vars:
       PROFILE: '{{ index .MATCH 0 }}'
     cmds:
@@ -87,7 +76,7 @@ tasks:
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
   host:test:inspec:ansible-baseline:all:
-    desc: 'HOST ONLY | Run InSpec against all nodes'
+    desc: HOST ONLY | Run InSpec against all nodes
     deps:
       - task: inspec:check:all
     cmds:
@@ -95,7 +84,7 @@ tasks:
         task: host:test:inspec:ansible-baseline:{{ .ITEM }}
 
   host:test:inspec:ansible-baseline:*:
-    desc: 'HOST ONLY | Run InSpec against single node | (* = FQDN)'
+    desc: HOST ONLY | Run InSpec against single node (* = FQDN)
     vars:
       HOST: '{{ index .MATCH 0 }}'
       USER: sebastian
@@ -104,7 +93,7 @@ tasks:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
   host:test:inspec:talos-baseline:
-    desc: 'HOST ONLY | Run InSpec against Talos cluster'
+    desc: HOST ONLY | Run InSpec against Talos cluster
     vars:
       PROFILE: talos-baseline
     cmds:
@@ -113,7 +102,7 @@ tasks:
   # ===============================================================================================
 
   host:virtual-talos-admin:start:
-    desc: 'HOST ONLY | Startup the Talos Administration Vagrantbox'
+    desc: HOST ONLY | Startup the Talos Administration Vagrantbox'
     dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
     cmds:
       - vagrant validate
@@ -121,19 +110,19 @@ tasks:
       - vagrant ssh
 
   host:virtual-talos-admin:stop:
-    desc: 'HOST ONLY | Shutdown the Talos Administration Vagrantbox'
+    desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
     dir: *talos-vm-dir
     cmds:
       - vagrant halt
 
   host:virtual-talos-admin:ssh:
-    desc: 'HOST ONLY | SSH into the Talos Administration Vagrantbox'
+    desc: HOST ONLY | SSH into the Talos Administration Vagrantbox
     dir: *talos-vm-dir
     cmds:
       - vagrant ssh
 
   host:virtual-talos-admin:remove:
-    desc: 'HOST ONLY | Remove the Talos Administration Vagrantbox'
+    desc: HOST ONLY | Remove the Talos Administration Vagrantbox
     dir: *talos-vm-dir
     cmds:
       - vagrant halt
