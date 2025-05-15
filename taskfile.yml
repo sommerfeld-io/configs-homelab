@@ -20,7 +20,7 @@ tasks:
       - for:
           matrix:
             LINTER: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
-        cmd: docker compose up lint-{{.ITEM.LINTER}} --exit-code-from lint-{{.ITEM.LINTER}}
+        cmd: docker compose up lint-{{ .ITEM.LINTER }} --exit-code-from lint-{{ .ITEM.LINTER }}
 
   # ===============================================================================================
 
@@ -43,10 +43,10 @@ tasks:
   host:ansible:cleanup:
     vars:
       PLAYBOOK: cleanup.yml
-    desc: &ansible-desc 'HOST ONLY | Run Ansible playbook | {{.PLAYBOOK}}'
+    desc: &ansible-desc 'HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}'
     dir: &ansible-dir components/ansible
     cmds: &ansible-cmd
-      - ansible-playbook "playbooks/{{.PLAYBOOK}}" --inventory hosts.yml --ask-become-pass
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
 
   host:ansible:raspi:
     vars:
@@ -75,16 +75,16 @@ tasks:
     desc: 'Vendor and check InSpec profile validity'
     cmds:
       - for: ['ansible-baseline', 'talos-baseline']
-        task: inspec:check:{{.ITEM}}
+        task: inspec:check:{{ .ITEM }}
 
   inspec:check:*:
     desc: 'Vendor and check InSpec profile validity'
     vars:
-      PROFILE: '{{index .MATCH 0}}'
+      PROFILE: '{{ index .MATCH 0 }}'
     cmds:
-      - rm -f "{{.INSPEC_DIR}}/{{.PROFILE}}/inspec.lock"
-      - docker compose run --rm inspec vendor "{{.INSPEC_DIR}}/{{.PROFILE}}" --overwrite --chef-license=accept
-      - docker compose run --rm inspec check "{{.INSPEC_DIR}}/{{.PROFILE}}" --chef-license=accept
+      - rm -f "{{ .INSPEC_DIR }}/{{ .PROFILE }}/inspec.lock"
+      - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
+      - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
   host:test:inspec:ansible-baseline:all:
     desc: 'HOST ONLY | Run InSpec against all nodes'
@@ -92,23 +92,23 @@ tasks:
       - task: inspec:check:all
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
-        task: host:test:inspec:ansible-baseline:{{.ITEM}}
+        task: host:test:inspec:ansible-baseline:{{ .ITEM }}
 
   host:test:inspec:ansible-baseline:*:
     desc: 'HOST ONLY | Run InSpec against single node | (* = FQDN)'
     vars:
-      HOST: '{{index .MATCH 0}}'
+      HOST: '{{ index .MATCH 0 }}'
       USER: sebastian
       PROFILE: ansible-baseline
     cmds:
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{.INSPEC_DIR}}/{{.PROFILE}}" --target "ssh://{{.USER}}@{{.HOST}}" --no-distinct-exit --chef-license=accept
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
   host:test:inspec:talos-baseline:
     desc: 'HOST ONLY | Run InSpec against Talos cluster'
     vars:
       PROFILE: talos-baseline
     cmds:
-      - docker compose run --rm inspec exec "{{.INSPEC_DIR}}/{{.PROFILE}}" --no-distinct-exit --chef-license=accept
+      - docker compose run --rm inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --no-distinct-exit --chef-license=accept
 
   # ===============================================================================================
 

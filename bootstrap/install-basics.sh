@@ -5,7 +5,7 @@
 #   This script runs the basic provisioning. This is a prerequisite to run the ansible steps.
 #
 #   ```bash
-#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/basics.sh | bash -
+#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -
 #   ```
 #
 #   The script does not accept any parameters.

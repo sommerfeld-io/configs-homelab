@@ -25,14 +25,14 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] When prompted for a user and password, use the username `sebastian` and the default password.
 - [ ] Remember to install and activate the OpenSSH server when the wizard prompts for this!
 - [ ] Do not install any further software packages. Installations take place later when Ansible provisions the system.
-- [ ] Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/basics.sh | bash -`
+- [ ] Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -`
 - [ ] Test connecting to my other Linux machines (with user "sebastian" being the user created while installing the OS).
     - [ ] `caprica` via `ssh sebastian@caprica.fritz.box`
     - [ ] `kobol` via `ssh sebastian@kobol.fritz.box`
 
 ### Install SSH Server
 
-- [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/components/bootstrap/ssh-server.sh | bash -` if needed
+- [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -` if needed
 
 ### Configuration and package installation
 

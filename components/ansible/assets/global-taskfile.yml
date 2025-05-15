@@ -3,68 +3,71 @@ version: '3.42.1'
 
 tasks:
 
+  conky:
+    desc: Start all conky instances
+    dir: .config/conky
+    cmds:
+      - killall conky | true
+      - for: ["docker.conkyrc", "host.conkyrc"]
+        cmd: |
+          (
+            conky -c {{ .ITEM }} &
+            sleep 5
+          )
+
+  # ===============================================================================================
+
   repository:new:sommerfeld-io/*:
     vars:
       ORG: sommerfeld-io
       TEMPLATE_REPO_NAME: template-repository
-      NEW_REPO_NAME: '{{index .MATCH 0}}'
-      REPO_DIR: ~/work/repos/{{.ORG}}
+      NEW_REPO_NAME: '{{ index .MATCH 0 }}'
+      REPO_DIR: ~/work/repos/{{ .ORG }}
     desc: 'Create a new repository on GitHub (* = repository name without organization)'
     summary: |
-      Create a new GitHub repository under {{.ORG}}, based on the template {{.ORG}}/{{.TEMPLATE_REPO_NAME}}.
+      Create a new GitHub repository under {{ .ORG }}, based on the template {{ .ORG }}/{{ .TEMPLATE_REPO_NAME }}.
       The repository is also cloned locally, configured remotely on GitHub, and opened in VS Code.
-      Repositories are cloned into {{.REPO_DIR}}.
-    dir: '{{.REPO_DIR}}'
+      Repositories are cloned into {{ .REPO_DIR }}.
+    dir: '{{ .REPO_DIR }}'
     cmds:
       - 'gh auth login -w'
-      - 'gh repo create {{.ORG}}/{{.NEW_REPO_NAME}} --template {{.ORG}}/{{.TEMPLATE_REPO_NAME}} --public'
-      - 'sleep 3'
-      - 'git clone git@github.com:{{.ORG}}/{{.NEW_REPO_NAME}}.git'
-      - 'gh repo edit {{.ORG}}/{{.NEW_REPO_NAME}} --enable-discussions --enable-issues --enable-projects --enable-wiki=false'
-      - 'code {{.NEW_REPO_NAME}}'
+      - 'gh repo create {{ .ORG }}/{{ .NEW_REPO_NAME }} --template {{ .ORG }}/{{ .TEMPLATE_REPO_NAME }} --public'
+      - 'sleep 5'
+      - 'git clone git@github.com:{{ .ORG }}/{{ .NEW_REPO_NAME }}.git'
+      - 'gh repo edit {{ .ORG }}/{{ .NEW_REPO_NAME }} --enable-discussions --enable-issues --enable-projects --enable-wiki=false'
+      - 'code {{ .NEW_REPO_NAME }}'
 
   # ===============================================================================================
 
   docker:stack:ops:start:
     vars: &docker-stack-ops
       STACK: ops
-    desc: &docker-stack-desc 'Docker stack = {{.STACK}} (start|stop|logs)'
-    dir: &docker-stack-dir ~/.docker-stacks/{{.STACK}}
+    desc: Start docker stack {{ .STACK }} in detached mode
+    dir: &docker-stack-dir ~/.docker-stacks/{{ .STACK }}
     cmds: &docker-stack-cmd-start
       - docker compose up -d
 
   docker:stack:ops:stop:
     vars: *docker-stack-ops
-    desc: *docker-stack-desc
+    desc: Stop docker stack {{ .STACK }}
     dir: *docker-stack-dir
     cmds: &docker-stack-cmd-stop
       - docker compose down --volumes --remove-orphans
 
   docker:stack:ops:logs:
     vars: *docker-stack-ops
-    desc: *docker-stack-desc
+    desc: Show logs for docker stack {{ .STACK }}
     dir: *docker-stack-dir
     cmds: &docker-stack-cmd-logs
       - docker compose logs -f
 
-  docker:stack:portainer:start:
-    vars: &docker-stack-portainer
+  docker:stack:portainer:
+    vars:
       STACK: portainer
-    desc: *docker-stack-desc
+    desc: Run stack {{ .STACK }} in foreground
     dir: *docker-stack-dir
-    cmds: *docker-stack-cmd-start
-
-  docker:stack:portainer:stop:
-    vars: *docker-stack-portainer
-    desc: *docker-stack-desc
-    dir: *docker-stack-dir
-    cmds: *docker-stack-cmd-stop
-
-  docker:stack:portainer:logs:
-    vars: *docker-stack-portainer
-    desc: *docker-stack-desc
-    dir: *docker-stack-dir
-    cmds: *docker-stack-cmd-logs
+    cmds:
+      - docker compose up
 
   # ===============================================================================================
 
@@ -120,15 +123,15 @@ tasks:
       SOURCE_DP: "0x0f"
     desc: &screen-desc 'Switch inputs sources for screens'
     cmds:
-      - ddcutil -b {{.MONITOR_LEFT}} setvcp {{.CHANGE_INPUT_SOURCE}} {{.SOURCE_DP}}
-      - ddcutil -b {{.MONITOR_RIGHT}} setvcp {{.CHANGE_INPUT_SOURCE}} {{.SOURCE_HDMI_1}}
+      - ddcutil -b {{ .MONITOR_LEFT }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_DP }}
+      - ddcutil -b {{ .MONITOR_RIGHT }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_1 }}
 
   screen:office:
     vars: *screen-vars
     desc: *screen-desc
     cmds:
-      - ddcutil -b {{.MONITOR_LEFT}} setvcp {{.CHANGE_INPUT_SOURCE}} {{.SOURCE_HDMI_2}}
-      - ddcutil -b {{.MONITOR_RIGHT}} setvcp {{.CHANGE_INPUT_SOURCE}} {{.SOURCE_HDMI_2}}
+      - ddcutil -b {{ .MONITOR_LEFT }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
+      - ddcutil -b {{ .MONITOR_RIGHT }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
 
   # ===============================================================================================
 
@@ -136,9 +139,9 @@ tasks:
     vars:
       USER: sebastian
       HOST: kobol.fritz.box
-    desc: &ssh-connect-desc 'SSH connect {{.USER}}@{{.HOST}}'
+    desc: &ssh-connect-desc 'SSH connect {{ .USER }}@{{ .HOST }}'
     cmds: &ssh-connect-cmd
-      - ssh {{.USER}}@{{.HOST}}
+      - ssh {{ .USER }}@{{ .HOST }}
 
   ssh:connect:caprica:
     vars:

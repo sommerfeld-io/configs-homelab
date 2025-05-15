@@ -1,0 +1,29 @@
+---
+- name: Conky Setup  ----  Install
+  ansible.builtin.apt:
+    pkg:
+      - conky-all
+    state: latest
+    update_cache: true
+
+- name: Conky Setup  ----  Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "/home/{{ ansible_user }}/.config/conky"
+
+- name: Conky Setup  ----  Copy files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=r,o=r
+  loop:
+    - { src: "../assets/conky/docker.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/docker.conkyrc" }
+    - { src: "../assets/conky/host.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/host.conkyrc" }
+    - { src: "../assets/conky/autostart/conky-launcher.desktop", dest: "/home/{{ ansible_user }}/.config/autostart/conky-launcher.desktop" }
