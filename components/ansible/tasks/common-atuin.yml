@@ -1,7 +1,15 @@
 ---
-- name: Config  ----  Download and execute the atuin setup script
+- name: Config  ----  atuin  ----  Download and execute the atuin setup script
   ansible.builtin.shell:
     cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | bash"
   args:
     executable: /bin/bash
     creates: "/home/{{ ansible_user }}/.atuin/bin/atuin"
+
+- name: Config  ----  atuin  ----  Set session as default scope
+  ansible.builtin.lineinfile:
+    dest: "/home/{{ ansible_user }}/.config/atuin/config.toml"
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - filters = [ "session", "directory", "workspace", "host",  "global" ]
