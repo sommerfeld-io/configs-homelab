@@ -12,12 +12,14 @@
       args:
         executable: /bin/bash
 
-    - name: Cleanup  ----  Docker  ----  Remove stopped containers, unused networks, dangling images/volumes
-      ansible.builtin.shell: docker system prune --all -f --volumes
+    - name: Cleanup  ----  Docker  ----  Remove stopped containers, unused networks, dangling images and dangling volumes
+      ansible.builtin.shell: |
+        docker system prune --all -f --volumes
+        docker volume prune -f
       args:
         executable: /bin/bash
 
-- name: Run cleanup tasks for group ubuntu_desktop
+- name: Run cleanup tasks for group ubuntu_desktop (non-root)
   hosts: ubuntu_desktop
   gather_facts: true
   become: false
@@ -29,3 +31,26 @@
       ansible.builtin.shell: vagrant box prune
       args:
         executable: /bin/bash
+
+    - name: Cleanup  ----  Filesystem  ----  Find junk folders
+      ansible.builtin.find:
+        paths: /home/{{ ansible_user }}
+        patterns: "{{ item }}"
+        file_type: directory
+        recurse: true
+      loop:
+        - "System Volume Information"
+      register: found_dirs
+
+    - name: Cleanup  ----  Filesystem  ----  Remove found junk folders
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ found_dirs.results | map(attribute='files') | flatten }}"
+      # When looping over patterns with ansible.builtin.find, each run returns
+      # a separate .files list inside found_dirs.results
+      #
+      # `map(attribute='files')` extracts the files list from each find result
+      # `flatten` turns list of lists into a single list
+      loop_control:
+        label: "{{ item.path }}"
