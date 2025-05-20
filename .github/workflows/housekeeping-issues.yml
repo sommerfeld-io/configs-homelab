@@ -30,18 +30,24 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
 
   assign-issue-to-user:
-    name: Assign to user
+    name: Assign task or PR to user
     runs-on: ubuntu-latest
-    if: "${{ github.actor != 'dependabot[bot]' }}"
     steps:
-      - name: Assign issue to user when moved into column
-        uses: pozil/auto-assign-issue@v2
-        # https://github.com/marketplace/actions/auto-assign-issue
+      - name: Assign to user
+        uses: actions/github-script@v7
         with:
-          assignees: ${{ github.actor }}
-          numOfAssignee: 1
-          allowSelfAssign: true
-          abortIfPreviousAssignees: true
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const assignee = context.actor;
+
+            await github.rest.issues.addAssignees({
+              issue_number,
+              owner,
+              repo,
+              assignees: [assignee]
+            });
 
   set-issue-labels:
     name: Set label for issues (if not story)
