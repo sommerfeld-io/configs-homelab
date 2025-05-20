@@ -11,6 +11,9 @@ tasks:
     cmds:
       - docker compose up cleanup
       - docker compose down --remove-orphans
+      - rm -rf .cache
+      - rm -rf node_modules
+      - rm -rf target
 
   # ===============================================================================================
 

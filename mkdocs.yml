@@ -8,7 +8,9 @@ site_description: >-
 repo_name: sommerfeld-io/configs-homelab
 repo_url: https://github.com/sommerfeld-io/configs-homelab
 
-copyright: Copyright &copy; 2024 Sommerfeld.io
+copyright: >
+  Copyright &copy; 2024 Sommerfeld.io |
+  <a href="#__consent">Cookie settings</a>
 
 docs_dir: docs
 site_dir: target/docs/site
@@ -47,6 +49,17 @@ plugins:
   - search:
 
 extra:
+  consent:
+    title: Cookie consent
+    description: >-
+      Our documentation website is hosted on GitHub Pages and uses services from GitHub,
+      Google Fonts, and Kroki, each with their own terms and privacy policies. We do not
+      control or influence the data these third parties may collect. The site itself does
+      not set cookies, track users, or collect personal data. For detals, see our
+      <a href="https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md">Terms of Use</a>.
+    actions:
+      - accept
+      - reject
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/sommerfeld-io/configs-homelab
