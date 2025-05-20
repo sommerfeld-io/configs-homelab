@@ -25,9 +25,9 @@ tasks:
       REPO_DIR: ~/work/repos/{{ .ORG }}
     desc: 'Create a new repository on GitHub (* = repository name without organization)'
     summary: |
-      Create a new GitHub repository under {{ .ORG }}, based on the template {{ .ORG }}/{{ .TEMPLATE_REPO_NAME }}.
-      The repository is also cloned locally, configured remotely on GitHub, and opened in VS Code.
-      Repositories are cloned into {{ .REPO_DIR }}.
+      Create a new GitHub repository under the organization '{{ .ORG }}', based on the template
+      '{{ .ORG }}/{{ .TEMPLATE_REPO_NAME }}'. The repository is also cloned locally, configured
+      remotely on GitHub, and opened in VS Code. Repositories are cloned into '{{ .REPO_DIR }}'.
     dir: '{{ .REPO_DIR }}'
     cmds:
       - 'gh auth login -w'
