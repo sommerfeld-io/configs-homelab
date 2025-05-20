@@ -17,11 +17,15 @@ This project contains infrastructure configurations and docs for my workstations
 This section outlines the basic requirements and features of the project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
 - Install all necessary software on workstations and servers. Follow Infrastructure as Code (IaC) principles. Ansible is used for this purpose.
-- Every machines run services (some of them are mandatory for every machine). These services run inside Docker containers. The containers are controlled through scripts from this project.
+- Every machine runs services (some of them are mandatory for every machine). These services mostly run inside Docker containers. The containers are controlled through scripts from this project.
 
-## Scope and Context
+## Warning: This Setup Has Opinions (and Will Enforce Them)
 
-This configuration set is intended to work specifically for our machines. You might be able to adopt some stuff from this project, but using it "as is" most likely will result in failure.
+For obvious reasons, it's not recommended to apply this configuration directly to your personal machine. Doing so will overwrite your existing setup, which may lead to unexpected behavior.
+
+Feel free to use this repository as a starting point for your own configuration. To stay on the safe side, it's best to experiment with it on a disposable virtual machine first.
+
+The main branch is intended for Ubuntu 24.10 and later.
 
 ## Architecture Constraints
 
