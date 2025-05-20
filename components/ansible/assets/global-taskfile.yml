@@ -115,8 +115,8 @@ tasks:
 
   screen:caprica:
     vars: &screen-vars
-      MONITOR_LEFT: "5" # Curved (landscape) /dev/i2c-5
-      MONITOR_RIGHT: "4" # UHD (portrait) /dev/i2c-4
+      MONITOR_LEFT: "5" # Curved /dev/i2c-5
+      MONITOR_RIGHT: "4" # UHD /dev/i2c-4
       CHANGE_INPUT_SOURCE: "0x60"
       SOURCE_HDMI_1: "0x11"
       SOURCE_HDMI_2: "0x12"
