@@ -105,6 +105,7 @@ jobs:
           curl -o CODE_OF_CONDUCT.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/code-of-conduct.md
           curl -o CONTRIBUTING.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/contribute.md
           curl -o SECURITY.md https://raw.githubusercontent.com/sommerfeld-io/.github/main/docs/security.md
+          chmod u+rw,g+rw,o+r ./*.md
         shell: bash
       - name: Add do-not-edit remark to Markdown files in project root
         run: |
