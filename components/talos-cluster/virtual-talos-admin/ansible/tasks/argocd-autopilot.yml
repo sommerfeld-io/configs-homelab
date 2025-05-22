@@ -3,6 +3,8 @@
   ansible.builtin.get_url:
     url: "https://github.com/argoproj-labs/argocd-autopilot/releases/download/{{ version }}/argocd-autopilot-linux-{{ architecture }}.tar.gz"
     dest: /tmp/argocd-autopilot-linux-{{ architecture }}.tar.gz
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: '0644'
   vars:
     version: v0.4.18

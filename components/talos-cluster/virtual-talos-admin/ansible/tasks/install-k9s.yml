@@ -3,6 +3,8 @@
   ansible.builtin.get_url:
     url: https://github.com/derailed/k9s/releases/download/{{ version }}/k9s_linux_{{ architecture }}.deb
     dest: /tmp/k9s_linux_{{ architecture }}.deb
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: '0644'
   vars:
     version: v0.32.7
