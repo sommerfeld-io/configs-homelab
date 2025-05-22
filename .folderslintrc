@@ -5,6 +5,7 @@
 		".devcontainer/ops/assets",
 
 		".github",
+        ".github/instructions",
 		".github/workflows",
 		".github/workflows/assets",
 

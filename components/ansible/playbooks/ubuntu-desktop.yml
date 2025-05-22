@@ -41,5 +41,6 @@
 
     - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
     - ansible.builtin.import_tasks: ../tasks/common-cron-jobs.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-scout.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-copy-files.yml
