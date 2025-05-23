@@ -1,6 +1,8 @@
 ---
 version: '3.42.1'
 
+dotenv: ['.env']
+
 vars:
   INSPEC_DIR: tests/inspec
 
@@ -9,22 +11,46 @@ tasks:
   cleanup:
     desc: Cleanup the development environment for this project
     cmds:
-      - docker compose up cleanup
       - docker compose down --remove-orphans
       - rm -rf .cache
       - rm -rf node_modules
       - rm -rf target
+      - for: &inspec-profiles ['ansible-baseline', 'talos-baseline']
+        cmd: |
+          rm -rf tests/inspec/{{ .ITEM }}/vendor
+          rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
 
   # ===============================================================================================
 
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - chmod u+rw,g+rw,o+r ./*.md
       - for: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
+
+  docs:generate:internal:copy:
+    desc: 'Do the actual work of copying files'
+    internal: true
+    silent: true
+    cmds:
+      - cp {{ .SRC }} {{ .DEST }}
+      - echo >> {{ .DEST }}
+      - echo "<!-- !    File is auto-generated        -->" >> {{ .DEST }}
+      - echo "<!-- !    EDITS WILL BE ERASED !!!!!    -->" >> {{ .DEST }}
+      - chmod u+rw,g+rw,o+r {{ .DEST }}
+    generates:
+      - "{{ .DEST }}"
+
+  docs:generate:
+    desc: 'Generate Markdown files for documentation'
+    cmds:
+      - echo "Collecting documentation from other Markdown files ..."
+      - task: docs:generate:internal:copy
+        vars: { SRC: docs/index.md, DEST: README.md }
+      - task: docs:generate:internal:copy
+        vars: { SRC: docs/license.md, DEST: LICENSE.md }
 
   docs:run:
     desc: Run the documentation server
@@ -67,7 +93,7 @@ tasks:
   inspec:check:all:
     desc: &inspec-check-desc Vendor and check InSpec profile validity
     cmds:
-      - for: ['ansible-baseline', 'talos-baseline']
+      - for: *inspec-profiles
         task: inspec:check:{{ .ITEM }}
 
   inspec:check:*:

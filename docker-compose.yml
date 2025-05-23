@@ -1,4 +1,11 @@
 ---
+x-volumes: &volumes
+  - /etc/timezone:/etc/timezone:ro
+  - /etc/localtime:/etc/localtime:ro
+  - project-root-volume:/workspaces/configs-homelab
+x-workdir: &default-workdir /workspaces/configs-homelab
+x-tty: &tty true
+
 volumes:
 
   project-root-volume:
@@ -9,23 +16,6 @@ volumes:
       o: bind
 
 services:
-
-  cleanup:
-    container_name: ${COMPOSE_PROJECT_NAME}-cleanup
-    image: &linux-image alpine:latest
-    volumes: &volumes
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - project-root-volume:/workspaces/configs-homelab
-    working_dir: &default-workdir /workspaces/configs-homelab
-    command:
-      - /bin/ash
-      - -c
-      - |
-        rm -rf target
-        rm -rf tests/inspec/ansible-baseline/vendor
-        rm -rf tests/inspec/ansible-baseline/inspec.lock
-    tty: &tty true
 
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
@@ -122,9 +112,6 @@ services:
     working_dir: *default-workdir
     command: build
     tty: *tty
-    depends_on:
-      cleanup:
-        condition: service_completed_successfully
 
   docs-dev-server:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
@@ -137,7 +124,5 @@ services:
       - 3080:8000
     tty: *tty
     depends_on:
-      cleanup:
-        condition: service_completed_successfully
       kroki:
         condition: service_started
