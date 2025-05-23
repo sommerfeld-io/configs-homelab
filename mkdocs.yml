@@ -71,9 +71,9 @@ nav:
       - license.md
       - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
-      - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/security.md
-      - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/contribute.md
-      - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/code-of-conduct.md
+      - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
+      - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
+      - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md.md
       - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
   - Workstations and RasPi Nodes:
       - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
