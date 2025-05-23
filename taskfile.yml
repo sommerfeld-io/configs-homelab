@@ -17,8 +17,8 @@ tasks:
       - rm -rf target
       - for: &inspec-profiles ['ansible-baseline', 'talos-baseline']
         cmd: |
-          rm -rf tests/inspec/{{ .ITEM }}/vendor
-          rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
+          sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
+          sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
 
   # ===============================================================================================
 
