@@ -1,8 +1,3 @@
----
-hide:
-  - toc
----
-
 # MIT License
 
 Copyright (c) 2024 sommerfeld-io
