@@ -49,6 +49,7 @@ tasks:
     silent: true
     cmds:
       - curl -fsSL -o {{ .DEST }} "{{ .URL }}"
+      - chmod u+rw,g+rw,o+r {{ .DEST }}
     generates:
       - "{{ .DEST }}"
 
