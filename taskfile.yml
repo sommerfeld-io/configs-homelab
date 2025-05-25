@@ -43,6 +43,15 @@ tasks:
     generates:
       - "{{ .DEST }}"
 
+  docs:generate:internal:download:
+    desc: 'Download code guideline pipelines markdown from central repo'
+    internal: true
+    silent: true
+    cmds:
+      - curl -fsSL -o {{ .DEST }} "{{ .URL }}"
+    generates:
+      - "{{ .DEST }}"
+
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     cmds:
@@ -51,6 +60,8 @@ tasks:
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: docs:generate:internal:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
+      - task: docs:generate:internal:download
+        vars: { URL: https://raw.githubusercontent.com/sommerfeld-io/.github/refs/heads/main/docs/code-guideline-pipelines.md, DEST: .github/instructions/code-guideline-pipelines.md }
 
   docs:run:
     desc: Run the documentation server
