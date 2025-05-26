@@ -40,7 +40,9 @@ jobs:
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const assignee = context.actor;
+            const actor = context.actor;
+
+            const assignee = actor === 'dependabot[bot]' ? 'sebastian-sommerfeld-io' : actor;
 
             await github.rest.issues.addAssignees({
               issue_number,
