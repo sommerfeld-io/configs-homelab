@@ -10,7 +10,7 @@
             "extensions": [
                 "streetsidesoftware.code-spell-checker",
                 "asciidoctor.asciidoctor-vscode",
-                "ms-azuretools.vscode-docker",
+                "ms-azuretools.vscode-containers",
                 "aaron-bond.better-comments",
                 "timonwong.shellcheck",
                 "jebbs.plantuml",
