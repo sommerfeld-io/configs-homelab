@@ -31,6 +31,7 @@ jobs:
 
   assign-issue-to-user:
     name: Assign task or PR to user
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - name: Assign to user
@@ -40,9 +41,7 @@ jobs:
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const actor = context.actor;
-
-            const assignee = actor === 'dependabot[bot]' ? 'sebastian-sommerfeld-io' : actor;
+            const assignee = context.actor;
 
             await github.rest.issues.addAssignees({
               issue_number,
