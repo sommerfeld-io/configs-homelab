@@ -1,5 +1,5 @@
 ---
-- name: Setup for group ubuntu_desktop
+- name: Install and configure nodes
   hosts: ubuntu_desktop
   gather_facts: true
   become: true
@@ -30,7 +30,7 @@
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
 
-- name: Setup for group ubuntu_desktop (non-root)
+- name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
   gather_facts: true
   become: false

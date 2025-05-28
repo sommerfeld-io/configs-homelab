@@ -1,5 +1,5 @@
 ---
-- name: Run cleanup tasks for all groups (non-root)
+- name: Run cleanup tasks (non-root)
   hosts: ubuntu_desktop:raspi
   gather_facts: true
   become: false
@@ -19,7 +19,7 @@
       args:
         executable: /bin/bash
 
-- name: Run cleanup tasks for all groups
+- name: Run cleanup tasks
   hosts: ubuntu_desktop:raspi
   gather_facts: true
   become: true
@@ -38,7 +38,7 @@
       register: cleanup_result
       changed_when: cleanup_result.changed
 
-- name: Run cleanup tasks for group ubuntu_desktop (non-root)
+- name: Run cleanup tasks (non-root)
   hosts: ubuntu_desktop
   gather_facts: true
   become: false

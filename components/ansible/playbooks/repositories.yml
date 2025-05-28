@@ -1,11 +1,10 @@
 ---
-- name: Setup and clone git repositories for ubuntu_desktop
+- name: Setup and clone git repositories
   hosts: ubuntu_desktop
   gather_facts: true
   become: false
   vars_files:
     - ../vars/global.yml
-    - ../vars/ubuntu.yml
   vars:
     repositories:
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }

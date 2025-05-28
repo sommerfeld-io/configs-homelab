@@ -1,5 +1,5 @@
 ---
-- name: Setup for group raspi
+- name: Install and configure nodes
   hosts: raspi
   gather_facts: true
   become: true
@@ -17,7 +17,7 @@
     - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
 
-- name: Setup for group raspi (non-root)
+- name: Install and configure nodes (non-root)
   hosts: raspi
   gather_facts: true
   become: false
