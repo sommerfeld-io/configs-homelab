@@ -1,5 +1,5 @@
 ---
-name: Test Development Environment
+name: Development Environment
 
 on:
   push:
@@ -42,3 +42,27 @@ jobs:
           platforms: linux/amd64
           push: false
           tags: local/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  sync-assets:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.ref}}
+      - name: Install Task
+        uses: arduino/setup-task@v2.0.0
+        with:
+          version: 3.x
+      - name: Run task to generate docs
+        run: task sync:assets-from-github
+        shell: bash
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: sebastian
+          author_email: sebastian@sommerfeld.io
+          message: 'ci: [Actions Bot] sync assets from sommerfeldio/.github'

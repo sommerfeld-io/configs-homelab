@@ -39,6 +39,3 @@ This is a constraint that is not likely to change in the future.
 ## Contact
 
 Feel free to contact me via <sebastian@sommerfeld.io> or [raise an issue in this repository][file-issues].
-
-<!-- !    File is auto-generated        -->
-<!-- !    EDITS WILL BE ERASED !!!!!    -->
