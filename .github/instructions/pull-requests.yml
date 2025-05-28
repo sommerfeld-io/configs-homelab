@@ -11,6 +11,10 @@ pull_request:
     - Verify that all CI checks have passed.
     - Ensure code passes all linter checks as configured in the repository.
     - Assign at least one reviewer.
+  remarks:
+    - Always create a Pull Request (PR) as soon as you begin implementing a change in a branch.
+    - As soon as possible, provide a PR description that reflects the reason for the change.
+    - Descriptions of technical changes can be added and updated as the implementation evolves.
   reviewers:
     always_request:
       - sebastian-sommerfeld-io
