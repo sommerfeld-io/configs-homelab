@@ -100,6 +100,13 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
+  host:ansible:repositories:
+    vars:
+      PLAYBOOK: repositories.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   # ===============================================================================================
 
   inspec:check:all:

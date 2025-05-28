@@ -1,4 +1,5 @@
 ---
+github: git@github.com
 dir_work: "/home/{{ ansible_user }}/work"
 dir_repos: "{{ dir_work }}/repos"
 dir_repos_sommerfeld_io: "{{ dir_repos }}/sommerfeld-io"
