@@ -1,0 +1,11 @@
+---
+- name: Setup and clone git repositories for ubuntu_desktop
+  hosts: ubuntu_desktop
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+    - ../vars/ubuntu.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
