@@ -13,3 +13,10 @@
 - name: Ansible  ----  Print version
   ansible.builtin.debug:
     msg: "{{ ansible_version_output.stdout }}"
+
+- name: Ansible  ----  Galaxy  ----  Install collections
+  ansible.builtin.shell: ansible-galaxy collection install {{ item }}
+  loop:
+    - community.general
+  args:
+    executable: /bin/bash
