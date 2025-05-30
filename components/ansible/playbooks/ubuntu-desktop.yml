@@ -17,11 +17,11 @@
     - ansible.builtin.import_tasks: ../tasks/common-task-setup.yml
     - ansible.builtin.import_tasks: ../tasks/common-task-config.yml
     - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
+    - ansible.builtin.import_tasks: ../tasks/common-ansible.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-conky.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-ansible.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-github-cli.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-virtualization.yml
