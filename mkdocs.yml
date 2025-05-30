@@ -73,7 +73,7 @@ nav:
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
       - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
       - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
-      - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md.md
+      - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
       - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
   - Workstations and RasPi Nodes:
       - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
