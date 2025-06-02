@@ -9,6 +9,7 @@ This project contains infrastructure configurations and docs for my workstations
 
 - [Documentation Website][doc-website]
 - [Github Repository][github-repo]
+- [Sonarcloud Code Quality and Security Analysis](https://sonarcloud.io/project/overview?id=sommerfeld-io_configs-homelab)
 - [Where to file issues][file-issues]
 - [Project Board for Issues and Pull Requests][project-board]
 
