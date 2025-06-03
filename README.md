@@ -7,7 +7,7 @@
 
 This project contains infrastructure configurations and docs for my workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
-![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/docs/.assets/images/logo/logo-1.png)
+![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/docs/.assets/images/logo/logo.png)
 
 - [Documentation Website][doc-website]
 - [Github Repository][github-repo]

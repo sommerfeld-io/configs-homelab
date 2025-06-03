@@ -12,4 +12,4 @@ The visual style should be flat or subtly dimensional, designed to suit the star
 
 ## Logo Variants
 
-- `logo-1.png`: Generated with [Sora AI](https://sora.chatgpt.com) on 2025-06-03 with Preset `none`.
+- `logo.png`: Generated with [Sora AI](https://sora.chatgpt.com) on 2025-06-03 with Preset `none`.
