@@ -14,4 +14,5 @@ The autopilot bootstrap command will deploy an Argo CD manifest to a target K8s 
 
 ??? note "Initial config from the ArgoCD Autopilot and its downside"
     - The initial config from the ArgoCD Autopilot points to [github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.18](https://github.com/argoproj-labs/argocd-autopilot/blob/main/manifests/base/kustomization.yaml) references a config which is marked as `stable`.
-    - However, this means that we cannot determine the exact version of ArgoCD that is being deployed and hence cannot determine when to update ArgoCd ourselves.
+    - However, this means that we cannot determine the exact version of ArgoCD that is being deployed and hence cannot determine when to update ArgoCD ourselves.
+    - We found a way around this by changing the `resources` URL in the `kustomization.yaml` file to point to a specific version of ArgoCD (see <https://github.com/sommerfeld-io/configs-homelab/blob/main/components/talos-cluster/manifests/bootstrap/argo-cd/kustomization.yaml>).
