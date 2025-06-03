@@ -9,6 +9,8 @@ This project contains infrastructure configurations and docs for my workstations
 
 ![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/docs/.assets/images/logo/logo.png)
 
+Our goal is to automate as much of the infrastructure management as possible. All provisioning, configuration, and deployment tasks are handled automatically using a combination of infrastructure-as-code, provisioning, and GitOps tools. The only manual step required (at the most) is to trigger a script or workflow or some other form of automation tool. From this point on, the remainder of the process is fully automated.
+
 - [Documentation Website][doc-website]
 - [Github Repository][github-repo]
 - [Sonarcloud Code Quality and Security Analysis](https://sonarcloud.io/project/overview?id=sommerfeld-io_configs-homelab)
@@ -16,8 +18,6 @@ This project contains infrastructure configurations and docs for my workstations
 - [Project Board for Issues and Pull Requests][project-board]
 
 ## Requirements and Features
-
-This section outlines the basic requirements and features of the project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
 - Install all necessary software on workstations and servers. Follow Infrastructure as Code (IaC) principles. Ansible is used for this purpose.
 - Every machine runs services (some of them are mandatory for every machine). These services mostly run inside Docker containers. The containers are controlled through scripts from this project.
