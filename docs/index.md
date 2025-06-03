@@ -7,6 +7,8 @@
 
 This project contains infrastructure configurations and docs for my workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
+![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/docs/.assets/images/logo/logo-1.png)
+
 - [Documentation Website][doc-website]
 - [Github Repository][github-repo]
 - [Sonarcloud Code Quality and Security Analysis](https://sonarcloud.io/project/overview?id=sommerfeld-io_configs-homelab)
