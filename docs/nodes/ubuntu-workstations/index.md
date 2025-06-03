@@ -39,11 +39,10 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Install machine using the Ansible configs from this repo using `task`
 - [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
 
-### Manual Follow-Up todos
+### Manual Follow-Up Todos
 
 - [ ] Set dark mode, Dock config, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
 - [ ] Use `task` to start Docker Compose services.`
-- [ ] Use `components/conky/run.sh` to start all conky instances.
