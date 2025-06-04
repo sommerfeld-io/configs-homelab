@@ -73,7 +73,6 @@ tasks:
   internal:docs:generate:from-readme:
     desc: 'Collecting documentation from helm charts and generate diagrams'
     internal: true
-    silent: true
     vars:
       FOLDERS:
         sh: find {{ .BASEPATH }} -maxdepth 1 -type d -not -path '{{ .BASEPATH }}' -exec basename {} \;
