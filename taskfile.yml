@@ -6,7 +6,6 @@ dotenv: ['.env']
 vars:
   INSPEC_DIR: tests/inspec
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
-  KUBE_DIAGRAMS_IMAGE: philippemerle/kubediagrams:0.3.0
 
 tasks:
 
