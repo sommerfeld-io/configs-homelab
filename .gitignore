@@ -11,3 +11,5 @@ node_modules
 /public
 /target
 /dist
+
+mkdocs.yml
