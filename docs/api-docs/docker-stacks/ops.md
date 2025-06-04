@@ -3,7 +3,7 @@ hide:
   - toc
 ---
 
-# Docker Stack - Ops
+# Ops
 
 The `ops` Docker stack is a Docker Compose configuration that manages
 all of the needed exporters to monitor system metrics with Prometheus and Grafana. By

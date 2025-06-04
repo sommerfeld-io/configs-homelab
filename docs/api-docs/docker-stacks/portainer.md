@@ -3,7 +3,7 @@ hide:
   - toc
 ---
 
-# Docker Stack - Portainer
+# Portainer
 
 This `portainer` Docker stack starts a [Portainer CE](https://github.com/portainer/portainer)
 instance. This [Portainer](https://docs.portainer.io) instance is pre-configured with an
