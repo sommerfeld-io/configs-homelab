@@ -43,6 +43,7 @@ ignore:
   - node_modules
   - target
 
+  - .task
   - tests/inspec/ansible-baseline/vendor
   - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
 

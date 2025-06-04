@@ -7,41 +7,22 @@ vars:
   INSPEC_DIR: tests/inspec
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
+includes:
+  common: https://raw.githubusercontent.com/sommerfeld-io/.github/refs/heads/main/assets/task/common.yml
+
 tasks:
-
-  internal:download:
-    desc: 'Download file from central repo'
-    internal: true
-    silent: true
-    cmds:
-      - curl -fsSL -o "{{ .DEST }}" "{{ .URL }}"
-      - chmod u+rw,g+rw,o+r "{{ .DEST }}"
-    generates:
-      - "{{ .DEST }}"
-
-  internal:copy:
-    desc: 'Do the actual work of copying files'
-    internal: true
-    silent: true
-    cmds:
-      - cp "{{ .SRC }}" "{{ .DEST }}"
-      - chmod u+rw,g+rw,o+r "{{ .DEST }}"
-    generates:
-      - "{{ .DEST }}"
-
-  # ===============================================================================================
 
   sync:assets-from-github:
     desc: 'Sync assets from the central sommerfeldio/.github repository'
     cmds:
       - echo "Syncing assets from the central sommerfeldio/.github repository..."
-      - task: internal:download
+      - task: common:download
         vars: { DEST: ".github/instructions/code-guideline-pipelines.md", URL: "{{ .REPO }}/refs/heads/main/docs/code-guideline-pipelines.md" }
-      - task: internal:download
+      - task: common:download
         vars: { DEST: ".github/instructions/pull-requests.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/instructions/pull-requests.yml" }
-      - task: internal:download
+      - task: common:download
         vars: { DEST: ".github/workflows/housekeeping-issues.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/workflows/housekeeping-issues.yml" }
-      - task: internal:download
+      - task: common:download
         vars: { DEST: ".github/workflows/housekeeping-labels.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/workflows/housekeeping-labels.yml" }
 
   # ===============================================================================================
@@ -81,7 +62,7 @@ tasks:
       - echo "Contents of this folder are auto-generated" > docs/{{ .TARGET_PATH }}/.auto-generated
       - echo "      - {{ .TITLE }}:" >> mkdocs.yml
       - for: { var: FOLDERS }
-        task: internal:copy
+        task: common:copy
         vars: { SRC: "{{ .BASEPATH }}/{{ .ITEM }}/README.md", DEST: "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md" }
       - for: { var: FOLDERS }
         cmd: echo "          - {{ .TARGET_PATH }}/{{ .ITEM }}.md" >> mkdocs.yml
@@ -93,9 +74,9 @@ tasks:
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - cp mkdocs-template.yml mkdocs.yml
-      - task: internal:copy
+      - task: common:copy
         vars: { SRC: docs/index.md, DEST: README.md }
-      - task: internal:copy
+      - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
       - task: internal:docs:generate:from-readme
         vars: { BASEPATH: components/ansible/assets/docker-stacks, TARGET_PATH: api-docs/docker-stacks, TITLE: 'Docker Stacks' }

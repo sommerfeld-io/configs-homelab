@@ -15,8 +15,9 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^components/talos-cluster/node-configs/generated$
+        exclude: ^(components/talos-cluster/node-configs/generated|\.task)/
       - id: end-of-file-fixer
+        exclude: ^(components/talos-cluster/node-configs/generated|\.task)/
       - id: check-added-large-files
         exclude_types:
           - jpeg

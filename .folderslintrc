@@ -9,6 +9,8 @@
 		".github/workflows",
 		".github/workflows/assets",
 
+        ".task/**",
+
 		".vscode",
 
 		"components/ansible",
