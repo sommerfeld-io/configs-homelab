@@ -75,7 +75,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Validate Inspec profile
-        run: task inspec:check:${{ matrix.profile }} --yes
+        run: |
+          export TASK_X_REMOTE_TASKFILES=1
+          task inspec:check:${{ matrix.profile }} --yes
         shell: bash
 
   # ----- Build Docs stage ------------------------------------------------------------------------
@@ -100,7 +102,9 @@ jobs:
         with:
           version: 3.x
       - name: Run task to generate docs
-        run: task docs:generate --yes
+        run: |
+          export TASK_X_REMOTE_TASKFILES=1
+          task docs:generate --yes
         shell: bash
       - name: Build docs-build image
         run: docker compose build docs-build

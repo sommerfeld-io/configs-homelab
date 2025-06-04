@@ -59,7 +59,9 @@ jobs:
         with:
           version: 3.x
       - name: Run task to generate docs
-        run: task sync:assets-from-github --yes
+        run: |
+          export TASK_X_REMOTE_TASKFILES=1
+          task sync:assets-from-github --yes
         shell: bash
       - name: Commit and push
         uses: EndBug/add-and-commit@v9.1.4
