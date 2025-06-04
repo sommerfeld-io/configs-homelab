@@ -90,3 +90,4 @@ nav:
       - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
   - Api Docs:
       # ----- From here on the navigation is auto-generated ---------------------------------------
+      # ----- `mkdocs.yml` is auto-generated based on `mkdocs-template.yml` -----------------------
