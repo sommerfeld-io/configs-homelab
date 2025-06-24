@@ -22,7 +22,7 @@ Our goal is to automate as much of the infrastructure management as possible. Al
 - Install all necessary software on workstations and servers. Follow Infrastructure as Code (IaC) principles. Ansible is used for this purpose.
 - Every machine runs services (some of them are mandatory for every machine). These services mostly run inside Docker containers. The containers are controlled through scripts from this project.
 
-## Warning: This Setup Has Opinions (and Will Enforce Them)
+## Warning: This Setup has Opinions (and will Enforce Them)
 
 For obvious reasons, it's not recommended to apply this configuration directly to your personal machine. Doing so will overwrite your existing setup, which may lead to unexpected behavior.
 
