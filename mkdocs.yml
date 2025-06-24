@@ -21,15 +21,15 @@ theme:
     text: Work Sans
   palette:
     scheme: slate
-    primary: black
+    primary: blue grey # black
     accent: deep orange
   features:
     - content.code.copy
     - content.tabs.link
-    - navigation.tabs
-    # - navigation.footer
-    # - navigation.sections
+    # - navigation.tabs
+    - navigation.footer
     - navigation.expand
+    # - navigation.sections
     - navigation.tracking
 
 markdown_extensions:
@@ -45,7 +45,6 @@ markdown_extensions:
 
 plugins:
   - kroki:
-      ServerURL: !ENV [KROKI_SERVER_URL, 'https://kroki.io']
   - search:
 
 extra:
@@ -65,29 +64,17 @@ extra:
       link: https://github.com/sommerfeld-io/configs-homelab
 
 nav:
-  - Home:
-      - index.md
-      - memos.md
-      - license.md
-      - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
-      - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
-      - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
-      - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
-      - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
-      - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
-  - Workstations and RasPi Nodes:
-      - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
-      # - Raspberry Pi Nodes:
-      #     - nodes/raspi/SOME_PI.md
-      - Talos Cluster:
-          - Overview: nodes/talos-cluster/index.md
-          - Installation: nodes/talos-cluster/installation.md
-          - nodes/talos-cluster/howto/interact.md
-          - nodes/talos-cluster/howto/deploy-application-with-argocd.md
-          - nodes/talos-cluster/howto/update-argocd.md
-          - Telemetry: nodes/talos-cluster/telemetry.md
-      - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
-      - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
+  - index.md
+  - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
+  # - RasPi Nodes:
+  #     - nodes/raspi/SOME_PI.md
+  - Talos Cluster:
+      - Overview: nodes/talos-cluster/index.md
+      - Installation: nodes/talos-cluster/installation.md
+      - nodes/talos-cluster/howto/interact.md
+      - nodes/talos-cluster/howto/deploy-application-with-argocd.md
+      - nodes/talos-cluster/howto/update-argocd.md
+      - Telemetry: nodes/talos-cluster/telemetry.md
   - Api Docs:
       - Docker Stacks:
           - api-docs/docker-stacks/ops.md
@@ -100,3 +87,12 @@ nav:
           - api-docs/manifests/apps/nginx-demo.md
       - Helm Charts:
           - api-docs/helm-charts/hello-world-nginx.md
+  - license.md
+  - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
+  - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
+  - Development Guide ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/development-guide.md
+  - Code Guideline - Pipelines ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/code-guideline-pipelines.md
+  - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
+  - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
+  - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
+  - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md

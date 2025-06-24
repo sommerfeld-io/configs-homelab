@@ -98,13 +98,6 @@ services:
     working_dir: *default-workdir
     tty: *tty
 
-  kroki:
-    container_name: ${COMPOSE_PROJECT_NAME}-kroki
-    image: yuzutech/kroki:0.26.0
-    ports:
-      - 3081:8000
-    tty: *tty
-
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
@@ -116,13 +109,8 @@ services:
   docs-dev-server:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
     image: *docs-image
-    environment:
-      - KROKI_SERVER_URL=http://localhost:3081
     volumes: *volumes
     working_dir: *default-workdir
     ports:
       - 3080:8000
     tty: *tty
-    depends_on:
-      kroki:
-        condition: service_started
