@@ -12,6 +12,4 @@ node_modules
 /target
 /dist
 
-mkdocs.yml
-
 .task/remote

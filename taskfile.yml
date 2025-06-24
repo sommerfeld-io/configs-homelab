@@ -60,12 +60,9 @@ tasks:
       - rm -rf docs/{{ .TARGET_PATH }}
       - mkdir -p docs/{{ .TARGET_PATH }}
       - echo "Contents of this folder are auto-generated" > docs/{{ .TARGET_PATH }}/.auto-generated
-      - echo "      - {{ .TITLE }}:" >> mkdocs.yml
       - for: { var: FOLDERS }
         task: common:copy
         vars: { SRC: "{{ .BASEPATH }}/{{ .ITEM }}/README.md", DEST: "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md" }
-      - for: { var: FOLDERS }
-        cmd: echo "          - {{ .TARGET_PATH }}/{{ .ITEM }}.md" >> mkdocs.yml
     generates:
       - "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md"
 
@@ -73,7 +70,6 @@ tasks:
     desc: 'Generate Markdown files for documentation'
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
-      - cp mkdocs-template.yml mkdocs.yml
       - task: common:copy
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: common:copy
