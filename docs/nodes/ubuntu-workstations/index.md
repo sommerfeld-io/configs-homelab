@@ -45,7 +45,7 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
-- [ ] Use `task` to start Docker Compose services.`
+- [ ] Use `task` to start Docker Compose services.
 
 #### Configure a keyboard shortcut to open a terminal in VSCode
 

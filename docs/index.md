@@ -28,7 +28,7 @@ For obvious reasons, it's not recommended to apply this configuration directly t
 
 Feel free to use this repository as a starting point for your own configuration. To stay on the safe side, it's best to experiment with it on a disposable virtual machine first.
 
-The main branch is intended for Ubuntu 24.10 and later.
+The `main` branch is intended for Ubuntu 24.10 and later.
 
 ## Architecture Constraints
 
