@@ -1,4 +1,4 @@
-# Code Guidelines: Pipelines
+# Code Guideline: Pipelines
 
 This guide defines conventions and best practices for writing GitHub Actions workflows to ensure clarity, maintainability, and consistency across repositories.
 
@@ -11,7 +11,7 @@ This guide defines conventions and best practices for writing GitHub Actions wor
 
 * Minimize logic in YAML: Avoid inline Bash scripts inside the `.yml` file.
 * Prefer calling logic from:
-    * `Taskfile.yml` (using [go-task](https://taskfile.dev))
+    * `taskfile.yml` (using [go-task](https://taskfile.dev))
     * `docker-compose.yml` services
 
 This approach keeps workflows clean, enables the reuse and local execution of tasks, and makes it easier to test logic outside the CI/CD environment.
