@@ -18,7 +18,6 @@ volumes:
 services:
 
   lint-yaml:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
     volumes: *volumes
     working_dir: *default-workdir
@@ -26,7 +25,6 @@ services:
     tty: *tty
 
   lint-workflows:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
     image: rhysd/actionlint:latest
     volumes: *volumes
     working_dir: *default-workdir
@@ -34,14 +32,12 @@ services:
     tty: *tty
 
   lint-filenames:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
     image: lslintorg/ls-lint:1.11.2
     volumes: *volumes
     working_dir: *default-workdir
     tty: *tty
 
   lint-folders:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
     image: sommerfeldio/folderslint:latest
     volumes: *volumes
     working_dir: *default-workdir
@@ -49,7 +45,6 @@ services:
     tty: *tty
 
   lint-markdown-links:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-markdown-links
     image: lycheeverse/lychee:sha-a11d515-alpine
     volumes: *volumes
     working_dir: *default-workdir
@@ -57,7 +52,6 @@ services:
     tty: *tty
 
   lint-ansible:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-ansible
     image: pipelinecomponents/ansible-lint:0.76.0
     volumes: *volumes
     working_dir: *default-workdir
@@ -65,7 +59,6 @@ services:
     tty: *tty
 
   lint-helm:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-helm
     image: alpine/helm:3.16.1
     volumes: *volumes
     working_dir: *default-workdir
@@ -73,7 +66,6 @@ services:
     tty: *tty
 
   lint-k8s-manifests:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-k8s-manifests
     image: golang:1.23.5-alpine3.21
     volumes: *volumes
     working_dir: *default-workdir
@@ -92,14 +84,12 @@ services:
   inspec:
     # template service to run from taskfile.yml
     # not intended to be run directly
-    container_name: ${COMPOSE_PROJECT_NAME}-inspec-check
     image: &inspec-image chef/inspec:5.22.76
     volumes: *volumes
     working_dir: *default-workdir
     tty: *tty
 
   docs-build:
-    container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: &docs-image sommerfeldio/mkdocs:latest
     volumes: *volumes
     working_dir: *default-workdir
@@ -107,7 +97,6 @@ services:
     tty: *tty
 
   docs-dev-server:
-    container_name: ${COMPOSE_PROJECT_NAME}-docs-dev-server
     image: *docs-image
     volumes: *volumes
     working_dir: *default-workdir
