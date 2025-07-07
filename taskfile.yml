@@ -127,7 +127,7 @@ tasks:
 
   # ===============================================================================================
 
-  inspec:check:all:
+  inspec:check:
     desc: &inspec-check-desc Vendor and check InSpec profile validity
     cmds:
       - for: *inspec-profiles
@@ -142,10 +142,10 @@ tasks:
       - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
-  host:test:inspec:ansible-baseline:all:
+  host:test:inspec:ansible-baseline:
     desc: HOST ONLY | Run InSpec against all nodes
     deps:
-      - task: inspec:check:all
+      - task: inspec:check
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
         task: host:test:inspec:ansible-baseline:{{ .ITEM }}

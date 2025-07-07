@@ -17,7 +17,6 @@ control 'docker-02' do
   desc 'Mandatory Docker images used for e.g. exposing Prometheus metrics should be present'
 
   docker_images = [
-    { image: 'portainer/portainer-ce', tag: '2.20.3-alpine' },
     { image: 'prom/node-exporter', tag: 'v1.8.1' },
     { image: 'gcr.io/cadvisor/cadvisor', tag: 'v0.49.1' },
   ]
