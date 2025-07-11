@@ -116,7 +116,7 @@ tasks:
     preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
-  ansible:ubuntu:desktop-steam:
+  ansible:ubuntu:desktop:steam:
     vars:
       PLAYBOOK: ubuntu-desktop-steam.yml
     desc: *ansible-desc
