@@ -89,40 +89,47 @@ tasks:
 
   # ===============================================================================================
 
-  host:ansible:cleanup:
+  ansible:cleanup:
     vars:
       PLAYBOOK: cleanup.yml
     desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
     dir: &ansible-dir components/ansible
+    preconditions: &kobol-or-caprica
+      - sh: '[ "$(hostname)" = "kobol" ] || [ "$(hostname)" = "caprica" ]'
+        msg: "[ERROR] This task can only be run on host 'kobol' or 'caprica'."
     cmds: &ansible-cmd
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
 
-  host:ansible:raspi:
+  ansible:raspi:
     vars:
       PLAYBOOK: raspi.yml
     desc: *ansible-desc
     dir: *ansible-dir
+    preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
-  host:ansible:ubuntu:desktop:
+  ansible:ubuntu:desktop:
     vars:
       PLAYBOOK: ubuntu-desktop.yml
     desc: *ansible-desc
     dir: *ansible-dir
+    preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
-  host:ansible:ubuntu:desktop-steam:
+  ansible:ubuntu:desktop-steam:
     vars:
       PLAYBOOK: ubuntu-desktop-steam.yml
     desc: *ansible-desc
     dir: *ansible-dir
+    preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
-  host:ansible:repositories:
+  ansible:repositories:
     vars:
       PLAYBOOK: repositories.yml
     desc: *ansible-desc
     dir: *ansible-dir
+    preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
   # ===============================================================================================
@@ -142,55 +149,62 @@ tasks:
       - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
-  host:test:inspec:ansible-baseline:
+  inspec:ansible-baseline:
     desc: HOST ONLY | Run InSpec against all nodes
     deps:
       - task: inspec:check
+    preconditions: *kobol-or-caprica
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
-        task: host:test:inspec:ansible-baseline:{{ .ITEM }}
+        task: inspec:ansible-baseline:{{ .ITEM }}
 
-  host:test:inspec:ansible-baseline:*:
+  inspec:ansible-baseline:*:
     desc: HOST ONLY | Run InSpec against single node (* = FQDN)
     vars:
       HOST: '{{ index .MATCH 0 }}'
       USER: sebastian
       PROFILE: ansible-baseline
+    preconditions: *kobol-or-caprica
     cmds:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
-  host:test:inspec:talos-baseline:
+  inspec:talos-baseline:
     desc: HOST ONLY | Run InSpec against Talos cluster
     vars:
       PROFILE: talos-baseline
+    preconditions: *kobol-or-caprica
     cmds:
       - docker compose run --rm inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --no-distinct-exit --chef-license=accept
 
   # ===============================================================================================
 
-  host:virtual-talos-admin:start:
+  virtual-talos-admin:start:
     desc: HOST ONLY | Startup the Talos Administration Vagrantbox'
     dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
+    preconditions: *kobol-or-caprica
     cmds:
       - vagrant validate
       - vagrant up
       - vagrant ssh
 
-  host:virtual-talos-admin:stop:
+  virtual-talos-admin:stop:
     desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
     dir: *talos-vm-dir
+    preconditions: *kobol-or-caprica
     cmds:
       - vagrant halt
 
-  host:virtual-talos-admin:ssh:
+  virtual-talos-admin:ssh:
     desc: HOST ONLY | SSH into the Talos Administration Vagrantbox
     dir: *talos-vm-dir
+    preconditions: *kobol-or-caprica
     cmds:
       - vagrant ssh
 
-  host:virtual-talos-admin:remove:
+  virtual-talos-admin:remove:
     desc: HOST ONLY | Remove the Talos Administration Vagrantbox
     dir: *talos-vm-dir
+    preconditions: *kobol-or-caprica
     cmds:
       - vagrant halt
       - vagrant destroy --force
