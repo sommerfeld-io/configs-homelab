@@ -1,26 +1,33 @@
 ---
-- name: GitHub CLI Setup  ----  Add GPG apt key
-  ansible.builtin.apt_key:
+- name: GitHub CLI Setup ---- Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: GitHub CLI Setup ---- Download GPG key
+  ansible.builtin.get_url:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    state: present
-    keyring: /etc/apt/trusted.gpg.d/github-cli.gpg
+    dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    mode: '0644'
 
-- name: GitHub CLI Setup  ----  Add apt repository
+- name: GitHub CLI Setup ---- Add apt repository
   ansible.builtin.apt_repository:
-    repo: deb https://cli.github.com/packages stable main
+    repo: "deb [signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+    filename: github-cli
     state: present
 
-- name: GitHub CLI Setup  ----  Install gh
+- name: GitHub CLI Setup ---- Install gh
   ansible.builtin.apt:
-    name:
-      - gh
+    name: gh
     state: latest
     update_cache: true
 
-- name: GitHub CLI Setup  ----  Verify installation
+- name: GitHub CLI Setup ---- Verify installation
   ansible.builtin.command: gh --version
   register: ghcli_version_output
+  changed_when: false
 
-- name: GitHub CLI Setup  ----  Print version
+- name: GitHub CLI Setup ---- Print version
   ansible.builtin.debug:
     msg: "{{ ghcli_version_output.stdout }}"

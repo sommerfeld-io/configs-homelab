@@ -11,15 +11,22 @@
     state: absent
     update_cache: true
 
-- name: Docker Setup  ----  Add GPG apt key
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-    keyring: /etc/apt/trusted.gpg.d/docker.gpg
+- name: Docker Setup ---- Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
 
-- name: Docker Setup  ----  Add apt repository (OS-codename {{ ansible_distribution_release }})
+- name: Docker Setup ---- Download Docker GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.gpg
+    mode: '0644'
+
+- name: Docker Setup ---- Add apt repository (OS-codename {{ ansible_distribution_release }})
   ansible.builtin.apt_repository:
-    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    filename: docker
     state: present
 
 - name: Docker Setup  ----  Install docker packages

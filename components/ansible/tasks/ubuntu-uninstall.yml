@@ -7,6 +7,7 @@
       - libreoffice-*
       - totem
       - totem-*
+      - yarn
     state: absent
 
 - name: Uninstall  ----  Pre-installed snap packages
