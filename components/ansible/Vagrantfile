@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+HOSTNAME = "test-ansible"
+
+Vagrant.configure("2") do |config|
+  config.vm.hostname = HOSTNAME
+  config.vm.box = "alvistack/ubuntu-25.04"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024*4
+    v.cpus = 2
+    v.customize ["modifyvm", :id, "--groups", "/vagrantboxes"]
+    v.name = HOSTNAME
+  end
+
+  default_playbook = "playbooks/ubuntu-desktop.yml"
+  ansible_playbook_path = ENV['PLAYBOOK'] || default_playbook
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = ansible_playbook_path
+    ansible.limit = "localhost"
+    ansible.extra_vars = {
+      architecture: "amd64",
+      ansible_user: "vagrant",
+      ps1: '${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) $ '
+  }
+  end
+end

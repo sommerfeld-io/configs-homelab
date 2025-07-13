@@ -132,6 +132,15 @@ tasks:
     preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
+  test:ansible:ubuntu:desktop:
+    desc: HOST ONLY | Test ansible playbook for Ubuntu Desktop
+    dir: *ansible-dir
+    preconditions: *kobol-or-caprica
+    cmds:
+      - PLAYBOOK="playbooks/ubuntu-desktop.yml" vagrant up
+      - vagrant halt
+      - vagrant destroy --force
+
   # ===============================================================================================
 
   inspec:check:
