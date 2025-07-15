@@ -29,7 +29,7 @@ control 'packages-01' do
 end
 
 if os.arch == 'x86_64'
-  control 'packages-02a-amd64' do
+  control 'packages-02-amd64' do
     impact 1.0
     title 'Check for amd64 specific packages'
     desc 'Ensure amd64 specific packages are installed
@@ -82,7 +82,7 @@ if os.arch == 'x86_64'
     end
   end
 
-  control 'packages-02b-amd64' do
+  control 'packages-03-amd64' do
     impact 1.0
     title 'Check for amd64 specific snap packages'
     desc 'Ensure amd64 specific snap packages are installed
@@ -105,7 +105,7 @@ if os.arch == 'x86_64'
     end
   end
 
-  control 'packages-03a-amd64' do
+  control 'packages-04-amd64' do
     impact 1.0
     title 'Check for amd64 specific packages (media players etc.)'
     desc 'Ensure amd64 specific packages (media players etc.) are installed
