@@ -64,7 +64,7 @@ if os.arch == 'x86_64'
       '/usr/bin/vagrant',
       '/usr/bin/virtualbox',
       # '/usr/bin/yarn',
-      '/usr/local/bin/helm',
+      # '/usr/local/bin/helm',
       '/usr/local/bin/pre-commit',
     ]
 
