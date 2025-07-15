@@ -14,7 +14,6 @@ control 'atuin-01' do
   binaries = [
     "/home/#{username}/.atuin/bin/atuin",
   ]
-
   binaries.each do |binary|
     describe file(binary) do
       it { should exist }

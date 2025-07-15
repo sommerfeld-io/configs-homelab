@@ -9,7 +9,6 @@ control 'http-01' do
     '9100', # node exporter
     '9110', # cAdvisor, 307 redirect to /containers
   ]
-
   ports.each do |port|
     describe port(port) do
       it { should be_listening }

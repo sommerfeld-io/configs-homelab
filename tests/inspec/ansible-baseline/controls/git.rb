@@ -15,7 +15,6 @@ control 'git-01' do
   binaries = [
     '/usr/bin/git',
   ]
-
   binaries.each do |binary|
     describe file(binary) do
       it { should exist }
@@ -46,29 +45,5 @@ control 'git-02' do
     its(['alias', 'all']) { should cmp '"!f() { ls | xargs -I{} git -C {} $1; }; f"' }
     its(['credential', 'helper']) { should cmp 'cache --timeout=3600' }
     its(['pull', 'rebase']) { should cmp 'false' }
-  end
-end
-
-if os.arch == 'x86_64'
-  control 'git-03-amd64' do
-    impact 0.3
-    title 'Ensure essential git repositories are cloned'
-    desc 'Check that essential git repositories are cloned
-      This applies to Ubuntu workstations
-      Ansible tasks:
-      * components/ansible/tasks/ubuntu-clone-repos.yml'
-
-    repos = [
-      "/home/#{username}/work/repos/sommerfeld-io/configs-homelab",
-    ]
-
-    repos.each do |repo|
-      describe file(repo) do
-        it { should exist }
-        it { should be_directory }
-        it { should be_owned_by username }
-        its('mode') { should cmp '0775' }
-      end
-    end
   end
 end

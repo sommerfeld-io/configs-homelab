@@ -14,7 +14,6 @@ control 'task-01' do
   binaries = [
     '/usr/bin/task',
   ]
-
   binaries.each do |binary|
     describe file(binary) do
       it { should exist }
@@ -36,7 +35,6 @@ control 'task-02' do
     "/home/#{username}/.docker-stacks/ops",
     "/home/#{username}/.docker-stacks/portainer",
   ]
-
   directories.each do |directory|
     describe file(directory) do
       it { should exist }
@@ -49,7 +47,6 @@ control 'task-02' do
   files = [
     "/home/#{username}/taskfile.yml",
   ]
-
   files.each do |file|
     describe file(file) do
       it { should exist }
