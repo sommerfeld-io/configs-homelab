@@ -30,33 +30,20 @@
     groups: vboxusers
     append: true
 
-- name: Vagrant Setup ---- Ensure keyring directory exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
-
-# - name: Vagrant Setup ---- Download GPG key
-#   ansible.builtin.get_url:
-#     url: https://apt.releases.hashicorp.com/gpg
-#     dest: /etc/apt/keyrings/hashicorp-archive-keyring.gpg
-#     mode: '0644'
-
-# Ensure the key is in binary format, which is required for Ubuntu 25.04.
 - name: Vagrant Setup ---- Download and convert HashiCorp GPG key
   ansible.builtin.shell: |
     curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
   args:
     creates: /etc/apt/keyrings/hashicorp-archive-keyring.gpg
 
-- name: Vagrant Setup ---- Add apt repository (force OS-codename to {{ codename }})
+- name: Vagrant Setup ---- Add apt repository (OS-codename {{ codename }})
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ codename }} main"
+    repo: "deb https://apt.releases.hashicorp.com {{ codename }} main"
     filename: hashicorp
     state: present
   vars:
-    # codename: "{{ ansible_distribution_release }}"
-    codename: noble # HashiCorp supports only LTS releases - so dynamically setting the distribution release might not work
+    codename: "{{ ansible_distribution_release }}"
+    # codename: noble # HashiCorp supports only LTS releases - so dynamically setting the distribution release might not work
 
 - name: Vagrant Setup ---- Install Vagrant packages
   ansible.builtin.apt:
