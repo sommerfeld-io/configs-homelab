@@ -53,7 +53,7 @@ if os.arch == 'x86_64'
       '/usr/bin/docker',
       '/usr/bin/filezilla',
       '/usr/bin/gh',
-      '/usr/bin/minikube',
+      # '/usr/bin/minikube',
       '/usr/bin/nmap',
       '/usr/bin/p7zip',
       '/usr/bin/rar',
