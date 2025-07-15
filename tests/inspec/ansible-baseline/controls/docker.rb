@@ -6,8 +6,8 @@ control 'docker-01' do
   desc 'Ensure Docker is installed in correct version'
 
   describe docker.version do
-    its('Server.Version') { should cmp >= '28.1.1'}
-    its('Client.Version') { should cmp >= '28.1.1'}
+    its('Server.Version') { should cmp >= '28.3.2'}
+    its('Client.Version') { should cmp >= '28.3.2'}
   end
 end
 

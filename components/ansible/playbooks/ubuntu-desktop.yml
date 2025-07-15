@@ -24,7 +24,7 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-github-cli.yml
-    # - ansible.builtin.import_tasks: ../tasks/ubuntu-virtualization.yml # Todo run again for Ubuntu 25.04
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-virtualization.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-minikube.yml
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml

@@ -11,12 +11,6 @@
     state: absent
     update_cache: true
 
-- name: Docker Setup ---- Ensure keyring directory exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
-
 - name: Docker Setup ---- Download Docker GPG key
   ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
