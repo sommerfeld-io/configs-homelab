@@ -61,7 +61,7 @@ if os.arch == 'x86_64'
       '/usr/bin/unrar',
       '/usr/bin/vagrant',
       '/usr/bin/virtualbox',
-      '/usr/local/bin/pre-commit',
+      '/usr/bin/pre-commit',
     ]
     binaries.each do |binary|
       describe file(binary) do
