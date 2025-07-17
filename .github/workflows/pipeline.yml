@@ -80,6 +80,21 @@ jobs:
           task inspec:check:${{ matrix.profile }} --yes
         shell: bash
 
+  files-should-exist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Mandatory files should exist
+        uses: chrisreddington/validate-file-exists@v0.0.7
+        with:
+          required-files: >
+            .editorconfig,
+            .gitignore,
+            taskfile.yml,
+            .github/dependabot.yml,
+            .task/.gitkeep
+
   # ----- Build Docs stage ------------------------------------------------------------------------
 
   generate-docs:
@@ -88,6 +103,7 @@ jobs:
       'lint',
       'shellcheck',
       'check-inspec-profile',
+      'files-should-exist',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
