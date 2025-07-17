@@ -75,6 +75,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Validate Inspec profile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export TASK_X_REMOTE_TASKFILES=1
           task inspec:check:${{ matrix.profile }} --yes
