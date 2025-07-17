@@ -21,7 +21,6 @@ control 'fs-01' do
     "/home/#{username}/work/repos/sebastian-sommerfeld-io",
     "/home/#{username}/tmp",
   ]
-
   directories.each do |directory|
     describe file(directory) do
       it { should exist }

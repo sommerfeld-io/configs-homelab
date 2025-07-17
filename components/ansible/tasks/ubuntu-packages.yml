@@ -18,7 +18,7 @@
 - name: Install  ----  Development tools
   ansible.builtin.apt:
     pkg:
-      - yarn
+      # - yarn
       - asciidoctor
       - pre-commit
     state: latest
@@ -28,7 +28,7 @@
   ansible.builtin.apt:
     pkg:
       - ddcui
-      - libddcutil4
+      - libddcutil5
       - ddcutil
       - i2c-tools
       - libi2c0

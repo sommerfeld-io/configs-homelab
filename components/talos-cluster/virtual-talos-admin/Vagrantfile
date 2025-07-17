@@ -5,26 +5,25 @@ BOX_NAME = "ubuntu/oracular64" # https://wiki.ubuntu.com/Releases
 HOSTNAME = "virtual-talos-admin"
 
 Vagrant.configure(2) do |config|
+  config.vm.box = BOX_NAME
+  config.vm.hostname = HOSTNAME
 
-    config.vm.box = BOX_NAME
-    config.vm.hostname = HOSTNAME
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024*2
+    v.cpus = 2
+    v.customize ["modifyvm", :id, "--groups", "/vagrantboxes"]
+    v.name = HOSTNAME
+  end
 
-    config.vm.provider "virtualbox" do |v|
-        v.memory = 1024*2
-        v.cpus = 2
-        v.customize ["modifyvm", :id, "--groups", "/vagrantboxes"]
-        v.name = HOSTNAME
-    end
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/playbook.yml"
+    ansible.extra_vars = {
+      ps1: '${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) $ ',
+      architecture: "amd64"
+    }
+  end
 
-    config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "ansible/playbook.yml"
-        ansible.extra_vars = {
-            ps1: '${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) $ ',
-            architecture: "amd64"
-        }
-    end
-
-    config.vm.network "forwarded_port", host: 8443, guest: 8443 # Kubernetes Dashboard
-    config.vm.network "forwarded_port", host: 8080, guest: 8080 # ArgoCD
-    config.vm.network "forwarded_port", host: 9000, guest: 9000 # ... free ...
+  config.vm.network "forwarded_port", host: 8443, guest: 8443 # Kubernetes Dashboard
+  config.vm.network "forwarded_port", host: 8080, guest: 8080 # ArgoCD
+  config.vm.network "forwarded_port", host: 9000, guest: 9000 # ... free ...
 end

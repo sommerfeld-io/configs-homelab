@@ -1,5 +1,15 @@
 ---
-- name: Setup and clone git repositories
+- name: Prepare directories for git repositories
+  hosts: ubuntu_desktop
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
+
+- name: Clone git repositories
   hosts: ubuntu_desktop
   gather_facts: true
   become: false
@@ -20,8 +30,6 @@
       - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
 
   tasks:
-
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
 
     - name: Block  ----  Clone repositories
       block:

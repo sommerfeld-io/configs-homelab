@@ -1,5 +1,5 @@
 ---
-- name: Virtualbox Setup  ----  Install Virtualbox and dependencies
+- name: Virtualbox Setup ---- Install Virtualbox and dependencies
   ansible.builtin.apt:
     pkg:
       - virtualbox
@@ -8,7 +8,7 @@
     state: latest
     update_cache: true
 
-- name: Virtualbox Setup  ----  Create virtual machines folder
+- name: Virtualbox Setup ---- Create virtual machines folder
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -18,50 +18,55 @@
   with_items:
     - "/home/{{ ansible_user }}/virtualmachines"
 
-- name: Virtualbox Setup  ----  Set virtual machines folder
+- name: Virtualbox Setup ---- Set virtual machines folder
   ansible.builtin.command: "vboxmanage setproperty machinefolder /home/{{ ansible_user }}/virtualmachines"
-  become_user: "{{ ansible_user }}"
   become: true
+  become_user: "{{ ansible_user }}"
 
-- name: Virtualbox Setup  ----  Add user to group
+- name: Virtualbox Setup ---- Add user to group
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     shell: /bin/bash
     groups: vboxusers
     append: true
 
-- name: Vagrant Setup  ----  Add GPG apt key
-  ansible.builtin.apt_key:
-    url: https://apt.releases.hashicorp.com/gpg
-    state: present
-    keyring: /etc/apt/trusted.gpg.d/vagrant.gpg
+- name: Vagrant Setup ---- Download and convert HashiCorp GPG key
+  ansible.builtin.shell: |
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+  args:
+    creates: /etc/apt/keyrings/hashicorp-archive-keyring.gpg
 
-- name: Vagrant Setup  ----  Add apt repository (OS-codename {{ ansible_distribution_release }})
+- name: Vagrant Setup ---- Add apt repository (OS-codename {{ codename }})
   ansible.builtin.apt_repository:
-    repo: "deb https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    repo: "deb https://apt.releases.hashicorp.com {{ codename }} main"
+    filename: hashicorp
     state: present
+  vars:
+    codename: "{{ ansible_distribution_release }}"
+    # codename: noble # HashiCorp supports only LTS releases - so dynamically setting the distribution release might not work
 
-- name: Vagrant Setup  ----  Install Vagrant packages
+- name: Vagrant Setup ---- Install Vagrant packages
   ansible.builtin.apt:
     pkg:
       - vagrant
     state: latest
     update_cache: true
 
-- name: Vagrant Setup  ----  Install Vagrant plugins
+- name: Vagrant Setup ---- Install Vagrant plugins
   ansible.builtin.shell: |
     vagrant plugin install vagrant-cachier
-  # vagrant plugin install vagrant-vbguest
-  # vagrant plugin install vagrant-docker-compose
+    # vagrant plugin install vagrant-vbguest
+    # vagrant plugin install vagrant-docker-compose
   become: true
   become_user: "{{ ansible_user }}"
   args:
     executable: /bin/bash
 
-- name: Vagrant Setup  ----  Verify installation
+- name: Vagrant Setup ---- Verify installation
   ansible.builtin.command: vagrant --version
   register: vagrant_version_output
+  changed_when: false
 
-- name: Vagrant Setup  ----  Print version
+- name: Vagrant Setup ---- Print version
   ansible.builtin.debug:
     msg: "{{ vagrant_version_output.stdout }}"

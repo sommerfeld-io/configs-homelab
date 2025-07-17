@@ -20,7 +20,6 @@ control 'packages-01' do
     '/usr/bin/neofetch',
     '/usr/bin/vim',
   ]
-
   binaries.each do |binary|
     describe file(binary) do
       it { should exist }
@@ -30,7 +29,7 @@ control 'packages-01' do
 end
 
 if os.arch == 'x86_64'
-  control 'packages-02a-amd64' do
+  control 'packages-02-amd64' do
     impact 1.0
     title 'Check for amd64 specific packages'
     desc 'Ensure amd64 specific packages are installed
@@ -53,7 +52,6 @@ if os.arch == 'x86_64'
       '/usr/bin/docker',
       '/usr/bin/filezilla',
       '/usr/bin/gh',
-      '/usr/bin/minikube',
       '/usr/bin/nmap',
       '/usr/bin/p7zip',
       '/usr/bin/rar',
@@ -63,20 +61,28 @@ if os.arch == 'x86_64'
       '/usr/bin/unrar',
       '/usr/bin/vagrant',
       '/usr/bin/virtualbox',
-      '/usr/bin/yarn',
-      '/usr/local/bin/helm',
-      '/usr/local/bin/pre-commit',
+      '/usr/bin/pre-commit',
     ]
-
     binaries.each do |binary|
       describe file(binary) do
         it { should exist }
         its('mode') { should cmp default_mode }
       end
     end
+
+    binaries = [
+      '/usr/bin/minikube',
+      '/usr/bin/yarn',
+      '/usr/local/bin/helm',
+    ]
+    binaries.each do |binary|
+      describe file(binary) do
+        it { should_not exist }
+      end
+    end
   end
 
-  control 'packages-02b-amd64' do
+  control 'packages-03-amd64' do
     impact 1.0
     title 'Check for amd64 specific snap packages'
     desc 'Ensure amd64 specific snap packages are installed
@@ -91,7 +97,6 @@ if os.arch == 'x86_64'
       '/snap/bin/postman',
       '/snap/bin/spotify',
     ]
-
     binaries.each do |binary|
       describe file(binary) do
         it { should exist }
@@ -100,7 +105,7 @@ if os.arch == 'x86_64'
     end
   end
 
-  control 'packages-03a-amd64' do
+  control 'packages-04-amd64' do
     impact 1.0
     title 'Check for amd64 specific packages (media players etc.)'
     desc 'Ensure amd64 specific packages (media players etc.) are installed
@@ -113,7 +118,6 @@ if os.arch == 'x86_64'
       '/usr/bin/brasero',
       '/usr/bin/vlc',
     ]
-
     binaries.each do |binary|
       describe file(binary) do
         it { should exist }
@@ -131,7 +135,6 @@ if os.arch == 'aarch64'
 
     binaries = [
     ]
-
     binaries.each do |binary|
       describe file(binary) do
         it { should exist }

@@ -6,8 +6,8 @@ control 'docker-01' do
   desc 'Ensure Docker is installed in correct version'
 
   describe docker.version do
-    its('Server.Version') { should cmp >= '28.1.1'}
-    its('Client.Version') { should cmp >= '28.1.1'}
+    its('Server.Version') { should cmp >= '28.3.2'}
+    its('Client.Version') { should cmp >= '28.3.2'}
   end
 end
 
@@ -20,7 +20,6 @@ control 'docker-02' do
     { image: 'prom/node-exporter', tag: 'v1.8.1' },
     { image: 'gcr.io/cadvisor/cadvisor', tag: 'v0.49.1' },
   ]
-
   docker_images.each do |img|
     image = "#{img[:image]}:#{img[:tag]}"
 
