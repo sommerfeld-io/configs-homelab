@@ -11,7 +11,7 @@ control 'packages-01' do
     Ansible tasks:
     * components/ansible/tasks/common-packages.yml'
 
-  binaries = [
+  should_exist = [
     '/usr/bin/curl',
     '/usr/bin/htop',
     '/usr/bin/jq',
@@ -20,7 +20,7 @@ control 'packages-01' do
     '/usr/bin/neofetch',
     '/usr/bin/vim',
   ]
-  binaries.each do |binary|
+  should_exist.each do |binary|
     describe file(binary) do
       it { should exist }
       its('mode') { should cmp default_mode }
@@ -43,7 +43,7 @@ if os.arch == 'x86_64'
       * components/ansible/tasks/ubuntu-packages.yml
       * components/ansible/tasks/ubuntu-sublime.yml'
 
-    binaries = [
+    should_exist = [
       '/usr/bin/ansible',
       '/usr/bin/asciidoctor',
       '/usr/bin/balena-etcher',
@@ -62,20 +62,21 @@ if os.arch == 'x86_64'
       '/usr/bin/vagrant',
       '/usr/bin/virtualbox',
       '/usr/bin/pre-commit',
+      '/usr/bin/hostnamectl',
     ]
-    binaries.each do |binary|
+    should_exist.each do |binary|
       describe file(binary) do
         it { should exist }
         its('mode') { should cmp default_mode }
       end
     end
 
-    binaries = [
+    should_not_exist = [
       '/usr/bin/minikube',
       '/usr/bin/yarn',
       '/usr/local/bin/helm',
     ]
-    binaries.each do |binary|
+    should_not_exist.each do |binary|
       describe file(binary) do
         it { should_not exist }
       end
@@ -90,14 +91,14 @@ if os.arch == 'x86_64'
       Ansible tasks:
       * components/ansible/tasks/ubuntu-packages.yml'
 
-    binaries = [
+    should_exist = [
       '/snap/bin/code',
       '/snap/bin/intellij-idea-community',
       '/snap/bin/intellij-idea-ultimate',
       '/snap/bin/postman',
       '/snap/bin/spotify',
     ]
-    binaries.each do |binary|
+    should_exist.each do |binary|
       describe file(binary) do
         it { should exist }
         its('mode') { should cmp default_mode }
@@ -113,12 +114,12 @@ if os.arch == 'x86_64'
       Ansible tasks:
       * components/ansible/tasks/ubuntu-media-players.yml'
 
-    binaries = [
+    should_exist = [
       '/usr/bin/asunder',
       '/usr/bin/brasero',
       '/usr/bin/vlc',
     ]
-    binaries.each do |binary|
+    should_exist.each do |binary|
       describe file(binary) do
         it { should exist }
         its('mode') { should cmp default_mode }
@@ -133,9 +134,9 @@ if os.arch == 'aarch64'
     title 'Check for arm64 specific tools'
     desc 'Ensure arm64 specific tools are installed'
 
-    binaries = [
+    should_exist = [
     ]
-    binaries.each do |binary|
+    should_exist.each do |binary|
       describe file(binary) do
         it { should exist }
         its('mode') { should cmp default_mode }

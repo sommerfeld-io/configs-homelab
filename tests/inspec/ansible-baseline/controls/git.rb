@@ -12,10 +12,10 @@ control 'git-01' do
     Ansible tasks:
     * components/ansible/tasks/common-git.yml'
 
-  binaries = [
+  should_exist = [
     '/usr/bin/git',
   ]
-  binaries.each do |binary|
+  should_exist.each do |binary|
     describe file(binary) do
       it { should exist }
       its('mode') { should cmp default_mode }
