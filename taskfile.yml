@@ -17,13 +17,11 @@ tasks:
     cmds:
       - echo "Syncing assets from the central sommerfeldio/.github repository..."
       - task: common:download
-        vars: { DEST: ".github/instructions/code-guideline-pipelines.md", URL: "{{ .REPO }}/refs/heads/main/docs/code-guideline-pipelines.md" }
+        vars: { DEST: ".github/copilot-instructions.md", URL: "{{ .REPO }}/refs/heads/main/.github/copilot-instructions.md" }
       - task: common:download
-        vars: { DEST: ".github/instructions/pull-requests.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/instructions/pull-requests.yml" }
+        vars: { DEST: ".github/workflows/housekeeping-issues.yml", URL: "{{ .REPO }}/refs/heads/main/.github/workflows/housekeeping-issues.yml" }
       - task: common:download
-        vars: { DEST: ".github/workflows/housekeeping-issues.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/workflows/housekeeping-issues.yml" }
-      - task: common:download
-        vars: { DEST: ".github/workflows/housekeeping-labels.yml", URL: "{{ .REPO }}/refs/heads/main/assets/github/workflows/housekeeping-labels.yml" }
+        vars: { DEST: ".github/workflows/housekeeping-labels.yml", URL: "{{ .REPO }}/refs/heads/main/.github/workflows/housekeeping-labels.yml" }
 
   # ===============================================================================================
 
