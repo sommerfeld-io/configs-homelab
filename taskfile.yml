@@ -19,6 +19,8 @@ tasks:
       - task: common:download
         vars: { DEST: ".github/copilot-instructions.md", URL: "{{ .REPO }}/refs/heads/main/.github/copilot-instructions.md" }
       - task: common:download
+        vars: { DEST: ".github/workflows/codeql.yml", URL: "{{ .REPO }}/refs/heads/main/.github/workflows/codeql.yml" }
+      - task: common:download
         vars: { DEST: ".github/workflows/housekeeping-issues.yml", URL: "{{ .REPO }}/refs/heads/main/.github/workflows/housekeeping-issues.yml" }
       - task: common:download
         vars: { DEST: ".github/workflows/housekeeping-labels.yml", URL: "{{ .REPO }}/refs/heads/main/.github/workflows/housekeeping-labels.yml" }
