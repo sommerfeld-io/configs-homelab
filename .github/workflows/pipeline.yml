@@ -50,7 +50,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Run lint-${{ matrix.linter }} from docker-compose.yml
-        run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
+        env:
+          LINTER: ${{ matrix.linter }}
+        run: docker compose up "lint-$LINTER" --exit-code-from "lint-$LINTER"
         shell: bash
 
   check-inspec-profile:
@@ -77,9 +79,10 @@ jobs:
       - name: Validate Inspec profile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROFILE: ${{ matrix.profile }}
         run: |
           export TASK_X_REMOTE_TASKFILES=1
-          task inspec:check:${{ matrix.profile }} --yes
+          task "inspec:check:$PROFILE" --yes
         shell: bash
 
   files-should-exist:
