@@ -1,35 +1,35 @@
 {
-    "yaml.schemas": {
-        "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml",
-        "https://taskfile.dev/schema.json": [
-          "**/Taskfile.yml",
-          "**/taskfile.yml"
-        ]
-    },
-    "yaml.customTags": [
-        "!ENV scalar",
-        "!ENV sequence",
-        "!relative scalar",
-        "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
-        "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
-        "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
-    ],
-    "[markdown]": {
-        "editor.formatOnSave": true,
-        "editor.formatOnPaste": true
-    },
-    "[shellscript]": {
-        "editor.tabSize": 2
-    },
-    "[yaml]": {
-        "editor.tabSize": 2
-    },
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "cSpell.words": [
-        "controlplane",
-        "loadbalancing",
-        "talosconfig",
-        "talosctl"
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Be detailed with the file changes and the reason for the change and follow the pattern `^(fix|feat|build|chore|ci|docs|style|refactor|perf|test)/[a-z0-9._-]+$`"
+    }
+  ],
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "yaml.schemas": {
+    "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml",
+    "https://taskfile.dev/schema.json": [
+      "**/Taskfile.yml",
+      "**/taskfile.yml"
     ]
+  },
+  "yaml.customTags": [
+    "!ENV scalar",
+    "!ENV sequence",
+    "!relative scalar",
+    "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
+    "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
+    "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
+  ],
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  },
+  "cSpell.words": [
+    "mkdocs",
+    "controlplane",
+    "loadbalancing",
+    "talosconfig",
+    "kubectl",
+    "talosctl"
+  ]
 }
