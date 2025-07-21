@@ -19,6 +19,8 @@ env:
 
 jobs:
   devcontainer:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     env:
       CHEF_LICENSE: accept-no-persist
