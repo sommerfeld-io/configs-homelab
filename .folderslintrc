@@ -8,6 +8,8 @@
 		".github/workflows",
 		".github/workflows/assets",
 
+        ".assets",
+
         ".task/**",
 
 		".vscode",
@@ -43,7 +45,6 @@
 		"components/talos-cluster/virtual-talos-admin/ansible/tasks",
 
         "docs",
-		"docs/.assets/**",
 		"docs/api-docs/**",
 		"docs/about/**",
 		"docs/nodes/**",

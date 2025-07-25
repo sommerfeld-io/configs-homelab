@@ -7,7 +7,7 @@
 
 This project contains infrastructure configurations and docs for my workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
-![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/docs/.assets/images/logo/logo.png)
+![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/.assets/logo.png)
 
 Our goal is to automate as much of the infrastructure management as possible. All provisioning, configuration, and deployment tasks are handled automatically using a combination of infrastructure-as-code, provisioning, and GitOps tools. The only manual step required (at the most) is to trigger a script or workflow or some other form of automation tool. From this point on, the remainder of the process is fully automated.
 
