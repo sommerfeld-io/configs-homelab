@@ -31,5 +31,6 @@
     "talosconfig",
     "kubectl",
     "talosctl"
-  ]
+  ],
+  "ansible.python.interpreterPath": "/bin/python3"
 }
