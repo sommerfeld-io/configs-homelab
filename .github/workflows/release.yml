@@ -26,7 +26,7 @@ jobs:
         run: ls -alF target/docs/site
         shell: bash
       - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+        uses: actions/upload-pages-artifact@v4.0.0
         with:
           name: ${{ env.DOCS_PAGES_ARTIFACT }}
           path: target/docs/site
