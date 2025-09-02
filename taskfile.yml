@@ -134,6 +134,14 @@ tasks:
     preconditions: *kobol-or-caprica
     cmds: *ansible-cmd
 
+  ansible:telemetry:
+    vars:
+      PLAYBOOK: telemetry.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    preconditions: *kobol-or-caprica
+    cmds: *ansible-cmd
+
   # ===============================================================================================
 
   inspec:check:
