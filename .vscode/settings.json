@@ -25,11 +25,12 @@
     "editor.formatOnPaste": true
   },
   "cSpell.words": [
-    "mkdocs",
+    "cadvisor",
     "controlplane",
-    "loadbalancing",
-    "talosconfig",
     "kubectl",
+    "loadbalancing",
+    "mkdocs",
+    "talosconfig",
     "talosctl"
   ],
   "ansible.python.interpreterPath": "/bin/python3"

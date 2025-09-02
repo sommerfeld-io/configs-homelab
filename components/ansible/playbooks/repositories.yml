@@ -21,7 +21,9 @@
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
+      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "release-watcher" }
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "template-repository" }
+      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "telemetry" }
 
       - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
       - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }

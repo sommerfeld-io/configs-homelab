@@ -1,0 +1,52 @@
+---
+- name: Telemetry  ----  Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "/home/{{ ansible_user }}/.repos"
+
+- name: Telemetry  ----  Docker  ----  Check if docker-compose.yml file exists
+  stat:
+    path: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics/docker-compose.yml"
+  register: compose_file
+
+- name: Telemetry  ----  Docker  ----  Tear down existing services
+  community.docker.docker_compose_v2:
+    project_src: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics"
+    state: absent
+    remove_orphans: true
+    remove_volumes: true
+  when: compose_file.stat.exists
+
+- name: Telemetry  ----  Clone repos
+  ansible.builtin.git:
+    repo: "{{ github }}:{{ item.org }}/{{ item.repo }}.git"
+    dest: "{{ item.dest }}/{{ item.repo }}"
+    clone: true
+    update: true
+    key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
+    accept_hostkey: true
+  with_items:
+    - { dest: "/home/{{ ansible_user }}/.repos", org: "sommerfeld-io", repo: "telemetry" }
+
+- name: Telemetry  ----  Docker  ----  Create and start services
+  community.docker.docker_compose_v2:
+    project_src: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics"
+    wait: true
+    wait_timeout: 30s
+  register: output
+
+- name: Telemetry  ----  Docker  ----  Verify that node_exporter and cadvisor services are running
+  ansible.builtin.assert:
+    that:
+      - node_exporter_container.State == 'running'
+      - cadvisor_container.State == 'running'
+  vars:
+    node_exporter_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "node_exporter") | first }}
+    cadvisor_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "cadvisor") | first }}

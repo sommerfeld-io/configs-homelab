@@ -53,7 +53,7 @@ tasks:
   # ===============================================================================================
 
   internal:docs:generate:from-readme:
-    desc: 'Collecting documentation from helm charts and generate diagrams'
+    desc: 'Collecting documentation README.md files in this repo'
     internal: true
     vars:
       FOLDERS:

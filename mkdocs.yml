@@ -77,7 +77,6 @@ nav:
       - Telemetry: nodes/talos-cluster/telemetry.md
   - Api Docs:
       - Docker Stacks:
-          - api-docs/docker-stacks/ops.md
           - api-docs/docker-stacks/portainer.md
       - Apps in Talos:
           - api-docs/manifests/apps/hello-world-nginx.md

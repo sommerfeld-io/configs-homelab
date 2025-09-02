@@ -32,7 +32,6 @@ control 'task-02' do
 
   directories = [
     "/home/#{username}/.docker-stacks",
-    "/home/#{username}/.docker-stacks/ops",
     "/home/#{username}/.docker-stacks/portainer",
   ]
   directories.each do |directory|
@@ -55,4 +54,27 @@ control 'task-02' do
       its('mode') { should cmp default_mode }
     end
   end
+end
+
+control 'task-03' do
+  impact 1.0
+  title 'Ensure obsolete directories and files are NOT present'
+  desc 'Check for the absence of directories and files which should no longer exist'
+
+  directories = [
+    "/home/#{username}/.docker-stacks/ops",
+  ]
+  directories.each do |directory|
+    describe file(directory) do
+      it { should_not exist }
+    end
+  end
+
+  # files = [
+  # ]
+  # files.each do |file|
+  #   describe file(file) do
+  #     it { should_not exist }
+  #   end
+  # end
 end

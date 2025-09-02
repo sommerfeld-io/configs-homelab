@@ -39,33 +39,11 @@ tasks:
 
   # ===============================================================================================
 
-  docker:stack:ops:start:
-    vars: &docker-stack-ops
-      STACK: ops
-    desc: Start docker stack {{ .STACK }} in detached mode
-    dir: &docker-stack-dir ~/.docker-stacks/{{ .STACK }}
-    cmds: &docker-stack-cmd-start
-      - docker compose up -d
-
-  docker:stack:ops:stop:
-    vars: *docker-stack-ops
-    desc: Stop docker stack {{ .STACK }}
-    dir: *docker-stack-dir
-    cmds: &docker-stack-cmd-stop
-      - docker compose down --volumes --remove-orphans
-
-  docker:stack:ops:logs:
-    vars: *docker-stack-ops
-    desc: Show logs for docker stack {{ .STACK }}
-    dir: *docker-stack-dir
-    cmds: &docker-stack-cmd-logs
-      - docker compose logs -f
-
   docker:stack:portainer:
     vars:
       STACK: portainer
     desc: Run stack {{ .STACK }} in foreground
-    dir: *docker-stack-dir
+    dir: &docker-stack-dir ~/.docker-stacks/{{ .STACK }}
     cmds:
       - docker compose up
 

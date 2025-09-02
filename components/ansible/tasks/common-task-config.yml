@@ -17,7 +17,6 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - { src: "../assets/docker-stacks/ops", dest: "/home/{{ ansible_user }}/.docker-stacks" }
     - { src: "../assets/docker-stacks/portainer", dest: "/home/{{ ansible_user }}/.docker-stacks" }
     - { src: "../assets/global-taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
 

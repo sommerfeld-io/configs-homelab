@@ -1,5 +1,29 @@
 title 'HTTP Service Check'
 
+username = input('username', value: 'default_user')
+emailAddress = input('emailAddress', value: 'noreply@example.com')
+mode = '0770'
+
+control 'services-01' do
+  impact 1.0
+  title 'Ensure essential directories and files are present'
+  desc 'Check for the presence of essential directories and files and their permissions
+    Ansible tasks:
+    * components/ansible/tasks/common-telemetry.yml'
+
+  directories = [
+    "/home/#{username}/.repos/telemetry",
+  ]
+  directories.each do |directory|
+    describe file(directory) do
+      it { should exist }
+      it { should be_directory }
+      it { should be_owned_by username }
+      its('mode') { should cmp mode }
+    end
+  end
+end
+
 control 'http-01' do
   impact 1.0
   title 'Ensure HTTP services are running'

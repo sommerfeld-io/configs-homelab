@@ -14,6 +14,7 @@ control 'fs-01' do
   directories = [
     "/home/#{username}/.config",
     "/home/#{username}/.config/autostart",
+    "/home/#{username}/.repos",
     "/home/#{username}/work",
     "/home/#{username}/work/repos",
     "/home/#{username}/work/repos/sommerfeld-io",

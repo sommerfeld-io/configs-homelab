@@ -1,17 +1,13 @@
 {
 	"rules": [
 		".devcontainer",
-		".devcontainer/ops",
-		".devcontainer/ops/assets",
 
 		".github",
 		".github/workflows",
 		".github/workflows/assets",
 
         ".assets",
-
         ".task/**",
-
 		".vscode",
 
 		"components/ansible",
@@ -48,8 +44,6 @@
 		"docs/api-docs/**",
 		"docs/about/**",
 		"docs/nodes/**",
-
-        "target/docs/site/**",
 
         "tests/inspec/**",
 

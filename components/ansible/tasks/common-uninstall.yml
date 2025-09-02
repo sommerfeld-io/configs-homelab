@@ -35,3 +35,10 @@
     - /usr/bin/yamllint
     - /usr/bin/node
     - /usr/bin/npm
+
+- name: Uninstall  ----  Docker Stacks
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/home/{{ ansible_user }}/.docker-stacks/ops"
