@@ -7,16 +7,16 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - "/home/{{ ansible_user }}/.repos"
+    - "{{ dot_repos_dir }}"
 
 - name: Telemetry  ----  Docker  ----  Check if docker-compose.yml file exists
   stat:
-    path: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics/docker-compose.yml"
+    path: "{{ stack_metrics }}/docker-compose.yml"
   register: compose_file
 
 - name: Telemetry  ----  Docker  ----  Tear down existing services
   community.docker.docker_compose_v2:
-    project_src: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics"
+    project_src: "{{ stack_metrics }}"
     state: absent
     remove_orphans: true
     remove_volumes: true
@@ -31,11 +31,11 @@
     key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
     accept_hostkey: true
   with_items:
-    - { dest: "/home/{{ ansible_user }}/.repos", org: "sommerfeld-io", repo: "telemetry" }
+    - { dest: "{{ dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }
 
 - name: Telemetry  ----  Docker  ----  Create and start services
   community.docker.docker_compose_v2:
-    project_src: "/home/{{ ansible_user }}/.repos/telemetry/components/metrics"
+    project_src: "{{ stack_metrics }}"
     # TODO ... https://github.com/sommerfeld-io/telemetry/issues/7
     # wait: true
     # wait_timeout: 30 # seconds

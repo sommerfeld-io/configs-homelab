@@ -24,6 +24,7 @@
   vars_files:
     - ../vars/global.yml
     - ../vars/raspi.yml
+    - ../vars/telemetry.yml
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
