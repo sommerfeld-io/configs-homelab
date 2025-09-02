@@ -71,48 +71,6 @@ tasks:
 
   # ===============================================================================================
 
-  minikube:start:
-    desc: &minikube-desc 'Minikube (start|stop|dashboard|pods|services|status|destroy)'
-    cmds:
-      - minikube start
-      - sleep 5s
-      - minikube addons enable metrics-server
-      - minikube addons enable ingress
-
-  minikube:stop:
-    desc: *minikube-desc
-    cmds:
-      - minikube stop
-
-  minikube:dashboard:
-    desc: *minikube-desc
-    cmds:
-      - minikube dashboard
-
-  minikube:pods:
-    desc: *minikube-desc
-    cmds:
-      - minikube kubectl -- get po -A
-
-  minikube:services:
-    desc: *minikube-desc
-    cmds:
-      - minikube service list
-
-  minikube:status:
-    desc: *minikube-desc
-    cmds:
-      - minikube version
-      - helm version
-      - minikube status
-
-  minikube:destroy:
-    desc: *minikube-desc
-    cmds:
-      - minikube delete
-
-  # ===============================================================================================
-
   screen:caprica:
     vars: &screen-vars
       MONITOR_LEFT: "5" # Curved /dev/i2c-5

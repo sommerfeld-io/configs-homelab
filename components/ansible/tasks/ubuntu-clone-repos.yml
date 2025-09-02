@@ -1,8 +1,0 @@
----
-- name: Config  ----  Clone mandatory git repositories from Github
-  ansible.builtin.git:
-    repo: "git@github.com:{{ item.org }}/{{ item.repo }}.git"
-    dest: "{{ dir_repos }}/{{ item.org }}/{{ item.repo }}"
-    key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
-  with_items:
-    - { org: "sommerfeld-io", repo: "configs-homelab" }
