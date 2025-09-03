@@ -38,7 +38,7 @@ services:
     tty: *tty
 
   lint-folders:
-    image: sommerfeldio/folderslint:latest
+    image: sommerfeldio/folderslint:0.10.4
     volumes: *volumes
     working_dir: *default-workdir
     command: .
@@ -84,20 +84,20 @@ services:
   inspec:
     # template service to run from taskfile.yml
     # not intended to be run directly
-    image: &inspec-image chef/inspec:5.22.76
+    image: chef/inspec:5.22.76
     volumes: *volumes
     working_dir: *default-workdir
     tty: *tty
 
   docs-build:
-    image: &docs-image sommerfeldio/mkdocs:latest
+    image: sommerfeldio/mkdocs:0.10.4
     volumes: *volumes
     working_dir: *default-workdir
     command: build
     tty: *tty
 
   docs-dev-server:
-    image: *docs-image
+    image: sommerfeldio/mkdocs:0.10.4
     volumes: *volumes
     working_dir: *default-workdir
     ports:
