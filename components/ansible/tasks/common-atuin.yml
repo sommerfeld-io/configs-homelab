@@ -6,6 +6,11 @@
     executable: /bin/bash
     creates: "/home/{{ ansible_user }}/.atuin/bin/atuin"
 
+- name: Config  ----  atuin  ----  Check if config file exists
+  stat:
+    path: "/home/{{ ansible_user }}/.config/atuin/config.toml"
+  register: config_file
+
 - name: Config  ----  atuin  ----  Set session as default scope
   ansible.builtin.lineinfile:
     dest: "/home/{{ ansible_user }}/.config/atuin/config.toml"
@@ -13,3 +18,4 @@
     line: "{{ item }}"
   with_items:
     - filters = [ "session", "directory", "workspace", "host",  "global" ]
+  when: config_file.stat.exists

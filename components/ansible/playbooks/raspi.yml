@@ -28,3 +28,4 @@
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
+    - ansible.builtin.import_tasks: ../tasks/common-telemetry-metrics.yml

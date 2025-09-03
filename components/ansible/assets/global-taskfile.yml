@@ -17,7 +17,7 @@ tasks:
 
   # ===============================================================================================
 
-  repository:new:sommerfeld-io/*:
+  github:repo:new:sommerfeld-io/*:
     vars:
       ORG: sommerfeld-io
       TEMPLATE_REPO_NAME: template-repository
@@ -83,6 +83,13 @@ tasks:
     vars:
       USER: sebastian
       HOST: caprica.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:admin-pi:
+    vars:
+      USER: sebastian
+      HOST: admin-pi.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 

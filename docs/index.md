@@ -24,11 +24,11 @@ Our goal is to automate as much of the infrastructure management as possible. Al
 
 ## Warning: This Setup has Opinions (and will Enforce Them)
 
-For obvious reasons, it's not recommended to apply this configuration directly to your personal machine. Doing so will overwrite your existing setup, which may lead to unexpected behavior.
+For obvious reasons, it's not recommended to apply this configuration directly to your personal machine. Doing so will overwrite (at least parts of) your existing setup, which may lead to unexpected behavior.
 
 Feel free to use this repository as a starting point for your own configuration. To stay on the safe side, it's best to experiment with it on a disposable virtual machine first.
 
-The `main` branch is intended for Ubuntu 25.04 and later.
+The `main` branch is intended for Ubuntu 25.04.
 
 ## Architecture Constraints
 
