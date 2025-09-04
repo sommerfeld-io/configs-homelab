@@ -1,6 +1,6 @@
 # `admin-pi.fritz.box`
 
-The `admin-pi` is a Raspberry Pi 4B with 4GB of RAM and a 128GB microSD card. It helps with administrative tasks in our home lab.
+The `admin-pi` is a Raspberry Pi 4B with 4GB of RAM and a 128GB microSD card. It helps with administrative tasks in the home lab.
 
 ## Ansible Control Node
 
