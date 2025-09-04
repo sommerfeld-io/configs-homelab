@@ -6,7 +6,7 @@ copyright: sommerfeld.io
 copyright_email: sebastian@sommerfeld.io
 license: MIT
 summary: ansible-baseline compliance profile for all machines that are installed with ansible
-version: 0.53.0
+version: 0.54.0
 supports:
   platform: os
 depends:
