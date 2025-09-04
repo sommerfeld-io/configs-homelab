@@ -1,5 +1,5 @@
 ---
-- name: Common telemetry setup und services for all nodes
+- name: Common telemetry setup und services for all nodes (workstations and raspberry pi)
   hosts: ubuntu_desktop:raspi
   gather_facts: true
   become: false
@@ -8,9 +8,9 @@
     - ../vars/telemetry.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-telemetry-metrics.yml
+    - ansible.builtin.import_tasks: ../tasks/telemetry/metrics.yml
 
-- name: Run monitoring stack (not the metrics) on dedicated host(s)
+- name: Run telemetry stack (not the metrics) on dedicated host(s)
   hosts: admin-pi.fritz.box
   gather_facts: true
   become: false
@@ -18,3 +18,5 @@
     - ../vars/global.yml
     - ../vars/telemetry.yml
   tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/telemetry/telemetry.yml

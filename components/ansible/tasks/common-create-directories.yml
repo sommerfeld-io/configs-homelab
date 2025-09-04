@@ -15,6 +15,7 @@
     - "{{ dir_repos_sommerfeld_io_archive }}"
     - "{{ dir_repos_sebastian_sommerfeld_io }}"
     - "/home/{{ ansible_user }}/tmp"
+    - "{{ dot_repos_dir }}"
 
 - name: Config ---- Ensure keyring directory for apt exists
   ansible.builtin.file:

@@ -13,7 +13,7 @@
 		"components/ansible",
 		"components/ansible/assets/**",
 		"components/ansible/playbooks",
-		"components/ansible/tasks",
+		"components/ansible/tasks/*",
 		"components/ansible/vars",
 
 		"bootstrap",
@@ -23,11 +23,10 @@
 		"components/docker-stacks/**",
 
 		"components/talos-cluster",
-		"components/talos-cluster/helm-charts/hello-world-nginx/*",
-		"components/talos-cluster/helm-charts/hello-world-nginx/*/templates",
+		"components/talos-cluster/helm-charts/*",
+		"components/talos-cluster/helm-charts/*/templates",
 		"components/talos-cluster/manifests",
 		"components/talos-cluster/manifests/apps/*",
-		"components/talos-cluster/manifests/apps/telemetry/grafana/dashboards",
 		"components/talos-cluster/manifests/bootstrap/argo-cd",
 		"components/talos-cluster/manifests/bootstrap/cluster-resources",
 		"components/talos-cluster/manifests/bootstrap/cluster-resources/in-cluster",

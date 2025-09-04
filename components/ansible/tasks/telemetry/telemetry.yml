@@ -1,22 +1,12 @@
 ---
-- name: Telemetry  ----  Create directories
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rwx,g=rx,o=rx
-  with_items:
-    - "{{ dot_repos_dir }}"
-
 - name: Telemetry  ----  Docker  ----  Check if docker-compose.yml file exists
   stat:
-    path: "{{ stack_metrics }}/docker-compose.yml"
+    path: "{{ stack_telemetry }}/docker-compose.yml"
   register: compose_file
 
 - name: Telemetry  ----  Docker  ----  Tear down existing services
   community.docker.docker_compose_v2:
-    project_src: "{{ stack_metrics }}"
+    project_src: "{{ stack_telemetry }}"
     state: absent
     remove_orphans: true
     remove_volumes: true
@@ -35,19 +25,22 @@
 
 - name: Telemetry  ----  Docker  ----  Create and start services
   community.docker.docker_compose_v2:
-    project_src: "{{ stack_metrics }}"
-    # TODO ... https://github.com/sommerfeld-io/telemetry/issues/7
+    project_src: "{{ stack_telemetry }}"
+    # TODO ... https://github.com/sommerfeld-io/telemetry/issues/15
     # wait: true
     # wait_timeout: 30 # seconds
   register: output
 
-- name: Telemetry  ----  Docker  ----  Verify that node_exporter and cadvisor services are running
+- name: Telemetry  ----  Docker  ----  Verify that services are running
   ansible.builtin.assert:
     that:
-      - node_exporter_container.State == 'running'
-      - cadvisor_container.State == 'running'
+      - prometheus_container.State == 'running'
+      - grafana_container.State == 'running'
+      - blackbox_exporter_container.State == 'running'
   vars:
-    node_exporter_container: >-
-      {{ output.containers | selectattr("Service", "equalto", "node_exporter") | first }}
-    cadvisor_container: >-
-      {{ output.containers | selectattr("Service", "equalto", "cadvisor") | first }}
+    prometheus_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "prometheus") | first }}
+    grafana_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "grafana") | first }}
+    blackbox_exporter_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "blackbox_exporter") | first }}

@@ -37,7 +37,6 @@
   vars_files:
     - ../vars/global.yml
     - ../vars/ubuntu.yml
-    - ../vars/telemetry.yml
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
@@ -45,4 +44,3 @@
     - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-scout.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-copy-files.yml
-    - ansible.builtin.import_tasks: ../tasks/common-telemetry-metrics.yml

@@ -1,4 +1,3 @@
 ---
-dot_repos_dir: "/home/{{ ansible_user }}/.repos"
 stack_metrics: "{{ dot_repos_dir }}/telemetry/components/metrics"
 stack_telemetry: "{{ dot_repos_dir }}/telemetry/components/telemetry"
