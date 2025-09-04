@@ -27,9 +27,12 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Do not install any further software packages. Installations take place later when Ansible provisions the system.
 - [ ] Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -`
 - [ ] Test connecting to my other Linux machines (with user "sebastian" being the user created while installing the OS).
-    - [ ] `caprica` via `ssh sebastian@caprica.fritz.box`
-    - [ ] `kobol` via `ssh sebastian@kobol.fritz.box`
-- [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@THE_HOSTNAME.fritz.box` from all relevant machines.
+    - [ ] `ssh sebastian@caprica.fritz.box`
+    - [ ] `ssh sebastian@kobol.fritz.box`
+- [ ] Setup password-less ssh connections via from all machines. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
+    - [ ] `ssh-copy-id sebastian@caprica.fritz.box`
+    - [ ] `ssh-copy-id sebastian@kobol.fritz.box`
+    - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`
 
 ### Install SSH Server
 

@@ -31,3 +31,4 @@ In addition to the tasks listed in the [Setup Guide](index.md) and Ansible playb
 - [ ] Setup password-less ssh connections from `admin-pi`
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box`
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box`
+    - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box` (to allow Ansible runs)
