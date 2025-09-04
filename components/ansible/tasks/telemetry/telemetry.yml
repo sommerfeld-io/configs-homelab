@@ -9,7 +9,7 @@
     project_src: "{{ stack_telemetry }}"
     state: absent
     remove_orphans: true
-    remove_volumes: true
+    remove_volumes: false
   when: compose_file.stat.exists
 
 - name: Telemetry  ----  Clone repos
