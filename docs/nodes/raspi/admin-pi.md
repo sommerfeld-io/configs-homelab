@@ -1,5 +1,13 @@
 # `admin-pi.fritz.box`
 
+The `admin-pi` is a Raspberry Pi 4B with 4GB of RAM and a 128GB microSD card. It helps with administrative tasks in our home lab.
+
+## Ansible Control Node
+
+The `admin-pi` is capable of running Ansible playbooks to manage other nodes in our home lab. It can run all the same playbooks as our Ubuntu desktop workstations.
+
+## Monitoring and Logging Hub
+
 The `admin-pi` consolidates monitoring and logging data from all our Linux nodes, including other Raspberry Pi nodes and Ubuntu workstations. It achieves this by running a powerful trio of open-source tools:
 
 - **Prometheus:** This tool is the foundation of the monitoring system. It collects metrics from all your hosts (e.g. CPU usage, memory, disk I/O) and stores them in a time series database, allowing for historical analysis and trend tracking.
@@ -10,7 +18,15 @@ The entire setup of the `admin-pi` is automated using Ansible playbooks. This en
 
 ## Setup Todos
 
-In addition to the tasks listed in the [Setup Guide](index.md), please complete the following steps:
+To automate the setup of `admin-pi`, should run the following Ansible playbooks:
+
+- `raspi`: Handles the base configuration and provisioning of the Raspberry Pi, including system updates and essential settings.
+- `telemetry`: Installs and configures monitoring tools such as Prometheus, Grafana, and Loki, ensuring your observability stack is ready.
+- `repositories`: Manages the setup of required code repositories
+.
+Running these playbooks ensures a consistent, repeatable, and fully documented deployment process for your monitoring infrastructure.
+
+In addition to the tasks listed in the [Setup Guide](index.md) and Ansible playbooks, please complete the following steps:
 
 - [ ] Setup password-less ssh connections from `admin-pi`
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box`

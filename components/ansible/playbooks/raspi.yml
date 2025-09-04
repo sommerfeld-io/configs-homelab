@@ -27,3 +27,14 @@
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
+
+- name: Install and configure admin-pi specifics
+  hosts: admin-pi.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/global.yml
+    - ../vars/raspi.yml
+  tasks:
+
+    - ansible.builtin.import_tasks: ../tasks/common-ansible.yml

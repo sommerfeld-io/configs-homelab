@@ -96,8 +96,8 @@ tasks:
       PLAYBOOK: cleanup.yml
     desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
     dir: &ansible-dir components/ansible
-    preconditions: &kobol-or-caprica
-      - sh: '[ "$(hostname)" = "kobol" ] || [ "$(hostname)" = "caprica" ]'
+    preconditions: &allowed-hosts
+      - sh: '[ "$(hostname)" = "kobol" ] || [ "$(hostname)" = "caprica" ] || [ "$(hostname)" = "admin-pi" ]'
         msg: "[ERROR] This task can only be run on host 'kobol' or 'caprica'."
     cmds: &ansible-cmd
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
@@ -107,7 +107,7 @@ tasks:
       PLAYBOOK: raspi.yml
     desc: *ansible-desc
     dir: *ansible-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
   ansible:ubuntu:desktop:
@@ -115,7 +115,7 @@ tasks:
       PLAYBOOK: ubuntu-desktop.yml
     desc: *ansible-desc
     dir: *ansible-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
   ansible:ubuntu:desktop:steam:
@@ -123,7 +123,7 @@ tasks:
       PLAYBOOK: ubuntu-desktop-steam.yml
     desc: *ansible-desc
     dir: *ansible-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
   ansible:repositories:
@@ -131,7 +131,7 @@ tasks:
       PLAYBOOK: repositories.yml
     desc: *ansible-desc
     dir: *ansible-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
   ansible:telemetry:
@@ -139,7 +139,7 @@ tasks:
       PLAYBOOK: telemetry.yml
     desc: *ansible-desc
     dir: *ansible-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
   # ===============================================================================================
@@ -163,7 +163,7 @@ tasks:
     desc: HOST ONLY | Run InSpec against all nodes
     deps:
       - task: inspec:check
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
         task: inspec:ansible-baseline:{{ .ITEM }}
@@ -174,7 +174,7 @@ tasks:
       HOST: '{{ index .MATCH 0 }}'
       USER: sebastian
       PROFILE: ansible-baseline
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
@@ -182,7 +182,7 @@ tasks:
     desc: HOST ONLY | Run InSpec against Talos cluster
     vars:
       PROFILE: talos-baseline
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - docker compose run --rm inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --no-distinct-exit --chef-license=accept
 
@@ -191,7 +191,7 @@ tasks:
   virtual-talos-admin:start:
     desc: HOST ONLY | Startup the Talos Administration Vagrantbox'
     dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - vagrant validate
       - vagrant up
@@ -200,21 +200,21 @@ tasks:
   virtual-talos-admin:stop:
     desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
     dir: *talos-vm-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - vagrant halt
 
   virtual-talos-admin:ssh:
     desc: HOST ONLY | SSH into the Talos Administration Vagrantbox
     dir: *talos-vm-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - vagrant ssh
 
   virtual-talos-admin:remove:
     desc: HOST ONLY | Remove the Talos Administration Vagrantbox
     dir: *talos-vm-dir
-    preconditions: *kobol-or-caprica
+    preconditions: *allowed-hosts
     cmds:
       - vagrant halt
       - vagrant destroy --force
