@@ -51,11 +51,12 @@ jobs:
           gh label create "ADR" --color "0052CC" --description "Architecture Decision Record" --force
 
           gh label create "dependencies" --color "000000" --description "Dependabot: Pull requests that update a dependency file" --force
-          gh label create "docker" --color "000000" --description "Dependabot: Pull requests that update Docker code" --force
+          gh label create "docker" --color "000000" --description "Dependabot: Pull requests that update Dockerfiles" --force
+          gh label create "docker_compose" --color "000000" --description "Dependabot: Pull requests that update Docker Compose configs" --force
           gh label create "github_actions" --color "000000" --description "Dependabot: Pull requests that update GitHub Actions code" --force
-          gh label create "go" --color "000000" --description "Dependabot: Pull requests that update Docker code" --force
+          gh label create "go" --color "000000" --description "Dependabot: Pull requests that update Go code" --force
           gh label create "javascript" --color "000000" --description "Dependabot: Pull requests that update javascript code (e.g. node modules)" --force
-          gh label create "java" --color "000000" --description "Dependabot: Pull requests that update java code" --force
-          gh label create "kotlin" --color "000000" --description "Dependabot: Pull requests that update java code" --force
+          gh label create "java" --color "000000" --description "Dependabot: Pull requests that update Java code" --force
+          gh label create "kotlin" --color "000000" --description "Dependabot: Pull requests that update Kotlin code" --force
           gh label create "terraform" --color "000000" --description "Dependabot: Pull requests that update Terraform code" --force
         shell: bash

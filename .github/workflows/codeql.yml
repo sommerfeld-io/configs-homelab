@@ -5,6 +5,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.adoc'
+      - '**.md'
+      - '.devcontainer/**'
+      - '.github/workflows/dev-environment.yml'
+      - '.vscode/**'
+      - '.gitkeep'
   pull_request:
     branches:
       - main
