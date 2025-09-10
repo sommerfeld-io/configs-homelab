@@ -15,19 +15,16 @@ This setup creates a distributed monitoring system where each node provides its 
 start
 
 partition "Interactive User Input" {
-    :Enter Become Password;
-    :Enter Ansible Vault Password;
+    :Become Password;
+    ' :Ansible Vault Password;
 }
 
 partition "Tasks on all machines" {
-    :Create Docker Secrets;
-    note left: Because the machines\neither need the secret\nfor dev purposes or run\nthe monitoring stack.
     :Start Metrics Stack;
 }
 
 partition "Tasks on admin-pi" {
     :Start Telemetry Stack;
-    note left: Uses the previously\ncreated secret.
 }
 
 stop
