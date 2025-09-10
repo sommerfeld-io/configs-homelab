@@ -70,6 +70,13 @@ nav:
   - Raspberry Pi Nodes:
       - Setup Guide: nodes/raspi/index.md
       - nodes/raspi/admin-pi.md
+  - Ansible Playbooks:
+      - Cleanup: ansible/cleanup.md
+      - RasPi: ansible/raspi.md
+      - Repositories: ansible/repositories.md
+      - Telemetry: ansible/telemetry.md
+      - Ubuntu Desktop: ansible/ubuntu-desktop.md
+      - Ubuntu Desktop Steam: ansible/ubuntu-desktop-steam.md
   - Talos Cluster:
       - Overview: nodes/talos-cluster/index.md
       - Installation: nodes/talos-cluster/installation.md

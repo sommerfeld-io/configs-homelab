@@ -40,6 +40,7 @@
 		"components/talos-cluster/virtual-talos-admin/ansible/tasks",
 
         "docs",
+		"docs/ansible/**",
 		"docs/api-docs/**",
 		"docs/about/**",
 		"docs/nodes/**",

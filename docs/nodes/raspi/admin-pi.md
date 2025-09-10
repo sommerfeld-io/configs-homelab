@@ -20,9 +20,9 @@ The entire setup of the `admin-pi` is automated using Ansible playbooks. This en
 
 To automate the setup of `admin-pi`, should run the following Ansible playbooks:
 
-- `raspi`: Handles the base configuration and provisioning of the Raspberry Pi, including system updates and essential settings.
-- `telemetry`: Installs and configures monitoring tools such as Prometheus, Grafana, and Loki, ensuring your observability stack is ready.
-- `repositories`: Manages the setup of required code repositories.
+- [ ] [Playbook "raspi"](../../ansible/raspi.md)
+- [ ] [Playbook "repositories"](../../ansible/repositories.md)
+- [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
 
 Running these playbooks ensures a consistent, repeatable, and fully documented deployment process for your monitoring infrastructure.
 

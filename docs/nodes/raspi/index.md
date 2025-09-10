@@ -14,7 +14,10 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 - [ ] Insert the SD card into the Raspberry Pi and power it on.
 - [ ] Connect to new Raspberry Pi via `ssh sebastian@THE_HOSTNAME.fritz.box` from all relevant machines.
 - [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@THE_HOSTNAME.fritz.box` from all relevant machines.
-- [ ] Install machine using the Ansible configs from this repo using `task`. This config also starts all necessary services.
+- [ ] Install machine using the Ansible configs from this repo using `task`.
+    - [ ] [Playbook "raspi"](../../ansible/raspi.md)
+    - [ ] [Playbook "repositories"](../../ansible/repositories.md)
+    - [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
 
 ## Follow-Up Todos
 
