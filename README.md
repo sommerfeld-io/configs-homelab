@@ -39,6 +39,12 @@ Workstations, servers and RasPi nodes are using similar operating systems.
 
 This is a constraint that is not likely to change in the future.
 
+[![Ansible](https://img.shields.io/badge/Ansible-Automation-C44D58?logo=ansible&logoColor=white&style=flat-square)](https://www.ansible.com)
+[![Docker](https://img.shields.io/badge/Docker-Containers-4A90E2?logo=docker&logoColor=white&style=flat-square)](https://www.docker.com)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Platform-0db7ed?logo=kubernetes&logoColor=white&style=flat-square)](https://kubernetes.io)
+[![Talos](https://img.shields.io/badge/Talos-k8s_OS-0db7ed?logo=talos&logoColor=white&style=flat-square)](https://www.talos.dev)
+[![InSpec](https://img.shields.io/badge/InSpec-Test-8A2BE2?logo=chef&logoColor=white&style=flat-square)](https://inspec.io)
+
 ## Contact
 
 Feel free to contact me via <sebastian@sommerfeld.io> or [raise an issue in this repository][file-issues].
