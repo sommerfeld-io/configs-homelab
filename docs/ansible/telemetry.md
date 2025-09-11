@@ -9,24 +9,3 @@ The telemetry playbook is responsible for setting up the monitoring and metrics 
     - Deploys the central monitoring components onto the [`admin-pi`](../nodes/raspi/admin-pi.md).
 
 This setup creates a distributed monitoring system where each node provides its own metrics, while the `admin-pi` acts as the central hub for collection, analysis, and visualization.
-
-```kroki-plantuml
-@startuml
-start
-
-partition "Interactive User Input" {
-    :Become Password;
-    ' :Ansible Vault Password;
-}
-
-partition "Tasks on all machines" {
-    :Start Metrics Stack;
-}
-
-partition "Tasks on admin-pi" {
-    :Start Telemetry Stack;
-}
-
-stop
-@enduml
-```
