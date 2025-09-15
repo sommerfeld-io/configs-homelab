@@ -5,14 +5,14 @@
 # virtualization provider available. Just make sure Docker is installed before starting minikube.
 
 # ! Remove Minikube before installing a new version
-- name: Minikube Setup  ----  Purge Minikube before installing a new version
+- name: Minikube Setup  ----  Purge minikube
   ansible.builtin.apt:
     name: minikube
     state: absent
     purge: true
 
 # ! Remove Minikube binary before installing a new version
-- name: Minikube Setup  ----  Purge before installing a new version (delete binary)
+- name: Minikube Setup  ----  Purge minikube (delete binary)
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent

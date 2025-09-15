@@ -5,11 +5,13 @@
     - name: Virtualbox Setup ---- Install Virtualbox and dependencies
       ansible.builtin.apt:
         pkg:
-          - virtualbox
-          - virtualbox-qt
-          - virtualbox-dkms
+          - "virtualbox={{ version }}"
+          - "virtualbox-qt={{ version }}"
+          - "virtualbox-dkms={{ version }}"
         state: latest
         update_cache: true
+      vars:
+        version: 7.0.20-*
 
     - name: Virtualbox Setup ---- Create virtual machines folder
       ansible.builtin.file:
@@ -19,10 +21,10 @@
         group: "{{ ansible_user }}"
         mode: u=rwx,g=rx,o=rx
       with_items:
-        - "/home/{{ ansible_user }}/virtualmachines"
+        - "{{ vm_folder }}"
 
     - name: Virtualbox Setup ---- Set virtual machines folder
-      ansible.builtin.command: "vboxmanage setproperty machinefolder /home/{{ ansible_user }}/virtualmachines"
+      ansible.builtin.command: "vboxmanage setproperty machinefolder {{ vm_folder }}"
       become: true
       become_user: "{{ ansible_user }}"
 

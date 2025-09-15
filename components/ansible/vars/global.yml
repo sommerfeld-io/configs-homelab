@@ -1,8 +1,9 @@
 ---
-github: git@github.com
+github: "git@github.com"
 dir_work: "/home/{{ ansible_user }}/work"
 dir_repos: "{{ dir_work }}/repos"
 dir_repos_sommerfeld_io: "{{ dir_repos }}/sommerfeld-io"
 dir_repos_sommerfeld_io_archive: "{{ dir_repos }}/sommerfeld-io-archive"
 dir_repos_sebastian_sommerfeld_io: "{{ dir_repos }}/sebastian-sommerfeld-io"
 dot_repos_dir: "/home/{{ ansible_user }}/.repos"
+vm_folder: "/home/{{ ansible_user }}/virtualmachines"
