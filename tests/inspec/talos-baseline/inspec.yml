@@ -6,6 +6,6 @@ copyright: sommerfeld.io
 copyright_email: sebastian@sommerfeld.io
 license: MIT
 summary: talos-baseline compliance profile for the talos kubernetes cluster running on Raspberry Pi
-version: 0.55.1
+version: 0.55.2
 supports:
   platform: os
