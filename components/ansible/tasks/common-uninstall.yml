@@ -36,9 +36,10 @@
     - /usr/bin/node
     - /usr/bin/npm
 
-- name: Uninstall  ----  Docker Stacks
+- name: Uninstall  ----  Files and folders
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   with_items:
     - "/home/{{ ansible_user }}/.docker-stacks/ops"
+    - "{{ dir_repos_sommerfeld_io }}/release-watcher"
