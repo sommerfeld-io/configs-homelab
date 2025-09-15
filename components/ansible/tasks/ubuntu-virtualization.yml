@@ -1,8 +1,25 @@
 ---
-- name: Virtualbox Setup
+## Without blacklisting the KVM kernel modules, Virtualbox will not work properly
+## because they conflict with each other. This does not affect Docker because it uses
+## containers and not full VMs.
+- name: Virtualization  ----  Config  ----  Blacklist the KVM kernel modules
+  ansible.builtin.lineinfile:
+    create: true
+    mode: u=rw,g=r,o=r
+    dest: "/etc/modprobe.d/blacklist-kvm.conf"
+    owner: "root"
+    group: "root"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - blacklist kvm
+    - blacklist kvm_intel
+    - blacklist kvm_amd
+
+- name: Virtualization  ----  Virtualbox Setup
   block:
 
-    - name: Virtualbox Setup ---- Install Virtualbox and dependencies
+    - name: Virtualization  ----  Virtualbox Setup ---- Install Virtualbox and dependencies
       ansible.builtin.apt:
         pkg:
           - "virtualbox={{ version }}"
@@ -13,7 +30,7 @@
       vars:
         version: 7.0.20-*
 
-    - name: Virtualbox Setup ---- Create virtual machines folder
+    - name: Virtualization  ----  Virtualbox Setup ---- Create virtual machines folder
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -23,28 +40,28 @@
       with_items:
         - "{{ vm_folder }}"
 
-    - name: Virtualbox Setup ---- Set virtual machines folder
+    - name: Virtualization  ----  Virtualbox Setup ---- Set virtual machines folder
       ansible.builtin.command: "vboxmanage setproperty machinefolder {{ vm_folder }}"
       become: true
       become_user: "{{ ansible_user }}"
 
-    - name: Virtualbox Setup ---- Add user to group
+    - name: Virtualization  ----  Virtualbox Setup ---- Add user to group
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         shell: /bin/bash
         groups: vboxusers
         append: true
 
-- name: Vagrant Setup
+- name: Virtualization  ----  Vagrant Setup
   block:
 
-    - name: Vagrant Setup ---- Download and convert HashiCorp GPG key
+    - name: Virtualization  ----  Vagrant Setup ---- Download and convert HashiCorp GPG key
       ansible.builtin.shell: |
         curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
       args:
         creates: /etc/apt/keyrings/hashicorp-archive-keyring.gpg
 
-    - name: Vagrant Setup ---- Add apt repository (OS-codename {{ codename }})
+    - name: Virtualization  ----  Vagrant Setup ---- Add apt repository (OS-codename {{ codename }})
       ansible.builtin.apt_repository:
         repo: "deb https://apt.releases.hashicorp.com {{ codename }} main"
         filename: hashicorp
@@ -53,14 +70,14 @@
         codename: "{{ ansible_distribution_release }}"
         # codename: noble # HashiCorp supports only LTS releases - so dynamically setting the distribution release might not work
 
-    - name: Vagrant Setup ---- Install Vagrant packages
+    - name: Virtualization  ----  Vagrant Setup ---- Install Vagrant packages
       ansible.builtin.apt:
         pkg:
           - vagrant
         state: latest
         update_cache: true
 
-    - name: Vagrant Setup ---- Install Vagrant plugins
+    - name: Virtualization  ----  Vagrant Setup ---- Install Vagrant plugins
       ansible.builtin.shell: |
         vagrant plugin install vagrant-cachier
         # vagrant plugin install vagrant-vbguest
@@ -70,11 +87,11 @@
       args:
         executable: /bin/bash
 
-    - name: Vagrant Setup ---- Verify installation
+    - name: Virtualization  ----  Vagrant Setup ---- Verify installation
       ansible.builtin.command: vagrant --version
       register: vagrant_version_output
       changed_when: false
 
-    - name: Vagrant Setup ---- Print version
+    - name: Virtualization  ----  Vagrant Setup ---- Print version
       ansible.builtin.debug:
         msg: "{{ vagrant_version_output.stdout }}"
