@@ -20,3 +20,4 @@
   tasks:
 
     - ansible.builtin.import_tasks: ../tasks/telemetry/telemetry.yml
+    - ansible.builtin.import_tasks: ../tasks/info/running-docker-containers.yml
