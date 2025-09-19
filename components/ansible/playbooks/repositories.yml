@@ -6,7 +6,7 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
+    - ansible.builtin.include_tasks: ../tasks/common-create-directories.yml
 
 - name: Clone git repositories
   hosts: ubuntu_desktop
@@ -28,7 +28,7 @@
       - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
       - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/repositories/clone.yml
+    - ansible.builtin.include_tasks: ../tasks/repositories/clone.yml
 
 - name: Clone git repositories
   hosts: admin-pi.fritz.box
@@ -40,4 +40,4 @@
     repositories:
       - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/repositories/clone.yml
+    - ansible.builtin.include_tasks: ../tasks/repositories/clone.yml

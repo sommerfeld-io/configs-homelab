@@ -1,12 +1,12 @@
 ---
-- name: Conky Setup  ----  Install
+- name: Conky  ----  Install
   ansible.builtin.apt:
     pkg:
       - conky-all
     state: latest
     update_cache: true
 
-- name: Conky Setup  ----  Create directories
+- name: Conky  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -16,7 +16,7 @@
   with_items:
     - "/home/{{ ansible_user }}/.config/conky"
 
-- name: Conky Setup  ----  Copy files
+- name: Conky  ----  Copy files
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"

@@ -8,7 +8,7 @@
     - ../vars/telemetry.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/telemetry/metrics.yml
+    - ansible.builtin.include_tasks: ../tasks/telemetry/metrics.yml
 
 - name: Run telemetry stack (not the metrics) on dedicated host(s)
   hosts: admin-pi.fritz.box
@@ -19,5 +19,5 @@
     - ../vars/telemetry.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/telemetry/telemetry.yml
-    - ansible.builtin.import_tasks: ../tasks/info/running-docker-containers.yml
+    - ansible.builtin.include_tasks: ../tasks/telemetry/telemetry.yml
+    - ansible.builtin.include_tasks: ../roles/info/tasks/main.yml

@@ -1,0 +1,3 @@
+---
+- name: Info  ----  Docker
+  ansible.builtin.include_tasks: 10-running-docker-containers.yml
