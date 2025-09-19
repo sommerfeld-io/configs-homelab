@@ -6,7 +6,7 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-    - ansible.builtin.include_tasks: ../tasks/common-create-directories.yml
+    - ansible.builtin.include_tasks: ../roles/filesystem/tasks/main.yml
 
 - name: Clone git repositories
   hosts: ubuntu_desktop

@@ -1,0 +1,6 @@
+---
+- name: Filesystem  ----  Common directories
+  ansible.builtin.include_tasks: 10-common-directories.yml
+
+- name: Filesystem  ----  Keyring directory
+  ansible.builtin.include_tasks: 20-keyring.yml

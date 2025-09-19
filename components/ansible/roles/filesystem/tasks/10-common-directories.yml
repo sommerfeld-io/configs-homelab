@@ -1,5 +1,5 @@
 ---
-- name: Config  ----  Create directories
+- name: Filesystem  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -15,10 +15,3 @@
     - "{{ dir_repos_sommerfeld_io_archive }}"
     - "{{ dir_repos_sebastian_sommerfeld_io }}"
     - "/home/{{ ansible_user }}/tmp"
-    - "{{ dot_repos_dir }}"
-
-- name: Config ---- Ensure keyring directory for apt exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
