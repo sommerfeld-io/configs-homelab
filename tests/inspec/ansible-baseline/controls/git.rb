@@ -10,7 +10,7 @@ control 'git-01' do
   title 'Verify Git installation'
   desc 'Ensure Git is installed
     Ansible tasks:
-    * components/ansible/tasks/common-git.yml'
+    * components/ansible/roles/git/tasks/main.yml'
 
   should_exist = [
     '/usr/bin/git',
@@ -27,7 +27,7 @@ control 'git-02' do
   title 'Verify .gitconfig settings'
   desc 'Ensure the .gitconfig file contains the correct user, alias, and other configurations
     Ansible tasks:
-    * components/ansible/tasks/common-git.yml
+    * components/ansible/roles/git/tasks/main.yml
     Assets:
     * components/ansible/assets/.gitconfig'
 

@@ -1,4 +1,14 @@
 ---
+- name: Config  ----  Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "{{ dot_repos_dir }}"
+
 - name: Telemetry  ----  Docker  ----  Check if docker-compose.yml file exists
   stat:
     path: "{{ stack_telemetry }}/docker-compose.yml"

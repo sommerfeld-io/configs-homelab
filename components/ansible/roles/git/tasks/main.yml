@@ -1,0 +1,15 @@
+---
+- name: Git  ----  Install package
+  ansible.builtin.apt:
+    pkg:
+      - git
+    state: latest
+    update_cache: true
+
+- name: Git  ----  Copy git configuration
+  ansible.builtin.copy:
+    src: ../files/.gitconfig
+    dest: "/home/{{ ansible_user }}/.gitconfig"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=r,o=r

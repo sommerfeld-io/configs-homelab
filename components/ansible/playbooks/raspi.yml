@@ -8,14 +8,12 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-bash.yml
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
-    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/common-task-setup.yml
-    - ansible.builtin.import_tasks: ../tasks/common-task-config.yml
-    - ansible.builtin.import_tasks: ../tasks/common-git.yml
-    - ansible.builtin.import_tasks: ../tasks/common-ssh.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.include_tasks: ../roles/bash/tasks/main.yml
+    - ansible.builtin.include_tasks: ../roles/filesystem/tasks/main.yml
+    - ansible.builtin.include_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.include_tasks: ../roles/taskfile-dev/tasks/main.yml
+    - ansible.builtin.include_tasks: ../roles/git/tasks/main.yml
+    - ansible.builtin.include_tasks: ../tasks/ubuntu-docker.yml
 
 - name: Install and configure nodes (non-root)
   hosts: raspi
@@ -26,7 +24,7 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-atuin.yml
+    - ansible.builtin.include_tasks: ../roles/atuin/tasks/main.yml
 
 - name: Install and configure admin-pi specifics
   hosts: admin-pi.fritz.box
@@ -37,4 +35,4 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/common-ansible.yml
+    - ansible.builtin.include_tasks: ../roles/ansible/tasks/main.yml

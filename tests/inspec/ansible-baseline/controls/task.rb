@@ -51,7 +51,7 @@ control 'task-02' do
       it { should exist }
       it { should be_file }
       it { should be_owned_by username }
-      its('mode') { should cmp default_mode }
+      its('mode') { should cmp '0644' }
     end
   end
 end

@@ -1,0 +1,17 @@
+---
+- name: Filesystem  ----  Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "/home/{{ ansible_user }}/.config"
+    - "/home/{{ ansible_user }}/.config/autostart"
+    - "{{ dir_work }}"
+    - "{{ dir_repos }}"
+    - "{{ dir_repos_sommerfeld_io }}"
+    - "{{ dir_repos_sommerfeld_io_archive }}"
+    - "{{ dir_repos_sebastian_sommerfeld_io }}"
+    - "/home/{{ ansible_user }}/tmp"

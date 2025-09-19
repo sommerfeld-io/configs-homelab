@@ -77,7 +77,7 @@ tasks:
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
       - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/ansible/assets/docker-stacks, TARGET_PATH: api-docs/docker-stacks, TITLE: 'Docker Stacks' }
+        vars: { BASEPATH: components/ansible/roles/taskfile-dev/files/docker-stacks/portainer, TARGET_PATH: api-docs/docker-stacks, TITLE: 'Docker Stacks' }
       - task: internal:docs:generate:from-readme
         vars: { BASEPATH: components/talos-cluster/manifests/apps, TARGET_PATH: api-docs/manifests/apps, TITLE: 'Apps in Talos' }
       - task: internal:docs:generate:from-readme

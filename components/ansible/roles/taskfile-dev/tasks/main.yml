@@ -1,0 +1,9 @@
+---
+- name: Task  ----  Install
+  ansible.builtin.include_tasks: 10-install.yml
+
+- name: Task  ----  Configure
+  ansible.builtin.include_tasks: 20-configure.yml
+
+- name: Task  ----  Uninstall
+  ansible.builtin.include_tasks: 90-uninstall.yml

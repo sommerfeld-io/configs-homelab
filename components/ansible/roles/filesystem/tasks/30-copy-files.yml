@@ -1,0 +1,23 @@
+---
+- name: Filesystem  ----  Wallpapers  ----  Create directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "/home/{{ ansible_user }}/Pictures/wallpapers"
+
+- name: Filesystem  ----  Wallpapers  ----  Copy images
+  ansible.builtin.copy:
+    src: "../files/wallpapers/{{ item }}"
+    dest: "/home/{{ ansible_user }}/Pictures/wallpapers/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=r,o=r
+  with_items:
+    - 1.jpg
+    - 2.jpg
+    - 3.jpg
+    - 4.jpg
