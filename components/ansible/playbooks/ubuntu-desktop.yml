@@ -23,7 +23,7 @@
     - ansible.builtin.include_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-media-players.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-sublime.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-github-cli.yml
+    - ansible.builtin.include_tasks: ../roles/github-cli/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-virtualization.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-minikube.yml

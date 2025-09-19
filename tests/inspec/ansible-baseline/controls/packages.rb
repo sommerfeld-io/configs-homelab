@@ -38,7 +38,7 @@ if os.arch == 'x86_64'
       * components/ansible/tasks/ubuntu-ansible.yml
       * components/ansible/tasks/ubuntu-chrome.yml
       * components/ansible/tasks/ubuntu-docker.yml
-      * components/ansible/tasks/ubuntu-github-cli.yml
+      * components/ansible/roles/github-cli/tasks/main.yml
       * components/ansible/tasks/ubuntu-minikube.yml
       * components/ansible/tasks/ubuntu-packages.yml
       * components/ansible/tasks/ubuntu-sublime.yml'
