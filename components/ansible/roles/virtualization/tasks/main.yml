@@ -1,0 +1,6 @@
+---
+- name: Virtualization  ----  Virtualbox
+  ansible.builtin.include_tasks: 10-virtualbox.yml
+
+- name: Virtualization  ----  Vagrant
+  ansible.builtin.include_tasks: 20-vagrant.yml

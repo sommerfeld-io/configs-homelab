@@ -1,0 +1,53 @@
+---
+## Without blacklisting the KVM kernel modules, Virtualbox will not work properly
+## because they conflict with each other. This does not affect Docker because it uses
+## containers and not full VMs.
+- name: Virtualization  ----  Config  ----  Blacklist the KVM kernel modules
+  ansible.builtin.lineinfile:
+    create: true
+    mode: u=rw,g=r,o=r
+    dest: "/etc/modprobe.d/blacklist-kvm.conf"
+    owner: "root"
+    group: "root"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - blacklist kvm
+    - blacklist kvm_intel
+    - blacklist kvm_amd
+
+- name: Virtualization  ----  Virtualbox Setup
+  block:
+
+    - name: Virtualization  ----  Virtualbox ---- Install Virtualbox and dependencies
+      ansible.builtin.apt:
+        pkg:
+          - "virtualbox={{ version }}"
+          - "virtualbox-qt={{ version }}"
+          - "virtualbox-dkms={{ version }}"
+        state: latest
+        update_cache: true
+      vars:
+        version: 7.0.20-*
+
+    - name: Virtualization  ----  Virtualbox ---- Create virtual machines folder
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - "{{ vm_folder }}"
+
+    - name: Virtualization  ----  Virtualbox ---- Set virtual machines folder
+      ansible.builtin.command: "vboxmanage setproperty machinefolder {{ vm_folder }}"
+      become: true
+      become_user: "{{ ansible_user }}"
+
+    - name: Virtualization  ----  Virtualbox ---- Add user to group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        shell: /bin/bash
+        groups: vboxusers
+        append: true
