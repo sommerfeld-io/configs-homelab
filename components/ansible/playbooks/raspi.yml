@@ -8,7 +8,7 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../tasks/common-bash.yml
+    - ansible.builtin.include_tasks: ../roles/bash/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/common-create-directories.yml
     - ansible.builtin.include_tasks: ../tasks/common-packages.yml
     - ansible.builtin.include_tasks: ../tasks/common-task-setup.yml

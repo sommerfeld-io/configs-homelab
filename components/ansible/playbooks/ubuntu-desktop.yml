@@ -9,7 +9,7 @@
   tasks:
 
     - ansible.builtin.include_tasks: ../roles/hardening/tasks/main.yml
-    - ansible.builtin.include_tasks: ../tasks/common-bash.yml
+    - ansible.builtin.include_tasks: ../roles/bash/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/common-create-directories.yml
     - ansible.builtin.include_tasks: ../roles/git/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/common-packages.yml

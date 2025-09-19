@@ -8,7 +8,7 @@
     - vars.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../../../ansible/tasks/common-bash.yml
+    - ansible.builtin.include_tasks: ../../../ansible/roles/bash/tasks/main.yml
     - ansible.builtin.include_tasks: ../../../ansible/tasks/common-create-directories.yml
     - ansible.builtin.include_tasks: ../../../ansible/tasks/common-task-setup.yml
     - ansible.builtin.include_tasks: tasks/install-packages.yml
