@@ -11,10 +11,15 @@
 		".vscode",
 
 		"components/ansible",
-		"components/ansible/assets/**",
+        "components/ansible/roles/*/files/**",
+        "components/ansible/roles/*/tasks",
+        "components/ansible/roles/*/templates",
+        "components/ansible/roles/*/vars",
 		"components/ansible/playbooks",
-		"components/ansible/tasks/*",
 		"components/ansible/vars",
+
+        "components/ansible/assets/**",
+		"components/ansible/tasks/*",
 
 		"bootstrap",
 

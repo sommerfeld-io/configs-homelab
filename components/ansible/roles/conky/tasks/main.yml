@@ -24,6 +24,6 @@
     group: "{{ ansible_user }}"
     mode: u=rw,g=r,o=r
   loop:
-    - { src: "../assets/conky/docker.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/docker.conkyrc" }
-    - { src: "../assets/conky/host.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/host.conkyrc" }
-    - { src: "../assets/conky/autostart/conky-launcher.desktop", dest: "/home/{{ ansible_user }}/.config/autostart/conky-launcher.desktop" }
+    - { src: "../files/docker.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/docker.conkyrc" }
+    - { src: "../files/host.conkyrc", dest: "/home/{{ ansible_user }}/.config/conky/host.conkyrc" }
+    - { src: "../files/autostart/conky-launcher.desktop", dest: "/home/{{ ansible_user }}/.config/autostart/conky-launcher.desktop" }
