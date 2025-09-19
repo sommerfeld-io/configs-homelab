@@ -1,5 +1,5 @@
 ---
-- name: Setup for group raspi_talos_admin
+- name: Setup
   hosts: all
   gather_facts: true
   become: true
@@ -15,7 +15,7 @@
     - ansible.builtin.include_tasks: tasks/install-k9s.yml
     - ansible.builtin.include_tasks: tasks/argocd-autopilot.yml
 
-- name: Setup for group raspi_talos_admin (non-root)
+- name: Setup (non-root)
   hosts: all
   gather_facts: true
   become: false
@@ -25,7 +25,7 @@
   tasks:
 
     - ansible.builtin.include_tasks: tasks/bash-aliases.yml
-    - ansible.builtin.include_tasks: ../../../ansible/tasks/common-atuin.yml
+    - ansible.builtin.include_tasks: ../../../ansible/roles/atuin/tasks/main.yml
 
     - name: Config  ----  Create directories
       ansible.builtin.file:

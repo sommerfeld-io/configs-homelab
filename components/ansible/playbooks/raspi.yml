@@ -26,7 +26,7 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../tasks/common-atuin.yml
+    - ansible.builtin.include_tasks: ../roles/atuin/tasks/main.yml
 
 - name: Install and configure admin-pi specifics
   hosts: admin-pi.fritz.box

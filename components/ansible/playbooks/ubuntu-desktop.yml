@@ -39,7 +39,7 @@
     - ../vars/ubuntu.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../tasks/common-atuin.yml
+    - ansible.builtin.include_tasks: ../roles/atuin/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/common-cron-jobs.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-docker-scout.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-vscode-plugins.yml
