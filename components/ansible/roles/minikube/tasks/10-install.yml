@@ -1,25 +1,4 @@
 ---
-# The task installs Minikube and Helm and all dependencies expect for the
-# virtualization provider. Minikube automatically selects the virtualization provider based on the
-# host system. Since `ubuntu-minikube.yml` took care of installing docker, there is a
-# virtualization provider available. Just make sure Docker is installed before starting minikube.
-
-# ! Remove Minikube before installing a new version
-- name: Minikube Setup  ----  Purge minikube
-  ansible.builtin.apt:
-    name: minikube
-    state: absent
-    purge: true
-
-# ! Remove Minikube binary before installing a new version
-- name: Minikube Setup  ----  Purge minikube (delete binary)
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - /usr/local/bin/minikube
-    - /usr/local/bin/helm
-
 # - name: Minikube Setup  ----  Download
 #   ansible.builtin.get_url:
 #     # url: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_{{ architecture }}.deb
