@@ -1,6 +1,6 @@
-# Role: Atuin
+# Role: Git
 
-Install Atuin, a modern shell history manager.
+Install Git, a distributed version control system.
 
 This role is intended to be used on all personal machines.
 
