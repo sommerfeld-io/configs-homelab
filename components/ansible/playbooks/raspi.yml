@@ -37,4 +37,4 @@
     - ../vars/raspi.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../tasks/common-ansible.yml
+    - ansible.builtin.include_tasks: ../roles/ansible/tasks/main.yml

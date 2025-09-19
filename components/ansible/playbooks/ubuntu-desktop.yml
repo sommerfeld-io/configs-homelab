@@ -17,7 +17,7 @@
     - ansible.builtin.include_tasks: ../tasks/common-task-setup.yml
     - ansible.builtin.include_tasks: ../tasks/common-task-config.yml
     - ansible.builtin.include_tasks: ../tasks/common-ssh.yml
-    - ansible.builtin.include_tasks: ../tasks/common-ansible.yml
+    - ansible.builtin.include_tasks: ../roles/ansible/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-packages.yml
     - ansible.builtin.include_tasks: ../roles/conky/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-chrome.yml
