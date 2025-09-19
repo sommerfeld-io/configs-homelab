@@ -15,7 +15,6 @@
     - ansible.builtin.include_tasks: ../tasks/common-packages.yml
     - ansible.builtin.include_tasks: ../tasks/common-cron-config.yml
     - ansible.builtin.include_tasks: ../roles/taskfile-dev/tasks/main.yml
-    - ansible.builtin.include_tasks: ../tasks/common-ssh.yml
     - ansible.builtin.include_tasks: ../roles/ansible/tasks/main.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-packages.yml
     - ansible.builtin.include_tasks: ../roles/conky/tasks/main.yml

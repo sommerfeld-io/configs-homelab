@@ -1,38 +1,6 @@
 ---
-- name: Config  ----  Write commands to .bashrc
-  ansible.builtin.lineinfile:
-    dest: "/home/{{ ansible_user }}/.bashrc"
-    state: present
-    line: "{{ item }}"
-  with_items:
-    - export LOG_DONE="[\e[32mDONE\e[0m]"
-    - export LOG_ERROR="[\e[1;31mERROR\e[0m]"
-    - export LOG_INFO="[\e[34mINFO\e[0m]"
-    - export LOG_WARN="[\e[93mWARN\e[0m]"
-    - export Y="\e[93m"
-    - export P="\e[35m"
-    - export B="\e[94m"
-    - export D="\e[0m"
-    - export G='\033[1;30m'
+- name: Bash  ----  Configure
+  ansible.builtin.include_tasks: 10-bash-config.yml
 
-- name: Config  ----  Write aliases to .bash_aliases
-  ansible.builtin.lineinfile:
-    create: true
-    mode: u=rw,g=,o=
-    dest: "/home/{{ ansible_user }}/.bash_aliases"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    line: "{{ item }}"
-    state: present
-  with_items:
-    - alias ll="ls -alFh --color=auto"
-    - alias ls="ls -a --color=auto"
-    - alias grep="grep --color=auto"
-    - alias pull-all-repos="git all pull"
-
-- name: Config  ----  Update prompt in .bashrc
-  ansible.builtin.lineinfile:
-    dest: "/home/{{ ansible_user }}/.bashrc"
-    regexp: '^PS1='
-    line: "export PS1='{{ ps1 }}'"
-    state: present
+- name: Task  ----  SSH
+  ansible.builtin.include_tasks: 20-ssh-keypair.yml

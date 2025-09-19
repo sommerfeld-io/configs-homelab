@@ -1,5 +1,5 @@
 ---
-- name: SSH Config  ----  Create ssh keypair
+- name: Bash  ----  SSH  ----  Create ssh keypair
   community.crypto.openssh_keypair:
     path: "/home/{{ ansible_user }}/.ssh/id_rsa"
     owner: "{{ ansible_user }}"

@@ -1,6 +1,6 @@
 # Role: Bash
 
-Configures bash settings.
+Configures bash settings and create an SSH keypair.
 
 This role is intended to be used on all machines (RasPi and workstation).
 
