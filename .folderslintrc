@@ -18,7 +18,6 @@
 		"components/ansible/playbooks",
 		"components/ansible/vars",
 
-        "components/ansible/assets/**",
 		"components/ansible/tasks/*",
 
 		"bootstrap",

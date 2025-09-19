@@ -1,5 +1,5 @@
 ---
-- name: Task Config  ----  Create directories
+- name: Task  ----  Configure  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -9,7 +9,7 @@
   with_items:
     - "/home/{{ ansible_user }}/.docker-stacks"
 
-- name: Task Config  ----  Copy taskfile and configs
+- name: Task  ----  Configure  ----  Copy taskfile and configs
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -17,8 +17,8 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - { src: "../assets/docker-stacks/portainer", dest: "/home/{{ ansible_user }}/.docker-stacks" }
-    - { src: "../assets/global-taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
+    - { src: "../files/docker-stacks/portainer", dest: "/home/{{ ansible_user }}/.docker-stacks" }
+    - { src: "../files/taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
 
 - name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc
   ansible.builtin.lineinfile:
