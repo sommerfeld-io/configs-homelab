@@ -1,8 +1,6 @@
-# Role: Info
+# Role: Hardening
 
-This role shows information about the system, such as:
-
-- Running Docker containers
+This role applies various hardening measures to a system.
 
 This role is intended to be used on all machines (RasPi and workstation).
 

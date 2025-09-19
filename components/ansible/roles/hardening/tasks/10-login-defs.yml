@@ -4,7 +4,7 @@
 ## * Owner: full access
 ## * Group: read and execute only
 ## * Others: no access
-- name: System  ----  Config  ----  Configure login.defs
+- name: Hardening  ----  Configure login.defs
   ansible.builtin.lineinfile:
     create: false
     dest: "/etc/login.defs"

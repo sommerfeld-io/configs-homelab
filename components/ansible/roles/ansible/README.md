@@ -2,7 +2,7 @@
 
 Install Ansible, a powerful automation tool.
 
-This role is intended to be used on all personal machines.
+This role is intended to be used on all machines (RasPi and workstation).
 
 ## Expected Variables
 
