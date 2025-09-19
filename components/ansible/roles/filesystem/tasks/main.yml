@@ -4,3 +4,6 @@
 
 - name: Filesystem  ----  Keyring directory
   ansible.builtin.include_tasks: 20-keyring.yml
+
+- name: Filesystem  ----  Copy files
+  ansible.builtin.include_tasks: 30-copy-files.yml
