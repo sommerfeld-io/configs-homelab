@@ -22,7 +22,10 @@
         name: ../roles/git
 
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/common-cron-config.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/cron
+        tasks_from: main
 
     - ansible.builtin.include_role:
         name: ../roles/taskfile-dev
@@ -63,7 +66,10 @@
 
     - ansible.builtin.include_role:
         name: ../roles/atuin
-    - ansible.builtin.import_tasks: ../tasks/common-cron-jobs.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/cron
+        tasks_from: jobs
 
     - ansible.builtin.include_role:
         name: ../roles/docker
