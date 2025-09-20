@@ -20,4 +20,6 @@
   tasks:
 
     - ansible.builtin.include_tasks: ../tasks/telemetry/telemetry.yml
-    - ansible.builtin.include_tasks: ../roles/info/tasks/main.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/info

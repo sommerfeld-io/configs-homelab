@@ -22,5 +22,6 @@ warn_list:
 
 skip_list:
   - yaml[line-length]
+  - role-name[path]
 
 offline: true

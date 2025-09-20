@@ -8,21 +8,43 @@
     - ../vars/ubuntu.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../roles/hardening/tasks/main.yml
-    - ansible.builtin.include_tasks: ../roles/bash/tasks/main.yml
-    - ansible.builtin.include_tasks: ../roles/filesystem/tasks/main.yml
-    - ansible.builtin.include_tasks: ../roles/git/tasks/main.yml
+    - ansible.builtin.include_role:
+        name: ../roles/hardening
+        tasks_from: main
+
+    - ansible.builtin.include_role:
+        name: ../roles/bash
+
+    - ansible.builtin.include_role:
+        name: ../roles/filesystem
+
+    - ansible.builtin.include_role:
+        name: ../roles/git
+
     - ansible.builtin.include_tasks: ../tasks/common-packages.yml
     - ansible.builtin.include_tasks: ../tasks/common-cron-config.yml
-    - ansible.builtin.include_tasks: ../roles/taskfile-dev/tasks/main.yml
-    - ansible.builtin.include_tasks: ../roles/ansible/tasks/main.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/taskfile-dev
+
+    - ansible.builtin.include_role:
+        name: ../roles/ansible
+
     - ansible.builtin.include_tasks: ../tasks/ubuntu-packages.yml
-    - ansible.builtin.include_tasks: ../roles/conky/tasks/main.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/conky
+
     - ansible.builtin.include_tasks: ../tasks/ubuntu-chrome.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-media-players.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-sublime.yml
-    - ansible.builtin.include_tasks: ../roles/github-cli/tasks/main.yml
-    - ansible.builtin.include_tasks: ../roles/virtualization/tasks/main.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/github-cli
+
+    - ansible.builtin.include_role:
+        name: ../roles/virtualization
+
     - ansible.builtin.include_tasks: ../tasks/ubuntu-docker.yml
     - ansible.builtin.include_tasks: ../tasks/common-uninstall.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-uninstall.yml
@@ -36,7 +58,8 @@
     - ../vars/ubuntu.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../roles/atuin/tasks/main.yml
+    - ansible.builtin.include_role:
+        name: ../roles/atuin
     - ansible.builtin.include_tasks: ../tasks/common-cron-jobs.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-docker-scout.yml
     - ansible.builtin.include_tasks: ../tasks/ubuntu-vscode-plugins.yml
