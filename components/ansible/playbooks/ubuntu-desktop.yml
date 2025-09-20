@@ -67,6 +67,6 @@
 
     - ansible.builtin.include_role:
         name: ../roles/docker
-        tasks_from: main
+        tasks_from: scout
 
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
