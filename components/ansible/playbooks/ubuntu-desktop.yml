@@ -10,7 +10,6 @@
 
     - ansible.builtin.include_role:
         name: ../roles/hardening
-        tasks_from: main
 
     - ansible.builtin.include_role:
         name: ../roles/bash
@@ -22,6 +21,20 @@
         name: ../roles/git
 
     - ansible.builtin.import_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
+    - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/docker
+        tasks_from: main
+
+    - ansible.builtin.include_role:
+        name: ../roles/vscode
+        tasks_from: main
 
     - ansible.builtin.include_role:
         name: ../roles/cron
@@ -33,27 +46,14 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible
 
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
-
     - ansible.builtin.include_role:
         name: ../roles/conky
-
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
 
     - ansible.builtin.include_role:
         name: ../roles/github-cli
 
     - ansible.builtin.include_role:
         name: ../roles/virtualization
-
-    - ansible.builtin.include_role:
-        name: ../roles/docker
-        tasks_from: main
-
-    - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
@@ -75,4 +75,6 @@
         name: ../roles/docker
         tasks_from: scout
 
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml
+    - ansible.builtin.include_role:
+        name: ../roles/vscode
+        tasks_from: plugins

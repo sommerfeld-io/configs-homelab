@@ -1,5 +1,5 @@
 ---
-- name: Install  ----  VSCode Extensions
+- name: VSCode  ----  Install Extensions
   ansible.builtin.shell: |
     extensions=(
       'streetsidesoftware.code-spell-checker'
