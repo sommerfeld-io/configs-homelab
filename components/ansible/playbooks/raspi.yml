@@ -22,7 +22,9 @@
     - ansible.builtin.include_role:
         name: ../roles/git
 
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.include_role:
+        name: ../roles/docker
+        tasks_from: main
 
 - name: Install and configure nodes (non-root)
   hosts: raspi

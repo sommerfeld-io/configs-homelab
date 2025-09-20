@@ -45,7 +45,10 @@
     - ansible.builtin.include_role:
         name: ../roles/virtualization
 
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.include_role:
+        name: ../roles/docker
+        tasks_from: main
+
     - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
     - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
 
@@ -61,5 +64,9 @@
     - ansible.builtin.include_role:
         name: ../roles/atuin
     - ansible.builtin.import_tasks: ../tasks/common-cron-jobs.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-scout.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/docker
+        tasks_from: main
+
     - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml

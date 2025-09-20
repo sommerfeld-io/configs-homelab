@@ -1,0 +1,15 @@
+---
+- name: Docker Setup ---- Download Docker GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Docker Setup ---- Add apt repository (OS-codename {{ codename }})
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ codename }} stable"
+    filename: docker
+    state: present
+  vars:
+    codename: "{{ ansible_distribution_release }}"
+    # codename: noble # No official support for Ubuntu 25.04 yet - https://docs.docker.com/engine/install/ubuntu/#os-requirements
