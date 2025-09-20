@@ -8,9 +8,15 @@
     - vars.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../../../ansible/roles/bash/tasks/main.yml
-    - ansible.builtin.import_tasks: ../../../ansible/roles/filesystem/tasks/main.yml
-    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-task-setup.yml
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/bash
+
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/filesystem
+
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/taskfile-dev
+
     - ansible.builtin.import_tasks: tasks/install-packages.yml
     - ansible.builtin.import_tasks: tasks/install-k9s.yml
     - ansible.builtin.import_tasks: tasks/argocd-autopilot.yml
@@ -25,7 +31,9 @@
   tasks:
 
     - ansible.builtin.import_tasks: tasks/bash-aliases.yml
-    - ansible.builtin.import_tasks: ../../../ansible/roles/atuin/tasks/main.yml
+
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/atuin
 
     - name: Config  ----  Create directories
       ansible.builtin.file:
