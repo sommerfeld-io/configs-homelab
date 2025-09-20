@@ -1,0 +1,12 @@
+---
+- name: Telemetry  ----  Prepare directories
+  ansible.builtin.import_tasks: 10-directories.yml
+
+- name: Telemetry  ----  Teardown
+  ansible.builtin.import_tasks: monitoring-stack/20-teardown.yml
+
+- name: Telemetry  ----  Clone
+  ansible.builtin.import_tasks: 30-clone.yml
+
+- name: Telemetry  ----  Startup
+  ansible.builtin.import_tasks: monitoring-stack/40-startup.yml

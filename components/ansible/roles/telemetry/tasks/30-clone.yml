@@ -1,0 +1,11 @@
+---
+- name: Telemetry  ----  Clone repos (and pull updates if already exists)
+  ansible.builtin.git:
+    repo: "{{ github }}:{{ item.org }}/{{ item.repo }}.git"
+    dest: "{{ item.dest }}/{{ item.repo }}"
+    clone: true
+    update: true
+    key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
+    accept_hostkey: true
+  with_items:
+    - { dest: "{{ telemetry_dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }

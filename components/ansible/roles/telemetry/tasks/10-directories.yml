@@ -1,0 +1,10 @@
+---
+- name: Config  ----  Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "{{ telemetry_dot_repos_dir }}"

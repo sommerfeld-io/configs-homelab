@@ -7,3 +7,6 @@
 
 - name: Docker  ----  Install
   ansible.builtin.import_tasks: 30-install.yml
+
+- name: Docker  ----  Uninstall
+  ansible.builtin.import_tasks: 90-unintall.yml

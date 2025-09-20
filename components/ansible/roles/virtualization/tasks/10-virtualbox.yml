@@ -38,10 +38,10 @@
         group: "{{ ansible_user }}"
         mode: u=rwx,g=rx,o=rx
       with_items:
-        - "{{ vm_folder }}"
+        - "{{ virtualization_vm_folder }}"
 
     - name: Virtualization  ----  Virtualbox ---- Set virtual machines folder
-      ansible.builtin.command: "vboxmanage setproperty machinefolder {{ vm_folder }}"
+      ansible.builtin.command: "vboxmanage setproperty machinefolder {{ virtualization_vm_folder }}"
       become: true
       become_user: "{{ ansible_user }}"
 

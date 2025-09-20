@@ -1,0 +1,23 @@
+---
+- name: Docker  ----  Docker wrapper scripts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /opt/docker-wrappers/groovy.sh
+    - /opt/docker-wrappers/hadolint.sh
+    - /opt/docker-wrappers/mvn.sh
+    - /opt/docker-wrappers/node-npm.sh
+    - /opt/docker-wrappers/shellcheck.sh
+    - /opt/docker-wrappers/yamllint.sh
+    - /opt/docker-wrappers/node.sh
+    - /opt/docker-wrappers/npm.sh
+    - /opt/docker-wrappers
+    - /usr/bin/groovy
+    - /usr/bin/hadolint
+    - /usr/bin/mvn
+    - /usr/bin/node-npm
+    - /usr/bin/shellcheck
+    - /usr/bin/yamllint
+    - /usr/bin/node
+    - /usr/bin/npm
