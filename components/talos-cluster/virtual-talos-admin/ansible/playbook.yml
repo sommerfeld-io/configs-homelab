@@ -8,12 +8,12 @@
     - vars.yml
   tasks:
 
-    - ansible.builtin.include_tasks: ../../../ansible/roles/bash/tasks/main.yml
-    - ansible.builtin.include_tasks: ../../../ansible/roles/filesystem/tasks/main.yml
-    - ansible.builtin.include_tasks: ../../../ansible/tasks/common-task-setup.yml
-    - ansible.builtin.include_tasks: tasks/install-packages.yml
-    - ansible.builtin.include_tasks: tasks/install-k9s.yml
-    - ansible.builtin.include_tasks: tasks/argocd-autopilot.yml
+    - ansible.builtin.import_tasks: ../../../ansible/roles/bash/tasks/main.yml
+    - ansible.builtin.import_tasks: ../../../ansible/roles/filesystem/tasks/main.yml
+    - ansible.builtin.import_tasks: ../../../ansible/tasks/common-task-setup.yml
+    - ansible.builtin.import_tasks: tasks/install-packages.yml
+    - ansible.builtin.import_tasks: tasks/install-k9s.yml
+    - ansible.builtin.import_tasks: tasks/argocd-autopilot.yml
 
 - name: Setup (non-root)
   hosts: all
@@ -24,8 +24,8 @@
     - vars.yml
   tasks:
 
-    - ansible.builtin.include_tasks: tasks/bash-aliases.yml
-    - ansible.builtin.include_tasks: ../../../ansible/roles/atuin/tasks/main.yml
+    - ansible.builtin.import_tasks: tasks/bash-aliases.yml
+    - ansible.builtin.import_tasks: ../../../ansible/roles/atuin/tasks/main.yml
 
     - name: Config  ----  Create directories
       ansible.builtin.file:
@@ -38,8 +38,8 @@
         - "/home/{{ ansible_user }}/.talos"
         - "/home/{{ ansible_user }}/bootstrap"
 
-    - ansible.builtin.include_tasks: tasks/copy-files.yml
-    - ansible.builtin.include_tasks: tasks/clone-repos.yml
+    - ansible.builtin.import_tasks: tasks/copy-files.yml
+    - ansible.builtin.import_tasks: tasks/clone-repos.yml
 
     - name: Talos  ----  Copy scripts, files and configs for user {{ ansible_user }}
       ansible.builtin.copy:

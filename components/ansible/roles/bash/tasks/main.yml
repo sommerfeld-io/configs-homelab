@@ -1,6 +1,6 @@
 ---
 - name: Bash  ----  Configure
-  ansible.builtin.include_tasks: 10-bash-config.yml
+  ansible.builtin.import_tasks: 10-bash-config.yml
 
 - name: Task  ----  SSH
-  ansible.builtin.include_tasks: 20-ssh-keypair.yml
+  ansible.builtin.import_tasks: 20-ssh-keypair.yml

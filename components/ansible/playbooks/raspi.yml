@@ -14,7 +14,7 @@
     - ansible.builtin.include_role:
         name: ../roles/filesystem
 
-    - ansible.builtin.include_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
 
     - ansible.builtin.include_role:
         name: ../roles/taskfile-dev
@@ -22,7 +22,7 @@
     - ansible.builtin.include_role:
         name: ../roles/git
 
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
 
 - name: Install and configure nodes (non-root)
   hosts: raspi

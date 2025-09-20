@@ -21,8 +21,8 @@
     - ansible.builtin.include_role:
         name: ../roles/git
 
-    - ansible.builtin.include_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.include_tasks: ../tasks/common-cron-config.yml
+    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/common-cron-config.yml
 
     - ansible.builtin.include_role:
         name: ../roles/taskfile-dev
@@ -30,14 +30,14 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible
 
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-packages.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
 
     - ansible.builtin.include_role:
         name: ../roles/conky
 
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-chrome.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-sublime.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
 
     - ansible.builtin.include_role:
         name: ../roles/github-cli
@@ -45,9 +45,9 @@
     - ansible.builtin.include_role:
         name: ../roles/virtualization
 
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-docker.yml
-    - ansible.builtin.include_tasks: ../tasks/common-uninstall.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker.yml
+    - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
@@ -60,6 +60,6 @@
 
     - ansible.builtin.include_role:
         name: ../roles/atuin
-    - ansible.builtin.include_tasks: ../tasks/common-cron-jobs.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-docker-scout.yml
-    - ansible.builtin.include_tasks: ../tasks/ubuntu-vscode-plugins.yml
+    - ansible.builtin.import_tasks: ../tasks/common-cron-jobs.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-docker-scout.yml
+    - ansible.builtin.import_tasks: ../tasks/ubuntu-vscode-plugins.yml

@@ -1,12 +1,12 @@
 ---
 - name: Filesystem  ----  Common directories
-  ansible.builtin.include_tasks: 10-common-directories.yml
+  ansible.builtin.import_tasks: 10-common-directories.yml
 
 - name: Filesystem  ----  Keyring directory
-  ansible.builtin.include_tasks: 20-keyring.yml
+  ansible.builtin.import_tasks: 20-keyring.yml
 
 - name: Filesystem  ----  Copy files
-  ansible.builtin.include_tasks: 30-copy-files.yml
+  ansible.builtin.import_tasks: 30-copy-files.yml
 
 - name: Filesystem  ----  Uninstall
-  ansible.builtin.include_tasks: 90-uninstall.yml
+  ansible.builtin.import_tasks: 90-uninstall.yml
