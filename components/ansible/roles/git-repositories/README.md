@@ -12,5 +12,3 @@ This role is intended to be used on all machines (RasPi and workstation).
     - `dest`: The destination directory where the repository should be cloned.
     - `org`: The GitHub organization or user name (e.g., `"sommerfeld-io"`).
     - `repo`: The repository name (e.g., `"configs-homelab"`).
-- `{{ dir_repos_sommerfeld_io }}`: The base directory for cloning repositories from the "sommerfeld-io" organization.
-- `{{ dir_repos_sebastian_sommerfeld_io }}`: The base directory for cloning repositories from the "sebastian-sommerfeld-io" user space.
