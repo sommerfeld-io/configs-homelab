@@ -1,0 +1,19 @@
+---
+- name: Packages Main  ----  Basics  ----  Install
+  ansible.builtin.apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - make
+      - ncdu
+      - htop
+      - neofetch
+      - python3-pip # python package manager
+      - vim
+      - jq
+    state: latest
+    update_cache: true

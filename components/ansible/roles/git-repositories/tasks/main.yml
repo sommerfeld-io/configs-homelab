@@ -1,0 +1,6 @@
+---
+- name: Git Repositories  ----  Clone repositories
+  ansible.builtin.import_tasks: 10-clone.yml
+
+- name: Git Repositories  ----  Uninstall outdated repositories
+  ansible.builtin.import_tasks: 90-uninstall.yml

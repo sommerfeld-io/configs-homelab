@@ -1,0 +1,18 @@
+---
+- name: Packages Ubuntu  ----  Sublime  ----  Download GPG key
+  ansible.builtin.get_url:
+    url: https://download.sublimetext.com/sublimehq-pub.gpg
+    dest: /etc/apt/keyrings/sublimehq-archive-keyring.gpg
+    mode: '0644'
+
+- name: Packages Ubuntu  ----  Sublime  ----  Add apt repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.sublimetext.com apt/stable/
+    state: present
+
+- name: Packages Ubuntu  ----  Sublime  ----  Install
+  ansible.builtin.apt:
+    name:
+      - sublime-text
+    state: latest
+    update_cache: true

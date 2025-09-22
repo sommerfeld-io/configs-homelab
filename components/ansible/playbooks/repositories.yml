@@ -6,7 +6,9 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/common-create-directories.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/filesystem
 
 - name: Clone git repositories
   hosts: ubuntu_desktop
@@ -14,21 +16,23 @@
   become: false
   vars_files:
     - ../vars/global.yml
-  vars:
-    repositories:
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "template-repository" }
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "telemetry" }
-      - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
-      - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
-      - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus-status-page" }
-      - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
-      - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/repositories/clone.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/git-repositories
+      vars:
+        repositories:
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "template-repository" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "telemetry" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus-status-page" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
 
 - name: Clone git repositories
   hosts: admin-pi.fritz.box
@@ -36,8 +40,10 @@
   become: false
   vars_files:
     - ../vars/global.yml
-  vars:
-    repositories:
-      - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
   tasks:
-    - ansible.builtin.import_tasks: ../tasks/repositories/clone.yml
+
+    - ansible.builtin.include_role:
+        name: ../roles/git-repositories
+      vars:
+        repositories:
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }

@@ -1,0 +1,12 @@
+---
+- name: Docker  ----  Purge deprecated docker installations
+  ansible.builtin.import_tasks: 10-uninstall-deprecated.yml
+
+- name: Docker  ----  Configure apt for Docker
+  ansible.builtin.import_tasks: 20-apt-repository.yml
+
+- name: Docker  ----  Install
+  ansible.builtin.import_tasks: 30-install.yml
+
+- name: Docker  ----  Uninstall
+  ansible.builtin.import_tasks: 90-unintall.yml

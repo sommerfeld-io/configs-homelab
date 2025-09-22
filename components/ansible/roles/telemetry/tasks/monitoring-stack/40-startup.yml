@@ -1,0 +1,21 @@
+---
+- name: Telemetry  ----  Monitoring Stack  ----  Create and start services
+  community.docker.docker_compose_v2:
+    project_src: "{{ telemetry_stack_telemetry }}"
+    wait: true
+    wait_timeout: 60 # seconds
+  register: output
+
+- name: Telemetry  ----  Monitoring Stack  ----  Verify that services are running
+  ansible.builtin.assert:
+    that:
+      - prometheus_container.State == 'running'
+      - grafana_container.State == 'running'
+      - blackbox_exporter_container.State == 'running'
+  vars:
+    prometheus_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "prometheus") | first }}
+    grafana_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "grafana") | first }}
+    blackbox_exporter_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "blackbox_exporter") | first }}

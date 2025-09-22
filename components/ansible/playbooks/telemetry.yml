@@ -5,10 +5,11 @@
   become: false
   vars_files:
     - ../vars/global.yml
-    - ../vars/telemetry.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/telemetry/metrics.yml
+    - ansible.builtin.include_role:
+        name: ../roles/telemetry
+        tasks_from: main
 
 - name: Run telemetry stack (not the metrics) on dedicated host(s)
   hosts: admin-pi.fritz.box
@@ -16,8 +17,11 @@
   become: false
   vars_files:
     - ../vars/global.yml
-    - ../vars/telemetry.yml
   tasks:
 
-    - ansible.builtin.import_tasks: ../tasks/telemetry/telemetry.yml
-    - ansible.builtin.import_tasks: ../tasks/info/running-docker-containers.yml
+    - ansible.builtin.include_role:
+        name: ../roles/telemetry
+        tasks_from: monitoring-stack
+
+    - ansible.builtin.include_role:
+        name: ../roles/info

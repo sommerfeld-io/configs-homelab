@@ -1,0 +1,12 @@
+---
+- name: Docker  ----  Uninstall  ----  Purge deprecated docker installations
+  ansible.builtin.apt:
+    pkg:
+      - docker
+      - docker-compose
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+    update_cache: true

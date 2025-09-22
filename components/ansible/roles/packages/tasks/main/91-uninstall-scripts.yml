@@ -1,0 +1,14 @@
+---
+- name: Packages Main  ----  Uninstall  ----  Scripts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /usr/bin/switch-display-inputs
+    - /opt/scripts/switch-display-inputs.sh
+    - /usr/bin/system-info
+    - /opt/scripts/system-info.sh
+    - /opt/scripts
+    - /usr/bin/jarvis
+    - /opt/jarvis
+    - /tmp/bash-lib

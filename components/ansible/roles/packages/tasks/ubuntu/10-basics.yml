@@ -1,0 +1,27 @@
+---
+- name: Packages Ubuntu  ----  Basics  ----  Install software packages
+  ansible.builtin.apt:
+    pkg:
+      - tilix
+      - gnome-tweaks
+      - rar
+      - unrar
+      - p7zip
+      - p7zip-full
+      - p7zip-rar
+      - nmap
+    state: latest
+    update_cache: true
+
+- name: Packages Ubuntu  ----  Basics  ----  Install packages to control Dell monitors
+  ansible.builtin.apt:
+    pkg:
+      - ddcui
+      - libddcutil5
+      - ddcutil
+      - i2c-tools
+      - libi2c0
+      - libx86-1
+      - read-edid
+    state: latest
+    update_cache: true

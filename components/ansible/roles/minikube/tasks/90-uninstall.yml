@@ -1,0 +1,14 @@
+---
+- name: Minikube Setup  ----  Purge minikube
+  ansible.builtin.apt:
+    name: minikube
+    state: absent
+    purge: true
+
+- name: Minikube Setup  ----  Purge minikube (delete binary)
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /usr/local/bin/minikube
+    - /usr/local/bin/helm

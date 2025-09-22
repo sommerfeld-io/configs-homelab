@@ -1,0 +1,7 @@
+---
+# - name: Minikube  ----  Install
+#   ansible.builtin.import_tasks: 10-install.yml
+
+# ! Remove Minikube binary before installing a new version
+- name: Minikube  ----  Uninstall
+  ansible.builtin.import_tasks: 90-uninstall.yml
