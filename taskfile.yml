@@ -40,7 +40,8 @@ tasks:
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
-      - find . -type f -exec chmod +r {} +
+      - find . -type f -exec chmod ugo+r {} +
+      - find . -type d -exec chmod 755 {} +
 
   # ===============================================================================================
 
