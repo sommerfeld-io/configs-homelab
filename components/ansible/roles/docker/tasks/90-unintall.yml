@@ -1,5 +1,5 @@
 ---
-- name: Docker  ----  Docker wrapper scripts
+- name: Docker  ----  Uninstall  ----  Docker wrapper scripts
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent

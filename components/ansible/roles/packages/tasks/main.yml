@@ -1,0 +1,9 @@
+---
+- name: Packages  ----  Install basics
+  ansible.builtin.import_tasks: main/10-basics.yml
+
+- name: Packages  ----  Uninstall unneeded packages
+  ansible.builtin.import_tasks: main/90-uninstall.yml
+
+- name: Packages  ----  Uninstall scripts
+  ansible.builtin.import_tasks: main/91-uninstall-scripts.yml

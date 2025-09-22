@@ -1,5 +1,5 @@
 ---
-- name: Docker  ----  Purge deprecated docker installations
+- name: Docker  ----  Uninstall  ----  Purge deprecated docker installations
   ansible.builtin.apt:
     pkg:
       - docker

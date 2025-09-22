@@ -20,13 +20,13 @@
     - ansible.builtin.include_role:
         name: ../roles/git
 
-    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-packages.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-chrome.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-media-players.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-sublime.yml
-    - ansible.builtin.import_tasks: ../tasks/common-uninstall.yml
-    - ansible.builtin.import_tasks: ../tasks/ubuntu-uninstall.yml
+    - ansible.builtin.include_role:
+        name: ../roles/packages
+        tasks_from: main
+
+    - ansible.builtin.include_role:
+        name: ../roles/packages
+        tasks_from: ubuntu
 
     - ansible.builtin.include_role:
         name: ../roles/docker

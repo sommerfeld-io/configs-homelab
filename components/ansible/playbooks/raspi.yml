@@ -14,7 +14,13 @@
     - ansible.builtin.include_role:
         name: ../roles/filesystem
 
-    - ansible.builtin.import_tasks: ../tasks/common-packages.yml
+    - ansible.builtin.include_role:
+        name: ../roles/packages
+        tasks_from: main
+
+    - ansible.builtin.include_role:
+        name: ../roles/packages
+        tasks_from: raspi
 
     - ansible.builtin.include_role:
         name: ../roles/taskfile-dev

@@ -1,0 +1,25 @@
+---
+- name: Packages Ubuntu  ----  Dev Tools  ---- Install apt packages
+  ansible.builtin.apt:
+    pkg:
+      - asciidoctor
+      - filezilla
+      - pre-commit
+      - rpi-imager
+      # - yarn
+    state: latest
+    update_cache: true
+
+- name: Packages Ubuntu  ----  Dev Tools  ----Install snap packages
+  community.general.snap:
+    name:
+      - postman
+    state: present
+
+- name: Packages Ubuntu  ----  Dev Tools  ---- Install Snap packages (classic)
+  community.general.snap:
+    name:
+      - intellij-idea-ultimate
+      - intellij-idea-community
+    state: present
+    classic: true
