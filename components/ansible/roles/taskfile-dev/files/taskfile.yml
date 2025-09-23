@@ -93,6 +93,13 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
+  ssh:connect:tv-pi:
+    vars:
+      USER: sebastian
+      HOST: tv-pi.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
   # ===============================================================================================
 
   system:info:
