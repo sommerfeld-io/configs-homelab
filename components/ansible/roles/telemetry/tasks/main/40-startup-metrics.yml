@@ -9,9 +9,12 @@
 - name: Telemetry  ----  Metrics  ----  Verify that services are running
   ansible.builtin.assert:
     that:
+      - alloy_container.State == 'running'
       - node_exporter_container.State == 'running'
       - cadvisor_container.State == 'running'
   vars:
+    alloy_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "alloy") | first }}
     node_exporter_container: >-
       {{ output.containers | selectattr("Service", "equalto", "node_exporter") | first }}
     cadvisor_container: >-
