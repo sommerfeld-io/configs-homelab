@@ -14,6 +14,7 @@
     - export B="\e[94m"
     - export D="\e[0m"
     - export G='\033[1;30m'
+    - export HOSTNAME # Ensure is available for other processes and sub-shells
 
 - name: Bash  ----  Config  ----  Write aliases to .bash_aliases
   ansible.builtin.lineinfile:

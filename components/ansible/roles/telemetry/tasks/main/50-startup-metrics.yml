@@ -4,6 +4,8 @@
     project_src: "{{ telemetry_stack_metrics }}"
     wait: true
     wait_timeout: 60 # seconds
+  environment:
+    HOSTNAME: "{{ ansible_hostname }}"
   register: output
 
 - name: Telemetry  ----  Metrics  ----  Verify that services are running
