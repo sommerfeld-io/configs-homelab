@@ -93,10 +93,10 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:tv-pi:
+  ssh:connect:testrunner-01-pi:
     vars:
       USER: sebastian
-      HOST: tv-pi.fritz.box
+      HOST: testrunner-01-pi.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 

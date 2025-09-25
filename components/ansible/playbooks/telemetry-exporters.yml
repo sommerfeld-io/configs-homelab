@@ -1,0 +1,12 @@
+---
+- name: Common telemetry setup und services for all nodes (workstations and raspberry pi)
+  hosts: ubuntu_desktop:raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: ../roles/telemetry
+        tasks_from: main

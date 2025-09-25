@@ -22,7 +22,8 @@ To automate the setup of `admin-pi`, should run the following Ansible playbooks:
 
 - [ ] [Playbook "raspi"](../../ansible/raspi.md)
 - [ ] [Playbook "repositories"](../../ansible/repositories.md)
-- [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
+    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
+    - [ ] [Playbook "telemetry-stack"](../../ansible/telemetry-stack.md)
 
 Running these playbooks ensures a consistent, repeatable, and fully documented deployment process for your monitoring infrastructure.
 
@@ -31,4 +32,5 @@ In addition to the tasks listed in the [Setup Guide](index.md) and Ansible playb
 - [ ] Setup password-less ssh connections from `admin-pi`
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box`
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box`
+    - [ ] `ssh-copy-id sebastian@testrunner-01-pi.fritz.box`
     - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box` (to allow Ansible runs)

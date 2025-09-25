@@ -17,7 +17,7 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "raspi"](../../ansible/raspi.md)
     - [ ] [Playbook "repositories"](../../ansible/repositories.md)
-    - [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
+    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
 
 ## Follow-Up Todos
 

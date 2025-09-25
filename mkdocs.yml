@@ -74,7 +74,8 @@ nav:
       - Cleanup: ansible/cleanup.md
       - RasPi: ansible/raspi.md
       - Repositories: ansible/repositories.md
-      - Telemetry: ansible/telemetry.md
+      - Telemetry Exporters: ansible/telemetry-exporters.md
+      - Telemetry Stack: ansible/telemetry-stack.md
       - Ubuntu Desktop: ansible/ubuntu-desktop.md
       - Ubuntu Desktop Steam: ansible/ubuntu-desktop-steam.md
   - Talos Cluster:

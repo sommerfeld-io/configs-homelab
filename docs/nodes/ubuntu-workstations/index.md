@@ -43,7 +43,7 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "ubuntu-desktop"](../../ansible/ubuntu-desktop.md)
     - [ ] [Playbook "repositories"](../../ansible/repositories.md)
-    - [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
+    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
 
 ### Manual Follow-Up Todos
 
