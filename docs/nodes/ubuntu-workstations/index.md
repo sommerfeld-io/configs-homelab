@@ -53,6 +53,7 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
 - [ ] Use `task` to start Docker Compose services.
+- [ ] Login to Docker registry on the new machine: `docker login`
 
 #### Configure a keyboard shortcut to open a terminal in VSCode
 

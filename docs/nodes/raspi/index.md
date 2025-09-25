@@ -23,3 +23,4 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 
 - [ ] Add the new RasPi Node to `components/ansible/assets/global-taskfile.yml` for easy SSH connections.
 - [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
+- [ ] Login to Docker registry on the new machine: `docker login`
