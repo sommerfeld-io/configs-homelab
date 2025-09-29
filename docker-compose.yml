@@ -84,7 +84,7 @@ services:
   inspec:
     # template service to run from taskfile.yml
     # not intended to be run directly
-    image: chef/inspec:5.22.76
+    image: chef/inspec:5.23
     volumes: *volumes
     working_dir: *default-workdir
     tty: *tty
