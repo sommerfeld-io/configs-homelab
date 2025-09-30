@@ -29,10 +29,11 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Test connecting to my other Linux machines (with user "sebastian" being the user created while installing the OS).
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
-- [ ] Setup password-less ssh connections via from all machines. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
-    - [ ] `ssh-copy-id sebastian@caprica.fritz.box`
-    - [ ] `ssh-copy-id sebastian@kobol.fritz.box`
+- [ ] Setup password-less ssh connections via from `carpica`, `kobol` and `admin-pi`. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
+    - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
+    - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@testrunner-01-pi.fritz.box`
 
 ### Install SSH Server
 

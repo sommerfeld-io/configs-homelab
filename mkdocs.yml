@@ -69,7 +69,7 @@ nav:
       - Setup Guide: nodes/ubuntu-workstations/index.md
   - Raspberry Pi Nodes:
       - Setup Guide: nodes/raspi/index.md
-      - nodes/raspi/admin-pi.md
+      - nodes/raspi/raspi-fleet.md
   - Ansible Playbooks:
       - Cleanup: ansible/cleanup.md
       - RasPi: ansible/raspi.md
