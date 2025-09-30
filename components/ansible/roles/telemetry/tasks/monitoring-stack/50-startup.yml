@@ -3,7 +3,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ telemetry_stack_telemetry }}"
     wait: true
-    wait_timeout: 60 # seconds
+    wait_timeout: 300 # seconds
   environment:
     HOSTNAME: "{{ ansible_hostname }}"
   register: output
