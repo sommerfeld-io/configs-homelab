@@ -34,6 +34,7 @@ tasks:
     cmds:
       - docker compose down --remove-orphans
       - rm -rf .cache
+      - sudo rm -rf .ansible
       - rm -rf node_modules
       - rm -rf target
       - for: &inspec-profiles ['ansible-baseline', 'talos-baseline']
@@ -78,11 +79,9 @@ tasks:
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
       - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/ansible/roles/taskfile-dev/files/docker-stacks/portainer, TARGET_PATH: api-docs/docker-stacks, TITLE: 'Docker Stacks' }
+        vars: { BASEPATH: components/talos-cluster/manifests/apps, TARGET_PATH: api-docs/manifests/apps }
       - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/manifests/apps, TARGET_PATH: api-docs/manifests/apps, TITLE: 'Apps in Talos' }
-      - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/helm-charts, TARGET_PATH: api-docs/helm-charts, TITLE: 'Helm Charts' }
+        vars: { BASEPATH: components/talos-cluster/helm-charts, TARGET_PATH: api-docs/helm-charts }
 
   docs:run:
     desc: Run the documentation server
@@ -138,14 +137,6 @@ tasks:
   ansible:telemetry:exporters:
     vars:
       PLAYBOOK: telemetry-exporters.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    preconditions: *allowed-hosts
-    cmds: *ansible-cmd
-
-  ansible:telemetry:stack:
-    vars:
-      PLAYBOOK: telemetry-stack.yml
     desc: *ansible-desc
     dir: *ansible-dir
     preconditions: *allowed-hosts

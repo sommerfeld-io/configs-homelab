@@ -28,7 +28,7 @@ theme:
     - content.tabs.link
     # - navigation.tabs
     - navigation.footer
-    - navigation.expand
+    # - navigation.expand
     # - navigation.sections
     - navigation.tracking
 
@@ -69,25 +69,23 @@ nav:
       - Setup Guide: nodes/ubuntu-workstations/index.md
   - Raspberry Pi Nodes:
       - Setup Guide: nodes/raspi/index.md
-      - nodes/raspi/raspi-fleet.md
+      - Fleet Overview: nodes/raspi/fleet-overview.md
+      - admin-pi: nodes/raspi/admin-pi.md
+      - testrunner-01-pi: nodes/raspi/testrunner-01-pi.md
   - Ansible Playbooks:
       - Cleanup: ansible/cleanup.md
       - RasPi: ansible/raspi.md
       - Repositories: ansible/repositories.md
       - Telemetry Exporters: ansible/telemetry-exporters.md
-      - Telemetry Stack: ansible/telemetry-stack.md
       - Ubuntu Desktop: ansible/ubuntu-desktop.md
       - Ubuntu Desktop Steam: ansible/ubuntu-desktop-steam.md
-  - Talos Cluster:
+  - Talos Kubernetes Cluster:
       - Overview: nodes/talos-cluster/index.md
       - Installation: nodes/talos-cluster/installation.md
       - nodes/talos-cluster/howto/interact.md
       - nodes/talos-cluster/howto/deploy-application-with-argocd.md
       - nodes/talos-cluster/howto/update-argocd.md
       - Telemetry: nodes/talos-cluster/telemetry.md
-  - Api Docs:
-      - Docker Stacks:
-          - api-docs/docker-stacks/portainer.md
       - Apps in Talos:
           - api-docs/manifests/apps/hello-world-nginx.md
           - api-docs/manifests/apps/kroki.md

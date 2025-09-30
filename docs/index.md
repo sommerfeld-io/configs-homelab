@@ -5,7 +5,7 @@
 [file-issues]: https://github.com/sommerfeld-io/configs-homelab/issues
 [project-board]: https://github.com/orgs/sommerfeld-io/projects/1/views/1
 
-This project contains infrastructure configurations and docs for my workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
+This project contains infrastructure configurations and docs for our workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
 ![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/.assets/logo.png)
 
@@ -37,7 +37,7 @@ Workstations, servers and RasPi nodes are using similar operating systems.
 - Every workstation and server is using Ubuntu as operating system.
 - Every RasPi node is using Raspberry Pi OS (which is based on Debian) or Ubuntu Server as operating system.
 
-This is a constraint that is not likely to change in the future.
+This is a constraint that is not likely to change in the future. More detailed [Architecture Decision Records](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR) are documented as issues on GitHub.
 
 [![Ansible](https://img.shields.io/badge/Ansible-Automation-C44D58?logo=ansible&logoColor=white&style=flat-square)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Containers-4A90E2?logo=docker&logoColor=white&style=flat-square)](https://www.docker.com)

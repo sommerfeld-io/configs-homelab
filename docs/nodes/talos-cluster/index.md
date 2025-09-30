@@ -198,7 +198,7 @@ nwdiag {
 
 The Talos Raspberry Pi nodes should get their IP addresses from the router via DHCP. The router should assign the same IP address to the same device every time. This is not mandatory but recommended.
 
-## RasPi Rack Setup
+<!-- ## RasPi Rack Setup
 
 The nodes are sorted in the rack as follows (top to bottom):
 
@@ -217,7 +217,7 @@ rackdiag {
   1U;
   1: talos-w3\nRasPi 4;
 }
-```
+``` -->
 
 ## References / External Links
 

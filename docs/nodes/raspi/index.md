@@ -1,4 +1,4 @@
-# Raspberry Pi Nodes - Setup Guide
+# Raspberry Pi - Setup Guide
 
 Ubuntu Server is the operating system of choice for all RasPi Nodes.
 
@@ -12,8 +12,8 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 - [ ] Set `sebastian` as user and set the default password.
 - [ ] Configure hostname, Wifi settings and enable SSH server with password-based auth.
 - [ ] Insert the SD card into the Raspberry Pi and power it on.
-- [ ] Connect to new Raspberry Pi via `ssh sebastian@THE_HOSTNAME.fritz.box` from all relevant machines.
-- [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@THE_HOSTNAME.fritz.box` from all relevant machines.
+- [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
+- [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "raspi"](../../ansible/raspi.md)
     - [ ] [Playbook "repositories"](../../ansible/repositories.md)

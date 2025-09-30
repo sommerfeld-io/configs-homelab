@@ -53,14 +53,13 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
-- [ ] Use `task` to start Docker Compose services.
 - [ ] Login to Docker registry on the new machine: `docker login`
 
 #### Configure a keyboard shortcut to open a terminal in VSCode
 
 For example, if you want to use `Ctrl+Shift+T` as the shortcut to open a new terminal, you would press those keys when editing the shortcut. Please note that the keys you choose for the shortcut should not conflict with existing shortcuts. If they do, you will need to change or disable the conflicting shortcuts.
 
-- Open the Keyboard Shortcuts editor by pressing `Ctrl+K Ctrl+S` or by navigating to `File > Preferences > Keyboard Shortcuts`.
-- In the search box, type "terminal" to filter the commands related to the terminal.
-- Look for the command `workbench.action.terminal.new` which is the command to open a new terminal.
-- Click on the pencil icon next to the command to edit the shortcut. Press the keys you want to use as the shortcut, then press `Enter` to save.
+- [ ] Open the Keyboard Shortcuts editor by pressing `Ctrl+K Ctrl+S` or by navigating to `File > Preferences > Keyboard Shortcuts`.
+- [ ] In the search box, type "terminal" to filter the commands related to the terminal.
+- [ ] Look for the command `workbench.action.terminal.new` which is the command to open a new terminal.
+- [ ] Click on the pencil icon next to the command to edit the shortcut. Press the keys you want to use as the shortcut, then press `Enter` to save.

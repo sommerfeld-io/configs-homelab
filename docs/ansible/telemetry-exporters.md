@@ -2,7 +2,8 @@
 
 The telemetry playbook is responsible for setting metrics collection infrastructure across the environment.
 
-- Installs and configures metrics exporters (all machines & Raspberry Pi nodes)
-- Ensures that every machine and Raspberry Pi node in the environment exposes system and application metrics in a standardized way.
+## What it does
 
-This setup creates a distributed monitoring system where each node provides its own metrics, while the `admin-pi` acts as the central hub for collection, analysis, and visualization.
+- **Basic Services**: Configures services to expose logs and metrics on all Ubuntu desktop and Raspberry Pi nodes
+
+The playbook creates a distributed monitoring system where each node provides its own metrics, while the `admin-pi` acts as the central hub for collection, analysis, and visualization.

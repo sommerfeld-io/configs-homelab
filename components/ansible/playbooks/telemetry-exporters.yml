@@ -6,7 +6,6 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/telemetry
         tasks_from: main

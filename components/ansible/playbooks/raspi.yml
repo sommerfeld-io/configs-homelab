@@ -7,27 +7,20 @@
     - ../vars/global.yml
     - ../vars/raspi.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/bash
-
     - ansible.builtin.include_role:
         name: ../roles/filesystem
-
     - ansible.builtin.include_role:
         name: ../roles/packages
         tasks_from: main
-
     - ansible.builtin.include_role:
         name: ../roles/packages
         tasks_from: raspi
-
     - ansible.builtin.include_role:
         name: ../roles/taskfile-dev
-
     - ansible.builtin.include_role:
         name: ../roles/git
-
     - ansible.builtin.include_role:
         name: ../roles/docker
         tasks_from: main
@@ -40,7 +33,6 @@
     - ../vars/global.yml
     - ../vars/raspi.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/atuin
 
@@ -52,6 +44,18 @@
     - ../vars/global.yml
     - ../vars/raspi.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/ansible
+
+- name: Install and configure admin-pi specifics (non-root)
+  hosts: admin-pi.fritz.box
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/global.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/telemetry
+        tasks_from: monitoring-stack
+    - ansible.builtin.include_role:
+        name: ../roles/info

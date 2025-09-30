@@ -6,7 +6,6 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/filesystem
 
@@ -17,7 +16,6 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/git-repositories
       vars:
@@ -41,7 +39,6 @@
   vars_files:
     - ../vars/global.yml
   tasks:
-
     - ansible.builtin.include_role:
         name: ../roles/git-repositories
       vars:
