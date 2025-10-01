@@ -32,12 +32,5 @@
     },
 
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",
-    "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post-start.sh",
-
-    "forwardPorts": [3990, 3080],
-    "portsAttributes": {
-        "3990": {
-            "label": "3990 Portainer"
-        }
-    }
+    "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post-start.sh"
 }
