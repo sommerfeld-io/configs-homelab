@@ -35,6 +35,7 @@ tasks:
       - docker compose down --remove-orphans
       - rm -rf .cache
       - sudo rm -rf .ansible
+      - sudo rm -f .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
       - for: &inspec-profiles ['ansible-baseline', 'talos-baseline']
