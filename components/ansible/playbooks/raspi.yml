@@ -8,6 +8,8 @@
     - ../vars/raspi.yml
   tasks:
     - ansible.builtin.include_role:
+        name: ../roles/hardening
+    - ansible.builtin.include_role:
         name: ../roles/bash
     - ansible.builtin.include_role:
         name: ../roles/filesystem
