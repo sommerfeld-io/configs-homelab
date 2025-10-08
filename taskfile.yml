@@ -174,10 +174,11 @@ tasks:
       HOST: caprica.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - task: internal:inspec:run-profile
+      - for: ['ansible-baseline']
+        task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
-          PROFILE: ansible-baseline
+          PROFILE: '{{ .ITEM }}'
 
   inspec:run:kobol:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
@@ -185,10 +186,11 @@ tasks:
       HOST: kobol.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - task: internal:inspec:run-profile
+      - for: ['ansible-baseline']
+        task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
-          PROFILE: ansible-baseline
+          PROFILE: '{{ .ITEM }}'
 
   inspec:run:admin-pi:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
@@ -196,14 +198,11 @@ tasks:
       HOST: admin-pi.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - task: internal:inspec:run-profile
+      - for: ['raspi-baseline', 'admin-pi']
+        task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
-          PROFILE: raspi-baseline
-      - task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: admin-pi
+          PROFILE: '{{ .ITEM }}'
 
   inspec:run:testrunner-01-pi:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
@@ -211,10 +210,11 @@ tasks:
       HOST: testrunner-01-pi.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - task: internal:inspec:run-profile
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
-          PROFILE: raspi-baseline
+          PROFILE: '{{ .ITEM }}'
 
   inspec:run:talos:
     desc: HOST ONLY | Run InSpec against Talos cluster
