@@ -51,7 +51,7 @@
 		"docs/about/**",
 		"docs/nodes/**",
 
-        "tests/inspec/**",
+        "tests/inspec/*/controls",
 
 		"node_modules/**",
 		"public/**",

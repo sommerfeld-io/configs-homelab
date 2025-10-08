@@ -1,0 +1,36 @@
+---
+name: raspi-baseline
+title: raspi-baseline profile
+maintainer: Sebastian Sommerfeld
+copyright: sommerfeld.io
+copyright_email: sebastian@sommerfeld.io
+license: MIT
+summary: raspi-baseline compliance profile for all raspberry pi nodes that are installed with ansible
+version: 0.56.2
+supports:
+  platform: os
+depends:
+  - name: linux-baseline
+    git: https://github.com/dev-sec/linux-baseline.git
+    tag: 2.9.0
+  - name: linux-essentials
+    git: https://github.com/sommerfeld-io/inspec-profiles.git
+    branch: main
+    relative_path: profiles/linux-essentials
+inputs:
+  - name: username
+    value: sebastian
+    description: Should correspond to the {{ ansible_user }} variable in ansible
+  - name: emailAddress
+    value: sebastian@sommerfeld.io
+    description: Email address of the user
+  - name: default_mode
+    value: '0755' # u=rwx,g=rx,o=rx
+    description: The mode for the files and directories
+  # Override linux-baseline inputs
+  - name: login_defs_passmaxdays
+    value: '99999'
+    profile: linux-baseline
+  - name: login_defs_passmindays
+    value: '0'
+    profile: linux-baseline

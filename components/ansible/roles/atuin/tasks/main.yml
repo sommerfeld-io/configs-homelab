@@ -6,6 +6,12 @@
     executable: /bin/bash
     creates: "/home/{{ ansible_user }}/.atuin/bin/atuin"
 
+- name: Atuin  ----  Set executable permissions on binary
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.atuin/bin/atuin"
+    mode: '0755'
+  ignore_errors: true
+
 - name: Atuin  ----  Check if config file exists
   stat:
     path: "/home/{{ ansible_user }}/.config/atuin/config.toml"

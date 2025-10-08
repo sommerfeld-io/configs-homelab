@@ -7,5 +7,12 @@
     update: true
     key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
     accept_hostkey: true
-  with_items:
+  loop:
     - { dest: "{{ telemetry_dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }
+
+- name: Atuin  ----  Set permissions on repo folders
+  ansible.builtin.file:
+    path: "{{ item.dest }}/{{ item.repo }}"
+    mode: '0770'
+  loop:
+    - { dest: "{{ telemetry_dot_repos_dir }}", repo: "telemetry" }

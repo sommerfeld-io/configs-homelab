@@ -179,6 +179,25 @@ tasks:
     cmds:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
+  inspec:raspi-baseline:
+    desc: HOST ONLY | Run InSpec against all nodes
+    deps:
+      - task: inspec:check
+    preconditions: *allowed-hosts
+    cmds:
+      - for: ['admin-pi.fritz.box', 'testrunner-01-pi.fritz.box']
+        task: inspec:raspi-baseline:{{ .ITEM }}
+
+  inspec:raspi-baseline:*:
+    desc: HOST ONLY | Run InSpec against single node (* = FQDN)
+    vars:
+      HOST: '{{ index .MATCH 0 }}'
+      USER: sebastian
+      PROFILE: raspi-baseline
+    preconditions: *allowed-hosts
+    cmds:
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
+
   inspec:talos-baseline:
     desc: HOST ONLY | Run InSpec against Talos cluster
     vars:
