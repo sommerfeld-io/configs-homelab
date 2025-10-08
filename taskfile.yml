@@ -233,7 +233,6 @@ tasks:
     cmds:
       - vagrant validate
       - vagrant up
-      - vagrant ssh
 
   virtual-talos-admin:stop:
     desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
