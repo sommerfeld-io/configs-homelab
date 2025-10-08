@@ -38,7 +38,7 @@ tasks:
       - sudo rm -rf .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
-      - for: &inspec-profiles ['ansible-baseline', 'talos-baseline']
+      - for: &inspec-profiles ['ansible-baseline', 'raspi-baseline', 'admin-pi', 'talos-baseline']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
@@ -162,8 +162,6 @@ tasks:
 
   inspec:ansible-baseline:
     desc: HOST ONLY | Run InSpec against all nodes
-    deps:
-      - task: inspec:check
     preconditions: *allowed-hosts
     cmds:
       - for: ['caprica.fritz.box', 'kobol.fritz.box']
@@ -181,8 +179,6 @@ tasks:
 
   inspec:raspi-baseline:
     desc: HOST ONLY | Run InSpec against all nodes
-    deps:
-      - task: inspec:check
     preconditions: *allowed-hosts
     cmds:
       - for: ['admin-pi.fritz.box', 'testrunner-01-pi.fritz.box']
@@ -196,6 +192,17 @@ tasks:
       PROFILE: raspi-baseline
     preconditions: *allowed-hosts
     cmds:
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
+
+  inspec:admin-pi:
+    desc: HOST ONLY | Run InSpec against all nodes
+    vars:
+      HOST: 'admin-pi.fritz.box'
+      USER: sebastian
+      PROFILE: admin-pi
+    preconditions: *allowed-hosts
+    cmds:
+      - task: inspec:raspi-baseline:{{ .HOST }}
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
   inspec:talos-baseline:

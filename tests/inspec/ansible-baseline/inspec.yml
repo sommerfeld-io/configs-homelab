@@ -18,15 +18,6 @@ depends:
     branch: main
     relative_path: profiles/linux-essentials
 inputs:
-  - name: username
-    value: sebastian
-    description: Should correspond to the {{ ansible_user }} variable in ansible
-  - name: emailAddress
-    value: sebastian@sommerfeld.io
-    description: Email address of the user
-  - name: default_mode
-    value: '0755' # u=rwx,g=rx,o=rx
-    description: The mode for the files and directories
   # Override linux-baseline inputs
   - name: login_defs_passmaxdays
     value: '99999'

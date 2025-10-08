@@ -62,7 +62,7 @@ jobs:
       INSPEC_IMAGE: chef/inspec:5.22.76
     strategy:
       matrix:
-        profile: ['ansible-baseline', 'talos-baseline']
+        profile: ['ansible-baseline', 'raspi-baseline', 'admin-pi', 'talos-baseline']
     steps:
       - name: Checkout code
         uses: actions/checkout@v5

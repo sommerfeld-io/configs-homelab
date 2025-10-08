@@ -1,0 +1,18 @@
+---
+name: admin-pi
+title: admin-pi profile
+maintainer: Sebastian Sommerfeld
+copyright: sommerfeld.io
+copyright_email: sebastian@sommerfeld.io
+license: MIT
+summary: admin-pi compliance profile for the admin-pi node that are installed with ansible
+version: 0.56.2
+supports:
+  platform: os
+inputs:
+  - name: username
+    value: sebastian
+    description: Should correspond to the {{ ansible_user }} variable in ansible
+  - name: default_mode
+    value: '0755' # u=rwx,g=rx,o=rx
+    description: The mode for the files and directories

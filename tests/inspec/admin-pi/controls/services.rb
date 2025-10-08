@@ -1,7 +1,6 @@
 title 'HTTP Service Check'
 
 username = input('username', value: 'default_user')
-emailAddress = input('emailAddress', value: 'noreply@example.com')
 mode = '0770'
 
 control 'services-01' do
@@ -30,8 +29,9 @@ control 'http-01' do
   desc 'Checks if the HTTP services are listening and are accessible'
 
   ports = [
-    '9100', # node exporter
-    '9110', # cAdvisor, 307 redirect to /containers
+    '3000', # grafana
+    '9090', # prometheus
+    '9115', # blackbox exporter
   ]
   ports.each do |port|
     describe port(port) do
@@ -46,7 +46,7 @@ control 'http-01' do
     end
 
     describe http("http://localhost:#{port}") do
-      its('status') { should be_in [200, 307] }
+      its('status') { should be_in [200, 302, 307] }
     end
   end
 end
