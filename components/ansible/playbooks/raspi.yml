@@ -24,6 +24,9 @@
     - ansible.builtin.include_role:
         name: ../roles/docker
         tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../roles/cron
+        tasks_from: main
 
 - name: Install and configure nodes (non-root)
   hosts: raspi

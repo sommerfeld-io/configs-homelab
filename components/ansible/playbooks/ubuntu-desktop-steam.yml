@@ -4,14 +4,12 @@
   gather_facts: true
   become: true
   tasks:
-
     - name: Install  ----  Steam
       ansible.builtin.apt:
         pkg:
           - steam
         state: latest
         update_cache: true
-
     - name: Info  ----  Post installation message
       ansible.builtin.debug:
         msg:
