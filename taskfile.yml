@@ -160,52 +160,63 @@ tasks:
       - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
-  inspec:ansible-baseline:
-    desc: HOST ONLY | Run InSpec against all nodes
-    preconditions: *allowed-hosts
-    cmds:
-      - for: ['caprica.fritz.box', 'kobol.fritz.box']
-        task: inspec:ansible-baseline:{{ .ITEM }}
-
-  inspec:ansible-baseline:*:
-    desc: HOST ONLY | Run InSpec against single node (* = FQDN)
+  internal:inspec:run-profile:
+    desc: 'Run the profile'
+    internal: true
     vars:
-      HOST: '{{ index .MATCH 0 }}'
       USER: sebastian
-      PROFILE: ansible-baseline
-    preconditions: *allowed-hosts
     cmds:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
 
-  inspec:raspi-baseline:
-    desc: HOST ONLY | Run InSpec against all nodes
-    preconditions: *allowed-hosts
-    cmds:
-      - for: ['admin-pi.fritz.box', 'testrunner-01-pi.fritz.box']
-        task: inspec:raspi-baseline:{{ .ITEM }}
-
-  inspec:raspi-baseline:*:
-    desc: HOST ONLY | Run InSpec against single node (* = FQDN)
+  inspec:run:caprica:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: '{{ index .MATCH 0 }}'
-      USER: sebastian
-      PROFILE: raspi-baseline
+      HOST: caprica.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
+      - task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: ansible-baseline
 
-  inspec:admin-pi:
-    desc: HOST ONLY | Run InSpec against all nodes
+  inspec:run:kobol:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: 'admin-pi.fritz.box'
-      USER: sebastian
-      PROFILE: admin-pi
+      HOST: kobol.fritz.box
     preconditions: *allowed-hosts
     cmds:
-      - task: inspec:raspi-baseline:{{ .HOST }}
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
+      - task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: ansible-baseline
 
-  inspec:talos-baseline:
+  inspec:run:admin-pi:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: admin-pi.fritz.box
+    preconditions: *allowed-hosts
+    cmds:
+      - task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: raspi-baseline
+      - task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: admin-pi
+
+  inspec:run:testrunner-01-pi:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: testrunner-01-pi.fritz.box
+    preconditions: *allowed-hosts
+    cmds:
+      - task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: raspi-baseline
+
+  inspec:run:talos:
     desc: HOST ONLY | Run InSpec against Talos cluster
     vars:
       PROFILE: talos-baseline
