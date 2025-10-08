@@ -6,7 +6,7 @@ copyright: sommerfeld.io
 copyright_email: sebastian@sommerfeld.io
 license: MIT
 summary: admin-pi compliance profile for the admin-pi node that are installed with ansible
-version: 0.56.2
+version: 0.57.0
 supports:
   platform: os
 inputs:
