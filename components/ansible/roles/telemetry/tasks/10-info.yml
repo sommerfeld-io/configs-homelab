@@ -4,4 +4,3 @@
     msg:
       - "Hostname: {{ ansible_hostname }}"
       - "FQDN: {{ ansible_fqdn }}"
-      - "HOSTNAME environment variable: {{ ansible_env.HOSTNAME | default('not set') }}"

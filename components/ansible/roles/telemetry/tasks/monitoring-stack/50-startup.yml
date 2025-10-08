@@ -15,6 +15,9 @@
       - grafana_container.State == 'running'
       - blackbox_exporter_container.State == 'running'
   vars:
+    ## Attribute `Services` refers to the name of the respective service in the docker-compose.yml file. So the
+    ## they must match those defined in https://github.com/sommerfeld-io/telemetry/blob/main/components/telemetry/docker-compose.yml.
+    ## Attribute `State` refers to the current state of the container (e.g. running, exited, etc.).
     prometheus_container: >-
       {{ output.containers | selectattr("Service", "equalto", "prometheus") | first }}
     grafana_container: >-
