@@ -15,5 +15,6 @@
       - python3-pip # python package manager
       - vim
       - jq
+      - auditd
     state: latest
     update_cache: true
