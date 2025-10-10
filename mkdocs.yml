@@ -65,13 +65,10 @@ extra:
 
 nav:
   - Introduction: index.md
-  - Ubuntu Workstations:
-      - Setup Guide: nodes/ubuntu-workstations/index.md
-  - Raspberry Pi Nodes:
-      - Setup Guide: nodes/raspi/index.md
-      - Fleet Overview: nodes/raspi/fleet-overview.md
-      - admin-pi: nodes/raspi/admin-pi.md
-      - testrunner-01-pi: nodes/raspi/testrunner-01-pi.md
+  # - Ubuntu Workstations:
+  #     - Setup Guide: nodes/ubuntu-workstations/index.md
+  - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
+  - nodes/raspi/index.md
   - Ansible Playbooks:
       - Cleanup: ansible/cleanup.md
       - RasPi: ansible/raspi.md

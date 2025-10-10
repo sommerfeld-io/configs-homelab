@@ -1,6 +1,6 @@
 # Ansible Playbook - RasPi
 
-This Ansible playbook configures all Raspberry Pi nodes in the home lab infrastructure with essential system components and services, while providing specialized administrative capabilities to the [`admin-pi`](../nodes/raspi/admin-pi.md) node.
+This Ansible playbook configures all Raspberry Pi nodes in the home lab infrastructure with essential system components and services, while providing specialized administrative capabilities to the [`admin-pi`](../nodes/raspi/index.md) node.
 
 The playbook establishes a standardized base configuration across all Raspberry Pi devices and transforms the `admin-pi` into the central management hub for the entire infrastructure.
 

@@ -204,10 +204,34 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:testrunner-01-pi:
+  inspec:run:runner-06-pi5:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: testrunner-01-pi.fritz.box
+      HOST: runner-06-pi5.fritz.box
+    preconditions: *allowed-hosts
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:runner-04-pi:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: runner-04-pi.fritz.box
+    preconditions: *allowed-hosts
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:runner-05-pi:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: runner-05-pi.fritz.box
     preconditions: *allowed-hosts
     cmds:
       - for: ['raspi-baseline']

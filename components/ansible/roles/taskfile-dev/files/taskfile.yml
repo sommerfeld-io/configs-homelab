@@ -93,10 +93,24 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:testrunner-01-pi:
+  ssh:connect:runner-04-pi:
     vars:
       USER: sebastian
-      HOST: testrunner-01-pi.fritz.box
+      HOST: runner-04-pi.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:runner-05-pi:
+    vars:
+      USER: sebastian
+      HOST: runner-05-pi.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:runner-06-pi5:
+    vars:
+      USER: sebastian
+      HOST: runner-06-pi5.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 

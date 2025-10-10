@@ -33,7 +33,9 @@ The setup wizard takes care of the hostname, network settings, ssh, etc.
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@testrunner-01-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@runner-04-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@runner-05-pi.fritz.box`
+    - [ ] `ssh-copy-id sebastian@runner-06-pi5.fritz.box`
 
 ### Install SSH Server
 

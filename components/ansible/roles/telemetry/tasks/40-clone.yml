@@ -5,14 +5,16 @@
     dest: "{{ item.dest }}/{{ item.repo }}"
     clone: true
     update: true
+    force: true
     key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
     accept_hostkey: true
   loop:
     - { dest: "{{ telemetry_dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }
 
-- name: Atuin  ----  Set permissions on repo folders
+- name: Telemetry  ----  Set permissions on repo folders
   ansible.builtin.file:
     path: "{{ item.dest }}/{{ item.repo }}"
-    mode: '0770'
+    mode: '0775'
+    recurse: true
   loop:
     - { dest: "{{ telemetry_dot_repos_dir }}", repo: "telemetry" }

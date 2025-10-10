@@ -8,3 +8,8 @@
     size: 4096
     state: present
     force: false
+
+- name: Bash  ----  SSH  ----  Set permissions for public key
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.ssh/id_rsa.pub"
+    mode: '0640'

@@ -1,5 +1,5 @@
 ---
-- name: Config  ----  Create directories
+- name: Telemetry  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory

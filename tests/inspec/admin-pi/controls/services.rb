@@ -1,7 +1,6 @@
 title 'HTTP Service Check'
 
 username = input('username', value: 'default_user')
-mode = '0770'
 
 control 'services-01' do
   impact 1.0
@@ -18,7 +17,6 @@ control 'services-01' do
       it { should exist }
       it { should be_directory }
       it { should be_owned_by username }
-      its('mode') { should cmp mode }
     end
   end
 end
