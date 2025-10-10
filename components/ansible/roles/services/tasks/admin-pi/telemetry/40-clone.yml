@@ -1,5 +1,5 @@
 ---
-- name: Telemetry  ----  Clone repos (and pull updates if already exists)
+- name: Services  ----  Telemetry Metrics  ----  Clone repos (and pull updates if already exists)
   ansible.builtin.git:
     repo: "{{ github }}:{{ item.org }}/{{ item.repo }}.git"
     dest: "{{ item.dest }}/{{ item.repo }}"
@@ -9,12 +9,12 @@
     key_file: "/home/{{ ansible_user }}/.ssh/id_rsa"
     accept_hostkey: true
   loop:
-    - { dest: "{{ telemetry_dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }
+    - { dest: "{{ services_dot_repos_dir }}", org: "sommerfeld-io", repo: "telemetry" }
 
-- name: Telemetry  ----  Set permissions on repo folders
+- name: Services  ----  Telemetry Metrics  ----  Set permissions on repo folders
   ansible.builtin.file:
     path: "{{ item.dest }}/{{ item.repo }}"
     mode: '0775'
     recurse: true
   loop:
-    - { dest: "{{ telemetry_dot_repos_dir }}", repo: "telemetry" }
+    - { dest: "{{ services_dot_repos_dir }}", repo: "telemetry" }

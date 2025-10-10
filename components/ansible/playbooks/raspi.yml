@@ -60,7 +60,7 @@
     - ../vars/global.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/telemetry
-        tasks_from: monitoring-stack
+        name: ../roles/services
+        tasks_from: admin-pi
     - ansible.builtin.include_role:
         name: ../roles/info

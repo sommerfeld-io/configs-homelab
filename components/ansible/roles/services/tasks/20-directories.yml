@@ -1,5 +1,5 @@
 ---
-- name: Telemetry  ----  Create directories
+- name: Services  ----  Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -7,4 +7,4 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - "{{ telemetry_dot_repos_dir }}"
+    - "{{ services_dot_repos_dir }}"

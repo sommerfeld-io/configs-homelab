@@ -1,5 +1,5 @@
 ---
-- name: Telemetry  ----  Info  ----  Environment
+- name: Services  ----  Info  ----  Environment
   ansible.builtin.debug:
     msg:
       - "Hostname: {{ ansible_hostname }}"

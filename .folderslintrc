@@ -14,7 +14,7 @@
 		"components/ansible",
         "components/ansible/roles/*/defaults",
         "components/ansible/roles/*/files/**",
-        "components/ansible/roles/*/tasks/*",
+        "components/ansible/roles/*/tasks/**",
         "components/ansible/roles/*/templates",
         "components/ansible/roles/*/vars",
 		"components/ansible/playbooks",

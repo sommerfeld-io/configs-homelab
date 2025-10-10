@@ -7,5 +7,5 @@
     - ../vars/global.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/telemetry
+        name: ../roles/services
         tasks_from: main

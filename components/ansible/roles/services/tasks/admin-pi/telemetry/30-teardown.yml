@@ -1,0 +1,13 @@
+---
+- name: Services  ----  Telemetry Monitoring Stack  ----  Check if docker-compose.yml file exists
+  stat:
+    path: "{{ services_stack_telemetry }}/docker-compose.yml"
+  register: compose_file
+
+- name: Services  ----  Telemetry Monitoring Stack  ----  Tear down existing services
+  community.docker.docker_compose_v2:
+    project_src: "{{ services_stack_telemetry }}"
+    state: absent
+    remove_orphans: true
+    remove_volumes: false
+  when: compose_file.stat.exists
