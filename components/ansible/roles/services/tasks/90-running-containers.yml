@@ -1,0 +1,15 @@
+---
+- name: Services  ----  services_container. Info  ----  Get services_container. information
+  community.docker.docker_host_info:
+    services_container.s: true
+  register: services_docker_info
+
+- name: "Services  ----  services_container. Info  ----  Display running services_container.s"
+  debug:
+    msg: "services_container.: {{ services_container.Names[0][1:] }} | Image: {{ services_container.Image }} | Status: {{ services_container.Status }}"
+    verbosity: 0
+  loop: "{{ services_docker_info.services_container.s }}"
+  loop_control:
+    loop_var: services_container
+    label: "{{ services_container.Names[0][1:] }}"
+  when: services_docker_info.services_container.s | length > 0

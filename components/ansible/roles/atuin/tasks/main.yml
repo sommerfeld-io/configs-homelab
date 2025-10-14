@@ -15,7 +15,7 @@
 - name: Atuin  ----  Check if config file exists
   stat:
     path: "/home/{{ ansible_user }}/.config/atuin/config.toml"
-  register: config_file
+  register: atuin_config_file
 
 - name: Atuin  ----  Set session as default scope
   ansible.builtin.lineinfile:
@@ -24,4 +24,4 @@
     line: "{{ item }}"
   with_items:
     - filters = [ "session", "directory", "workspace", "host",  "global" ]
-  when: config_file.stat.exists
+  when: atuin_config_file.stat.exists

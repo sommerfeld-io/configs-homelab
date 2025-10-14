@@ -36,9 +36,9 @@
 
     - name: Virtualization  ----  Vagrant ---- Verify installation
       ansible.builtin.command: vagrant --version
-      register: vagrant_version_output
+      register: virtualization_vagrant_version_output
       changed_when: false
 
     - name: Virtualization  ----  Vagrant ---- Print version
       ansible.builtin.debug:
-        msg: "{{ vagrant_version_output.stdout }}"
+        msg: "{{ virtualization_vagrant_version_output.stdout }}"

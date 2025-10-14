@@ -61,6 +61,4 @@
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/services
-        tasks_from: admin-pi
-    - ansible.builtin.include_role:
-        name: ../roles/info
+        tasks_from: telemetry

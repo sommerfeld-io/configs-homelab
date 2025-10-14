@@ -13,3 +13,6 @@
 
 - name: Services  ----  Startup
   ansible.builtin.import_tasks: main/metrics/50-startup.yml
+
+- name: Services  ----  Info
+  ansible.builtin.import_tasks: 90-running-containers.yml
