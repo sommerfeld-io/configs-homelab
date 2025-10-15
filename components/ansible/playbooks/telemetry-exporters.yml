@@ -4,7 +4,7 @@
   gather_facts: true
   become: false
   vars_files:
-    - ../vars/global.yml
+    - ../vars/main.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/services

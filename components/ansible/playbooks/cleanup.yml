@@ -4,7 +4,7 @@
   gather_facts: true
   become: false
   vars_files:
-    - ../vars/global.yml
+    - ../vars/main.yml
   tasks:
 
     - name: Cleanup  ----  Docker  ----  Remove all build caches
@@ -24,7 +24,7 @@
   gather_facts: true
   become: true
   vars_files:
-    - ../vars/global.yml
+    - ../vars/main.yml
   tasks:
 
     - name: Cleanup  ----  Filesystem  ----  Remove installer files and scripts from /tmp
@@ -43,7 +43,7 @@
   gather_facts: true
   become: false
   vars_files:
-    - ../vars/global.yml
+    - ../vars/main.yml
   tasks:
 
     - name: Cleanup  ----  Vagrant  ----  Remove stale vagrant box images
