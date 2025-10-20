@@ -135,6 +135,14 @@ tasks:
     preconditions: *allowed-hosts
     cmds: *ansible-cmd
 
+  ansible:telemetry:
+    vars:
+      PLAYBOOK: telemetry.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    preconditions: *allowed-hosts
+    cmds: *ansible-cmd
+
   ansible:telemetry:exporters:
     vars:
       PLAYBOOK: telemetry-exporters.yml

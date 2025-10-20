@@ -52,17 +52,6 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible
 
-- name: Install and configure admin-pi specifics (non-root)
-  hosts: admin-pi.fritz.box
-  gather_facts: true
-  become: false
-  vars_files:
-    - ../vars/main.yml
-  tasks:
-    - ansible.builtin.include_role:
-        name: ../roles/services
-        tasks_from: telemetry
-
 - name: Install and configure runner-04-pi specifics (non-root)
   hosts: runner-04-pi.fritz.box
   gather_facts: true
