@@ -7,7 +7,7 @@
     group: "{{ ansible_user }}"
     mode: u=rwx,g=rx,o=rx
   with_items:
-    - "/home/{{ ansible_user }}/.docker-stacks"
+    - "{{ docker_stacks_dir }}"
 
 - name: Task  ----  Configure  ----  Copy taskfile and configs
   ansible.builtin.copy:
@@ -17,7 +17,7 @@
     group: "{{ ansible_user }}"
     mode: u=rw,g=r,o=r
   with_items:
-    - { src: "../files/docker-stacks/portainer", dest: "/home/{{ ansible_user }}/.docker-stacks" }
+    - { src: "../files/docker-stacks/portainer", dest: "{{ docker_stacks_dir }}" }
     - { src: "../files/taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
 
 - name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc

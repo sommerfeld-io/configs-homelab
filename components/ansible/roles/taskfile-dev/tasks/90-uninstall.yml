@@ -4,5 +4,5 @@
     path: "{{ item }}"
     state: absent
   with_items:
-    - "/home/{{ ansible_user }}/.docker-stacks/ops"
-    - "/home/{{ ansible_user }}/.docker-stacks/portainer/assets"
+    - "{{ docker_stacks_dir }}/ops"
+    - "{{ docker_stacks_dir }}/portainer/assets"

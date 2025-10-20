@@ -1,0 +1,20 @@
+---
+- name: Services  ----  Petclinic  ----  Create and start services
+  community.docker.docker_compose_v2:
+    project_src: "{{ services_stack_petclinic }}"
+    wait: true
+    wait_timeout: 300 # seconds
+  environment:
+    HOSTNAME: "{{ ansible_hostname }}"
+  register: output
+
+- name: Services  ----  Petclinic  ----  Verify that services are running
+  ansible.builtin.assert:
+    that:
+      - petclinic_container.State == 'running'
+  vars:
+    ## Attribute `Services` refers to the name of the respective service in the docker-compose.yml file. So the
+    ## they must match those defined in https://github.com/sommerfeld-io/telemetry/blob/main/components/telemetry/docker-compose.yml.
+    ## Attribute `State` refers to the current state of the container (e.g. running, exited, etc.).
+    petclinic_container: >-
+      {{ output.containers | selectattr("Service", "equalto", "petclinic") | first }}

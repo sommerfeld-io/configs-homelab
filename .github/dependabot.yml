@@ -17,6 +17,11 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: components/ansible/assets/docker-stacks/portainer
+    directory: components/ansible/roles/taskfile-dev/files/docker-stacks/portainer
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker-compose
+    directory: components/ansible/roles/services/files/docker-stacks/petclinic
     schedule:
       interval: weekly
