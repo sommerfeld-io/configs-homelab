@@ -174,7 +174,7 @@ tasks:
     vars:
       USER: sebastian
     cmds:
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept # --no-color
 
   inspec:run:caprica:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
