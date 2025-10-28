@@ -90,14 +90,14 @@ services:
     tty: *tty
 
   docs-build:
-    image: sommerfeldio/mkdocs:0.11.0
+    image: sommerfeldio/mkdocs:0.12.0
     volumes: *volumes
     working_dir: *default-workdir
     command: build
     tty: *tty
 
   docs-dev-server:
-    image: sommerfeldio/mkdocs:0.11.0
+    image: sommerfeldio/mkdocs:0.12.0
     volumes: *volumes
     working_dir: *default-workdir
     ports:
