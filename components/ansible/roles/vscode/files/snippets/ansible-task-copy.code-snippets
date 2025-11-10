@@ -30,5 +30,5 @@
       "$0"
     ],
     "description": "Ansible task template for copying multiple files using a loop",
-  }
+  },
 }

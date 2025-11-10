@@ -20,7 +20,7 @@
       "main \"$@\"",
       "",
     ],
-    "description": "basic bash script"
+    "description": "Basic bash script skeleton"
   },
   "Bash function": {
     "scope": "shellscript",
@@ -33,6 +33,6 @@
       "}",
       "",
     ],
-    "description": "new function"
-  }
+    "description": "New function skeleton"
+  },
 }

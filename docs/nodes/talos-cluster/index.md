@@ -160,7 +160,6 @@ Repeater -right-> Switch: Ethernet
 skinparam backgroundColor transparent
 skinparam arrowColor #E2E4E9
 
-
 nwdiag {
   group switch_cable {
     color = "#999";

@@ -1,7 +1,7 @@
 {
   "Markdown table": {
     "scope": "markdown",
-    "prefix": "markdown-table",
+    "prefix": "md-table",
     "body": [
       "| ${1:key} | ${2:value} |",
       "|----------|------------|",
@@ -12,11 +12,21 @@
   },
   "Markdown GitHub admonition": {
     "scope": "markdown",
-    "prefix": "markdown-github-admonition",
+    "prefix": "md-github-admonition",
     "body": [
       "> **:${1:icon}: ${2:type}:** ${3:content}",
       "",
     ],
-    "description": "Markdown admonition in GitHub style"
-  }
+    "description": "Admonition in GitHub style in Markdown"
+  },
+  "Markdown code block": {
+    "scope": "markdown",
+    "prefix": "md-code-block",
+    "body": [
+      "```${1:language}",
+      "```",
+      "",
+    ],
+    "description": "Code block snippet in Markdown"
+  },
 }
