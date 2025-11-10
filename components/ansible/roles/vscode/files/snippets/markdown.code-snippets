@@ -1,0 +1,22 @@
+{
+  "Markdown table": {
+    "scope": "markdown",
+    "prefix": "markdown-table",
+    "body": [
+      "| ${1:key} | ${2:value} |",
+      "|----------|------------|",
+      "| ...      | ...        |",
+      "",
+    ],
+    "description": "Markdown table snippet"
+  },
+  "Markdown GitHub admonition": {
+    "scope": "markdown",
+    "prefix": "markdown-github-admonition",
+    "body": [
+      "> **:${1:icon}: ${2:type}:** ${3:content}",
+      "",
+    ],
+    "description": "Markdown admonition in GitHub style"
+  }
+}
