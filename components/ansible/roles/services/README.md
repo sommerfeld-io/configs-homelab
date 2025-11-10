@@ -7,4 +7,6 @@ This stack installs and starts services for all workstations and Raspberry Pi no
 
 ## Expected Variables
 
-- `{{ ansible_user }}`: The user to install and configure for (typically the logged-in user).
+| Variable             | Description |
+|----------------------|-------------|
+| `{{ ansible_user }}` | The user to install and configure for (typically the logged-in user). |

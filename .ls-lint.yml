@@ -14,6 +14,8 @@ ls:
   .toml: kebab-case
   .feature: kebab-case
 
+  .code-snippets: kebab-case
+
   .java: PascalCase
   .kt: PascalCase
   .sh: kebab-case

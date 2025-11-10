@@ -1,0 +1,38 @@
+{
+  "Bash script template": {
+    "scope": "shellscript",
+    "prefix": "bash-script",
+    "body": [
+      "#!/usr/bin/bash",
+      "",
+      "set -o errexit",
+      "set -o pipefail",
+      "set -o nounset",
+      "# set -o xtrace",
+      "",
+      "#",
+      "# Entrypoint function for the script",
+      "#",
+      "function main() {",
+      "  echo \"${1:hello, world ...}\"",
+      "}",
+      "",
+      "main \"$@\"",
+      "",
+    ],
+    "description": "basic bash script"
+  },
+  "Bash function": {
+    "scope": "shellscript",
+    "prefix": "bash-function",
+    "body": [
+      "#",
+      "# TODO: describe me",
+      "#",
+      "function ${1:myName}() {",
+      "}",
+      "",
+    ],
+    "description": "new function"
+  }
+}
