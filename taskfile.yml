@@ -45,6 +45,7 @@ tasks:
       - find . -type f -exec chmod ugo+r {} +
       - find . -type d -exec chmod 755 {} +
       - find . -name "*.sh" -type f -exec chmod +x {} +
+      - git pull --recurse-submodules
 
   # ===============================================================================================
 
