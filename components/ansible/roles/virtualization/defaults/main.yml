@@ -1,2 +1,0 @@
----
-virtualization_vm_folder: "/home/{{ ansible_user }}/virtualmachines"

@@ -1,3 +1,0 @@
----
-- name: VSCode  ----  Snippets
-  ansible.builtin.import_tasks: 10-snippets.yml

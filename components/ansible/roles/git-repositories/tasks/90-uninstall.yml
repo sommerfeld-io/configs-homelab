@@ -1,8 +1,0 @@
----
-- name: Git Repositories  ----  Remove outdated repositories
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
-    - "{{ dir_repos_sommerfeld_io }}/release-watcher"

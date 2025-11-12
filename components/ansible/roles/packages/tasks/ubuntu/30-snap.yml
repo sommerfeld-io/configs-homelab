@@ -1,6 +1,0 @@
----
-- name: Packages Ubuntu  ----  Snap  ---- Install
-  community.general.snap:
-    name:
-      - spotify
-    state: present

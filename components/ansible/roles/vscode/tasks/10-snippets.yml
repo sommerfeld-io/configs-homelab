@@ -1,8 +1,0 @@
----
-- name: VSCode  ----  Snippets  ----  Copy code snippets to VSCode config in /home/{{ ansible_user }}
-  ansible.builtin.copy:
-    src: "../files/snippets"
-    dest: "/home/{{ ansible_user }}/.config/Code/User"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rw,g=r,o=r

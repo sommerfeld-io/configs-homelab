@@ -1,6 +1,0 @@
----
-- name: Filesystem  ----  Ensure keyring directory for apt exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
