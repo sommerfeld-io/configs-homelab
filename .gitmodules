@@ -1,3 +1,0 @@
-[submodule "components/ansible/roles"]
-	path = components/ansible/roles
-	url = git@github.com:sommerfeld-io/roles.git
