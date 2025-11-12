@@ -8,26 +8,26 @@
     - ../vars/raspi.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/hardening
+        name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
-        name: ../roles/bash
+        name: ../roles/ansible-roles-collection/bash
     - ansible.builtin.include_role:
-        name: ../roles/filesystem
+        name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
-        name: ../roles/packages
+        name: ../roles/ansible-roles-collection/packages
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/packages
+        name: ../roles/ansible-roles-collection/packages
         tasks_from: raspi
     - ansible.builtin.include_role:
-        name: ../roles/taskfile-dev
+        name: ../roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../roles/git
+        name: ../roles/ansible-roles-collection/git
     - ansible.builtin.include_role:
-        name: ../roles/docker
+        name: ../roles/ansible-roles-collection/docker
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/cron
+        name: ../roles/ansible-roles-collection/cron
         tasks_from: main
 
 - name: Install and configure nodes (non-root)
@@ -39,7 +39,7 @@
     - ../vars/raspi.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/atuin
+        name: ../roles/ansible-roles-collection/atuin
 
 - name: Install and configure admin-pi specifics
   hosts: admin-pi.fritz.box
@@ -50,7 +50,7 @@
     - ../vars/raspi.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/ansible
+        name: ../roles/ansible-roles-collection/ansible
 
 - name: Install and configure runner-04-pi specifics (non-root)
   hosts: runner-04-pi.fritz.box
@@ -60,5 +60,5 @@
     - ../vars/main.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/services
+        name: ../roles/ansible-roles-collection/services
         tasks_from: petclinic

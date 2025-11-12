@@ -8,38 +8,38 @@
     - ../vars/ubuntu.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/hardening
+        name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
-        name: ../roles/bash
+        name: ../roles/ansible-roles-collection/bash
     - ansible.builtin.include_role:
-        name: ../roles/filesystem
+        name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
-        name: ../roles/git
+        name: ../roles/ansible-roles-collection/git
     - ansible.builtin.include_role:
-        name: ../roles/packages
+        name: ../roles/ansible-roles-collection/packages
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/packages
+        name: ../roles/ansible-roles-collection/packages
         tasks_from: ubuntu
     - ansible.builtin.include_role:
-        name: ../roles/docker
+        name: ../roles/ansible-roles-collection/docker
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/vscode
+        name: ../roles/ansible-roles-collection/vscode
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/cron
+        name: ../roles/ansible-roles-collection/cron
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../roles/taskfile-dev
+        name: ../roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../roles/ansible
+        name: ../roles/ansible-roles-collection/ansible
     - ansible.builtin.include_role:
-        name: ../roles/conky
+        name: ../roles/ansible-roles-collection/conky
     - ansible.builtin.include_role:
-        name: ../roles/github-cli
+        name: ../roles/ansible-roles-collection/github-cli
     - ansible.builtin.include_role:
-        name: ../roles/virtualization
+        name: ../roles/ansible-roles-collection/virtualization
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
@@ -50,13 +50,13 @@
     - ../vars/ubuntu.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/atuin
+        name: ../roles/ansible-roles-collection/atuin
     - ansible.builtin.include_role:
-        name: ../roles/cron
+        name: ../roles/ansible-roles-collection/cron
         tasks_from: jobs
     - ansible.builtin.include_role:
-        name: ../roles/docker
+        name: ../roles/ansible-roles-collection/docker
         tasks_from: scout
     - ansible.builtin.include_role:
-        name: ../roles/vscode
+        name: ../roles/ansible-roles-collection/vscode
         tasks_from: plugins

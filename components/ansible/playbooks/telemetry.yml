@@ -7,5 +7,5 @@
     - ../vars/main.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../roles/services
+        name: ../roles/ansible-roles-collection/services
         tasks_from: telemetry
