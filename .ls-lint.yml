@@ -48,6 +48,7 @@ ignore:
   - .task
   - tests/inspec/ansible-baseline/vendor
   - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
+  - components/ansible/roles
 
   # linter definitions etc.
   - .ansible-lint.yml
