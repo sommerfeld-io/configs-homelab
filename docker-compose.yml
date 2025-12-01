@@ -59,7 +59,7 @@ services:
     tty: *tty
 
   lint-helm:
-    image: alpine/helm:4.0.0
+    image: alpine/helm:4.0.1
     volumes: *volumes
     working_dir: *default-workdir
     command: lint components/talos-cluster/helm-charts/hello-world-nginx # --with-subcharts
