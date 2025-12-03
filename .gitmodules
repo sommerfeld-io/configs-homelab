@@ -1,3 +1,4 @@
 [submodule "components/ansible/roles/ansible-roles-collection"]
 	path = components/ansible/roles/ansible-roles-collection
 	url = git@github.com:sommerfeld-io/ansible-roles-collection.git
+	branch = main

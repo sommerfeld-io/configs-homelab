@@ -20,7 +20,7 @@
         tasks_from: main
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/packages
-        tasks_from: ubuntu
+        tasks_from: desktop
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/docker
         tasks_from: main

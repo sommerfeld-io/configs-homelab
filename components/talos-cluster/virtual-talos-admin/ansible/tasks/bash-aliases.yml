@@ -2,7 +2,7 @@
 - name: Talos  ----  Admin Pi  ----  Write aliases to .bash_aliases
   ansible.builtin.lineinfile:
     create: true
-    mode: 0600
+    mode: u=rw,g=,o=
     dest: "/home/{{ ansible_user }}/.bash_aliases"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"

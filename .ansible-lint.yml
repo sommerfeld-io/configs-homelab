@@ -1,6 +1,7 @@
 ---
 # See https://ansible.readthedocs.io/projects/lint/configuring
-profile: basic # https://ansible.readthedocs.io/projects/lint/profiles
+# https://ansible.readthedocs.io/projects/lint/profiles
+profile: basic
 
 var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 

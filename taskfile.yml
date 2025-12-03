@@ -45,7 +45,7 @@ tasks:
       - find . -type f -exec chmod ugo+r {} +
       - find . -type d -exec chmod 755 {} +
       - find . -name "*.sh" -type f -exec chmod +x {} +
-      - git pull --recurse-submodules
+      - git submodule update --remote
 
   # ===============================================================================================
 
@@ -103,6 +103,7 @@ tasks:
       - sh: '[ "$(hostname)" = "kobol" ] || [ "$(hostname)" = "caprica" ] || [ "$(hostname)" = "admin-pi" ]'
         msg: "[ERROR] This task can only be run on host 'kobol' or 'caprica'."
     cmds: &ansible-cmd
+      - git submodule update --remote
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
 
   ansible:raspi:
