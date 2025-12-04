@@ -38,6 +38,17 @@
       register: cleanup_result
       changed_when: cleanup_result.changed
 
+    - name: Cleanup  ----  APT  ----  Remove unused packages
+      when: ansible_os_family == "Debian"
+      ansible.builtin.apt:
+        autoremove: true
+
+    - name: Cleanup  ----  APT  ----  Clean package cache
+      when: ansible_os_family == "Debian"
+      ansible.builtin.apt:
+        autoclean: true
+        clean: true
+
 - name: Run cleanup tasks (non-root)
   hosts: ubuntu_desktop
   gather_facts: true

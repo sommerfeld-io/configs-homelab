@@ -38,6 +38,7 @@
 		"docs/nodes/**",
 
         "tests/inspec/*/controls",
+        "tests/inspec/*/vendor/**",
 
 		"node_modules/**",
 		"public/**",

@@ -46,7 +46,11 @@ ignore:
   - target
 
   - .task
+  - tests/inspec/admin-pi/vendor
   - tests/inspec/ansible-baseline/vendor
+  - tests/inspec/raspi-baseline/vendor
+  - tests/inspec/runner-04-pi/vendor
+  - tests/inspec/talos-baseline/vendor
   - components/talos-cluster/helm-charts/hello-world-nginx/Chart.yaml
   - components/ansible/roles
 
