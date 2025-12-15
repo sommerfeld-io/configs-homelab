@@ -29,6 +29,11 @@ tasks:
 
   # ===============================================================================================
 
+  update:
+    desc: Update project dependencies and submodules
+    cmds:
+      - git submodule update --remote
+
   cleanup:
     desc: Cleanup the development environment for this project
     cmds:
@@ -45,7 +50,7 @@ tasks:
       - find . -type f -exec chmod ugo+r {} +
       - find . -type d -exec chmod 755 {} +
       - find . -name "*.sh" -type f -exec chmod +x {} +
-      - git submodule update --remote
+      - task: update
 
   # ===============================================================================================
 
