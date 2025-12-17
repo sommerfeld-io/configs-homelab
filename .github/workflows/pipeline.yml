@@ -91,7 +91,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Mandatory files should exist
-        uses: chrisreddington/validate-file-exists@v0.0.9
+        uses: chrisreddington/validate-file-exists@v0.0.10
         with:
           required-files: >
             .editorconfig,
