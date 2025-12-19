@@ -24,3 +24,27 @@
           - "    - Click 'Enable Steam Play for all titles'"
           - "      - Use 'Proton 7.0-6'"
           - "  - Install games"
+
+    - name: Config  ----  Master of Orion 2
+      vars:
+        config_file: /home/{{ ansible_user }}/snap/steam/common/.local/share/Steam/steamapps/common/Master of Orion 2/dosboxMOO2.conf
+      block:
+        - name: Config  ----  Master of Orion 2  ----  Check if Orion config file exists
+          ansible.builtin.stat:
+            path: "{{ config_file }}"
+          register: orion_config
+        - name: Config  ----  Master of Orion 2  ----  Disable fullscreen
+          ansible.builtin.lineinfile:
+            path: "{{ config_file }}"
+            regexp: "^{{ item.old }}$"
+            line: "{{ item.new }}"
+            state: present
+          loop:
+            - { old: "fullscreen=true", new: "fullscreen=false" }
+            - { old: "windowresolution=original", new: "windowresolution=1280x960" }
+          when: orion_config.stat.exists
+        - name: Config  ----  Master of Orion 2  ----  Fix line endings (CRLF to LF)
+          ansible.builtin.replace:
+            path: "{{ config_file }}"
+            regexp: '\r\n'
+            replace: '\n'
