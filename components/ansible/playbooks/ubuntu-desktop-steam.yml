@@ -24,6 +24,7 @@
           - "    - Click 'Enable Steam Play for all titles'"
           - "      - Use 'Proton 7.0-6'"
           - "  - Install games"
+          - "    - Run Playbook again for some Game configs"
 
     - name: Config  ----  Master of Orion 2
       vars:
