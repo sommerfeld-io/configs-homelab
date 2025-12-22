@@ -10,58 +10,13 @@ on:
       - opened
       - assigned
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  repository-projects: write
-
 jobs:
-  add-issue-to-project:
-    name: Add to project
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Add to project sommerfeld-io (issues and PRs)
-        uses: actions/add-to-project@main
-        with:
-          project-url: https://github.com/orgs/sommerfeld-io/projects/1/views/1
-          github-token: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
-
-  assign-issue-to-user:
-    name: Assign task or PR to user
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Assign to user
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const issue_number = context.issue.number;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const assignee = context.actor;
-
-            await github.rest.issues.addAssignees({
-              issue_number,
-              owner,
-              repo,
-              assignees: [assignee]
-            });
-
-  set-issue-labels:
-    name: Set label for issues (if not story)
-    runs-on: ubuntu-latest
-    if: "${{ github.event.issue && !contains(github.event.issue.labels.*.name, 'story') }}"
-    steps:
-      - name: Set label
-        uses: actions/github-script@v8
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['task']
-            })
+  housekeeping-issues:
+    uses: sommerfeld-io/.github/.github/workflows/housekeeping-issues.yml@main
+    secrets:
+      GH_TOKEN_REPO_AND_PROJECT: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      repository-projects: write
