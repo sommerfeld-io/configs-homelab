@@ -25,7 +25,7 @@ services:
     tty: *tty
 
   lint-workflows:
-    image: rhysd/actionlint:1.7.9
+    image: rhysd/actionlint:1.7.10
     volumes: *volumes
     working_dir: *default-workdir
     command: -color
