@@ -8,6 +8,7 @@ ignore: |
   target
   components/talos-cluster/virtual-talos-admin/ansible/assets/node-configs/generated
   tests/inspec/*/vendor
+  components/ansible/roles/ansible-roles-collection
 
 rules:
   line-length:
