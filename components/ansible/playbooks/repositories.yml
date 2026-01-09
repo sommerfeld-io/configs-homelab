@@ -18,6 +18,7 @@
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/git-repositories
+        tasks_from: main
       vars:
         repositories:
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
@@ -34,6 +35,10 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
 
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git-repositories
+        tasks_from: uninstall
+
 - name: Clone git repositories
   hosts: admin-pi.fritz.box
   gather_facts: true
@@ -46,3 +51,8 @@
       vars:
         repositories:
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
+        tasks_from: main
+
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git-repositories
+        tasks_from: uninstall
