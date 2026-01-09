@@ -6,7 +6,6 @@ ignore: |
   node_modules
   .vagrant
   target
-  components/minikube
   components/talos-cluster/virtual-talos-admin/ansible/assets/node-configs/generated
   tests/inspec/*/vendor
 
