@@ -44,6 +44,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] [Playbook "ubuntu-desktop"](../../ansible/ubuntu-desktop.md)
     - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
     - [ ] [Playbook "repositories"](../../ansible/repositories.md)
+    - [ ] Login to Docker registry on the new machine: `docker login`
     - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
 
 ## Manual Follow-Up Todos
@@ -52,7 +53,6 @@ The setup wizard takes care of the hostname, network settings, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
 - [ ] Update file associations in "Settings > Applications > Sublime Text"
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
-- [ ] Login to Docker registry on the new machine: `docker login`
 
 ### Configure a keyboard shortcut to open a terminal in VSCode
 
