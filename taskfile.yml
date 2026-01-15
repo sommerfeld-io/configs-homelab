@@ -191,6 +191,18 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
+  inspec:run:picon:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: picon.fritz.box
+    preconditions: *allowed-hosts
+    cmds:
+      - for: ['ansible-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
   inspec:run:admin-pi:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
