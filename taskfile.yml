@@ -21,6 +21,8 @@ tasks:
     desc: Cleanup the development environment for this project
     cmds:
       - docker compose down --remove-orphans
+      - docker container prune -f
+      - docker volume prune -f
       - rm -rf .cache
       - sudo rm -rf .ansible
       - sudo rm -rf .devcontainer/ops
