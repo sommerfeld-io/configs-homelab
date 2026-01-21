@@ -51,7 +51,8 @@ The setup wizard takes care of the hostname, network settings, etc.
 
 - [ ] Set dark mode, Dock config, etc.
 - [ ] Add `~/work`, `~/tmp` and `~/virtualmachines` to favorites (in File Manager)
-- [ ] Update file associations in "Settings > Applications > Sublime Text"
+- [ ] Update file associations in `Settings > Applications > Sublime Text`
+- [ ] Ensure all displays are switched when rotating desktops by updating the config in `Settings > Multitasking`
 - [ ] Install GitHub CLI extensions: `gh extension install seachicken/gh-poi`
 
 ### Configure a keyboard shortcut to open a terminal in VSCode
