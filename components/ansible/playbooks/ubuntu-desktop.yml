@@ -41,8 +41,8 @@
         name: ../roles/ansible-roles-collection/conky
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/github-cli
-    # - ansible.builtin.include_role:
-    #     name: ../roles/ansible-roles-collection/virtualization
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/virtualization
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
