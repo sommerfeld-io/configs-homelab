@@ -100,16 +100,16 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:ubuntu:desktop:
+  ansible:desktop:
     vars:
-      PLAYBOOK: ubuntu-desktop.yml
+      PLAYBOOK: desktop.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:ubuntu:desktop:steam:
+  ansible:desktop:steam:
     vars:
-      PLAYBOOK: ubuntu-desktop-steam.yml
+      PLAYBOOK: desktop-steam.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd

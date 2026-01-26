@@ -75,8 +75,8 @@ nav:
       - Repositories: ansible/repositories.md
       - Telemetry: ansible/telemetry.md
       - Telemetry Exporters: ansible/telemetry-exporters.md
-      - Ubuntu Desktop: ansible/ubuntu-desktop.md
-      - Ubuntu Desktop Steam: ansible/ubuntu-desktop-steam.md
+      - Ubuntu Desktop: ansible/desktop.md
+      - Ubuntu Desktop Steam: ansible/desktop-steam.md
   - Talos Kubernetes Cluster:
       - Overview: nodes/talos-cluster/index.md
       - Installation: nodes/talos-cluster/installation.md

@@ -1,6 +1,6 @@
-# Ansible Playbook - Ubuntu Desktop
+# Ansible Playbook - Desktop
 
-This Ansible playbook performs comprehensive setup and configuration of Ubuntu desktop workstations in the home lab environment, transforming them into fully-featured development and administrative machines.
+This Ansible playbook performs comprehensive setup and configuration of desktop workstations in the home lab environment, transforming them into fully-featured development and administrative machines.
 
 The playbook handles both system-level configuration requiring elevated privileges and user-specific customizations to create a standardized, secure, and productive desktop environment.
 
@@ -14,4 +14,4 @@ The playbook handles both system-level configuration requiring elevated privileg
 - **File System Management**: Creates standardized directory structures and file system configurations
 - **Package Management**: Installs essential system packages and Ubuntu-specific software repositories
 
-The playbook targets Ubuntu desktop workstations to establish a complete, standardized development and administrative environment suitable for home lab operations and software development activities.
+The playbook targets desktop workstations to establish a complete, standardized development and administrative environment suitable for home lab operations and software development activities.
