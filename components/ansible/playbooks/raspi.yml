@@ -20,6 +20,9 @@
         name: ../roles/ansible-roles-collection/packages
         tasks_from: raspi
     - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/packages
+        tasks_from: fastfetch
+    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/git
