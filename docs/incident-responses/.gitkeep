@@ -1,0 +1,3 @@
+Add runbooks / instructions / incident response plans for grafana alerts.
+Link to these markdown files (or the generated GitHub Pages) from the Alert.
+Better link to this page because GitHub Pages do not always reflect the latest docs (due to our release process).
