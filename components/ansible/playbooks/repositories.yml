@@ -20,6 +20,7 @@
         name: ../roles/ansible-roles-collection/git-repositories
         tasks_from: main
       vars:
+        git_repositories_ssh_base: &ssh-base git@github.com
         repositories:
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "ansible-roles-collection" }
@@ -49,6 +50,7 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/git-repositories
       vars:
+        git_repositories_ssh_base: *ssh-base
         repositories:
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
         tasks_from: main

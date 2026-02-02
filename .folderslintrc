@@ -35,6 +35,7 @@
 
         "docs/ansible/**",
 		"docs/api-docs/**",
+        "docs/incident-responses",
 		"docs/nodes/**",
 
         "tests/inspec/*/controls",

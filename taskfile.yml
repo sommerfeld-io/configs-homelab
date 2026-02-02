@@ -28,7 +28,7 @@ tasks:
       - sudo rm -rf .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
-      - for: &inspec-profiles ['ansible-baseline', 'raspi-baseline', 'admin-pi', 'talos-baseline']
+      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi', 'talos-baseline']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
