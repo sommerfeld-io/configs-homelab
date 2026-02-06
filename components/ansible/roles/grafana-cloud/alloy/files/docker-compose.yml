@@ -1,0 +1,20 @@
+---
+services:
+
+  grafana-cloud-alloy:
+    image: grafana/alloy:v1.12.2
+    container_name: grafana-cloud-alloy
+    restart: unless-stopped
+    environment:
+      # additional data which should be available in config.alloy
+      - HOSTNAME=${HOSTNAME}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    ports:
+      - 12321:12345
+      # - 4317:4317
+      # - 4318:4318

@@ -1,0 +1,5 @@
+alloy etc. with config for my grafana cloud account.
+
+roll out to localhost (picon) first. then all nodes and raspi nodes.
+
+how should i handle the secrets?

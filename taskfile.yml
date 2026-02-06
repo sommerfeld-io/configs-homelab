@@ -135,6 +135,13 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
+  ansible:grafana-cloud:
+    vars:
+      PLAYBOOK: grafana-cloud.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   # ===============================================================================================
 
   inspec:check:

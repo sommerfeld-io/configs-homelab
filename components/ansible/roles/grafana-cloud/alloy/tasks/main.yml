@@ -1,0 +1,58 @@
+---
+- name: Grafana Cloud  ----  Alloy  ----  Teardown
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Check if docker-compose.yml file exists
+      stat:
+        path: "{{ grafana_cloud_dir }}/{{ alloy_dir }}/docker-compose.yml"
+      register: compose_file
+
+    - name: Grafana Cloud  ----  Alloy  ----  Tear down existing services
+      community.docker.docker_compose_v2:
+        project_src: "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
+        state: absent
+        remove_orphans: true
+        remove_volumes: true
+      when: compose_file.stat.exists
+
+- name: Grafana Cloud  ----  Alloy  ----  Update Config
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Create directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: u=rwx,g=rx,o=
+      with_items:
+        - "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
+
+    - name: Grafana Cloud  ----  Alloy  ----  Copy files
+      ansible.builtin.copy:
+        src: "../files/{{ item }}"
+        dest: "{{ grafana_cloud_dir }}/{{ alloy_dir }}/{{ item }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: u=rw,g=r,o=
+        # TODO force overwrite
+      with_items:
+        - docker-compose.yml
+        - config.alloy
+
+- name: Grafana Cloud  ----  Alloy  ----  Startup
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Create and start services
+      community.docker.docker_compose_v2:
+        project_src: "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
+        wait: true
+        wait_timeout: 60 # seconds
+      environment:
+        HOSTNAME: "{{ ansible_hostname }}"
+      register: output
+
+    - name: Grafana Cloud  ----  Alloy  ----  Verify that services are running
+      ansible.builtin.assert:
+        that:
+          - alloy_container.State == 'running'
+      vars:
+        alloy_container: >-
+          {{ output.containers | selectattr("Service", "equalto", "grafana-cloud-alloy") | first }}
