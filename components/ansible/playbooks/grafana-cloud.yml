@@ -1,11 +1,12 @@
 ---
 - name: Install and configure nodes
-  # hosts: ubuntu_desktop:raspi
-  hosts: picon.fritz.box
+  hosts: ubuntu_desktop:raspi
   gather_facts: true
   become: true
   vars:
     grafana_cloud_dir: /opt/grafana-cloud
+  vars_files:
+    - ../roles/grafana-cloud/alloy/vars/vault.yml
   tasks:
     # - ansible.builtin.include_role:
     #     name: ../roles/grafana-cloud/exporters

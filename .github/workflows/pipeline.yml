@@ -39,7 +39,7 @@ jobs:
     name: ${{ matrix.linter }}
     strategy:
       matrix:
-        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
+        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'alloy-config']
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

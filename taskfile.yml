@@ -42,26 +42,10 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'helm', 'k8s-manifests', 'markdown-links']
+      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'markdown-links', 'alloy-config']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
-
-  internal:docs:generate:from-readme:
-    desc: 'Collecting documentation README.md files in this repo'
-    internal: true
-    vars:
-      FOLDERS:
-        sh: find {{ .BASEPATH }} -maxdepth 1 -type d -not -path '{{ .BASEPATH }}' -exec basename {} \;
-    cmds:
-      - rm -rf docs/{{ .TARGET_PATH }}
-      - mkdir -p docs/{{ .TARGET_PATH }}
-      - echo "Contents of this folder are auto-generated" > docs/{{ .TARGET_PATH }}/.auto-generated
-      - for: { var: FOLDERS }
-        task: common:copy
-        vars: { SRC: "{{ .BASEPATH }}/{{ .ITEM }}/README.md", DEST: "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md" }
-    generates:
-      - "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md"
 
   docs:generate:
     desc: 'Generate Markdown files for documentation'
@@ -71,10 +55,6 @@ tasks:
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
-      - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/manifests/apps, TARGET_PATH: api-docs/manifests/apps }
-      - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/helm-charts, TARGET_PATH: api-docs/helm-charts }
 
   docs:run:
     desc: Run the documentation server
@@ -91,7 +71,7 @@ tasks:
     dir: &ansible-dir components/ansible
     cmds: &ansible-cmd
       - git submodule update --remote
-      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
 
   ansible:raspi:
     vars:
@@ -141,6 +121,21 @@ tasks:
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
+
+  ansible:grafana-cloud:vault:view:
+    vars: &grafana-cloud-vars
+      VAULT_FILE: vars/main.yml
+    desc: Show the contentse of the Ansible Vault file for Grafana Cloud
+    dir: components/ansible/roles/grafana-cloud/alloy
+    cmds:
+      - ansible-vault view {{ .VAULT_FILE }}
+
+  ansible:grafana-cloud:vault:edit:
+    vars: *grafana-cloud-vars
+    desc: Edit the contentse of the Ansible Vault file for Grafana Cloud
+    dir: components/ansible/roles/grafana-cloud/alloy
+    cmds:
+      - ansible-vault edit {{ .VAULT_FILE }}
 
   # ===============================================================================================
 

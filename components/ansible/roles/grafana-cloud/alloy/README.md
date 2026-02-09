@@ -1,21 +1,17 @@
 # Role: Alloy
 
-This role deploys and starts Grafana Alloy to collect telemetry data and push it to Grafana Cloud. Alloy runs on port 12321.
+This role deploys and configures Grafana Alloy to collect telemetry data and push it to Grafana Cloud. Alloy is installed as a native system service and runs on port 12345.
 
-- With `tasks_from: main` this role installs and starts Grafana Alloy on all machines (RasPi and workstation).
-- With `tasks_from: admin-pi` this role installs and starts Grafana Alloy specifically on the `admin-pi`.
+All sensitive credentials are stored in an encrypted Ansible Vault file. The vault file is safe to commit to the repository.
 
-## Expected Variables
+## Required Variables (from Ansible Vault)
 
-| Variable                  | Description                                                                       |
-|---------------------------|-----------------------------------------------------------------------------------|
-| `{{ ansible_user }}`      | The user to install and configure for (typically the logged-in user).             |
-| `{{ grafana_cloud_dir }}` | The folder to install all Grafana Cloud components in (e.g. `/opt/grafana-cloud`) |
+The following sensitive variables must be defined in `vars/main.yml` (encrypted with Ansible Vault):
 
-## Optional Variables
+| Variable                       | Description                              |
+|--------------------------------|------------------------------------------|
+| `alloy_grafana_cloud_api_key`  | Grafana Cloud API key for authentication |
+| `alloy_prometheus_user`        | Prometheus user ID for metrics push      |
+| `alloy_loki_user`              | Loki user ID for logs push               |
 
-The following variables are optional and have default values:
-
-| Variable          | Description         | Default |
-|-------------------|---------------------|---------|
-| `{{ alloy_dir }}` | Subfolder for Alloy | `alloy` |
+**Note:** These variables are stored in an encrypted Ansible Vault file at `vars/main.yml`.

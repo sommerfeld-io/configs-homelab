@@ -1,3 +1,37 @@
+remotecfg {
+  url            = "https://fleet-management-prod-011.grafana.net"
+  id             = "8a0ba9569295"
+  poll_frequency = "60s"
+  attributes     = encoding.from_json(coalesce(``, `{}`))
+
+  basic_auth {
+    username = "1140545"
+    password = sys.env("GCLOUD_RW_API_KEY")
+  }
+}
+
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = "https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push"
+
+    basic_auth {
+      username = sys.env("GCLOUD_PROMETHEUS_USER")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+loki.write "grafana_cloud_loki" {
+  endpoint {
+    url = "https://logs-prod-012.grafana.net/loki/api/v1/push"
+
+    basic_auth {
+      username = sys.env("GCLOUD_LOKI_USER")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
 discovery.relabel "integrations_node_exporter" {
   targets = prometheus.exporter.unix.integrations_node_exporter.targets
 
@@ -64,35 +98,35 @@ journal_module "integrations_node_exporter" {
 //JOURNAL
 declare "journal_module" {
   argument "forward_to" {
-      optional = false
+    optional = false
   }
 
   loki.source.journal "default"  {
-      max_age       = "12h0m0s"
-      forward_to    = [loki.process.default.receiver]
-      relabel_rules = loki.relabel.default.rules
+    max_age       = "12h0m0s"
+    forward_to    = [loki.process.default.receiver]
+    relabel_rules = loki.relabel.default.rules
   }
 
   loki.relabel "default" {
-      rule {
-          source_labels = ["__journal__systemd_unit"]
-          target_label  = "unit"
-      }
-      rule {
-          source_labels = ["__journal__boot_id"]
-          target_label  = "boot_id"
-      }
-      rule {
-          source_labels = ["__journal__transport"]
-          target_label  = "transport"
-      }
-      rule {
-          source_labels = ["__journal_priority_keyword"]
-          target_label  = "level"
-      }
-      forward_to    = []
+    rule {
+      source_labels = ["__journal__systemd_unit"]
+      target_label  = "unit"
+    }
+    rule {
+      source_labels = ["__journal__boot_id"]
+      target_label  = "boot_id"
+    }
+    rule {
+      source_labels = ["__journal__transport"]
+      target_label  = "transport"
+    }
+    rule {
+      source_labels = ["__journal_priority_keyword"]
+      target_label  = "level"
+    }
+    forward_to    = []
   }
   loki.process "default" {
-      forward_to    = argument.forward_to.value
+    forward_to    = argument.forward_to.value
   }
 }

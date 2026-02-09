@@ -1,58 +1,91 @@
 ---
-- name: Grafana Cloud  ----  Alloy  ----  Teardown
+- name: Grafana Cloud  ----  Alloy  ----  Install
+  when: ansible_os_family == "Debian"
   block:
-    - name: Grafana Cloud  ----  Alloy  ----  Check if docker-compose.yml file exists
-      stat:
-        path: "{{ grafana_cloud_dir }}/{{ alloy_dir }}/docker-compose.yml"
-      register: compose_file
+    - name: Grafana Cloud  ----  Alloy  ----  Create APT keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: u=rwx,g=rx,o=x
 
-    - name: Grafana Cloud  ----  Alloy  ----  Tear down existing services
-      community.docker.docker_compose_v2:
-        project_src: "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
-        state: absent
-        remove_orphans: true
-        remove_volumes: true
-      when: compose_file.stat.exists
+    - name: Grafana Cloud  ----  Alloy  ----  Download Grafana GPG key
+      ansible.builtin.get_url:
+        url: https://apt.grafana.com/gpg-full.key
+        dest: /etc/apt/keyrings/grafana.asc
+        mode: u=rw,g=r,o=r
+
+    - name: Grafana Cloud  ----  Alloy  ----  Add Grafana APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
+        state: present
+        filename: grafana
+
+    - name: Grafana Cloud  ----  Alloy  ----  Install Alloy package
+      ansible.builtin.apt:
+        name:
+          - alloy
+        update_cache: true
+        state: present
+
+    - name: Grafana Cloud  ----  Alloy  ----  Enable Alloy service
+      ansible.builtin.systemd:
+        name: alloy.service
+        enabled: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Start Alloy service
+      ansible.builtin.systemd:
+        name: alloy
+        state: started
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/alloy.service.d
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override for environment
+      ansible.builtin.copy:
+        content: |
+          [Service]
+          EnvironmentFile=/etc/default/alloy
+        dest: /etc/systemd/system/alloy.service.d/override.conf
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        force: true
 
 - name: Grafana Cloud  ----  Alloy  ----  Update Config
   block:
-    - name: Grafana Cloud  ----  Alloy  ----  Create directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: u=rwx,g=rx,o=
-      with_items:
-        - "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
-
-    - name: Grafana Cloud  ----  Alloy  ----  Copy files
+    - name: Grafana Cloud  ----  Alloy  ----  Copy config files
       ansible.builtin.copy:
-        src: "../files/{{ item }}"
-        dest: "{{ grafana_cloud_dir }}/{{ alloy_dir }}/{{ item }}"
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: u=rw,g=r,o=
-        # TODO force overwrite
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: alloy
+        mode: u=rw,g=r,o=r
+        force: true
       with_items:
-        - docker-compose.yml
-        - config.alloy
+        - { src: files/config.alloy, dest: /etc/alloy/config.alloy }
 
-- name: Grafana Cloud  ----  Alloy  ----  Startup
-  block:
-    - name: Grafana Cloud  ----  Alloy  ----  Create and start services
-      community.docker.docker_compose_v2:
-        project_src: "{{ grafana_cloud_dir }}/{{ alloy_dir }}"
-        wait: true
-        wait_timeout: 60 # seconds
-      environment:
-        HOSTNAME: "{{ ansible_hostname }}"
-      register: output
+    - name: Grafana Cloud  ----  Alloy  ----  Create environment file
+      ansible.builtin.copy:
+        content: |
+          CONFIG_FILE=/etc/alloy/config.alloy
+          CUSTOM_ARGS=
+          GCLOUD_RW_API_KEY={{ alloy_grafana_cloud_api_key }}
+          GCLOUD_PROMETHEUS_USER={{ alloy_prometheus_user }}
+          GCLOUD_LOKI_USER={{ alloy_loki_user }}
+        dest: /etc/default/alloy
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=
+        force: true
 
-    - name: Grafana Cloud  ----  Alloy  ----  Verify that services are running
-      ansible.builtin.assert:
-        that:
-          - alloy_container.State == 'running'
-      vars:
-        alloy_container: >-
-          {{ output.containers | selectattr("Service", "equalto", "grafana-cloud-alloy") | first }}
+    - name: Grafana Cloud  ----  Alloy  ----  Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Restart
+      ansible.builtin.systemd:
+        name: alloy
+        state: restarted

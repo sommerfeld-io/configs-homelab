@@ -7,6 +7,9 @@ var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 
 use_default_rules: false
 
+exclude_paths:
+  - components/ansible/roles/grafana-cloud/alloy/vars/main.yml
+
 enable_list:
   - no-log-password
   - no-same-owner
