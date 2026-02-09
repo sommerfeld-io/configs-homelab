@@ -13,3 +13,4 @@ The following sensitive variables are be defined in `components/ansible/vars/gra
 | `grafana_cloud_api_key`         | Grafana Cloud API key for authentication |
 | `grafana_cloud_prometheus_user` | Prometheus user ID for metrics push      |
 | `grafana_cloud_loki_user`       | Loki user ID for logs push               |
+| `{{ grafana_com_url }}`         | The URL of the Grafana Instance          |
