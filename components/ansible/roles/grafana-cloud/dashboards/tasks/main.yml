@@ -1,0 +1,6 @@
+---
+- name: Grafana Cloud  ----  Folders  ----  Provision
+  ansible.builtin.import_tasks: folders/main.yml
+
+- name: Grafana Cloud  ----  Dashboards  ----  Provision
+  ansible.builtin.import_tasks: dashboards/main.yml

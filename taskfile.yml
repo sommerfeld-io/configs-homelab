@@ -122,18 +122,10 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:grafana-cloud:vault:view:
+  ansible:grafana-cloud:vault:
     vars: &grafana-cloud-vars
-      VAULT_FILE: vars/main.yml
-    desc: Show the contentse of the Ansible Vault file for Grafana Cloud
-    dir: components/ansible/roles/grafana-cloud/alloy
-    cmds:
-      - ansible-vault view {{ .VAULT_FILE }}
-
-  ansible:grafana-cloud:vault:edit:
-    vars: *grafana-cloud-vars
-    desc: Edit the contentse of the Ansible Vault file for Grafana Cloud
-    dir: components/ansible/roles/grafana-cloud/alloy
+      VAULT_FILE: components/ansible/vars/grafana-cloud-vault.yml
+    desc: Show and edit the contents of the Ansible Vault file for Grafana Cloud
     cmds:
       - ansible-vault edit {{ .VAULT_FILE }}
 

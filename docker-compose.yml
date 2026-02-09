@@ -55,7 +55,7 @@ services:
     image: pipelinecomponents/ansible-lint:0.79.11
     volumes: *volumes
     working_dir: *default-workdir
-    command: ansible-lint components/ansible/playbooks -c .ansible-lint.yml
+    command: ansible-lint components/ansible -c .ansible-lint.yml
     tty: *tty
 
   lint-alloy-config:

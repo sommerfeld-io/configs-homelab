@@ -8,7 +8,10 @@ var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 use_default_rules: false
 
 exclude_paths:
-  - components/ansible/roles/grafana-cloud/alloy/vars/main.yml
+  - components/ansible/roles/ansible-roles-collection
+  ## Ignore the following due to ansinle-vault usage in playbooks and vars files
+  - components/ansible/vars/grafana-cloud-vault.yml
+  - components/ansible/playbooks/grafana-cloud.yml
 
 enable_list:
   - no-log-password

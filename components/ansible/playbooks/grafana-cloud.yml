@@ -6,9 +6,21 @@
   vars:
     grafana_cloud_dir: /opt/grafana-cloud
   vars_files:
-    - ../roles/grafana-cloud/alloy/vars/vault.yml
+    - ../vars/grafana-cloud-vault.yml
   tasks:
     # - ansible.builtin.include_role:
     #     name: ../roles/grafana-cloud/exporters
     - ansible.builtin.include_role:
         name: ../roles/grafana-cloud/alloy
+
+- name: Provision Grafana Cloud
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars:
+    grafana_cloud_dir: /opt/grafana-cloud
+  vars_files:
+    - ../vars/grafana-cloud-vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/grafana-cloud/dashboards

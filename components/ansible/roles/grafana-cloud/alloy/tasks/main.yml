@@ -72,9 +72,9 @@
         content: |
           CONFIG_FILE=/etc/alloy/config.alloy
           CUSTOM_ARGS=
-          GCLOUD_RW_API_KEY={{ alloy_grafana_cloud_api_key }}
-          GCLOUD_PROMETHEUS_USER={{ alloy_prometheus_user }}
-          GCLOUD_LOKI_USER={{ alloy_loki_user }}
+          GCLOUD_RW_API_KEY={{ grafana_cloud_api_key }}
+          GCLOUD_PROMETHEUS_USER={{ grafana_cloud_prometheus_user }}
+          GCLOUD_LOKI_USER={{ grafana_cloud_loki_user }}
         dest: /etc/default/alloy
         owner: root
         group: root
