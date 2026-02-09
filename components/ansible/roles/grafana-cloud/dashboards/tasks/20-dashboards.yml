@@ -10,4 +10,3 @@
     state: present
   loop:
     - { dashboard_id: "1860", dashboard_revision: "42", parent_folder: "", folder: "sommerfeldio-nodes" } # https://grafana.com/grafana/dashboards/1860-node-exporter-full/
-    - { dashboard_id: "3489", dashboard_revision: "2", parent_folder: "", folder: "sommerfeldio" } # https://grafana.com/grafana/dashboards/3489-grafana-alert-dashboard/
