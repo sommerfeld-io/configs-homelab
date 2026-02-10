@@ -70,6 +70,7 @@ nav:
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
   - nodes/raspi/index.md
   - Ansible Playbooks:
+      - All (provision full Homelab): ansible/all.md
       - Cleanup: ansible/cleanup.md
       - Grafana: ansible/grafana.md
       - RasPi: ansible/raspi.md
