@@ -73,6 +73,13 @@ tasks:
       - git submodule update --remote
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
 
+  ansible:all:
+    vars:
+      PLAYBOOK: all.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   ansible:raspi:
     vars:
       PLAYBOOK: raspi.yml
@@ -115,16 +122,30 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:grafana-cloud:
+  ansible:grafana:
+    vars:
+      PLAYBOOK: grafana.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:grafana:agents:
+    vars:
+      PLAYBOOK: grafana-agents.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:grafana:cloud:
     vars:
       PLAYBOOK: grafana-cloud.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:grafana-cloud:vault:
-    vars: &grafana-cloud-vars
-      VAULT_FILE: components/ansible/vars/grafana-cloud-vault.yml
+  ansible:grafana:vault:
+    vars:
+      VAULT_FILE: components/ansible/vars/grafana-vault.yml
     desc: Show and edit the contents of the Ansible Vault file for Grafana Cloud
     cmds:
       - ansible-vault edit {{ .VAULT_FILE }}

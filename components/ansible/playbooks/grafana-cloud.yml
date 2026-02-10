@@ -1,26 +1,10 @@
 ---
-- name: Install and configure nodes
-  hosts: ubuntu_desktop:raspi
-  gather_facts: true
-  become: true
-  vars:
-    grafana_cloud_dir: /opt/grafana-cloud
-  vars_files:
-    - ../vars/grafana-cloud-vault.yml
-  tasks:
-    # - ansible.builtin.include_role:
-    #     name: ../roles/grafana-cloud/exporters
-    - ansible.builtin.include_role:
-        name: ../roles/grafana-cloud/alloy
-
-- name: Provision Grafana Cloud
+- name: Provision Grafana Cloud Instance (sommerfeldio.grafana.net)
   hosts: localhost
   gather_facts: false
   become: false
-  vars:
-    grafana_cloud_dir: /opt/grafana-cloud
   vars_files:
-    - ../vars/grafana-cloud-vault.yml
+    - ../vars/grafana-vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/grafana-cloud/dashboards

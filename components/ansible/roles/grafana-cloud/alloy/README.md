@@ -6,7 +6,7 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 ## Required Variables
 
-The following sensitive variables are be defined in `components/ansible/vars/grafana-cloud-vault.yml` (encrypted with Ansible Vault):
+The following sensitive variables are be defined in `components/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
 
 | Variable                        | Description                              |
 |---------------------------------|------------------------------------------|

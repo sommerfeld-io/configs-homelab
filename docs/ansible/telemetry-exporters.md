@@ -1,5 +1,7 @@
 # Ansible Playbook - Telemetry-Exporters
 
+> **DEPRECATED:** This playbook is relevant to install agents and exporters for Prometheus, Grafana, Loki etc. onto nodes on the homelab. These components relate to the Grafana OSS stack on the `admin-pi`. **Once we switched to Grafana Cloud, this playbook and the corresponding project will be obsolete and eventually removed!**
+
 The telemetry playbook is responsible for setting metrics collection infrastructure across the environment.
 
 ## What it does

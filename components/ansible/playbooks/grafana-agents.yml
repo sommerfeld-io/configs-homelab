@@ -1,0 +1,12 @@
+---
+- name: Install and configure nodes for use with Grafana Cloud
+  hosts: ubuntu_desktop:raspi
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/grafana-vault.yml
+  tasks:
+    # - ansible.builtin.include_role:
+    #     name: ../roles/grafana-cloud/exporters
+    - ansible.builtin.include_role:
+        name: ../roles/grafana-cloud/alloy

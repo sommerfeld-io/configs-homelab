@@ -71,6 +71,7 @@ nav:
   - nodes/raspi/index.md
   - Ansible Playbooks:
       - Cleanup: ansible/cleanup.md
+      - Grafana: ansible/grafana.md
       - RasPi: ansible/raspi.md
       - Repositories: ansible/repositories.md
       - Telemetry: ansible/telemetry.md

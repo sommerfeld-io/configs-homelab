@@ -9,9 +9,12 @@ use_default_rules: false
 
 exclude_paths:
   - components/ansible/roles/ansible-roles-collection
-  ## Ignore the following due to ansinle-vault usage in playbooks and vars files
-  - components/ansible/vars/grafana-cloud-vault.yml
+  ## Ignore the following due to ansible-vault usage in playbooks and vars files
+  - components/ansible/vars/grafana-vault.yml
+  - components/ansible/playbooks/grafana-agents.yml
   - components/ansible/playbooks/grafana-cloud.yml
+  - components/ansible/playbooks/grafana.yml
+  - components/ansible/playbooks/all.yml
 
 enable_list:
   - no-log-password

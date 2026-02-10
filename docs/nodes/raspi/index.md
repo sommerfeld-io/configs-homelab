@@ -1,7 +1,6 @@
 # Raspberry Pi Nodes
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as lightweight nodes in the home lab infrastructure. These devices handle dedicated roles including administrative tasks, monitoring and logging aggregation, and testing environments.
-y
 
 ## Rack Layout
 
@@ -13,9 +12,9 @@ Workstations and Raspberry Pi nodes are organized in a DeskPi RackMate T0, a com
 +-----------------+-----------------+
 |  runner-06-pi5  |  admin-pi       |
 +-----------------+-----------------+
-|  Power and HDD                    |
+|  Power                            |
 +-----------------------------------+
-|  caprica                          |
+|  -                                |
 +-----------------------------------+
 ```
 
@@ -35,25 +34,26 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 * [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 * [ ] Install machine using the Ansible configs from this repo using `task`.
     * [ ] [Playbook "raspi"](../../ansible/raspi.md)
-    * [ ] [Playbook "repositories"](../../ansible/repositories.md)
-    * [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
+    * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
+    * [ ] Login to Docker registry on the new machine: `docker login`
+    * [ ] [Playbook "repositories"](../../ansible/repositories.md) **DEPRECATED**
+    * [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md) **DEPRECATED**
+    * [ ] [Playbook "grafana-agents"](../../ansible/grafana.md)
 
 ### Follow-Up Todos
 
 * [ ] Add the new RasPi Node to `components/ansible/assets/global-taskfile.yml` for easy SSH connections.
-* [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-* [ ] Login to Docker registry on the new machine: `docker login`
 
 ## RasPi Fleet Overview
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as lightweight nodes in the home lab infrastructure. These devices handle dedicated roles including administrative tasks, monitoring and logging aggregation, and testing environments. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet.
 
-| Name            | Model           | RAM | Storage         | Note |
-|-----------------|-----------------|-----|-----------------|------|
-| `admin-pi`      | Raspberry Pi 4B | 8GB | 128GB microSD   | Help with administrative tasks in the home lab |
-| `runner-04-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD    | -    |
-| `runner-05-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD    | -    |
-| `runner-06-pi5` | Raspberry Pi 5  | 8GB | 32GB microSD    | -    |
+| Name            | Model           | RAM | Storage       | Note                                           |
+|-----------------|-----------------|-----|---------------|------------------------------------------------|
+| `admin-pi`      | Raspberry Pi 4B | 8GB | 128GB microSD | Help with administrative tasks in the home lab |
+| `runner-04-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD  | -                                              |
+| `runner-05-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD  | -                                              |
+| `runner-06-pi5` | Raspberry Pi 5  | 8GB | 32GB microSD  | -                                              |
 
 ### `admin-pi.fritz.box`
 
@@ -78,17 +78,17 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
 ### `runner-04-pi.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id sebastian@runner-04-pi.fritz.box`
 
 ### `runner-05-pi.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id sebastian@runner-05-pi.fritz.box`
 
 ### `runner-06-pi5.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id <sebastian@runner-06-pi5.fritz.box>
