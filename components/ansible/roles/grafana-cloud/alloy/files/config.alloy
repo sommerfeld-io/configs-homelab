@@ -215,7 +215,7 @@ beyla.ebpf "integrations_beyla" {
 
   discovery {
     services {
-      open_ports = "80,443,3000,5000,8000,8080,9000"
+      open_ports = "80,443,3000,3080,5000,8000,8080,9000"
     }
   }
 
