@@ -43,9 +43,10 @@ The setup wizard takes care of the hostname, network settings, etc.
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "desktop"](../../ansible/desktop.md)
     - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-    - [ ] [Playbook "repositories"](../../ansible/repositories.md)
     - [ ] Login to Docker registry on the new machine: `docker login`
-    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
+    - [ ] [Playbook "repositories"](../../ansible/repositories.md) **DEPRECATED**
+    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md) **DEPRECATED**
+    - [ ] [Playbook "grafana-agents"](../../ansible/grafana.md)
 
 ## Manual Follow-Up Todos
 

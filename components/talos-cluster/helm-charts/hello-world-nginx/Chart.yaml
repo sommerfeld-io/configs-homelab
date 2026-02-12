@@ -1,5 +1,0 @@
----
-apiVersion: v2
-name: hello-world-nginx
-version: 0.62.0
-description: A simple Helm chart for a Hello World HTML site

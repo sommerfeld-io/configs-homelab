@@ -77,10 +77,10 @@
         path: "{{ item.path }}"
         state: absent
       loop: "{{ found_dirs.results | map(attribute='files') | flatten }}"
-      # When looping over patterns with ansible.builtin.find, each run returns
-      # a separate .files list inside found_dirs.results
-      #
-      # `map(attribute='files')` extracts the files list from each find result
-      # `flatten` turns list of lists into a single list
+      ## When looping over patterns with ansible.builtin.find, each run returns
+      ## a separate .files list inside found_dirs.results
+      ##
+      ## * `map(attribute='files')` extracts the files list from each find result
+      ## * `flatten` turns list of lists into a single list
       loop_control:
         label: "{{ item.path }}"

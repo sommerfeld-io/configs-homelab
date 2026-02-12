@@ -1,0 +1,6 @@
+---
+- name: Include Grafana Playbook to provision nodes on the homelab for use with Grafana Cloud
+  ansible.builtin.import_playbook: ./grafana-agents.yml
+
+- name: Include Grafana Cloud Playbook to provision Grafana Cloud with dashboards etc.
+  ansible.builtin.import_playbook: ./grafana-cloud.yml

@@ -1,0 +1,108 @@
+---
+- name: Grafana Cloud  ----  Alloy  ----  Install
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Create APT keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: u=rwx,g=rx,o=x
+
+    - name: Grafana Cloud  ----  Alloy  ----  Download Grafana GPG key
+      ansible.builtin.get_url:
+        url: https://apt.grafana.com/gpg-full.key
+        dest: /etc/apt/keyrings/grafana.asc
+        mode: u=rw,g=r,o=r
+
+    - name: Grafana Cloud  ----  Alloy  ----  Add Grafana APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
+        state: present
+        filename: grafana
+
+    - name: Grafana Cloud  ----  Alloy  ----  Install Alloy package
+      ansible.builtin.apt:
+        name:
+          - alloy
+        update_cache: true
+        state: present
+
+    - name: Grafana Cloud  ----  Alloy  ----  Ensure Alloy binary has necessary eBPF capabilities
+      community.general.capabilities:
+        path: /usr/bin/alloy
+        capability: cap_sys_admin,cap_sys_ptrace,cap_net_raw=ep
+        state: present
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/alloy.service.d
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override for environment
+      ansible.builtin.copy:
+        content: |
+          [Service]
+          EnvironmentFile={{ alloy_env_file }}
+          AmbientCapabilities=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+          CapabilityBoundingSet=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+        dest: /etc/systemd/system/alloy.service.d/override.conf
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        force: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Enable Alloy service
+      ansible.builtin.systemd:
+        name: alloy.service
+        enabled: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Start Alloy service
+      ansible.builtin.systemd:
+        name: alloy
+        state: started
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/alloy.service.d
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+- name: Grafana Cloud  ----  Alloy  ----  Update Config
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Copy config files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: alloy
+        mode: u=rw,g=r,o=r
+        force: true
+      with_items:
+        - { src: files/config.alloy, dest: /etc/alloy/config.alloy }
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create environment file
+      ansible.builtin.copy:
+        content: |
+          CONFIG_FILE=/etc/alloy/config.alloy
+          CUSTOM_ARGS=
+          GCLOUD_RW_API_KEY={{ grafana_cloud_api_key }}
+          GCLOUD_PROMETHEUS_USER={{ grafana_cloud_prometheus_user }}
+          GCLOUD_LOKI_USER={{ grafana_cloud_loki_user }}
+          GCLOUD_TEMPO_URL={{ grafana_cloud_tempo_url }}
+          GCLOUD_TEMPO_USER={{ grafana_cloud_tempo_user }}
+          GCLOUD_TEMPO_RW_API_KEY={{ grafana_cloud_tempo_api_key }}
+        dest: "{{ alloy_env_file }}"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=
+        force: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Restart
+      ansible.builtin.systemd:
+        name: alloy
+        state: restarted

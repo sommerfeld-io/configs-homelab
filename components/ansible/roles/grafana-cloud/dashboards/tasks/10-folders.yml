@@ -1,0 +1,15 @@
+---
+- name: Grafana Cloud  ----  Folders  ----  Create
+  community.grafana.grafana_folder:
+    url: "{{ grafana_com_url }}"
+    grafana_api_key: "{{ grafana_com_api_key }}"
+    title: "{{ item.title }}"
+    uid: "{{ item.uid }}"
+    parent_uid: "{{ item.parent_uid }}"
+    state: present
+  loop:
+    - { title: "Sommerfeld.io", uid: "sommerfeldio", parent_uid: "" }
+    - { title: "Sommerfeld.io - DevOps", uid: "sommerfeldio-devops", parent_uid: "" }
+    - { title: "Sommerfeld.io - Nodes", uid: "sommerfeldio-nodes", parent_uid: "" }
+    - { title: "Sommerfeld.io - Playground", uid: "sommerfeldio-playground", parent_uid: "" }
+    - { title: "Sommerfeld.io - Services", uid: "sommerfeldio-services", parent_uid: "" }

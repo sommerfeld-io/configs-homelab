@@ -34,7 +34,6 @@
 		"components/talos-cluster/virtual-talos-admin/ansible/tasks",
 
         "docs/ansible/**",
-		"docs/api-docs/**",
         "docs/incident-responses",
 		"docs/nodes/**",
 
