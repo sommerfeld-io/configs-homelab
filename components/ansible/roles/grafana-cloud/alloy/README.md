@@ -8,9 +8,14 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 The following sensitive variables are be defined in `components/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
 
-| Variable                        | Description                              |
-|---------------------------------|------------------------------------------|
-| `grafana_cloud_api_key`         | Grafana Cloud API key for authentication |
-| `grafana_cloud_prometheus_user` | Prometheus user ID for metrics push      |
-| `grafana_cloud_loki_user`       | Loki user ID for logs push               |
-| `{{ grafana_com_url }}`         | The URL of the Grafana Instance          |
+| Variable                              | Description                                                                                     |
+|---------------------------------------|-------------------------------------------------------------------------------------------------|
+| `{{ grafana_com_url }}`               | The URL of the Grafana Instance (the one you access from the browser)                           |
+| `{{ grafana_cloud_api_key }}`         | Grafana Cloud API key for authentication                                                        |
+| `{{ grafana_cloud_prometheus_user }}` | Prometheus user ID for metrics push                                                             |
+| `grafana_cloud_loki_user`             | Loki user ID for logs push                                                                      |
+| `{{ grafana_cloud_tempo_url }}`       | The URL to the Tempo datasource                                                                 |
+| `{{ grafana_cloud_tempo_user }}`      | The user of the Tempo datasource                                                                |
+| `{{ grafana_cloud_tempo_api_key }}`   | Scopes: `metrics:write`, `logs:write`, `traces:write`, `profiles:write`,`fleet-management:read` |
+
+See <https://grafana.com/orgs/sommerfeldio/access-policies> for an overview of all tokens.

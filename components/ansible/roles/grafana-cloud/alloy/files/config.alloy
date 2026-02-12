@@ -200,3 +200,60 @@ loki.relabel "logs_integrations_integrations_alloy_health" {
     replacement  = "integrations/alloy"
   }
 }
+
+/*
+ * Beyla config to auto-discover data and send traces to grafana cloud
+ */
+
+// Beyla eBPF Component - This auto-detects processes on workstations and RasPi nodes
+beyla.ebpf "integrations_beyla" {
+  attributes {
+    kubernetes {
+      enable = "disabled"
+    }
+  }
+
+  discovery {
+    services {
+      open_ports = "80,443,3000,5000,8000,8080,9000"
+    }
+  }
+
+  output {
+    metrics = [otelcol.exporter.prometheus.beyla_converter.input]
+    traces  = [otelcol.exporter.otlp.grafana_cloud_tempo.input]
+  }
+}
+
+// The Converter
+otelcol.exporter.prometheus "beyla_converter" {
+    forward_to = [prometheus.relabel.beyla_metrics.receiver]
+}
+
+// Metrics Routing - This pipes Beyla metrics into your existing Prometheus remote write
+prometheus.relabel "beyla_metrics" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  rule {
+    replacement  = constants.hostname
+    target_label = "instance"
+  }
+
+  rule {
+    replacement  = "integrations/beyla"
+    target_label = "job"
+  }
+}
+
+// Traces Export (OTLP) - You will need to add GCLOUD_TEMPO_USER and GCLOUD_TEMPO_URL to your env
+otelcol.exporter.otlp "grafana_cloud_tempo" {
+  client {
+    endpoint = sys.env("GCLOUD_TEMPO_URL")
+    auth     = otelcol.auth.basic.grafana_cloud_tempo.handler
+  }
+}
+
+otelcol.auth.basic "grafana_cloud_tempo" {
+  username = sys.env("GCLOUD_TEMPO_USER")
+  password = sys.env("GCLOUD_TEMPO_RW_API_KEY")
+}
