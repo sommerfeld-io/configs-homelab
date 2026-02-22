@@ -70,15 +70,18 @@ nav:
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
   - nodes/raspi/index.md
   - Ansible Playbooks:
-      - All (provision full Homelab): ansible/all.md
-      - Cleanup: ansible/cleanup.md
-      - Grafana: ansible/grafana.md
-      - RasPi: ansible/raspi.md
-      - Repositories: ansible/repositories.md
-      - Telemetry: ansible/telemetry.md
-      - Telemetry Exporters: ansible/telemetry-exporters.md
-      - Ubuntu Desktop: ansible/desktop.md
-      - Ubuntu Desktop Steam: ansible/desktop-steam.md
+      - All (provision full Homelab): ansible/playbooks/all.md
+      - Cleanup: ansible/playbooks/cleanup.md
+      - Grafana: ansible/playbooks/grafana.md
+      - RasPi: ansible/playbooks/raspi.md
+      - Repositories: ansible/playbooks/repositories.md
+      - Telemetry: ansible/playbooks/telemetry.md
+      - Telemetry Exporters: ansible/playbooks/telemetry-exporters.md
+      - Ubuntu Desktop: ansible/playbooks/desktop.md
+      - Ubuntu Desktop Steam: ansible/playbooks/desktop-steam.md
+  - Ansible Roles:
+      - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
+      - Grafana Cloud / Dashboards: ansible/roles/grafana-cloud/dashboards.md
   - license.md
   - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
   - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR

@@ -1,4 +1,4 @@
-# Grafana Cloud
+# Grafana
 
 This documentation covers the Ansible playbooks that establish the observability solution for the home lab infrastructure using Grafana Cloud. The playbooks deploy telemetry collection agents on managed nodes and provision dashboards in Grafana Cloud for comprehensive monitoring and visualization.
 

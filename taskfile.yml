@@ -49,12 +49,20 @@ tasks:
 
   docs:generate:
     desc: 'Generate Markdown files for documentation'
+    vars:
+      GRAFANA_CLOUD_DOCS: docs/ansible/roles/grafana-cloud
+      GRAFANA_CLOUD_SRC: components/ansible/roles/grafana-cloud
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
+      - mkdir -p {{ .GRAFANA_CLOUD_DOCS }}
+      - task: common:copy
+        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/alloy/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/alloy.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/dashboards/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/dashboards.md" }
 
   docs:run:
     desc: Run the documentation server
