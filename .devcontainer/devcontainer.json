@@ -27,7 +27,14 @@
     },
 
     "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2.12.0": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:2.12.0": {},
+        "ghcr.io/devcontainers/features/node:1": {
+          "version": "latest"
+        }
+    },
+
+    "containerEnv": {
+      "SONARCLOUD_TOKEN": "${localEnv:SONARCLOUD_TOKEN}"
     },
 
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",

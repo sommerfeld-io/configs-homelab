@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "sonarqube": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "sonarqube-mcp-server@latest"
+      ],
+      "env": {
+        "SONARQUBE_URL": "https://sonarcloud.io",
+        "SONARQUBE_TOKEN": "${env:SONARCLOUD_TOKEN}",
+        "SONARQUBE_ORGANIZATION": "sommerfeld-io"
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ VERSION="$1"
 ## The version inside the yaml files is expected to be in the format: `version: 0.1.0`.
 ##
 ## @arg $1 string The version that should be written to the files.
-function incrementVersionsInYaml() {
+function increment_versions_in_yaml() {
   yaml_files=(
   )
   for file in tests/inspec/*/inspec.yml; do
@@ -21,6 +21,8 @@ function incrementVersionsInYaml() {
   for file in "${yaml_files[@]}"; do
     sed -i "s/version: .*/version: $VERSION/" "$file"
   done
+
+  return 0
 }
 
-incrementVersionsInYaml
+increment_versions_in_yaml

@@ -25,9 +25,10 @@
     "editor.formatOnPaste": true
   },
   "cSpell.words": [
-    "mkdocs",
     "controlplane",
+    "kubectl",
     "loadbalancing",
-    "kubectl"
+    "mkdocs",
+    "SONARCLOUD"
   ]
 }
