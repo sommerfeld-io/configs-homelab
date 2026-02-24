@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - .github/workflows/ansible-grafana-cloud.yml
+      - ansible/playbooks/grafana-cloud.yml
       - ansible/roles/grafana-cloud/**
   schedule:
     - cron: '0 3 * * *'
@@ -22,13 +23,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          ansible-galaxy collection install community.grafana
+        shell: bash
+      - name: Show versions
+        run: |
+          ansible --version
+          ansible-galaxy collection list | grep -Ei 'community.grafana'
+        shell: bash
       - name: Run playbook
         env:
           PLAYBOOK: grafana-cloud.yml
           VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible
           git submodule update --remote
           (
             cd ansible || exit
