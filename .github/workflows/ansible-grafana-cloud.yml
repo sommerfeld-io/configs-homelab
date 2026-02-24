@@ -1,0 +1,38 @@
+---
+name: "Ansible: Provision Grafana Cloud"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ansible-grafana-cloud.yml
+      - ansible/roles/grafana-cloud/**
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  playbook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Run playbook
+        env:
+          PLAYBOOK: grafana-cloud.yml
+          VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          git submodule update --remote
+          (
+            cd ansible || exit
+            echo "$VAULT_PASSWORD" > vault.pass
+            ansible-playbook "playbooks/$PLAYBOOK" --inventory hosts.yml --vault-password-file vault.pass
+          )
+        shell: bash

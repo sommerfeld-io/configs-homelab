@@ -28,8 +28,6 @@
     "mkdocs",
     "controlplane",
     "loadbalancing",
-    "talosconfig",
-    "kubectl",
-    "talosctl"
+    "kubectl"
   ]
 }

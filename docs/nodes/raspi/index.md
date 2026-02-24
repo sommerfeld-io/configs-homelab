@@ -1,7 +1,6 @@
 # Raspberry Pi Nodes
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as lightweight nodes in the home lab infrastructure. These devices handle dedicated roles including administrative tasks, monitoring and logging aggregation, and testing environments.
-y
 
 ## Rack Layout
 
@@ -13,9 +12,9 @@ Workstations and Raspberry Pi nodes are organized in a DeskPi RackMate T0, a com
 +-----------------+-----------------+
 |  runner-06-pi5  |  admin-pi       |
 +-----------------+-----------------+
-|  Power and HDD                    |
+|  Power                            |
 +-----------------------------------+
-|  caprica                          |
+|  -                                |
 +-----------------------------------+
 ```
 
@@ -34,26 +33,27 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 * [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 * [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 * [ ] Install machine using the Ansible configs from this repo using `task`.
-    * [ ] [Playbook "raspi"](../../ansible/raspi.md)
-    * [ ] [Playbook "repositories"](../../ansible/repositories.md)
-    * [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
+    * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
+    * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
+    * [ ] Login to Docker registry on the new machine: `docker login`
+    * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) **DEPRECATED**
+    * [ ] [Playbook "telemetry-exporters"](../../ansible/playbooks/telemetry-exporters.md) **DEPRECATED**
+    * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana.md)
 
 ### Follow-Up Todos
 
-* [ ] Add the new RasPi Node to `components/ansible/assets/global-taskfile.yml` for easy SSH connections.
-* [ ] Allow machine to work with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-* [ ] Login to Docker registry on the new machine: `docker login`
+* [ ] Add the new RasPi Node to `ansible/playbooks/assets/global-taskfile.yml` for easy SSH connections.
 
 ## RasPi Fleet Overview
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as lightweight nodes in the home lab infrastructure. These devices handle dedicated roles including administrative tasks, monitoring and logging aggregation, and testing environments. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet.
 
-| Name            | Model           | RAM | Storage         | Note |
-|-----------------|-----------------|-----|-----------------|------|
-| `admin-pi`      | Raspberry Pi 4B | 8GB | 128GB microSD   | Help with administrative tasks in the home lab |
-| `runner-04-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD    | -    |
-| `runner-05-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD    | -    |
-| `runner-06-pi5` | Raspberry Pi 5  | 8GB | 32GB microSD    | -    |
+| Name            | Model           | RAM | Storage       | Note                                           |
+|-----------------|-----------------|-----|---------------|------------------------------------------------|
+| `admin-pi`      | Raspberry Pi 4B | 8GB | 128GB microSD | Help with administrative tasks in the home lab |
+| `runner-04-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD  | -                                              |
+| `runner-05-pi`  | Raspberry Pi 4B | 8GB | 32GB microSD  | -                                              |
+| `runner-06-pi5` | Raspberry Pi 5  | 8GB | 32GB microSD  | -                                              |
 
 ### `admin-pi.fritz.box`
 
@@ -66,7 +66,7 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
         * [Grafana](https://grafana.com): As the visualization layer, Grafana takes the metrics from Prometheus and transforms them into interactive and insightful dashboards. You can build custom graphs and charts to get a clear, at-a-glance view of your network's health and performance.
         * [Loki](https://grafana.com/oss/loki): This logging service is designed specifically for handling large volumes of log data efficiently. Loki works by using the same labels as Prometheus, which makes it easy to correlate metrics and logs for quick troubleshooting and root cause analysis.
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] [Playbook "telemetry"](../../ansible/telemetry.md)
+    * [ ] [Playbook "telemetry"](../../ansible/playbooks/telemetry.md)
     * [ ] Setup password-less ssh connections from `admin-pi`
         * [ ] `ssh-copy-id sebastian@caprica.fritz.box`
         * [ ] `ssh-copy-id sebastian@kobol.fritz.box`
@@ -78,17 +78,17 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
 ### `runner-04-pi.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id sebastian@runner-04-pi.fritz.box`
 
 ### `runner-05-pi.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id sebastian@runner-05-pi.fritz.box`
 
 ### `runner-06-pi5.fritz.box`
 
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi`
+    * [ ] Setup password-less ssh connections from `carpica`, `kobol` and `admin-pi` to the RasPi node
         * [ ] `ssh-copy-id <sebastian@runner-06-pi5.fritz.box>

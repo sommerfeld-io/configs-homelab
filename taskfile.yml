@@ -28,7 +28,7 @@ tasks:
       - sudo rm -rf .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
-      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi', 'talos-baseline']
+      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
@@ -42,39 +42,27 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'helm', 'k8s-manifests', 'markdown-links']
+      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'markdown-links', 'alloy-config']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
 
-  internal:docs:generate:from-readme:
-    desc: 'Collecting documentation README.md files in this repo'
-    internal: true
-    vars:
-      FOLDERS:
-        sh: find {{ .BASEPATH }} -maxdepth 1 -type d -not -path '{{ .BASEPATH }}' -exec basename {} \;
-    cmds:
-      - rm -rf docs/{{ .TARGET_PATH }}
-      - mkdir -p docs/{{ .TARGET_PATH }}
-      - echo "Contents of this folder are auto-generated" > docs/{{ .TARGET_PATH }}/.auto-generated
-      - for: { var: FOLDERS }
-        task: common:copy
-        vars: { SRC: "{{ .BASEPATH }}/{{ .ITEM }}/README.md", DEST: "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md" }
-    generates:
-      - "docs/{{ .TARGET_PATH }}/{{ .ITEM }}.md"
-
   docs:generate:
     desc: 'Generate Markdown files for documentation'
+    vars:
+      GRAFANA_CLOUD_DOCS: docs/ansible/roles/grafana-cloud
+      GRAFANA_CLOUD_SRC: ansible/roles/grafana-cloud
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
-      - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/manifests/apps, TARGET_PATH: api-docs/manifests/apps }
-      - task: internal:docs:generate:from-readme
-        vars: { BASEPATH: components/talos-cluster/helm-charts, TARGET_PATH: api-docs/helm-charts }
+      - mkdir -p {{ .GRAFANA_CLOUD_DOCS }}
+      - task: common:copy
+        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/alloy/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/alloy.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/dashboards/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/dashboards.md" }
 
   docs:run:
     desc: Run the documentation server
@@ -88,10 +76,17 @@ tasks:
     vars:
       PLAYBOOK: cleanup.yml
     desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
-    dir: &ansible-dir components/ansible
+    dir: &ansible-dir ansible
     cmds: &ansible-cmd
       - git submodule update --remote
-      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
+
+  ansible:all:
+    vars:
+      PLAYBOOK: all.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
 
   ansible:raspi:
     vars:
@@ -134,6 +129,34 @@ tasks:
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
+
+  ansible:grafana:
+    vars:
+      PLAYBOOK: grafana.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:grafana:agents:
+    vars:
+      PLAYBOOK: grafana-agents.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:grafana:cloud:
+    vars:
+      PLAYBOOK: grafana-cloud.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:grafana:vault:
+    vars:
+      VAULT_FILE: ansible/vars/grafana-vault.yml
+    desc: Show and edit the contents of the Ansible Vault file for Grafana Cloud
+    cmds:
+      - ansible-vault edit {{ .VAULT_FILE }}
 
   # ===============================================================================================
 
@@ -236,38 +259,3 @@ tasks:
         vars:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
-
-  inspec:run:talos:
-    desc: HOST ONLY | Run InSpec against Talos cluster
-    vars:
-      PROFILE: talos-baseline
-    cmds:
-      - docker compose run --rm inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --no-distinct-exit --chef-license=accept
-
-  # ===============================================================================================
-
-  virtual-talos-admin:start:
-    desc: HOST ONLY | Startup the Talos Administration Vagrantbox'
-    dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
-    cmds:
-      - vagrant validate
-      - vagrant up
-
-  virtual-talos-admin:stop:
-    desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant halt
-
-  virtual-talos-admin:ssh:
-    desc: HOST ONLY | SSH into the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant ssh
-
-  virtual-talos-admin:remove:
-    desc: HOST ONLY | Remove the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant halt
-      - vagrant destroy --force

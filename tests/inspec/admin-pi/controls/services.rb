@@ -7,7 +7,7 @@ control 'services-01' do
   title 'Ensure essential directories and files are present'
   desc 'Check for the presence of essential directories and files and their permissions
     Ansible tasks:
-    * components/ansible/tasks/common-telemetry.yml'
+    * ansible/tasks/common-telemetry.yml'
 
   directories = [
     "/home/#{username}/.repos/telemetry",

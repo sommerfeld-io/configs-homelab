@@ -1,0 +1,10 @@
+---
+- name: Provision Grafana Cloud Instance (sommerfeldio.grafana.net)
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - ../vars/grafana-vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/grafana-cloud/dashboards

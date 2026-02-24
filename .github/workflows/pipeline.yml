@@ -39,7 +39,7 @@ jobs:
     name: ${{ matrix.linter }}
     strategy:
       matrix:
-        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'helm', 'k8s-manifests']
+        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'alloy-config']
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -62,7 +62,7 @@ jobs:
       INSPEC_IMAGE: chef/inspec:5.22.76
     strategy:
       matrix:
-        profile: ['ansible-baseline', 'raspi-baseline', 'admin-pi', 'talos-baseline']
+        profile: ['ansible-baseline', 'raspi-baseline', 'admin-pi']
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

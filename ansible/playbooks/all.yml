@@ -1,0 +1,15 @@
+---
+- name: Include Grafana Playbook to provision desktop workstations on the homelab
+  ansible.builtin.import_playbook: ./desktop.yml
+
+- name: Include Grafana Playbook to provision RasPi nodes on the homelab
+  ansible.builtin.import_playbook: ./raspi.yml
+
+- name: Include Grafana Playbook to provision nodes on the homelab for use with Grafana Cloud
+  ansible.builtin.import_playbook: ./grafana-agents.yml
+
+- name: Include Grafana Playbook to clone repositories on the homelab nodes
+  ansible.builtin.import_playbook: ./repositories.yml
+
+- name: Include Grafana Playbook to clean up the homelab nodes from old files, etc.
+  ansible.builtin.import_playbook: ./cleanup.yml

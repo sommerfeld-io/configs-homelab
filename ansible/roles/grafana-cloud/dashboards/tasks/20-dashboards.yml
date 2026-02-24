@@ -1,0 +1,12 @@
+---
+- name: Grafana Cloud  ----  Dashboards  ----  Create from Grafana.com by ID
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_com_url }}"
+    grafana_api_key: "{{ grafana_com_api_key }}"
+    parent_folder: "{{ item.parent_folder }}"
+    folder: "{{ item.folder }}"
+    dashboard_id: "{{ item.dashboard_id }}"
+    dashboard_revision: "{{ item.dashboard_revision }}"
+    state: present
+  loop:
+    - { dashboard_id: "1860", dashboard_revision: "42", parent_folder: "", folder: "sommerfeldio-nodes" } # https://grafana.com/grafana/dashboards/1860-node-exporter-full/

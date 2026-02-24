@@ -41,11 +41,12 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `sudo visudo` (edit sudoers file)
     - [ ]  Add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 - [ ] Install machine using the Ansible configs from this repo using `task`.
-    - [ ] [Playbook "desktop"](../../ansible/desktop.md)
+    - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md)
     - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-    - [ ] [Playbook "repositories"](../../ansible/repositories.md)
     - [ ] Login to Docker registry on the new machine: `docker login`
-    - [ ] [Playbook "telemetry-exporters"](../../ansible/telemetry-exporters.md)
+    - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) **DEPRECATED**
+    - [ ] [Playbook "telemetry-exporters"](../../ansible/playbooks/telemetry-exporters.md) **DEPRECATED**
+    - [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana.md)
 
 ## Manual Follow-Up Todos
 
