@@ -28,7 +28,7 @@ tasks:
       - sudo rm -rf .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
-      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi', 'talos-baseline']
+      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
@@ -51,7 +51,7 @@ tasks:
     desc: 'Generate Markdown files for documentation'
     vars:
       GRAFANA_CLOUD_DOCS: docs/ansible/roles/grafana-cloud
-      GRAFANA_CLOUD_SRC: components/ansible/roles/grafana-cloud
+      GRAFANA_CLOUD_SRC: ansible/roles/grafana-cloud
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
@@ -76,7 +76,7 @@ tasks:
     vars:
       PLAYBOOK: cleanup.yml
     desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
-    dir: &ansible-dir components/ansible
+    dir: &ansible-dir ansible
     cmds: &ansible-cmd
       - git submodule update --remote
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
@@ -153,7 +153,7 @@ tasks:
 
   ansible:grafana:vault:
     vars:
-      VAULT_FILE: components/ansible/vars/grafana-vault.yml
+      VAULT_FILE: ansible/vars/grafana-vault.yml
     desc: Show and edit the contents of the Ansible Vault file for Grafana Cloud
     cmds:
       - ansible-vault edit {{ .VAULT_FILE }}
@@ -259,38 +259,3 @@ tasks:
         vars:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
-
-  inspec:run:talos:
-    desc: HOST ONLY | Run InSpec against Talos cluster
-    vars:
-      PROFILE: talos-baseline
-    cmds:
-      - docker compose run --rm inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --no-distinct-exit --chef-license=accept
-
-  # ===============================================================================================
-
-  virtual-talos-admin:start:
-    desc: HOST ONLY | Startup the Talos Administration Vagrantbox'
-    dir: &talos-vm-dir components/talos-cluster/virtual-talos-admin
-    cmds:
-      - vagrant validate
-      - vagrant up
-
-  virtual-talos-admin:stop:
-    desc: HOST ONLY | Shutdown the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant halt
-
-  virtual-talos-admin:ssh:
-    desc: HOST ONLY | SSH into the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant ssh
-
-  virtual-talos-admin:remove:
-    desc: HOST ONLY | Remove the Talos Administration Vagrantbox
-    dir: *talos-vm-dir
-    cmds:
-      - vagrant halt
-      - vagrant destroy --force

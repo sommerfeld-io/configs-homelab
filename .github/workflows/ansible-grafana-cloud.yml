@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - .github/workflows/ansible-grafana-cloud.yml
-      - components/ansible/roles/grafana-cloud/**
+      - ansible/roles/grafana-cloud/**
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install -y ansible
           git submodule update --remote
           (
-            cd components/ansible || exit
+            cd ansible || exit
             echo "$VAULT_PASSWORD" > vault.pass
             ansible-playbook "playbooks/$PLAYBOOK" --inventory hosts.yml --vault-password-file vault.pass
           )

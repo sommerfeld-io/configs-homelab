@@ -42,7 +42,7 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 
 ### Follow-Up Todos
 
-* [ ] Add the new RasPi Node to `components/ansible/playbooks/assets/global-taskfile.yml` for easy SSH connections.
+* [ ] Add the new RasPi Node to `ansible/playbooks/assets/global-taskfile.yml` for easy SSH connections.
 
 ## RasPi Fleet Overview
 
