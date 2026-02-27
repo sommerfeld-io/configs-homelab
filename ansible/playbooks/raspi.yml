@@ -6,11 +6,14 @@
   vars_files:
     - ../vars/main.yml
     - ../vars/raspi.yml
+    - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/bash-secrets
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
@@ -40,6 +43,7 @@
   vars_files:
     - ../vars/main.yml
     - ../vars/raspi.yml
+    - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/atuin
@@ -51,6 +55,7 @@
   vars_files:
     - ../vars/main.yml
     - ../vars/raspi.yml
+    - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/ansible

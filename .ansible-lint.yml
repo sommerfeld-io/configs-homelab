@@ -10,6 +10,7 @@ use_default_rules: false
 exclude_paths:
   - ansible/roles/ansible-roles-collection
   ## Ignore the following due to ansible-vault usage in playbooks and vars files
+  ## TODO https://github.com/sommerfeld-io/configs-homelab/issues/172
   - ansible/vars/grafana-vault.yml
   - ansible/vars/vault.yml
   - ansible/playbooks/all.yml
@@ -17,6 +18,7 @@ exclude_paths:
   - ansible/playbooks/grafana-agents.yml
   - ansible/playbooks/grafana-cloud.yml
   - ansible/playbooks/grafana.yml
+  - ansible/playbooks/raspi.yml
 
 enable_list:
   - no-log-password
