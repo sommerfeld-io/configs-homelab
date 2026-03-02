@@ -16,4 +16,4 @@
         name: ../roles/ansible-roles-collection/clamav
         tasks_from: scan
       vars:
-        scan_path: /home/{{ ansible_user }}/tmp
+        scan_path: /home/{{ ansible_user }}
