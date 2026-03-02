@@ -75,6 +75,7 @@ nav:
       - Grafana: ansible/playbooks/grafana.md
       - RasPi: ansible/playbooks/raspi.md
       - Repositories: ansible/playbooks/repositories.md
+      - Scan: ansible/playbooks/scan.md
       - Telemetry: ansible/playbooks/telemetry.md
       - Telemetry Exporters: ansible/playbooks/telemetry-exporters.md
       - Ubuntu Desktop: ansible/playbooks/desktop.md

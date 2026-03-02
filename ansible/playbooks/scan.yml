@@ -1,0 +1,19 @@
+---
+- name: Scan systems
+  # hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/clamav
+        tasks_from: install
+
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/clamav
+        tasks_from: scan
+      vars:
+        scan_path: /home/{{ ansible_user }}/tmp

@@ -79,6 +79,7 @@ tasks:
     dir: &ansible-dir ansible
     cmds: &ansible-cmd
       - git submodule update --remote
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --syntax-check
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
 
   ansible:all:
@@ -133,6 +134,13 @@ tasks:
   ansible:grafana:
     vars:
       PLAYBOOK: grafana.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:scan:
+    vars:
+      PLAYBOOK: scan.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
