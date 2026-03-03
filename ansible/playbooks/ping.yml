@@ -1,0 +1,9 @@
+---
+- name: Ping all nodes on the homelab
+  hosts: all
+  gather_facts: false
+  become: false
+  tasks:
+
+    - name: Ping nodes
+      ansible.builtin.ping:

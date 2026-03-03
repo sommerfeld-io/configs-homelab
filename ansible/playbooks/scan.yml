@@ -1,7 +1,6 @@
 ---
 - name: Scan systems
-  # hosts: ubuntu_desktop:raspi
-  hosts: ubuntu_desktop
+  hosts: ubuntu_desktop:raspi
   gather_facts: true
   become: true
   vars_files:

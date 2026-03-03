@@ -138,6 +138,13 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
+  ansible:ping:
+    vars:
+      PLAYBOOK: ping.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   ansible:scan:
     vars:
       PLAYBOOK: scan.yml
