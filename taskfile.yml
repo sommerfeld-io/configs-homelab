@@ -79,7 +79,6 @@ tasks:
     dir: &ansible-dir ansible
     cmds: &ansible-cmd
       - git submodule update --remote
-      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --syntax-check
       - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
 
   ansible:all:

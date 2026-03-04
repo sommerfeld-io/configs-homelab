@@ -12,8 +12,12 @@
         name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/bash-secrets
+
+    - ansible.builtin.include_tasks:
+        file: ../tasks/bash-secrets.yml
+      vars:
+        line: export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}
+
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
