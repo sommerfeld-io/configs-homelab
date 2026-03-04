@@ -36,10 +36,6 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
 
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/git-repositories
-        tasks_from: uninstall
-
 - name: Clone git repositories
   hosts: admin-pi.fritz.box
   gather_facts: true
@@ -55,6 +51,18 @@
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
         tasks_from: main
 
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/git-repositories
-        tasks_from: uninstall
+- name: Cleanup
+  hosts: ubuntu_desktop:raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+
+    - name: Git Repositories  ----  Remove outdated repositories from host
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
+        - "{{ dir_repos_sommerfeld_io }}/release-watcher"
