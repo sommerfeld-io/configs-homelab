@@ -13,8 +13,6 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash
     - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/bash-secrets
-    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/packages
