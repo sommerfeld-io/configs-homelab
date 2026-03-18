@@ -38,16 +38,40 @@
       register: cleanup_result
       changed_when: cleanup_result.changed
 
-    - name: Cleanup  ----  APT  ----  Remove unused packages
-      when: ansible_os_family == "Debian"
-      ansible.builtin.apt:
-        autoremove: true
+    - name: Cleanup  ----  ClamAV
+      vars:
+        age: 30d
+        paths: /var/log/clamav
+        pattern: "*.log, *.log.*"
+      block:
+        - name: Cleanup  ----  ClamAV  ----  Find scan logs older than "{{ age }}"
+          ansible.builtin.find:
+            paths: "{{ paths }}"
+            patterns: "{{ pattern }}"
+            file_type: file
+            recurse: true
+            age: "{{ age }}"
+            age_stamp: mtime
+          register: old_logs
+        - name: Cleanup  ----  ClamAV  ----  Remove scan logs older than "{{ age }}"
+          ansible.builtin.file:
+            path: "{{ item.path }}"
+            state: absent
+          loop: "{{ old_logs.files }}"
+          loop_control:
+            label: "{{ item.path }}"
 
-    - name: Cleanup  ----  APT  ----  Clean package cache
-      when: ansible_os_family == "Debian"
-      ansible.builtin.apt:
-        autoclean: true
-        clean: true
+    - name: Cleanup  ----  APT
+      block:
+        - name: Cleanup  ----  APT  ----  Remove unused packages
+          when: ansible_os_family == "Debian"
+          ansible.builtin.apt:
+            autoremove: true
+        - name: Cleanup  ----  APT  ----  Clean package cache
+          when: ansible_os_family == "Debian"
+          ansible.builtin.apt:
+            autoclean: true
+            clean: true
 
 - name: Run cleanup tasks (non-root)
   hosts: ubuntu_desktop
