@@ -48,6 +48,6 @@ jobs:
         uses: actions/configure-pages@v5.0.0
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4.0.5
+        uses: actions/deploy-pages@v5.0.0
         with:
           artifact_name: ${{ env.DOCS_PAGES_ARTIFACT }}
