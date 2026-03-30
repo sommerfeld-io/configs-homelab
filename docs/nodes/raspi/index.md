@@ -36,8 +36,7 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
     * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
     * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
     * [ ] Login to Docker registry on the new machine: `docker login`
-    * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) **DEPRECATED**
-    * [ ] [Playbook "telemetry-exporters"](../../ansible/playbooks/telemetry-exporters.md) **DEPRECATED**
+    * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
     * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana.md)
 
 ### Follow-Up Todos
@@ -66,7 +65,6 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
         * [Grafana](https://grafana.com): As the visualization layer, Grafana takes the metrics from Prometheus and transforms them into interactive and insightful dashboards. You can build custom graphs and charts to get a clear, at-a-glance view of your network's health and performance.
         * [Loki](https://grafana.com/oss/loki): This logging service is designed specifically for handling large volumes of log data efficiently. Loki works by using the same labels as Prometheus, which makes it easy to correlate metrics and logs for quick troubleshooting and root cause analysis.
 * **Setup**: In addition to the tasks listed in the Setup Guide above, please complete the following steps:
-    * [ ] [Playbook "telemetry"](../../ansible/playbooks/telemetry.md)
     * [ ] Setup password-less ssh connections from `admin-pi`
         * [ ] `ssh-copy-id sebastian@caprica.fritz.box`
         * [ ] `ssh-copy-id sebastian@kobol.fritz.box`

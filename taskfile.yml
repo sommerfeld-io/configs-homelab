@@ -116,20 +116,6 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:telemetry:
-    vars:
-      PLAYBOOK: telemetry.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:telemetry:exporters:
-    vars:
-      PLAYBOOK: telemetry-exporters.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
   ansible:grafana:
     vars:
       PLAYBOOK: grafana.yml

@@ -21,7 +21,7 @@ The setup wizard takes care of the hostname, network settings, etc.
 - [ ] Do not install any other software packages. Installations take place later when Ansible provisions the system.
 - [ ] When running Ansible from the freshly provisioned machine: Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -` (skip of another host is the Ansible controller)
 - [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -` if needed
-- [ ] Test connecting to my other Linux machines (with user "sebastian" being the user created while installing the OS).
+- [ ] Test connecting to my other Linux machines (with `sebastian` being the user created while installing the OS).
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
     - [ ] `ssh sebastian@picon.fritz.box`
@@ -44,8 +44,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md)
     - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
     - [ ] Login to Docker registry on the new machine: `docker login`
-    - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) **DEPRECATED**
-    - [ ] [Playbook "telemetry-exporters"](../../ansible/playbooks/telemetry-exporters.md) **DEPRECATED**
+    - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
     - [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana.md)
 
 ## Manual Follow-Up Todos
