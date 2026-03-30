@@ -51,3 +51,4 @@
         - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
         - "{{ dir_repos_sommerfeld_io }}/release-watcher"
         - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
+        - "{{ dir_repos_sommerfeld_io }}/telemetry"
