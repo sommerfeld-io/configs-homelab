@@ -10,6 +10,6 @@
   loop:
     - { title: "Sommerfeld.io", uid: "sommerfeldio", parent_uid: "" }
     - { title: "Sommerfeld.io - DevOps", uid: "sommerfeldio-devops", parent_uid: "" }
-    - { title: "Sommerfeld.io - Nodes", uid: "sommerfeldio-nodes", parent_uid: "" }
+    - { title: "Sommerfeld.io - Linux Node", uid: "sommerfeldio-node", parent_uid: "" }
     - { title: "Sommerfeld.io - Playground", uid: "sommerfeldio-playground", parent_uid: "" }
     - { title: "Sommerfeld.io - Services", uid: "sommerfeldio-services", parent_uid: "" }
