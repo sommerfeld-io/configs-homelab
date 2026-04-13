@@ -17,12 +17,9 @@ tasks:
     cmds:
       - git submodule update --remote
 
-  cleanup:
-    desc: Cleanup the development environment for this project
+  cleanup:filesystem:
+    desc: Cleanup the filesystem for this project
     cmds:
-      - docker compose down --remove-orphans
-      - docker container prune -f
-      - docker volume prune -f
       - rm -rf .cache
       - sudo rm -rf .ansible
       - sudo rm -rf .devcontainer/ops
@@ -35,6 +32,14 @@ tasks:
       - find . -type f -exec chmod ugo+r {} +
       - find . -type d -exec chmod 755 {} +
       - find . -name "*.sh" -type f -exec chmod +x {} +
+
+  cleanup:
+    desc: Cleanup the development environment for this project
+    cmds:
+      - docker compose down --remove-orphans
+      - docker container prune -f
+      - docker volume prune -f
+      - task: cleanup:filesystem
       - task: update
 
   # ===============================================================================================
@@ -42,6 +47,7 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
+      - task: cleanup:filesystem
       - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'markdown-links', 'alloy-config']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 

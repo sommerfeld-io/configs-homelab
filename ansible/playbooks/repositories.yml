@@ -34,6 +34,7 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
+          - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
 
 - name: Cleanup
   hosts: ubuntu_desktop:raspi
