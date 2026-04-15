@@ -19,6 +19,7 @@
         repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
         state: present
         filename: grafana
+        mode: '0644'
 
     - name: Grafana Cloud  ----  Alloy  ----  Install Alloy package
       ansible.builtin.apt:

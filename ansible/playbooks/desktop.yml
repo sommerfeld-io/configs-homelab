@@ -50,6 +50,9 @@
         name: ../roles/ansible-roles-collection/github-cli
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/virtualization
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/node
+        tasks_from: main
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_desktop
@@ -71,3 +74,6 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/vscode
         tasks_from: plugins
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/node
+        tasks_from: modules-ai
