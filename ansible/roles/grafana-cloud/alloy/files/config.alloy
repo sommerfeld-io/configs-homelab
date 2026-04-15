@@ -205,7 +205,8 @@ loki.relabel "logs_integrations_integrations_alloy_health" {
  * Github integration
  */
 prometheus.exporter.github "integrations_github_exporter" {
-	organizations = ["sommerfeld-io"]
+	organizations = ["sommerfeld-io", "bad-android", "twelve-colonies"]
+  users = ["sebastian-sommerfeld-io", "marvin-the-bad-android"]
 	api_token_file = "/etc/alloy/github.token"
 }
 
