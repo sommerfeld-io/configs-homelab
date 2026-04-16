@@ -1,0 +1,16 @@
+---
+name: picon
+title: picon compliance profile
+maintainer: Sebastian Sommerfeld
+copyright: sommerfeld.io
+copyright_email: sebastian@sommerfeld.io
+license: MIT
+summary: picon compliance profile for all machines that are installed with ansible
+version: 0.69.0
+supports:
+  platform: os
+depends:
+  - name: ollama-essentials
+    git: https://github.com/sommerfeld-io/inspec-profiles.git
+    branch: main
+    relative_path: profiles/ollama-essentials

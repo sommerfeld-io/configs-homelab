@@ -1,0 +1,11 @@
+---
+- name: Install and configure Ollama and models
+  hosts: ollama
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/ollama

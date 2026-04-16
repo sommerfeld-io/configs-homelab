@@ -75,6 +75,7 @@ nav:
       - Desktop: ansible/playbooks/desktop.md
       - Desktop Steam: ansible/playbooks/desktop-steam.md
       - Grafana: ansible/playbooks/grafana.md
+      - Ollama: ansible/playbooks/ollama.md
       - Ping: ansible/playbooks/ping.md
       - RasPi: ansible/playbooks/raspi.md
       - Repositories: ansible/playbooks/repositories.md

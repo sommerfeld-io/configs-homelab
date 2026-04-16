@@ -25,7 +25,7 @@ tasks:
       - sudo rm -rf .devcontainer/ops
       - rm -rf node_modules
       - rm -rf target
-      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'raspi-baseline', 'runner-04-pi']
+      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'picon', 'raspi-baseline', 'runner-04-pi']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
@@ -94,13 +94,6 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:raspi:
-    vars:
-      PLAYBOOK: raspi.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
   ansible:desktop:
     vars:
       PLAYBOOK: desktop.yml
@@ -115,30 +108,9 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:repositories:
-    vars:
-      PLAYBOOK: repositories.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
   ansible:grafana:
     vars:
       PLAYBOOK: grafana.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:ping:
-    vars:
-      PLAYBOOK: ping.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:scan:
-    vars:
-      PLAYBOOK: scan.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
@@ -153,6 +125,41 @@ tasks:
   ansible:grafana:cloud:
     vars:
       PLAYBOOK: grafana-cloud.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:ollama:
+    vars:
+      PLAYBOOK: ollama.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:ping:
+    vars:
+      PLAYBOOK: ping.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:raspi:
+    vars:
+      PLAYBOOK: raspi.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:repositories:
+    vars:
+      PLAYBOOK: repositories.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:scan:
+    vars:
+      PLAYBOOK: scan.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd
@@ -222,7 +229,7 @@ tasks:
     vars:
       HOST: picon.fritz.box
     cmds:
-      - for: ['ansible-baseline']
+      - for: ['ansible-baseline', 'picon']
         task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
