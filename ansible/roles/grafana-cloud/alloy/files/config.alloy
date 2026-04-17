@@ -207,6 +207,7 @@ loki.relabel "logs_integrations_integrations_alloy_health" {
 prometheus.exporter.github "integrations_github_exporter" {
 	organizations = ["sommerfeld-io", "bad-android", "twelve-colonies", "fb-brunnenbau", "minifigs", "sommerfeld-shop"]
   users = ["sebastian-sommerfeld-io"]
+  // repositories   = ["sommerfeld-io/your-repo", ...] // For PR counts, add explicit repositories because PRs need a dedicated API call per repository. The default metadata for users and organizations does not include PR counts.
 	api_token_file = "/etc/alloy/github.token"
 }
 
