@@ -1,16 +1,22 @@
 ---
-- name: Mount Disk  ----  Ensure mount directory exists
-  ansible.builtin.file:
-    path: "{{ mount_path }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0755'
+- name: Mount Disk
+  when:
+    - mount_disk_path | default('') | length > 0
+    - mount_disk_uuid | default('') | length > 0
+  block:
 
-- name: Mount Disk  ----  Mount and enable the SSD in fstab
-  ansible.posix.mount:
-    path: "{{ mount_path }}"
-    src: "UUID={{ disk_uuid }}"
-    fstype: ext4
-    opts: defaults,noatime,nofail
-    state: mounted
+    - name: Mount Disk  ----  Ensure mount directory exists
+      ansible.builtin.file:
+        path: "{{ mount_disk_path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Mount Disk  ----  Mount and enable the SSD in fstab
+      ansible.posix.mount:
+        path: "{{ mount_disk_path }}"
+        src: "UUID={{ mount_disk_uuid }}"
+        fstype: ext4
+        opts: defaults,noatime,nofail
+        state: mounted
