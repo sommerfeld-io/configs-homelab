@@ -7,3 +7,13 @@
 
     - name: Ping nodes
       ansible.builtin.ping:
+
+    - name: Network  ----  Check network route metrics
+      block:
+        - name: Network  ----  Show default routes with metrics
+          ansible.builtin.command: ip route show default
+          register: routes
+          changed_when: false
+        - name: Network  ----  Print routes
+          ansible.builtin.debug:
+            var: routes.stdout_lines
