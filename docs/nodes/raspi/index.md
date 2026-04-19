@@ -9,9 +9,9 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle ded
 | Name        | Model    | RAM | Main Storage  | Role                    |
 |-------------|----------|-----|---------------|-------------------------|
 | `raspi4-01` | RasPi 4B | 8GB | 32GB microSD  | Secondary OpenClaw Node |
-| `raspi4-02` | RasPi 4B | 8GB | 32GB microSD  | Main OpenClaw Node      |
+| `raspi4-02` | RasPi 4B | 8GB | 32GB microSD  | -                       |
 | `raspi4-03` | RasPi 4B | 8GB | 128GB microSD | -                       |
-| `raspi5-01` | RasPi 5  | 8GB | 32GB microSD  | Ollama Runner           |
+| `raspi5-01` | RasPi 5  | 8GB | 32GB microSD  | Main OpenClaw Node      |
 
 Workstations and Raspberry Pi nodes are organized in a DeskPi RackMate T0, a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
 
