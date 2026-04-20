@@ -17,3 +17,13 @@
         - name: Network  ----  Print routes
           ansible.builtin.debug:
             var: routes.stdout_lines
+
+    - name: Network  ----  Check all interface link states
+      block:
+        - name: Network  ----  Show all interfaces
+          ansible.builtin.command: ip -brief link show
+          register: ip_links
+          changed_when: false
+        - name: Network  ----  Print interfaces
+          ansible.builtin.debug:
+            var: ip_links.stdout_lines
