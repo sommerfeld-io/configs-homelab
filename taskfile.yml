@@ -53,6 +53,14 @@ tasks:
 
   # ===============================================================================================
 
+  copilot:lint-and-fix:
+    desc: 'Use GitHub Copilot to lint and fix issues in the project'
+    cmds:
+      - task: cleanup
+      - copilot --allow-all --prompt "/lint-and-fix"
+
+  # ===============================================================================================
+
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     vars:
