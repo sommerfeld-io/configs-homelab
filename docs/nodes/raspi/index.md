@@ -6,26 +6,29 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle dedicated roles. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet. No Pi has password-less SSH connections configured so they cannot easily connect to any other node.
 
-| Name        | Model    | RAM | Main Storage  | Role                    |
-|-------------|----------|-----|---------------|-------------------------|
-| `raspi4-01` | RasPi 4B | 8GB | 32GB microSD  | Secondary OpenClaw Node |
-| `raspi4-02` | RasPi 4B | 8GB | 32GB microSD  | -                       |
-| `raspi4-03` | RasPi 4B | 8GB | 128GB microSD | -                       |
-| `raspi5-01` | RasPi 5  | 8GB | 32GB microSD  | Main OpenClaw Node      |
+| Name              | Model    | RAM | Main Storage  | Role                    |
+|-------------------|----------|-----|---------------|-------------------------|
+| `pi4-01`          | RasPi 4B | 8GB | 32GB microSD  | Secondary OpenClaw Node |
+| `pi4-02`          | RasPi 4B | 8GB | 32GB microSD  | -                       |
+| `pi4-03`          | RasPi 4B | 8GB | 64GB microSD  | -                       |
+| `pi4-04`          | RasPi 4B | 8GB | 64GB microSD  | Ubuntu Desktop          |
+| `pi5-01-openclaw` | RasPi 5  | 8GB | 128GB microSD | Main OpenClaw Node      |
 
-Workstations and Raspberry Pi nodes are organized in a DeskPi RackMate T0, a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
+Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
 
 ```ditaa
-+-------------+      +-------------+-------------+      +-------------+
-|  SSD 120GB  +------+  raspi4-01  |  raspi4-02  +------+  SSD 240GB  |
-+-------------+      +----------------+----------+      +-------------+
-                     |  raspi5-01  |  raspi4-03  |
-                     +-----------------+---------+
-                     |  Power                    |
-                     +---------------------------+
-                     |  -                        |
-                     +---------------------------+
++-------------+      +-------------------+-------------------+      +-------------+
+|  SSD 120GB  +------+  pi4-01           |  pi4-02           +------+  SSD 240GB  |
++-------------+      +-------------------+-------------------+      +-------------+
+                     |  pi5-01-openclaw  |  pi4-03           |
+                     +-------------------+-------------------+
+                     |  Power                                |
+                     +---------------------------------------+
+                     |  Network Switch                       |
+                     +---------------------------------------+
 ```
+
+`pi4-04` is in a separate case outside of the rack
 
 ## Setup Guide
 

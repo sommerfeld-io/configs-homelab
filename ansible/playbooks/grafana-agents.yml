@@ -7,17 +7,5 @@
     - ../vars/grafana-vault.yml
   tasks:
 
-    - name: Create the GitHub token file for Alloy
-      copy:
-        content: "{{ GITHUB_TOKEN }}"
-        dest: /etc/alloy/github.token
-        owner: alloy
-        group: alloy
-        mode: u=rw,g=,o= # Crucial: Only the alloy user can read the file
-      become: true
-
-    # - ansible.builtin.include_role:
-    #     name: ../roles/grafana-cloud/exporters
-
     - ansible.builtin.include_role:
         name: ../roles/grafana-cloud/alloy

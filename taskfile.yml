@@ -59,6 +59,11 @@ tasks:
       - task: cleanup
       - copilot --allow-all --prompt "/lint-and-fix"
 
+  copilot:pull-request:
+    desc: 'Use GitHub Copilot to create or update a pull request with a summary of all changes based on commit messages'
+    cmds:
+      - copilot --allow-all --prompt "/create-or-update-pull-request"
+
   # ===============================================================================================
 
   docs:generate:

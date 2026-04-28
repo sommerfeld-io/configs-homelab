@@ -2,7 +2,9 @@
 ls:
   .adoc: kebab-case | SCREAMING_SNAKE_CASE | PascalCase
   .puml: kebab-case
+
   .md: kebab-case | SCREAMING_SNAKE_CASE
+  .prompt.md: kebab-case | SCREAMING_SNAKE_CASE
 
   .conf: kebab-case
   .go: snake_case
