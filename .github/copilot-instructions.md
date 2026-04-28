@@ -18,6 +18,8 @@ Always use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/
 - Breaking changes must include `BREAKING CHANGE:` in the footer: `feat: drop support for Node 6`
 - Commit message titles must also match the project pattern: `^(fix|feat|build|chore|ci|docs|style|refactor|perf|test)/[a-z0-9._-]+$`
 
+Write commit messages using the Conventional Commits format, ensuring the header (`type(scope): summary`) is clear and descriptive, as it will be displayed on GitHub release pages and used for changelogs. Focus the header on user-visible, meaningful change descriptions and avoid vague wording. Always document breaking changes explicitly in the footer using `BREAKING CHANGE:` (do not use the `!` notation).
+
 ## Project Overview
 
 Infrastructure-as-Code (IaC) repository managing homelab workstations, servers, and Raspberry Pi nodes. Primary automation tool is **Ansible**; all linters run in Docker via **go-task**.
