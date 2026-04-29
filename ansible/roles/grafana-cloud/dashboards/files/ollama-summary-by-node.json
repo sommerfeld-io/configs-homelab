@@ -1858,6 +1858,9 @@
   "preload": false,
   "refresh": "",
   "schemaVersion": 42,
+  "tags": [
+    "ai"
+  ],
   "templating": {
     "list": [
       {
@@ -1985,7 +1988,7 @@
   },
   "timezone": "browser",
   "title": "Ollama / Summary by Node",
-  "version": 3,
+  "version": 2,
   "uid": "seft69g",
-  "id": 287072516173824
+  "id": 326778188562432
 }
