@@ -20,7 +20,7 @@
     dashboard_url: "{{ item.base_url }}/{{ item.file }}"
     state: present
   vars:
-    dashboards_branch: reinstall-raspi-nodes
+    dashboards_branch: main
     dashboards_base_url: https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/{{ dashboards_branch }}/ansible/roles/grafana-cloud/dashboards/files
   loop:
     - { base_url: "{{ dashboards_base_url }}", file: "ollama-summary-by-node.json", parent_folder: "", folder: "sommerfeldio-ai" }
