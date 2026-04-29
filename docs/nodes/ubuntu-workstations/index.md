@@ -2,11 +2,11 @@
 
 [Ubuntu Desktop](https://ubuntu.com/download/desktop) is the operating system of choice for all workstations. Ubuntu Desktop is a free and open-source operating system. It is based on the Debian Linux distribution.
 
-| Workstation | Description                                                          |
-| ----------- | -------------------------------------------------------------------- |
-| `caprica`   | Secondary workstation for development tasks and daily to-dos         |
-| `kobol`     | Tertiary workstation (laptop) for development tasks and daily to-dos |
-| `picon`     | Primary workstation (laptop) for development tasks and daily to-dos  |
+| Workstation | Description                                                         | OS             |
+| ----------- | ------------------------------------------------------------------- | -------------- |
+| `caprica`   | AI node running OpenClaw and Ollama                                 | Ubuntu Server  |
+| `kobol`     | Backup workstation (laptop) for development tasks and daily to-dos  | Ubuntu Desktop |
+| `picon`     | Primary workstation (laptop) for development tasks and daily to-dos | Ubuntu Desktop |
 
 ## Create bootable USB stick with Ubuntu
 
@@ -14,6 +14,8 @@
 - [ ] Create a bootable USB stick from the downloaded iso image with a tool like [Etcher](https://www.balena.io/etcher) or the Startup Disk Creator (shipped with Ubuntu).
 
 ## Install machine from stick
+
+> :NOTE: This setup process docs are based on Ubuntu Desktop setup. For Ubuntu Server, the setup process might be a little bit different.
 
 The setup wizard takes care of the hostname, network settings, etc.
 
@@ -25,14 +27,15 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
     - [ ] `ssh sebastian@picon.fritz.box`
-- [ ] Setup password-less ssh connections via from `caprica`, `kobol`, `picon` and `admin-pi`. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
+- [ ] Setup password-less ssh connections via from `kobol` and `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@picon.fritz.box` (to allow Ansible runs against this host)
-    - [ ] `ssh-copy-id sebastian@admin-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@runner-04-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@runner-05-pi.fritz.box`
-    - [ ] `ssh-copy-id sebastian@runner-06-pi5.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-01.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-02.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-03.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-04.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi5-01.fritz.box`
 
 ## Configuration and package installation
 
