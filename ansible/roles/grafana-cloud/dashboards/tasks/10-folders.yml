@@ -1,15 +1,31 @@
 ---
+# - name: Grafana Cloud  ----  Folders  ----  Create
+#   community.grafana.grafana_folder:
+#     url: "{{ grafana_com_url }}"
+#     grafana_api_key: "{{ grafana_com_api_key }}"
+#     title: "{{ item.title }}"
+#     uid: "{{ item.uid }}"
+#     parent_uid: "{{ item.parent_uid }}"
+#     state: present
+#   loop:
+#     - { title: "Sommerfeld.io", uid: "sommerfeldio", parent_uid: "" }
+#     - { title: "Sommerfeld.io - DevOps", uid: "sommerfeldio-devops", parent_uid: "" }
+#     - { title: "Sommerfeld.io - Linux Node", uid: "sommerfeldio-node", parent_uid: "" }
+#     - { title: "Sommerfeld.io - Playground", uid: "sommerfeldio-playground", parent_uid: "" }
+#     - { title: "Sommerfeld.io - Services", uid: "sommerfeldio-services", parent_uid: "" }
+#     - { title: "Sommerfeld.io - AI", uid: "sommerfeldio-ai", parent_uid: "" }
+
 - name: Grafana Cloud  ----  Folders  ----  Create
-  community.grafana.grafana_folder:
-    url: "{{ grafana_com_url }}"
+  grafana.grafana.folder:
+    grafana_url: "{{ grafana_com_url }}"
     grafana_api_key: "{{ grafana_com_api_key }}"
     title: "{{ item.title }}"
     uid: "{{ item.uid }}"
-    parent_uid: "{{ item.parent_uid }}"
     state: present
   loop:
-    - { title: "Sommerfeld.io", uid: "sommerfeldio", parent_uid: "" }
-    - { title: "Sommerfeld.io - DevOps", uid: "sommerfeldio-devops", parent_uid: "" }
-    - { title: "Sommerfeld.io - Linux Node", uid: "sommerfeldio-node", parent_uid: "" }
-    - { title: "Sommerfeld.io - Playground", uid: "sommerfeldio-playground", parent_uid: "" }
-    - { title: "Sommerfeld.io - Services", uid: "sommerfeldio-services", parent_uid: "" }
+    - { title: "Sommerfeld.io", uid: "sommerfeldio" }
+    - { title: "Sommerfeld.io - DevOps", uid: "sommerfeldio-devops" }
+    - { title: "Sommerfeld.io - Linux Node", uid: "sommerfeldio-node" }
+    - { title: "Sommerfeld.io - Playground", uid: "sommerfeldio-playground" }
+    - { title: "Sommerfeld.io - Services", uid: "sommerfeldio-services" }
+    - { title: "Sommerfeld.io - AI", uid: "sommerfeldio-ai" }
