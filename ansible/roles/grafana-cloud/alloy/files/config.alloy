@@ -298,3 +298,42 @@ otelcol.auth.basic "grafana_cloud_tempo" {
   username = sys.env("GCLOUD_TEMPO_USER")
   password = sys.env("GCLOUD_TEMPO_RW_API_KEY")
 }
+
+/*
+ * Ollama metrics - only scraped on nodes where Ollama is running.
+ * On nodes without Ollama, the target simply shows up=0; no Alloy errors.
+ */
+discovery.relabel "integrations_ollama" {
+  targets = [{
+    __address__      = "localhost:9180",
+    __metrics_path__ = "/metrics",
+    __scheme__       = "http",
+  }]
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/ollama"
+  }
+}
+
+prometheus.scrape "integrations_ollama" {
+  targets    = discovery.relabel.integrations_ollama.output
+  forward_to = [prometheus.relabel.integrations_ollama.receiver]
+  job_name   = "integrations/ollama"
+
+  // Shorter timeout so a dead endpoint fails fast and doesn't block the scrape loop.
+  scrape_interval = "10s"
+  scrape_timeout  = "3s"
+}
+
+prometheus.relabel "integrations_ollama" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  // All Ollama metrics are forwarded as-is.
+  // Add a keep rule here to limit cardinality if needed.
+}
