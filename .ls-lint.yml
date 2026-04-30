@@ -54,6 +54,8 @@ ignore:
   - tests/inspec/runner-04-pi/vendor
   - ansible/roles
 
+  - .github/skills/.markdownlint.yml
+
   # linter definitions etc.
   - .ansible-lint.yml
   - .editorconfig
