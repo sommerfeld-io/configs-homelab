@@ -9,6 +9,7 @@ vars:
 
 includes:
   common: https://raw.githubusercontent.com/sommerfeld-io/.github/refs/heads/main/assets/task/common.yml
+  copilot: .github/skills/taskfile.yml
 
 tasks:
 
