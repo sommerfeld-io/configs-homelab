@@ -54,20 +54,6 @@ tasks:
 
   # ===============================================================================================
 
-  copilot:lint-and-fix:
-    desc: 'Use GitHub Copilot to lint and fix issues in the project'
-    cmds:
-      - task: cleanup
-      - copilot --allow-all --prompt "/lint-and-fix"
-
-  copilot:pull-request:
-    desc: 'Use GitHub Copilot to create or update a pull request with a summary of all changes based on commit messages'
-    cmds:
-      - task: update
-      - copilot --allow-all --prompt "/create-or-update-pull-request"
-
-  # ===============================================================================================
-
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     vars:
@@ -250,32 +236,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:admin-pi:
+  inspec:run:pi4-01:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: admin-pi.fritz.box
-    cmds:
-      - for: ['raspi-baseline', 'admin-pi']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:runner-04-pi:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
-    vars:
-      HOST: runner-04-pi.fritz.box
-    cmds:
-      - for: ['raspi-baseline', 'runner-04-pi']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:runner-05-pi:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
-    vars:
-      HOST: runner-05-pi.fritz.box
+      HOST: pi4-01.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:inspec:run-profile
@@ -283,10 +247,43 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:runner-06-pi5:
+  inspec:run:pi4-02:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: runner-06-pi5.fritz.box
+      HOST: pi4-02.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi4-03:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi4-03.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi4-04:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi4-04.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi5-01:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi5-01.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:inspec:run-profile
