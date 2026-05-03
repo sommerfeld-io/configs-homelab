@@ -1,0 +1,143 @@
+---
+version: '3.42.1'
+
+tasks:
+
+  conky:
+    desc: Start all conky instances
+    dir: .config/conky
+    cmds:
+      - killall conky | true
+      - for: ["docker.conkyrc", "host.conkyrc"]
+        cmd: |
+          (
+            conky -c {{ .ITEM }} &
+            sleep 8
+          )
+
+  # ===============================================================================================
+
+  github:repo:new:sommerfeld-io/*:
+    vars:
+      ORG: sommerfeld-io
+      TEMPLATE_REPO_NAME: template-repository
+      NEW_REPO_NAME: '{{ index .MATCH 0 }}'
+      REPO_DIR: ~/work/repos/{{ .ORG }}
+    desc: 'Create a new repository on GitHub (* = repository name without organization)'
+    summary: |
+      Create a new GitHub repository under the organization '{{ .ORG }}', based on the template
+      '{{ .ORG }}/{{ .TEMPLATE_REPO_NAME }}'. The repository is also cloned locally, configured
+      remotely on GitHub, and opened in VS Code. Repositories are cloned into '{{ .REPO_DIR }}'.
+    dir: '{{ .REPO_DIR }}'
+    cmds:
+      - 'gh auth login -w'
+      - 'gh repo create {{ .ORG }}/{{ .NEW_REPO_NAME }} --template {{ .ORG }}/{{ .TEMPLATE_REPO_NAME }} --public'
+      - 'sleep 5'
+      - 'git clone git@github.com:{{ .ORG }}/{{ .NEW_REPO_NAME }}.git'
+      - 'gh repo edit {{ .ORG }}/{{ .NEW_REPO_NAME }} --enable-discussions --enable-issues --enable-projects --enable-wiki=false'
+      - 'code {{ .NEW_REPO_NAME }}'
+
+  # ===============================================================================================
+
+  docker:stack:portainer:
+    vars:
+      STACK: portainer
+    desc: Run stack {{ .STACK }} in foreground
+    dir: &docker-stack-dir ~/.docker-stacks/{{ .STACK }}
+    cmds:
+      - docker compose up
+
+  # ===============================================================================================
+
+  screen:caprica:
+    vars: &screen-vars
+      MONITOR_CURVED: "17" # Curved DELL S3422DWG /dev/i2c-17
+      MONITOR_NORMAL: "18" # UHD DELL UP2716D /dev/i2c-18
+      CHANGE_INPUT_SOURCE: "0x60"
+      SOURCE_HDMI_1: "0x11"
+      SOURCE_HDMI_2: "0x12"
+      SOURCE_DP: "0x0f"
+    desc: &screen-desc 'Switch inputs sources for screens'
+    cmds:
+      - ddcutil -b {{ .MONITOR_CURVED }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_DP }}
+      - ddcutil -b {{ .MONITOR_NORMAL }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
+
+  screen:picon:
+    vars: *screen-vars
+    desc: *screen-desc
+    cmds:
+      - ddcutil -b {{ .MONITOR_CURVED }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_1 }}
+      - ddcutil -b {{ .MONITOR_NORMAL }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_1 }}
+
+  screen:office:
+    cmds:
+      - task: screen:picon
+
+  # ===============================================================================================
+
+  ssh:connect:kobol:
+    vars:
+      USER: sebastian
+      HOST: kobol.fritz.box
+    desc: &ssh-connect-desc 'SSH connect {{ .USER }}@{{ .HOST }}'
+    cmds: &ssh-connect-cmd
+      - ssh {{ .USER }}@{{ .HOST }}
+
+  ssh:connect:caprica:
+    vars:
+      USER: sebastian
+      HOST: caprica.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:picon:
+    vars:
+      USER: sebastian
+      HOST: picon.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:pi4-01:
+    vars:
+      USER: sebastian
+      HOST: pi4-01.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:pi4-02:
+    vars:
+      USER: sebastian
+      HOST: pi4-02.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:pi4-03:
+    vars:
+      USER: sebastian
+      HOST: pi4-03.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:pi4-04:
+    vars:
+      USER: sebastian
+      HOST: pi4-04.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  ssh:connect:pi5-01:
+    vars:
+      USER: sebastian
+      HOST: pi5-01.fritz.box
+    desc: *ssh-connect-desc
+    cmds: *ssh-connect-cmd
+
+  # ===============================================================================================
+
+  system:info:
+    desc: 'Show system information'
+    cmds:
+      - hostnamectl
+      - 'echo -e " ${B}Ubuntu Codename:${D} $(lsb_release -c | cut -f2)"'
+      - for: ["[c]hromium", "[f]irefox"]
+        cmd: ps aux | grep -i '{{ .ITEM }}' | awk '{sum+=$6} END {print sum/1024 " MiB"}'

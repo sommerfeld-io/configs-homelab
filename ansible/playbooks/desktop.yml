@@ -43,6 +43,8 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
+        name: ../roles/common/taskfile-dev
+    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/ansible
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/conky
