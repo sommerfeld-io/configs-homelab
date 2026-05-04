@@ -11,7 +11,7 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle ded
 | `pi4-01` | RasPi 4B | 8GB | 32GB microSD  | -               |
 | `pi4-02` | RasPi 4B | 8GB | 32GB microSD  | -               |
 | `pi4-03` | RasPi 4B | 8GB | 64GB microSD  | -               |
-| `pi4-04` | RasPi 4B | 8GB | 64GB microSD  | Ubuntu Desktop  |
+| `pi4-05` | RasPi 4B | 8GB | 64GB microSD  | Ubuntu Desktop  |
 | `pi5-01` | RasPi 5  | 8GB | 128GB microSD | -               |
 
 Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
@@ -28,7 +28,9 @@ Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a c
                      +---------------------+
 ```
 
-`pi4-04` is in a separate case outside of the rack
+`pi4-05` is in a separate case outside of the rack
+
+> **:NOTE:** Node numbers are not necessarily sequential. When a node is reinstalled, its number is incremented to avoid hostname conflicts with the FritzBox router.
 
 ## Setup Guide
 

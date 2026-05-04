@@ -34,7 +34,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh-copy-id sebastian@pi4-01.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-02.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-03.fritz.box`
-    - [ ] `ssh-copy-id sebastian@pi4-04.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-05.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi5-01.fritz.box`
 
 ## Configuration and package installation

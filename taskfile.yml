@@ -269,10 +269,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:pi4-04:
+  inspec:run:pi4-05:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: pi4-04.fritz.box
+      HOST: pi4-05.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:inspec:run-profile

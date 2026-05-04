@@ -119,10 +119,10 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:pi4-04:
+  ssh:connect:pi4-05:
     vars:
       USER: sebastian
-      HOST: pi4-04.fritz.box
+      HOST: pi4-05.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
