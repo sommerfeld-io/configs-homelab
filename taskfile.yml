@@ -49,7 +49,7 @@ tasks:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
       - task: cleanup:filesystem
-      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config'] # , 'markdown-links'
+      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
