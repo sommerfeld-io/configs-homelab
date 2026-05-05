@@ -1,6 +1,6 @@
 ---
 - name: Prepare directories for git repositories
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: true
   vars_files:
@@ -38,7 +38,7 @@
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: "nhl-predictions-game-prototype" }
 
 - name: Cleanup
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: false
   vars_files:

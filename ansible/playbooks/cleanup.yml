@@ -1,6 +1,6 @@
 ---
 - name: Run cleanup tasks (non-root)
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: false
   vars_files:
@@ -20,7 +20,7 @@
         executable: /bin/bash
 
 - name: Run cleanup tasks
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: true
   vars_files:
@@ -74,7 +74,7 @@
             clean: true
 
 - name: Run cleanup tasks (non-root)
-  hosts: ubuntu_desktop
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: false
   vars_files:

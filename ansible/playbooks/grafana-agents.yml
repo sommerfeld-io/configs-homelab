@@ -1,6 +1,6 @@
 ---
 - name: Install and configure nodes for use with Grafana Cloud
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: true
   vars_files:
