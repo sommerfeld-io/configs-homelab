@@ -39,10 +39,9 @@ The setup wizard takes care of the hostname, network settings, etc.
 
 ## Configuration and package installation
 
-- [ ] When running Ansible against Ubuntu 25.10 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all.
+- [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>.
     - [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
-    - [ ] `sudo visudo` (edit sudoers file)
-    - [ ]  Add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
+    - [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md)
     - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!

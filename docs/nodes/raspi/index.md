@@ -46,6 +46,9 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 * [ ] Insert the SD card into the Raspberry Pi and power it on.
 * [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 * [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
+* [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>.
+    * [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
+    * [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 * [ ] Install machine using the Ansible configs from this repo using `task`.
     * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
     * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
