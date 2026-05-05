@@ -165,6 +165,13 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
+  ansible:server:
+    vars:
+      PLAYBOOK: server.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   ansible:vault:
     vars:
       VAULT_FILE: ansible/vars/vault.yml

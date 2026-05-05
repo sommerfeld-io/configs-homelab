@@ -2,6 +2,9 @@
 - name: Include Ansible Playbook to provision desktop workstations on the homelab
   ansible.builtin.import_playbook: ./desktop.yml
 
+- name: Include Ansible Playbook to provision servers on the homelab
+  ansible.builtin.import_playbook: ./server.yml
+
 - name: Include Ansible Playbook to provision RasPi nodes on the homelab
   ansible.builtin.import_playbook: ./raspi.yml
 
