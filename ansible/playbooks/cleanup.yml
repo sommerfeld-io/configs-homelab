@@ -74,7 +74,7 @@
             clean: true
 
 - name: Run cleanup tasks (non-root)
-  hosts: ubuntu_desktop:ubuntu_server:raspi
+  hosts: ubuntu_desktop:ubuntu_server
   gather_facts: true
   become: false
   vars_files:
