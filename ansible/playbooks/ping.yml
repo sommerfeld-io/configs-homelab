@@ -27,3 +27,15 @@
         - name: Network  ----  Print interfaces
           ansible.builtin.debug:
             var: ip_links.stdout_lines
+
+    - name: Network  ----  Show IP addresses on real interfaces
+      block:
+        - name: Network  ----  Get IP addresses for ethernet and wifi interfaces
+          ansible.builtin.shell:
+            cmd: ip -brief -4 addr show | grep -vE '^lo|^docker|^br-|^veth|^virbr'
+          register: ip_addrs
+          changed_when: false
+          failed_when: false
+        - name: Network  ----  Print IP addresses
+          ansible.builtin.debug:
+            var: ip_addrs.stdout_lines
