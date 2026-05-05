@@ -60,8 +60,8 @@ tasks:
       SOURCE_MDP: "0x10"
     desc: &screen-desc 'Switch inputs sources for screens'
     cmds:
-      - ddcutil -b {{ .MONITOR_CURVED }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_DP }}
-      # - ddcutil -b {{ .MONITOR_NORMAL }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
+      # - ddcutil -b {{ .MONITOR_CURVED }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_DP }}
+      - ddcutil -b {{ .MONITOR_NORMAL }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
 
   screen:picon:
     vars: *screen-vars
