@@ -1,6 +1,6 @@
 ---
 - name: Prepare directories for git repositories
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: true
   vars_files:
@@ -27,9 +27,9 @@
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "skills" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "tech-radar" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "template-repository" }
-          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "telemetry" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
@@ -38,7 +38,7 @@
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: "nhl-predictions-game-prototype" }
 
 - name: Cleanup
-  hosts: ubuntu_desktop:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi
   gather_facts: true
   become: false
   vars_files:

@@ -11,7 +11,9 @@
     - name: Network  ----  Check network route metrics
       block:
         - name: Network  ----  Show default routes with metrics
-          ansible.builtin.command: ip route show default
+          ansible.builtin.shell: ip route show default
+          args:
+            executable: /bin/bash
           register: routes
           changed_when: false
         - name: Network  ----  Print routes
@@ -21,9 +23,38 @@
     - name: Network  ----  Check all interface link states
       block:
         - name: Network  ----  Show all interfaces
-          ansible.builtin.command: ip -brief link show
+          ansible.builtin.shell: ip -brief link show
+          args:
+            executable: /bin/bash
           register: ip_links
           changed_when: false
         - name: Network  ----  Print interfaces
           ansible.builtin.debug:
             var: ip_links.stdout_lines
+
+    - name: Network  ----  Show IP addresses on real interfaces
+      block:
+        - name: Network  ----  Get IP addresses for ethernet and wifi interfaces
+          ansible.builtin.shell:
+            cmd: ip -brief -4 addr show | grep -vE '^lo|^docker|^br-|^veth|^virbr'
+          args:
+            executable: /bin/bash
+          register: ip_addrs
+          changed_when: false
+          failed_when: false
+        - name: Network  ----  Print IP addresses
+          ansible.builtin.debug:
+            var: ip_addrs.stdout_lines
+
+    - name: SSH  ----  Show public key
+      block:
+        - name: SSH  ----  Read id_rsa.pub
+          ansible.builtin.shell: cat /home/sebastian/.ssh/id_rsa.pub
+          args:
+            executable: /bin/bash
+          register: ssh_pub_key
+          changed_when: false
+          failed_when: false
+        - name: SSH  ----  Print id_rsa.pub
+          ansible.builtin.debug:
+            var: ssh_pub_key.stdout_lines

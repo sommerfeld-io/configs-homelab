@@ -1,2 +1,2 @@
-FROM sommerfeldio/devcontainer:0.16.0
+FROM sommerfeldio/devcontainer:0.19.2
 LABEL maintainer="sebastian@sommerfeld.io"
