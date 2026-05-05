@@ -20,6 +20,7 @@ exclude_paths:
   - ansible/playbooks/grafana.yml
   - ansible/playbooks/ollama.yml
   - ansible/playbooks/raspi.yml
+  - ansible/playbooks/server.yml
 
 enable_list:
   - no-log-password

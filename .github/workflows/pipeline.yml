@@ -69,6 +69,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          submodules: true
       - name: Install Task
         uses: arduino/setup-task@v2.0.0
         with:
@@ -104,6 +106,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          submodules: true
           ref: ${{github.ref}}
       - name: Install Task
         uses: arduino/setup-task@v2.0.0
