@@ -46,22 +46,8 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/atuin
 
-- name: Install and configure runner-04-pi specifics
-  hosts: runner-04-pi.fritz.box
-  gather_facts: true
-  become: true
-  vars_files:
-    - ../vars/main.yml
-    - ../vars/raspi.yml
-  tasks:
-    - ansible.builtin.include_role:
-        name: ../roles/common/mount-disk
-      vars:
-        mount_disk_uuid: "c9a69508-2ed1-4d74-9494-72da540a1421" # run `sudo blkid` to get ID
-        mount_disk_path: "/mnt/data"
-
-- name: Install and configure runner-04-pi specifics
-  hosts: runner-05-pi.fritz.box
+- name: Install and configure pi4-01 specifics
+  hosts: pi4-01.fritz.box
   gather_facts: true
   become: true
   vars_files:
@@ -72,4 +58,18 @@
         name: ../roles/common/mount-disk
       vars:
         mount_disk_uuid: "68a36c9f-9a1b-40e9-9bf4-fd2b6b6eeeef" # run `sudo blkid` to get ID
+        mount_disk_path: "/mnt/data"
+
+- name: Install and configure pi4-02 specifics
+  hosts: pi4-02.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/common/mount-disk
+      vars:
+        mount_disk_uuid: "c9a69508-2ed1-4d74-9494-72da540a1421" # run `sudo blkid` to get ID
         mount_disk_path: "/mnt/data"

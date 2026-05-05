@@ -71,6 +71,26 @@
 
 - name: Grafana Cloud  ----  Alloy  ----  Update Config
   block:
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "alloy"
+        group: "alloy"
+        mode: u=rwx,g=rx,o=
+      with_items:
+        - /etc/alloy
+
+    - name: Grafana Cloud  ----  Alloy  ----  Create the GitHub token file
+      copy:
+        content: "{{ GITHUB_TOKEN }}"
+        dest: /etc/alloy/github.token
+        owner: alloy
+        group: alloy
+        mode: u=rw,g=,o= # Crucial: Only the alloy user can read the file
+      become: true
+
     - name: Grafana Cloud  ----  Alloy  ----  Copy config files
       ansible.builtin.copy:
         src: "{{ item.src }}"

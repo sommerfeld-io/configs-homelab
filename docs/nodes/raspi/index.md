@@ -6,26 +6,31 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle dedicated roles. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet. No Pi has password-less SSH connections configured so they cannot easily connect to any other node.
 
-| Name        | Model    | RAM | Main Storage  | Role                    |
-|-------------|----------|-----|---------------|-------------------------|
-| `raspi4-01` | RasPi 4B | 8GB | 32GB microSD  | Secondary OpenClaw Node |
-| `raspi4-02` | RasPi 4B | 8GB | 32GB microSD  | -                       |
-| `raspi4-03` | RasPi 4B | 8GB | 128GB microSD | -                       |
-| `raspi5-01` | RasPi 5  | 8GB | 32GB microSD  | Main OpenClaw Node      |
+| Name     | Model    | RAM | Main Storage  | Role            |
+|----------|----------|-----|---------------|-----------------|
+| `pi4-01` | RasPi 4B | 8GB | 32GB microSD  | -               |
+| `pi4-02` | RasPi 4B | 8GB | 32GB microSD  | -               |
+| `pi4-03` | RasPi 4B | 8GB | 64GB microSD  | -               |
+| `pi4-05` | RasPi 4B | 8GB | 64GB microSD  | Ubuntu Desktop  |
+| `pi5-01` | RasPi 5  | 8GB | 128GB microSD | -               |
 
-Workstations and Raspberry Pi nodes are organized in a DeskPi RackMate T0, a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
+Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
 
 ```ditaa
-+-------------+      +-------------+-------------+      +-------------+
-|  SSD 120GB  +------+  raspi4-01  |  raspi4-02  +------+  SSD 240GB  |
-+-------------+      +----------------+----------+      +-------------+
-                     |  raspi5-01  |  raspi4-03  |
-                     +-----------------+---------+
-                     |  Power                    |
-                     +---------------------------+
-                     |  -                        |
-                     +---------------------------+
++-------------+      +----------+----------+      +-------------+
+|  SSD 120GB  +------+  pi4-01  |  pi4-02  +------+  SSD 240GB  |
++-------------+      +----------+----------+      +-------------+
+                     |  pi5-01  |  pi4-03  |
+                     +----------+----------+
+                     |  Power              |
+                     +---------------------+
+                     |  Network Switch     |
+                     +---------------------+
 ```
+
+`pi4-05` is in a separate case outside of the rack
+
+> **:NOTE:** Node numbers are not necessarily sequential. When a node is reinstalled, its number is incremented to avoid hostname conflicts with the FritzBox router.
 
 ## Setup Guide
 
@@ -41,6 +46,9 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 * [ ] Insert the SD card into the Raspberry Pi and power it on.
 * [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
 * [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
+* [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>.
+    * [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
+    * [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 * [ ] Install machine using the Ansible configs from this repo using `task`.
     * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
     * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!

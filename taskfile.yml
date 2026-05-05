@@ -9,6 +9,7 @@ vars:
 
 includes:
   common: https://raw.githubusercontent.com/sommerfeld-io/.github/refs/heads/main/assets/task/common.yml
+  copilot: .github/skills/taskfile.yml
 
 tasks:
 
@@ -32,6 +33,7 @@ tasks:
       - find . -type f -exec chmod ugo+r {} +
       - find . -type d -exec chmod 755 {} +
       - find . -name "*.sh" -type f -exec chmod +x {} +
+      - task: update
 
   cleanup:
     desc: Cleanup the development environment for this project
@@ -40,7 +42,6 @@ tasks:
       - docker container prune -f
       - docker volume prune -f
       - task: cleanup:filesystem
-      - task: update
 
   # ===============================================================================================
 
@@ -48,16 +49,8 @@ tasks:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
       - task: cleanup:filesystem
-      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'markdown-links', 'alloy-config']
+      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config'] # , 'markdown-links'
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
-
-  # ===============================================================================================
-
-  copilot:lint-and-fix:
-    desc: 'Use GitHub Copilot to lint and fix issues in the project'
-    cmds:
-      - task: cleanup
-      - copilot --allow-all --prompt "/lint-and-fix"
 
   # ===============================================================================================
 
@@ -172,6 +165,13 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
+  ansible:server:
+    vars:
+      PLAYBOOK: server.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
   ansible:vault:
     vars:
       VAULT_FILE: ansible/vars/vault.yml
@@ -243,32 +243,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:admin-pi:
+  inspec:run:pi4-01:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: admin-pi.fritz.box
-    cmds:
-      - for: ['raspi-baseline', 'admin-pi']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:runner-04-pi:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
-    vars:
-      HOST: runner-04-pi.fritz.box
-    cmds:
-      - for: ['raspi-baseline', 'runner-04-pi']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:runner-05-pi:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
-    vars:
-      HOST: runner-05-pi.fritz.box
+      HOST: pi4-01.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:inspec:run-profile
@@ -276,10 +254,43 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  inspec:run:runner-06-pi5:
+  inspec:run:pi4-02:
     desc: HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
-      HOST: runner-06-pi5.fritz.box
+      HOST: pi4-02.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi4-03:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi4-03.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi4-05:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi4-05.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:inspec:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  inspec:run:pi5-01:
+    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: pi5-01.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:inspec:run-profile

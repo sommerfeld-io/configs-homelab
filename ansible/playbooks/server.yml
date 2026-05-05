@@ -1,6 +1,6 @@
 ---
 - name: Install and configure nodes
-  hosts: ubuntu_desktop
+  hosts: ubuntu_server
   gather_facts: true
   become: true
   vars_files:
@@ -12,12 +12,6 @@
         name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash
-
-    - ansible.builtin.include_tasks:
-        file: ../tasks/bash-secrets.yml
-      vars:
-        line: export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}
-
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
@@ -29,13 +23,7 @@
         name: ../roles/ansible-roles-collection/packages
         tasks_from: fastfetch
     - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/packages
-        tasks_from: desktop
-    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/docker
-        tasks_from: main
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/vscode
         tasks_from: main
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/cron
@@ -43,11 +31,7 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../roles/common/taskfile-dev
-    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/ansible
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/conky
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/github-cli
     - ansible.builtin.include_role:
@@ -57,7 +41,7 @@
         tasks_from: main
 
 - name: Install and configure nodes (non-root)
-  hosts: ubuntu_desktop
+  hosts: ubuntu_server
   gather_facts: true
   become: false
   vars_files:
@@ -73,9 +57,6 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/docker
         tasks_from: scout
-    - ansible.builtin.include_role:
-        name: ../roles/ansible-roles-collection/vscode
-        tasks_from: plugins
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/node
         tasks_from: modules-ai
