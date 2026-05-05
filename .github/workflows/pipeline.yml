@@ -65,7 +65,7 @@ jobs:
       INSPEC_IMAGE: chef/inspec:5.22.76
     strategy:
       matrix:
-        profile: ['ansible-baseline', 'raspi-baseline', 'admin-pi']
+        profile: ['ansible-baseline', 'raspi-baseline', 'picon']
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
