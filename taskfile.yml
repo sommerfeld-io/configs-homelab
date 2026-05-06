@@ -8,7 +8,7 @@ vars:
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
 includes:
-  common: https://raw.githubusercontent.com/sommerfeld-io/.github/refs/heads/main/assets/task/common.yml
+  common: .tasks/common/taskfile.yml
   copilot: .github/skills/taskfile.yml
 
 tasks:
