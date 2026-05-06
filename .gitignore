@@ -13,6 +13,4 @@ node_modules
 /target
 /dist
 
-.task/remote
-
 .ansible
