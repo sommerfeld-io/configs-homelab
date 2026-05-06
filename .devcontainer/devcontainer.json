@@ -31,7 +31,10 @@
     },
 
     "containerEnv": {
-      "SONARCLOUD_TOKEN": "${localEnv:SONARCLOUD_TOKEN}"
+      "SONARCLOUD_TOKEN": "${localEnv:SONARCLOUD_TOKEN}",
+      "SONARQUBE_TOKEN": "${localEnv:SONARCLOUD_TOKEN}",
+      "SONARQUBE_URL": "https://sonarcloud.io",
+      "SONARQUBE_ORGANIZATION": "sommerfeld-io"
     },
 
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",

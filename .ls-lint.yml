@@ -62,6 +62,7 @@ ignore:
   - .hadolint.yml
   - .kube-linter.yml
   - .ls-lint.yml
+  - .mcp.json
   - .lychee.toml
   - .markdownlint.yml
   - .yamllint.yml
