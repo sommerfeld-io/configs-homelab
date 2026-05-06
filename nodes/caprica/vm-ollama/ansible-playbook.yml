@@ -1,0 +1,31 @@
+---
+- name: Install and configure vagrantbox
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/bash
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/filesystem
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/packages
+        tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/packages
+        tasks_from: fastfetch
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/docker
+        tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/taskfile-dev
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/ollama
+
+- name: Install and configure vagrantbox (non-root)
+  hosts: all
+  gather_facts: true
+  become: false
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../../../ansible/roles/ansible-roles-collection/atuin
