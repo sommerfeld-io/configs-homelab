@@ -183,7 +183,7 @@ tasks:
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
 
   internal:inspec:run-profile:
-    desc: 'Run the profile'
+    desc: Run the profile
     internal: true
     vars:
       USER: sebastian
@@ -192,7 +192,7 @@ tasks:
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept # --no-color
 
   inspec:run:caprica:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: &inspec-run-desc HOST ONLY | Run InSpec against {{ .HOST }}
     vars:
       HOST: caprica.fritz.box
     cmds:
@@ -203,7 +203,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:kobol:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: kobol.fritz.box
     cmds:
@@ -214,7 +214,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:picon:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: picon.fritz.box
     cmds:
@@ -225,7 +225,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:pi4-01:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: pi4-01.fritz.box
     cmds:
@@ -236,7 +236,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:pi4-02:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: pi4-02.fritz.box
     cmds:
@@ -247,7 +247,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:pi4-03:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: pi4-03.fritz.box
     cmds:
@@ -258,7 +258,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:pi4-05:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: pi4-05.fritz.box
     cmds:
@@ -269,7 +269,7 @@ tasks:
           PROFILE: '{{ .ITEM }}'
 
   inspec:run:pi5-01:
-    desc: HOST ONLY | Run InSpec against {{ .HOST }}
+    desc: *inspec-run-desc
     vars:
       HOST: pi5-01.fritz.box
     cmds:
