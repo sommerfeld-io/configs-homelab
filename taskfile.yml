@@ -8,41 +8,19 @@ vars:
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
 includes:
+  cleanup: .task/cleanup/taskfile.yml
   common: .task/common/taskfile.yml
   copilot: .github/skills/taskfile.yml
 
 tasks:
 
-  update:
-    desc: Update project dependencies and submodules
+  cleanup:inspec:
+    desc: Cleanup inspec profiles and lock files
     cmds:
-      - git submodule update --remote
-      - "jq '{mcpServers: .servers}' .vscode/mcp.json > .mcp.json"
-
-  cleanup:filesystem:
-    desc: Cleanup the filesystem for this project
-    cmds:
-      - rm -rf .cache
-      - sudo rm -rf .ansible
-      - sudo rm -rf .devcontainer/ops
-      - rm -rf node_modules
-      - rm -rf target
       - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'picon', 'raspi-baseline', 'runner-04-pi']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
-      - find . -type f -exec chmod ugo+r {} +
-      - find . -type d -exec chmod 755 {} +
-      - find . -name "*.sh" -type f -exec chmod +x {} +
-      - task: update
-
-  cleanup:
-    desc: Cleanup the development environment for this project
-    cmds:
-      - docker compose down --remove-orphans
-      - docker container prune -f
-      - docker volume prune -f
-      - task: cleanup:filesystem
 
   # ===============================================================================================
 
@@ -199,6 +177,7 @@ tasks:
     vars:
       PROFILE: '{{ index .MATCH 0 }}'
     cmds:
+      - task: cleanup:inspec
       - rm -f "{{ .INSPEC_DIR }}/{{ .PROFILE }}/inspec.lock"
       - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
       - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
@@ -209,6 +188,7 @@ tasks:
     vars:
       USER: sebastian
     cmds:
+      - task: cleanup:inspec
       - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept # --no-color
 
   inspec:run:caprica:
