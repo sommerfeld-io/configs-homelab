@@ -80,6 +80,7 @@ nav:
       - RasPi: ansible/playbooks/raspi.md
       - Repositories: ansible/playbooks/repositories.md
       - Scan: ansible/playbooks/scan.md
+      - Server: ansible/playbooks/server.md
   - Ansible Roles:
       - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
       - Grafana Cloud / Dashboards: ansible/roles/grafana-cloud/dashboards.md
