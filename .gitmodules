@@ -4,3 +4,6 @@
 [submodule ".github/skills"]
 	path = .github/skills
 	url = git@github.com:sommerfeld-io/skills.git
+[submodule ".vscode"]
+	path = .vscode
+	url = git@github.com:sommerfeld-io/.vscode.git
