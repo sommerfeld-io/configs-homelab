@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - .github/workflows/housekeeping-labels.yml
+  workflow_dispatch:
 
 jobs:
   housekeeping-labels:
