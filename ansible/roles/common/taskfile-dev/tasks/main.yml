@@ -3,8 +3,8 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: u=rwx,g=rx,o=
   with_items:
     - "{{ docker_stacks_dir }}"
@@ -13,16 +13,16 @@
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
     mode: u=rw,g=r,o=
   with_items:
     - { src: "../files/docker-stacks/portainer", dest: "{{ docker_stacks_dir }}" }
-    - { src: "../files/taskfile.yml", dest: "/home/{{ ansible_user }}/taskfile.yml" }
+    - { src: "../files/taskfile.yml", dest: "/home/{{ default_user }}/taskfile.yml" }
 
 - name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc
   ansible.builtin.lineinfile:
-    dest: "/home/{{ ansible_user }}/.bashrc"
+    dest: "/home/{{ default_user }}/.bashrc"
     state: present
     line: "{{ item }}"
   with_items:

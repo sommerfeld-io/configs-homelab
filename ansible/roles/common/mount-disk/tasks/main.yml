@@ -9,8 +9,8 @@
       ansible.builtin.file:
         path: "{{ mount_disk_path }}"
         state: directory
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
         mode: '0755'
 
     - name: Mount Disk  ----  Mount and enable the SSD in fstab

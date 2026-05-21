@@ -28,7 +28,7 @@
 
     - name: Config  ----  Master of Orion 2
       vars:
-        config_file: /home/{{ ansible_user }}/snap/steam/common/.local/share/Steam/steamapps/common/Master of Orion 2/dosboxMOO2.conf
+        config_file: /home/{{ default_user }}/snap/steam/common/.local/share/Steam/steamapps/common/Master of Orion 2/dosboxMOO2.conf
       block:
         - name: Config  ----  Master of Orion 2  ----  Check if Orion config file exists
           ansible.builtin.stat:

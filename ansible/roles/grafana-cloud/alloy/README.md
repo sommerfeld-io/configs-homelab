@@ -4,13 +4,13 @@ This role deploys and configures Grafana Alloy to collect telemetry data and pus
 
 All sensitive credentials are stored in an encrypted Ansible Vault file. The vault file is safe to commit to the repository.
 
-> NOTE: `{{ ansible_user }}` will need `sudo` rights to run`systemctl start` without a password (a sudoers entry for that command). Otherwise the Cron Job to check and start Alloy if needed will no work.
+> NOTE: `{{ default_user }}` will need `sudo` rights to run`systemctl start` without a password (a sudoers entry for that command). Otherwise the Cron Job to check and start Alloy if needed will no work.
 
 ## Required Variables
 
 | Variable                        | Description                                                                                     |
 |---------------------------------|-------------------------------------------------------------------------------------------------|
-| `ansible_user`                  | The user to install and configure for (typically the logged-in user)                            |
+| `default_user`                  | The user to install and configure for (typically the logged-in user)                            |
 
 The following sensitive variables are be defined in `components/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
 

@@ -88,7 +88,7 @@
 
     - name: Cleanup  ----  Filesystem  ----  Find junk folders
       ansible.builtin.find:
-        paths: /home/{{ ansible_user }}
+        paths: /home/{{ default_user }}
         patterns: "{{ item }}"
         file_type: directory
         recurse: true

@@ -136,4 +136,4 @@
         name: "alloy service watchdog"
         minute: "*/5"
         job: "systemctl is-active --quiet alloy || sudo systemctl start alloy"
-        user: "{{ ansible_user }}"
+        user: "{{ default_user }}"

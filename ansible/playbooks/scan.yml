@@ -17,5 +17,5 @@
       vars:
         scan_path: "{{ item }}"
       loop:
-        - "/home/{{ ansible_user }}"
+        - "/home/{{ default_user }}"
         - "/opt"
