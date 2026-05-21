@@ -29,6 +29,8 @@
         "docs/incident-responses",
 		"docs/nodes/**",
 
+        "nodes/*/*",
+
         "tests/inspec/*/controls",
         "tests/inspec/*/vendor/**",
 

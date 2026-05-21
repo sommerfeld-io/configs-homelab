@@ -14,7 +14,7 @@ Always use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/
 | `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test` | No release | All other changes |
 
 **Rules:**
-- A scope may be added in parentheses for extra context: `feat(parser): add ability to parse arrays`. A scope may not be with a slash (`/`).
+- A scope may be added in parentheses for extra context: `feat(parser): add ability to parse arrays`. A scope may **NOT** contain a slash (`/`).
 - Breaking changes must include `BREAKING CHANGE:` in the footer: `feat: drop support for Node 6`
 - Commit message titles must also match the project pattern: `^(fix|feat|build|chore|ci|docs|style|refactor|perf|test)/[a-z0-9._-]+$`
 

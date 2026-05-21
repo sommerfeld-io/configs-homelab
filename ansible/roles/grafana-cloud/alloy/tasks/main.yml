@@ -127,3 +127,13 @@
       ansible.builtin.systemd:
         name: alloy
         state: restarted
+
+- name: Grafana Cloud  ----  Alloy  ----  Cron
+  block:
+
+    - name: Grafana Cloud  ----  Alloy  ----  Cron  ----  Add service watchdog
+      ansible.builtin.cron:
+        name: "alloy service watchdog"
+        minute: "*/5"
+        job: "systemctl is-active --quiet alloy || sudo systemctl start alloy"
+        user: "{{ ansible_user }}"
