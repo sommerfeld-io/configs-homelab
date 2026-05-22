@@ -1,5 +1,5 @@
 ---
-name: 'Housekeeping: Issues + Project'
+name: 'Housekeeping: Issues in Project'
 
 on:
   issues:
