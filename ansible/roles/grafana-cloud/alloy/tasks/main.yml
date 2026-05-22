@@ -1,6 +1,6 @@
 ---
 - name: Grafana Cloud  ----  Alloy  ----  Install
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
   block:
     - name: Grafana Cloud  ----  Alloy  ----  Create APT keyrings directory
       ansible.builtin.file:
