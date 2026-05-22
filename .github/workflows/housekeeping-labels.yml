@@ -3,7 +3,7 @@ name: 'Housekeeping: Labels'
 
 on:
   schedule:
-    - cron: '0 1 * * *' # https://crontab.guru
+    - cron: '0 1 * * *'
   push:
     branches:
       - main
