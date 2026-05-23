@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: read
       issues: write
+      models: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -22,7 +23,7 @@ jobs:
         with:
           node-version: 22
       - name: Install GitHub Copilot CLI
-        run: curl -fsSL https://gh.io/copilot-install | bash
+        run: npm install -g @github/copilot
         shell: bash
       - name: Install Task
         uses: arduino/setup-task@v2.0.0
