@@ -29,12 +29,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
-          ansible-galaxy collection install community.grafana
+          ansible-galaxy collection install community.grafana grafana.grafana
+          pip install requests
         shell: bash
       - name: Show versions
         run: |
           ansible --version
-          ansible-galaxy collection list | grep -Ei 'community.grafana'
+          ansible-galaxy collection list | grep -Ei 'community.grafana|grafana.grafana'
         shell: bash
       - name: Run playbook
         env:
