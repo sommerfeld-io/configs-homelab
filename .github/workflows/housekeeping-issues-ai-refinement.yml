@@ -4,7 +4,6 @@ name: 'Housekeeping: Issues AI Refinement'
 on:
   schedule:
     - cron: '30 5 * * *'
-  workflow_dispatch:
 
 jobs:
   triage-issues:

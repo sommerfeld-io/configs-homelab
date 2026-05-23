@@ -6,6 +6,8 @@ on:
     types:
       - labeled
       - unlabeled
+  schedule:
+    - cron: '0 6 * * *'
 
 jobs:
   housekeeping-project:
