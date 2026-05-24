@@ -17,13 +17,19 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: u=rw,g=r,o=r
-        force: true
+      register: compose_file
 
     - name: Grafana Cloud  ----  Exporters  ----  Start containers
       community.docker.docker_compose_v2:
         project_src: "{{ exporters_path }}"
         state: present
         pull: missing
+
+    - name: Grafana Cloud  ----  Exporters  ----  Restart stack on config change
+      community.docker.docker_compose_v2:
+        project_src: "{{ exporters_path }}"
+        state: restarted
+      when: compose_file.changed
 
     - name: Grafana Cloud  ----  Exporters  ----  Verify cAdvisor is running
       community.docker.docker_container_info:
