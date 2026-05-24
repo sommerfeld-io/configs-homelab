@@ -4,7 +4,7 @@
 
     - name: Grafana Cloud  ----  Exporters  ----  Create deploy directory
       ansible.builtin.file:
-        path: /opt/grafana-cloud/exporters
+        path: "{{ exporters_path }}"
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
@@ -13,7 +13,7 @@
     - name: Grafana Cloud  ----  Exporters  ----  Copy docker-compose.yml
       ansible.builtin.copy:
         src: files/docker-compose.yml
-        dest: /opt/grafana-cloud/exporters/docker-compose.yml
+        dest: "{{ exporters_path }}/docker-compose.yml"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: u=rw,g=r,o=r
@@ -21,7 +21,7 @@
 
     - name: Grafana Cloud  ----  Exporters  ----  Start containers
       community.docker.docker_compose_v2:
-        project_src: /opt/grafana-cloud/exporters
+        project_src: "{{ exporters_path }}"
         state: present
         pull: missing
 
