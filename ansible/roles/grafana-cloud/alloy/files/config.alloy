@@ -335,22 +335,6 @@ loki.source.docker "docker_containers" {
 
 loki.relabel "docker_containers" {
   forward_to = [loki.write.grafana_cloud_loki.receiver]
-
-  rule {
-    source_labels = ["__meta_docker_container_name"]
-    regex         = "/(.*)"
-    target_label  = "container"
-  }
-
-  rule {
-    target_label = "instance"
-    replacement  = constants.hostname
-  }
-
-  rule {
-    target_label = "job"
-    replacement  = "integrations/docker"
-  }
 }
 
 /*
