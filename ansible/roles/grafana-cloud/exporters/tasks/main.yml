@@ -6,16 +6,16 @@
       ansible.builtin.file:
         path: /opt/grafana-cloud/exporters
         state: directory
-        owner: root
-        group: root
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
         mode: u=rwx,g=rx,o=rx
 
     - name: Grafana Cloud  ----  Exporters  ----  Copy docker-compose.yml
       ansible.builtin.copy:
         src: files/docker-compose.yml
         dest: /opt/grafana-cloud/exporters/docker-compose.yml
-        owner: root
-        group: root
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
         mode: u=rw,g=r,o=r
         force: true
 
@@ -23,7 +23,7 @@
       community.docker.docker_compose_v2:
         project_src: /opt/grafana-cloud/exporters
         state: present
-        pull: always
+        pull: missing
 
     - name: Grafana Cloud  ----  Exporters  ----  Verify cAdvisor is running
       community.docker.docker_container_info:
