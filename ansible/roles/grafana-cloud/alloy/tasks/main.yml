@@ -76,8 +76,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-        owner: "alloy"
-        group: "alloy"
+        owner: "{{ alloy_user }}"
+        group: "{{ alloy_group }}"
         mode: u=rwx,g=rx,o=
       with_items:
         - /etc/alloy
@@ -86,8 +86,8 @@
       copy:
         content: "{{ GITHUB_TOKEN }}"
         dest: /etc/alloy/github.token
-        owner: alloy
-        group: alloy
+        owner: "{{ alloy_user }}"
+        group: "{{ alloy_group }}"
         mode: u=rw,g=,o= # Crucial: Only the alloy user can read the file
       become: true
 
@@ -96,7 +96,7 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root
-        group: alloy
+        group: "{{ alloy_group }}"
         mode: u=rw,g=r,o=r
         force: true
       with_items:
@@ -118,6 +118,12 @@
         group: root
         mode: u=rw,g=r,o=
         force: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Add alloy user to docker group
+      ansible.builtin.user:
+        name: "{{ alloy_user }}"
+        groups: docker
+        append: true
 
     - name: Grafana Cloud  ----  Alloy  ----  Reload systemd daemon
       ansible.builtin.systemd:

@@ -8,8 +8,9 @@
     dashboard_id: "{{ item.dashboard_id }}"
     dashboard_revision: "{{ item.dashboard_revision }}"
     state: present
+    overwrite: true
   loop:
-    - { dashboard_id: "1860", dashboard_revision: "42", parent_folder: "", folder: "sommerfeldio-node" } # https://grafana.com/grafana/dashboards/1860-node-exporter-full
+    - { dashboard_id: "1860", dashboard_revision: "45", parent_folder: "", folder: "sommerfeldio-node" } # https://grafana.com/grafana/dashboards/1860-node-exporter-full
 
 - name: Grafana Cloud  ----  Dashboards  ----   Create from JSON file (hosted on GitHub)
   community.grafana.grafana_dashboard:
@@ -24,4 +25,6 @@
     dashboards_branch: main
     dashboards_base_url: https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/{{ dashboards_branch }}/ansible/roles/grafana-cloud/dashboards/files
   loop:
-    - { base_url: "{{ dashboards_base_url }}", file: "ollama-summary-by-node.json", parent_folder: "", folder: "sommerfeldio-ai" }
+    - { base_url: "{{ dashboards_base_url }}", file: "summary-by-node.json", parent_folder: "", folder: "sommerfeldio" }
+    - { base_url: "{{ dashboards_base_url }}", file: "ai/ollama-summary-by-node.json", parent_folder: "", folder: "sommerfeldio-ai" }
+    - { base_url: "{{ dashboards_base_url }}", file: "devops/docker-containers-by-node.json", parent_folder: "", folder: "sommerfeldio-devops" }

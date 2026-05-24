@@ -1,2 +1,4 @@
 ---
 alloy_env_file: /etc/default/alloy
+alloy_user: alloy
+alloy_group: alloy

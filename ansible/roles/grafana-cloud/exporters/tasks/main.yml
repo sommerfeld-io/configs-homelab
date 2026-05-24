@@ -1,0 +1,44 @@
+---
+- name: Grafana Cloud  ----  Exporters  ----  Deploy cAdvisor
+  block:
+
+    - name: Grafana Cloud  ----  Exporters  ----  Create deploy directory
+      ansible.builtin.file:
+        path: "{{ exporters_path }}"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Grafana Cloud  ----  Exporters  ----  Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: files/docker-compose.yml
+        dest: "{{ exporters_path }}/docker-compose.yml"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+      register: compose_file
+
+    - name: Grafana Cloud  ----  Exporters  ----  Start containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ exporters_path }}"
+        state: present
+        pull: missing
+
+    - name: Grafana Cloud  ----  Exporters  ----  Restart stack on config change
+      community.docker.docker_compose_v2:
+        project_src: "{{ exporters_path }}"
+        state: restarted
+      when: compose_file.changed
+
+    - name: Grafana Cloud  ----  Exporters  ----  Verify cAdvisor is running
+      community.docker.docker_container_info:
+        name: cadvisor
+      register: cadvisor_info
+
+    - name: Grafana Cloud  ----  Exporters  ----  Assert cAdvisor is running
+      ansible.builtin.assert:
+        that:
+          - cadvisor_info.container.State.Running
+        fail_msg: "cAdvisor container is not running"
+        success_msg: "cAdvisor container is running"
