@@ -8,4 +8,7 @@
   tasks:
 
     - ansible.builtin.include_role:
+        name: ../roles/grafana-cloud/exporters
+
+    - ansible.builtin.include_role:
         name: ../roles/grafana-cloud/alloy

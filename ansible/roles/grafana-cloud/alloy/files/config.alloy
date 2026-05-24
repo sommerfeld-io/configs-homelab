@@ -300,6 +300,100 @@ otelcol.auth.basic "grafana_cloud_tempo" {
 }
 
 /*
+ * Docker container logs - collect logs from all running Docker containers
+ */
+discovery.docker "docker_containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "docker_containers" {
+  targets = discovery.docker.docker_containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/docker"
+  }
+}
+
+loki.source.docker "docker_containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.docker_containers.targets
+  forward_to = [loki.relabel.docker_containers.receiver]
+  relabel_rules = discovery.relabel.docker_containers.rules
+}
+
+loki.relabel "docker_containers" {
+  forward_to = [loki.write.grafana_cloud_loki.receiver]
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/docker"
+  }
+}
+
+/*
+ * cAdvisor metrics - container resource usage and performance metrics
+ */
+discovery.relabel "integrations_cadvisor" {
+  targets = [{
+    __address__      = "localhost:9110",
+    __metrics_path__ = "/metrics",
+    __scheme__       = "http",
+  }]
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/cadvisor"
+  }
+}
+
+prometheus.scrape "integrations_cadvisor" {
+  targets    = discovery.relabel.integrations_cadvisor.output
+  forward_to = [prometheus.relabel.integrations_cadvisor.receiver]
+  job_name   = "integrations/cadvisor"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+}
+
+prometheus.relabel "integrations_cadvisor" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "container_cpu_usage_seconds_total|container_fs_reads_bytes_total|container_fs_reads_total|container_fs_writes_bytes_total|container_fs_writes_total|container_memory_cache|container_memory_rss|container_memory_usage_bytes|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_receive_packets_dropped_total|container_network_receive_packets_total|container_network_transmit_bytes_total|container_network_transmit_packets_dropped_total|container_network_transmit_packets_total|container_spec_cpu_quota|container_spec_cpu_shares|container_spec_memory_limit_bytes|container_start_time_seconds|machine_cpu_cores|machine_memory_bytes|up"
+    action        = "keep"
+  }
+}
+
+/*
  * Ollama metrics - only scraped on nodes where Ollama is running.
  * On nodes without Ollama, the target simply shows up=0; no Alloy errors.
  */
