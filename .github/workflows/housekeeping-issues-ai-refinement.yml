@@ -4,49 +4,14 @@ name: 'Housekeeping: Issues AI Refinement'
 on:
   schedule:
     - cron: '30 5 * * *'
+  workflow_dispatch:
 
 jobs:
   triage-issues:
-    runs-on: ubuntu-latest
+    uses: sommerfeld-io/.github/.github/workflows/housekeeping-issues-ai-refinement.yml@main
+    secrets:
+      COPILOT_CLI_TOKEN: ${{ secrets.COPILOT_CLI_TOKEN }}
     permissions:
       contents: read
       issues: write
       models: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          submodules: true
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-      - name: Install GitHub Copilot CLI
-        run: npm install -g @github/copilot
-        shell: bash
-      - name: Install Task
-        uses: arduino/setup-task@v2.0.0
-        with:
-          version: 3.x
-      - name: Show versions
-        run: |
-          gh --version
-          copilot --version
-          task --version
-        shell: bash
-      - name: Check for issues labelled needs-triage
-        id: check
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          count=$(gh issue list --label "needs-triage" --state open --json number --limit 200 | jq 'length')
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-        shell: bash
-      - name: Run AI triage via GitHub Copilot CLI
-        if: steps.check.outputs.count != '0'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_CLI_TOKEN }}
-        run: task copilot:triage-issues
-        shell: bash
