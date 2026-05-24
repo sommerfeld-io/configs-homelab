@@ -9,65 +9,10 @@ env:
   DOCS_PAGES_ARTIFACT: docs-page
 
 jobs:
-
   update-release-notes:
-    runs-on: ubuntu-latest
+    uses: sommerfeld-io/.github/.github/workflows/release.yml@main
     permissions:
       contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          submodules: true
-          ref: ${{ github.ref }}
-      - name: Add closed issues and PRs to release notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          CURRENT_TAG="${{ github.event.release.tag_name }}"
-
-          # Get the previous release tag (excluding the current one)
-          PREV_TAG=$(gh release list --limit 50 --json tagName --jq '.[].tagName' \
-            | grep -v "^${CURRENT_TAG}$" | head -1 || echo "")
-
-          if [[ -n "$PREV_TAG" ]]; then
-            PREV_DATE=$(gh release view "$PREV_TAG" --json publishedAt \
-              --jq '.publishedAt | split("T")[0]')
-          else
-            PREV_DATE="1970-01-01"
-          fi
-
-          # List closed issues since previous release (excludes PRs)
-          ISSUES=$(gh issue list --state closed \
-            --search "closed:>${PREV_DATE}" \
-            --limit 100 \
-            --json number,title,url \
-            --jq '.[] | "- [#\(.number) \(.title)](\(.url))"' || echo "")
-
-          # List closed PRs since previous release
-          PRS=$(gh pr list --state closed \
-            --search "closed:>${PREV_DATE}" \
-            --limit 100 \
-            --json number,title,url \
-            --jq '.[] | "- [#\(.number) \(.title)](\(.url))"' || echo "")
-
-          # Build section
-          SECTION=$'### Closed Issues and Pull Requests\n'
-          if [[ -n "$ISSUES" || -n "$PRS" ]]; then
-            [[ -n "$ISSUES" ]] && SECTION+="${ISSUES}"$'\n'
-            [[ -n "$PRS" ]] && SECTION+="${PRS}"$'\n'
-          else
-            SECTION+="_No issues or pull requests were closed since the last release._"
-          fi
-
-          # Append section to existing release body
-          CURRENT_BODY=$(gh release view "$CURRENT_TAG" --json body --jq '.body')
-          NEW_BODY="${CURRENT_BODY}"$'\n\n'"${SECTION}"
-
-          gh release edit "$CURRENT_TAG" --notes "${NEW_BODY}"
-        shell: bash
 
   docs-build:
     runs-on: ubuntu-latest
