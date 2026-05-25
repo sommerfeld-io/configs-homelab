@@ -52,7 +52,7 @@ services:
     tty: *tty
 
   lint-ansible:
-    image: pipelinecomponents/ansible-lint:0.79.11
+    image: pipelinecomponents/ansible-lint:0.79.33
     volumes: *volumes
     working_dir: *default-workdir
     command: ansible-lint ansible -c .ansible-lint.yml
