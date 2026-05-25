@@ -17,11 +17,6 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/grafana-cloud/alloy/files
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: docker-compose
     directory: ansible/roles/grafana-cloud/exporters/files
     schedule:
       interval: weekly
