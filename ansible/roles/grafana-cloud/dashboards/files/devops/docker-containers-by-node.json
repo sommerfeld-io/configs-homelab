@@ -40,15 +40,15 @@
         "type": "prometheus",
         "uid": "grafanacloud-prom"
       },
-      "description": "Container running state over time (presence = running)",
+      "description": "Shows when each Docker container was running (green) or stopped/absent (no data). Detects container presence via container_start_time_seconds — useful for spotting stop/start cycles and unexpected downtime.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "custom": {
-            "axisPlacement": "hidden",
-            "fillOpacity": 70,
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -59,26 +59,21 @@
           "mappings": [
             {
               "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
                 "1": {
                   "color": "green",
-                  "index": 0,
-                  "text": "Running"
+                  "index": 1,
+                  "text": "UP"
                 }
               },
               "type": "value"
-            },
-            {
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "color": "red",
-                  "index": 1,
-                  "text": "No Data / Stopped"
-                }
-              },
-              "type": "special"
             }
           ],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -95,12 +90,12 @@
         }
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 53,
+      "id": 61,
       "options": {
         "annotations": {
           "clustering": -1,
@@ -129,8 +124,7 @@
             "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "last_over_time(container_start_time_seconds{instance=\"$instance\", name=\"$container\", name!=\"\"}[$__rate_interval]) * 0 + 1",
+          "expr": "count by (name) (container_start_time_seconds{name!=\"\", instance=~\"$instance\", job=\"integrations/cadvisor\", name=\"$container\"})",
           "instant": false,
           "interval": "$interval",
           "legendFormat": "{{name}}",
@@ -139,7 +133,7 @@
           "refId": "A"
         }
       ],
-      "title": "Container Status",
+      "title": "Container Up/Down State",
       "type": "status-history"
     },
     {
@@ -168,7 +162,7 @@
         "h": 3,
         "w": 5,
         "x": 0,
-        "y": 3
+        "y": 4
       },
       "id": 18,
       "options": {
@@ -233,7 +227,7 @@
         "h": 3,
         "w": 15,
         "x": 5,
-        "y": 3
+        "y": 4
       },
       "id": 19,
       "options": {
@@ -300,7 +294,7 @@
         "h": 3,
         "w": 4,
         "x": 20,
-        "y": 3
+        "y": 4
       },
       "id": 20,
       "options": {
@@ -345,9 +339,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 7
       },
-      "id": 61,
+      "id": 62,
       "title": "CPU + Memory",
       "type": "row"
     },
@@ -387,7 +381,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 57,
       "options": {
@@ -480,7 +474,7 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 7
+        "y": 8
       },
       "id": 58,
       "options": {
@@ -566,7 +560,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 7
+        "y": 8
       },
       "id": 59,
       "options": {
@@ -640,7 +634,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 7
+        "y": 8
       },
       "id": 39,
       "options": {
@@ -719,7 +713,7 @@
         "h": 4,
         "w": 4,
         "x": 16,
-        "y": 7
+        "y": 8
       },
       "id": 40,
       "options": {
@@ -805,7 +799,7 @@
         "h": 4,
         "w": 4,
         "x": 20,
-        "y": 7
+        "y": 8
       },
       "id": 41,
       "options": {
@@ -909,7 +903,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 11
+        "y": 12
       },
       "id": 56,
       "options": {
@@ -1012,7 +1006,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 11
+        "y": 12
       },
       "id": 60,
       "options": {
@@ -1116,7 +1110,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 11
+        "y": 12
       },
       "id": 42,
       "options": {
@@ -1200,9 +1194,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 21
       },
-      "id": 62,
+      "id": 63,
       "title": "Network",
       "type": "row"
     },
@@ -1285,7 +1279,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 22
       },
       "id": 27,
       "options": {
@@ -1416,7 +1410,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 22
       },
       "id": 28,
       "options": {
@@ -1500,9 +1494,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 30
       },
-      "id": 63,
+      "id": 64,
       "title": "Filesystem I/O",
       "type": "row"
     },
@@ -1585,7 +1579,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 30
+        "y": 31
       },
       "id": 29,
       "options": {
@@ -1716,7 +1710,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 31
       },
       "id": 30,
       "options": {
@@ -1774,9 +1768,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 39
       },
-      "id": 64,
+      "id": 65,
       "title": "Logs - Container",
       "type": "row"
     },
@@ -2087,7 +2081,7 @@
         "h": 6,
         "w": 20,
         "x": 0,
-        "y": 39
+        "y": 40
       },
       "id": 47,
       "options": {
@@ -2394,7 +2388,7 @@
         "h": 6,
         "w": 4,
         "x": 20,
-        "y": 39
+        "y": 40
       },
       "id": 48,
       "options": {
@@ -2455,7 +2449,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 46
       },
       "id": 51,
       "options": {
@@ -2499,9 +2493,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 58
       },
-      "id": 65,
+      "id": 66,
       "title": "Logs - journald",
       "type": "row"
     },
@@ -2812,7 +2806,7 @@
         "h": 6,
         "w": 20,
         "x": 0,
-        "y": 58
+        "y": 59
       },
       "id": 49,
       "options": {
@@ -3119,7 +3113,7 @@
         "h": 6,
         "w": 4,
         "x": 20,
-        "y": 58
+        "y": 59
       },
       "id": 50,
       "options": {
@@ -3180,7 +3174,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 64
+        "y": 65
       },
       "id": 52,
       "options": {
@@ -3375,7 +3369,7 @@
   },
   "timezone": "browser",
   "title": "Docker Containers / by Node",
-  "version": 2,
+  "version": 3,
   "uid": "sevj92j",
   "id": 540570496360448
 }

@@ -31,10 +31,307 @@
       "tooltip": "",
       "type": "link",
       "url": "/d/nodes/linux-node-overview?orgId=1&from=now-30m&to=now&timezone=browser&var-env=$__all&var-site=$__all&var-prometheus_datasource=grafanacloud-prom&var-cluster=$__all&var-job=$__all&var-instance=$instance&var-loki_datasource=grafanacloud-logs&refresh=30s"
+    },
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Docker Containers / by Node - $instance",
+      "tooltip": "",
+      "type": "link",
+      "url": "/d/sevj92j/docker-containers-by-node?var-interval=5m&orgId=1&from=now-3h&to=now&timezone=browser&var-instance=$instance&var-container=cadvisor"
     }
   ],
   "liveNow": false,
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "title": "Node Info",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.1.0-25668120414",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafanacloud-prom"
+          },
+          "expr": "node_uname_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
+          "instant": true,
+          "legendFormat": "{{nodename}}",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Hostname",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.1.0-25668120414",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafanacloud-prom"
+          },
+          "expr": "time() - node_boot_time_seconds{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
+          "instant": true,
+          "legendFormat": "Uptime",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Node Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.1.0-25668120414",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafanacloud-prom"
+          },
+          "expr": "node_os_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
+          "instant": true,
+          "legendFormat": "{{pretty_name}}",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Operating System",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.1.0-25668120414",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafanacloud-prom"
+          },
+          "expr": "node_uname_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
+          "instant": true,
+          "legendFormat": "{{release}}",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Kernel Version",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 23,
+      "title": "Services",
+      "type": "row"
+    },
     {
       "datasource": {
         "type": "prometheus",
@@ -72,6 +369,7 @@
               "type": "value"
             }
           ],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -91,7 +389,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 5
       },
       "id": 18,
       "options": {
@@ -165,10 +463,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 11
       },
-      "id": 19,
-      "title": "Node Info",
+      "id": 24,
+      "title": "Docker Containers",
       "type": "row"
     },
     {
@@ -181,7 +479,7 @@
         "defaults": {
           "color": {
             "fixedColor": "blue",
-            "mode": "fixed"
+            "mode": "thresholds"
           },
           "links": [
             {
@@ -190,12 +488,17 @@
               "url": "/d/sevj92j"
             }
           ],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue",
+                "color": "red",
                 "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
               }
             ]
           },
@@ -203,10 +506,10 @@
         }
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
+        "h": 7,
+        "w": 5,
         "x": 0,
-        "y": 7
+        "y": 12
       },
       "id": 14,
       "options": {
@@ -250,46 +553,121 @@
         "type": "prometheus",
         "uid": "grafanacloud-prom"
       },
+      "description": "Snapshot of all running Docker containers: name, uptime, image, and originating Compose file (empty = not managed by Compose).",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
           },
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "green",
                 "value": 0
               }
             ]
           }
-        }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Compose File"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "match": "empty",
+                      "result": {
+                        "color": "text",
+                        "index": 0,
+                        "text": "--"
+                      }
+                    },
+                    "type": "special"
+                  },
+                  {
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "color": "text",
+                        "index": 1,
+                        "text": "--"
+                      }
+                    },
+                    "type": "special"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Container",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 250
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Docker Containers / by Node - $instance / ${__data.fields[\"Container\"]}",
+                    "url": "/d/sevj92j/docker-containers-by-node?var-interval=5m&orgId=1&from=now-3h&to=now&timezone=browser&var-instance=$instance&var-container=${__data.fields[\"Container\"]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 4,
-        "y": 7
+        "h": 7,
+        "w": 19,
+        "x": 5,
+        "y": 12
       },
-      "id": 11,
+      "id": 21,
       "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "name",
-        "wideLayout": true
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Container"
+          }
+        ]
       },
       "pluginVersion": "13.1.0-25668120414",
       "targets": [
@@ -299,128 +677,141 @@
             "type": "prometheus",
             "uid": "grafanacloud-prom"
           },
-          "expr": "node_uname_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
+          "expr": "time() - container_start_time_seconds{name!=\"\", instance=~\"$instance\", job=\"integrations/cadvisor\"}",
           "instant": true,
-          "legendFormat": "{{nodename}}",
+          "legendFormat": "",
           "queryType": "instant",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Hostname",
-      "type": "stat"
+      "title": "Running Containers Overview",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "name",
+                "Value",
+                "image",
+                "container_label_com_docker_compose_project_config_files"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Value": 3,
+              "container_label_com_docker_compose_project_config_files": 2,
+              "image": 1,
+              "name": 0
+            },
+            "orderByMode": "manual",
+            "renameByName": {
+              "Value": "Uptime",
+              "container_label_com_docker_compose_project_config_files": "Compose File",
+              "image": "Image",
+              "name": "Container"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "grafanacloud-prom"
       },
+      "description": "Shows when each Docker container was running (green) or stopped/absent (no data). Detects container presence via container_start_time_seconds — useful for spotting stop/start cycles and unexpected downtime.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
             "mode": "thresholds"
           },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text",
-                "value": 0
-              }
-            ]
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
           },
-          "unit": "s"
-        }
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 8,
-        "y": 7
-      },
-      "id": 10,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "transparent",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
           ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "13.1.0-25668120414",
-      "targets": [
-        {
-          "app": "grafana-assistant-app",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "grafanacloud-prom"
-          },
-          "expr": "time() - node_boot_time_seconds{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
-          "instant": true,
-          "legendFormat": "Uptime",
-          "queryType": "instant",
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Node Uptime",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafanacloud-prom"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
-          },
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "red",
                 "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
               }
             ]
           }
         }
       },
       "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 12,
-        "y": 7
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 19
       },
-      "id": 12,
+      "id": 20,
       "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
         },
-        "showPercentChange": false,
-        "textMode": "name",
-        "wideLayout": true
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "13.1.0-25668120414",
       "targets": [
@@ -430,81 +821,18 @@
             "type": "prometheus",
             "uid": "grafanacloud-prom"
           },
-          "expr": "node_os_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
-          "instant": true,
-          "legendFormat": "{{pretty_name}}",
-          "queryType": "instant",
-          "range": false,
+          "editorMode": "code",
+          "expr": "count by (name) (container_start_time_seconds{name!=\"\", instance=~\"$instance\", job=\"integrations/cadvisor\"})",
+          "instant": false,
+          "interval": "$interval",
+          "legendFormat": "{{name}}",
+          "queryType": "range",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Operating System",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafanacloud-prom"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text",
-                "value": 0
-              }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 7
-      },
-      "id": 13,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "name",
-        "wideLayout": true
-      },
-      "pluginVersion": "13.1.0-25668120414",
-      "targets": [
-        {
-          "app": "grafana-assistant-app",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "grafanacloud-prom"
-          },
-          "expr": "node_uname_info{instance=~\"$instance\", job=\"integrations/node_exporter\"}",
-          "instant": true,
-          "legendFormat": "{{release}}",
-          "queryType": "instant",
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Kernel Version",
-      "type": "stat"
+      "title": "Container Up/Down State",
+      "type": "status-history"
     }
   ],
   "preload": false,
@@ -610,8 +938,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "Summary by Node",
-  "version": 2,
+  "title": "Summary / by Node",
+  "version": 14,
   "uid": "seffkjn",
   "id": 550005258915840
 }
