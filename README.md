@@ -7,6 +7,16 @@
 
 This project contains infrastructure configurations and docs for our workstations, servers and RasPi nodes. All infrastructure follows the infrastructure as code pattern.
 
+<!-- ===== START status badge ===== -->
+
+[![Ansible: Provision Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/ansible-grafana-cloud.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/ansible-grafana-cloud.yml)
+[![CodeQL Advanced](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/codeql.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/codeql.yml)
+[![Development Environment](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/dev-environment.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/dev-environment.yml)
+[![Pipeline: Commit + Test](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/pipeline.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/pipeline.yml)
+[![Pipeline: Release](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/release.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/release.yml)
+
+<!-- ===== END status badge ===== -->
+
 ![Project Logo](https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/refs/heads/main/.assets/logo.png)
 
 Our goal is to automate as much of the infrastructure management as possible. All provisioning, configuration, and deployment tasks are handled automatically using a combination of infrastructure-as-code, provisioning, and GitOps tools. The only manual step required (at the most) is to trigger a script or workflow or some other form of automation tool. From this point on, the remainder of the process is fully automated.
@@ -39,10 +49,10 @@ Workstations, servers and RasPi nodes are using similar operating systems.
 
 This is a constraint that is not likely to change in the future. More detailed [Architecture Decision Records](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR) are documented as issues on GitHub.
 
-[![Ansible](https://img.shields.io/badge/Ansible-Automation-C44D58?logo=ansible&logoColor=white&style=flat-square)](https://www.ansible.com)
+<!-- [![Ansible](https://img.shields.io/badge/Ansible-Automation-C44D58?logo=ansible&logoColor=white&style=flat-square)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Containers-4A90E2?logo=docker&logoColor=white&style=flat-square)](https://www.docker.com)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Platform-0db7ed?logo=kubernetes&logoColor=white&style=flat-square)](https://kubernetes.io)
-[![InSpec](https://img.shields.io/badge/InSpec-Test-8A2BE2?logo=chef&logoColor=white&style=flat-square)](https://inspec.io)
+[![InSpec](https://img.shields.io/badge/InSpec-Test-8A2BE2?logo=chef&logoColor=white&style=flat-square)](https://inspec.io) -->
 
 ## Contact
 
