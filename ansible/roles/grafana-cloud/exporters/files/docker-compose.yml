@@ -5,6 +5,9 @@ services:
     image: gcr.io/cadvisor/cadvisor:v0.55.1
     container_name: cadvisor
     restart: unless-stopped
+    command:
+      - --docker_only=true ## Drops those system cgroup metrics and only send actual docker container metrics
+      # - --disable_metrics=disk,diskIO,network,tcp,udp,percpu,sched,process ## Disable the high-cardinality device-label metrics
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw

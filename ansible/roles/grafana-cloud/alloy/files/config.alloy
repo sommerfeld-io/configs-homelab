@@ -310,18 +310,18 @@ discovery.relabel "docker_containers" {
   targets = discovery.docker.docker_containers.targets
 
   // Drop VSCode devcontainers from log collection
-  rule {
-    source_labels = ["__meta_docker_container_name"]
-    regex         = "/vsc-.+"
-    action        = "drop"
-  }
+  // rule {
+  //   source_labels = ["__meta_docker_container_name"]
+  //   regex         = "/vsc-.+"
+  //   action        = "drop"
+  // }
 
   // Drop short-lived linter containers from log collection
-  rule {
-    source_labels = ["__meta_docker_container_name"]
-    regex         = ".+(yamllint|lychee|folderslint|ls-lint|actionlint).+"
-    action        = "drop"
-  }
+  // rule {
+  //   source_labels = ["__meta_docker_container_name"]
+  //   regex         = ".+(yamllint|lychee|folderslint|ls-lint|actionlint).+"
+  //   action        = "drop"
+  // }
 
   rule {
     source_labels = ["__meta_docker_container_name"]
@@ -385,18 +385,18 @@ prometheus.relabel "integrations_cadvisor" {
   forward_to = [prometheus.remote_write.metrics_service.receiver]
 
   // Drop VSCode devcontainers containers
-  rule {
-    source_labels = ["name"]
-    regex         = "vsc-.+"
-    action        = "drop"
-  }
+  // rule {
+  //   source_labels = ["name"]
+  //   regex         = "vsc-.+"
+  //   action        = "drop"
+  // }
 
   // Drop short-lived linter containers
-  rule {
-    source_labels = ["name"]
-    regex         = ".+(yamllint|lychee|folderslint|ls-lint|actionlint).+"
-    action        = "drop"
-  }
+  // rule {
+  //   source_labels = ["name"]
+  //   regex         = ".+(yamllint|lychee|folderslint|ls-lint|actionlint).+"
+  //   action        = "drop"
+  // }
 
   rule {
     source_labels = ["__name__"]
