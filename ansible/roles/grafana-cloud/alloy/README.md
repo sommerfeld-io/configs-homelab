@@ -26,7 +26,7 @@ The following sensitive variables are be defined in `components/ansible/vars/gra
 
 See <https://grafana.com/orgs/sommerfeldio/access-policies> for an overview of all tokens.
 
-## What data is sent to Grafana Cloud as defined in `config.alloy`?
+<!-- ## What data is sent to Grafana Cloud as defined in `config.alloy`?
 
 ### Collected and sent to Grafana Cloud
 
@@ -48,4 +48,4 @@ See <https://grafana.com/orgs/sommerfeldio/access-policies> for an overview of a
 |-----------------------------|------------------------------------------------------------------------------|
 | **Node Exporter** (metrics) | `node_scrape_collector_.+` metrics (internal scrape bookkeeping)             |
 | **Docker logs** (logs)      | VS Code dev containers and short-lived linter containers                     |
-| **cAdvisor** (metrics)      | VS Code dev containers, linter containers, and non-allow-listed metric names |
+| **cAdvisor** (metrics)      | VS Code dev containers, linter containers, and non-allow-listed metric names | -->
