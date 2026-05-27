@@ -25,3 +25,27 @@ The following sensitive variables are be defined in `components/ansible/vars/gra
 | `grafana_cloud_tempo_api_key`   | Scopes: `metrics:write`, `logs:write`, `traces:write`, `profiles:write`,`fleet-management:read` |
 
 See <https://grafana.com/orgs/sommerfeldio/access-policies> for an overview of all tokens.
+
+## What data is sent to Grafana Cloud as defined in `config.alloy`?
+
+### Collected and sent to Grafana Cloud
+
+| Integration                       | What is sent                                                                              |
+|-----------------------------------|-------------------------------------------------------------------------------------------|
+| **Node Exporter** (metrics)       | Host metrics (CPU, memory, disk, network), virtual FS and interfaces excluded             |
+| **Alloy health** (metrics)        | Curated Alloy self-monitoring metrics (state, WAL, transport, resource usage)             |
+| **Alloy logs** (logs)             | Alloy log output with extracted `level` label                                             |
+| **systemd journal** (logs)        | Journal entries from the last 12h with `unit`, `boot_id`, `transport`, and `level` labels |
+| **GitHub** (metrics)              | Repo and rate-limit metrics for orgs/users (only configured `github_*` and `up` metrics)  |
+| **Beyla eBPF** (metrics + traces) | Auto-instrumented HTTP/HTTPS metrics and traces for configured ports                      |
+| **Docker container logs** (logs)  | stdout/stderr logs from running containers with `container`, `instance`, and `job` labels |
+| **cAdvisor** (metrics)            | Curated `container_*` and `machine_*` metrics from `localhost:9110`                       |
+| **Ollama** (metrics)              | Metrics from `localhost:9180` - unavailable nodes only report `up=0`                      |
+
+### Explicitly dropped / not sent
+
+| Integration                 | What is dropped                                                              |
+|-----------------------------|------------------------------------------------------------------------------|
+| **Node Exporter** (metrics) | `node_scrape_collector_.+` metrics (internal scrape bookkeeping)             |
+| **Docker logs** (logs)      | VS Code dev containers and short-lived linter containers                     |
+| **cAdvisor** (metrics)      | VS Code dev containers, linter containers, and non-allow-listed metric names |
