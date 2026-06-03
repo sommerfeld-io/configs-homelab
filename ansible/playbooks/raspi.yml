@@ -33,6 +33,8 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/cron
         tasks_from: main
+    - ansible.builtin.include_tasks:
+        file: ../tasks/fix-system-clock-not-synchronized.yml
 
 - name: Install and configure nodes (non-root)
   hosts: raspi

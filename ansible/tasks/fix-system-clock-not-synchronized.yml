@@ -1,0 +1,8 @@
+---
+- name: Fix  ----  System clock not synchronized  ----  Setup Cron Job
+  ansible.builtin.cron:
+    name: "chrony system clock watchdog"
+    minute: "0"
+    hour: "*/2"
+    job: "timedatectl show | grep -q 'NTPSynchronized=yes' || (chronyc online && chronyc makestep)"
+    user: root
