@@ -4,5 +4,5 @@
     name: "chrony system clock watchdog"
     minute: "0"
     hour: "*/2"
-    job: "timedatectl show | grep -q 'NTPSynchronized=yes' || (chronyc online && chronyc makestep)"
-    user: root
+    job: "timedatectl show | grep -q 'NTPSynchronized=yes' || (sudo chronyc online && sudo chronyc makestep)"
+    user: "{{ default_user }}"
