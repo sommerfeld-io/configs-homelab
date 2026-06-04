@@ -1,11 +1,11 @@
 ---
-name: picon
-title: picon compliance profile
+name: ollama
+title: ollama compliance profile
 maintainer: Sebastian Sommerfeld
 copyright: sommerfeld.io
 copyright_email: sebastian@sommerfeld.io
 license: MIT
-summary: picon compliance profile for all machines that are installed with ansible
+summary: ollama compliance profile
 version: 0.78.3
 supports:
   platform: os

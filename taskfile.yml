@@ -17,7 +17,7 @@ tasks:
   cleanup:inspec:
     desc: Cleanup inspec profiles and lock files
     cmds:
-      - for: &inspec-profiles ['admin-pi', 'ansible-baseline', 'picon', 'raspi-baseline', 'runner-04-pi']
+      - for: &inspec-profiles ['ansible-baseline', 'ollama', 'raspi-baseline']
         cmd: |
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
@@ -28,6 +28,7 @@ tasks:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
       - task: cleanup:filesystem
+      - task: cleanup:inspec
       - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
@@ -196,7 +197,7 @@ tasks:
     vars:
       HOST: caprica.fritz.box
     cmds:
-      - for: ['ansible-baseline']
+      - for: ['ansible-baseline', 'ollama']
         task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
@@ -218,7 +219,7 @@ tasks:
     vars:
       HOST: picon.fritz.box
     cmds:
-      - for: ['ansible-baseline', 'picon']
+      - for: ['ansible-baseline', 'ollama']
         task: internal:inspec:run-profile
         vars:
           HOST: '{{ .HOST }}'
