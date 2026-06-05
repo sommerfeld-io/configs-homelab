@@ -29,6 +29,7 @@ tasks:
     cmds:
       - task: cleanup:inspec
       - task: cleanup:filesystem
+      - task: docs:generate
       - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
