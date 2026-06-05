@@ -1,0 +1,31 @@
+---
+name: desktop-baseline
+title: desktop-baseline profile
+maintainer: Sebastian Sommerfeld
+copyright: sommerfeld.io
+copyright_email: sebastian@sommerfeld.io
+license: MIT
+summary: desktop-baseline compliance profile for all machines that are installed with ansible
+version: 0.78.3
+supports:
+  platform: os
+depends:
+  - name: linux-baseline
+    git: https://github.com/dev-sec/linux-baseline.git
+    tag: 2.9.0
+  - name: linux-essentials
+    git: https://github.com/sommerfeld-io/inspec-profiles.git
+    branch: main
+    relative_path: profiles/linux-essentials
+  - name: desktop-essentials
+    git: https://github.com/sommerfeld-io/inspec-profiles.git
+    branch: main
+    relative_path: profiles/desktop-essentials
+inputs:
+  # Override linux-baseline inputs
+  - name: login_defs_passmaxdays
+    value: '99999'
+    profile: linux-baseline
+  - name: login_defs_passmindays
+    value: '0'
+    profile: linux-baseline

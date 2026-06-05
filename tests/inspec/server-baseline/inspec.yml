@@ -1,11 +1,11 @@
 ---
-name: ansible-baseline
-title: ansible-baseline profile
+name: server-baseline
+title: server-baseline profile
 maintainer: Sebastian Sommerfeld
 copyright: sommerfeld.io
 copyright_email: sebastian@sommerfeld.io
 license: MIT
-summary: ansible-baseline compliance profile for all machines that are installed with ansible
+summary: server-baseline compliance profile for all machines that are installed with ansible
 version: 0.78.3
 supports:
   platform: os

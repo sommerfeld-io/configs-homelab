@@ -9,6 +9,14 @@
   with_items:
     - "{{ docker_stacks_dir }}"
 
+- name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc
+  ansible.builtin.lineinfile:
+    dest: "/home/{{ default_user }}/.bashrc"
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - export TASK_X_REMOTE_TASKFILES=1
+
 - name: Task  ----  Configure  ----  Copy taskfile and configs
   ansible.builtin.copy:
     src: "{{ item.src }}"
@@ -18,12 +26,31 @@
     mode: u=rw,g=r,o=
   with_items:
     - { src: "../files/docker-stacks/portainer", dest: "{{ docker_stacks_dir }}" }
-    - { src: "../files/taskfile.yml", dest: "/home/{{ default_user }}/taskfile.yml" }
 
-- name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc
-  ansible.builtin.lineinfile:
-    dest: "/home/{{ default_user }}/.bashrc"
-    state: present
-    line: "{{ item }}"
-  with_items:
-    - export TASK_X_REMOTE_TASKFILES=1
+- name: Block  ----  Configure  ----  caprica only
+  when: inventory_hostname == "caprica.fritz.box"
+  block:
+
+    - name: Task  ----  Configure  ----  Copy taskfile and configs  ----  caprica only
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=
+      with_items:
+        - { src: "../files/taskfile-caprica.yml", dest: "/home/{{ default_user }}/taskfile.yml" }
+
+- name: Block  ----  Configure  ----  All hosts except caprica
+  when: inventory_hostname != "caprica.fritz.box"
+  block:
+
+    - name: Task  ----  Configure  ----  Copy taskfile and configs  ----  All hosts except caprica
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=
+      with_items:
+        - { src: "../files/taskfile.yml", dest: "/home/{{ default_user }}/taskfile.yml" }

@@ -1,5 +1,5 @@
 ---
-name: "Ansible: Provision Grafana Cloud"
+name: "Provision: Grafana Cloud"
 
 on:
   push:

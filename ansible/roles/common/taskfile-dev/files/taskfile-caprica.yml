@@ -1,0 +1,20 @@
+---
+version: '3.42.1'
+
+tasks:
+
+  docker:stack:portainer:
+    vars:
+      STACK: portainer
+    desc: Run stack {{ .STACK }} in foreground
+    dir: &docker-stack-dir ~/.docker-stacks/{{ .STACK }}
+    cmds:
+      - docker compose up
+
+  # ===============================================================================================
+
+  system:info:
+    desc: 'Show system information'
+    cmds:
+      - hostnamectl
+      - 'echo -e " ${B}Ubuntu Codename:${D} $(lsb_release -c | cut -f2)"'

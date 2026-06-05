@@ -7,6 +7,8 @@ include_controls 'linux-baseline' do
   skip_control 'os-10'
   skip_control 'os-12'
   skip_control 'os-14'
+  skip_control 'os-15'
+  skip_control 'os-16'
   skip_control 'sysctl-01'
   skip_control 'sysctl-02'
   skip_control 'sysctl-05'
@@ -31,5 +33,4 @@ include_controls 'linux-baseline' do
   skip_control 'sysctl-27'
   skip_control 'sysctl-28'
   skip_control 'sysctl-30'
-  skip_control 'sysctl-33'
 end

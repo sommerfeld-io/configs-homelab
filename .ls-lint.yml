@@ -49,8 +49,9 @@ ignore:
 
   - .task
   - tests/inspec/admin-pi/vendor
-  - tests/inspec/ansible-baseline/vendor
+  - tests/inspec/desktop-baseline/vendor
   - tests/inspec/raspi-baseline/vendor
+  - tests/inspec/server-baseline/vendor
   - tests/inspec/runner-04-pi/vendor
   - ansible/roles
 
