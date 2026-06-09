@@ -38,8 +38,6 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
-          - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: "katan" }
-          - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: "nhl-predictions-game-prototype" }
 
 - name: Cleanup
   hosts: ubuntu_desktop:ubuntu_server:raspi
@@ -58,3 +56,5 @@
         - "{{ dir_repos_sommerfeld_io }}/release-watcher"
         - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
         - "{{ dir_repos_sommerfeld_io }}/telemetry"
+        - "{{ dir_repos_bad_android }}/katan"
+        - "{{ dir_repos_bad_android }}/nhl-predictions-game-prototype"
