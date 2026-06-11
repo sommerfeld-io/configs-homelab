@@ -16,12 +16,13 @@
   vars_files:
     - ../vars/main.yml
   tasks:
-    - ansible.builtin.include_role:
+    - name: Git Repositories  ----  Clone
+      ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/git-repositories
         tasks_from: main
       vars:
         git_repositories_ssh_base: &ssh-base git@github.com
-        repositories:
+        repositories: &repositories
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".task" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".vscode" }
@@ -32,12 +33,36 @@
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "skills" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "tech-radar" }
-          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "template-repository" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
+
+- name: Configure repositories on GitHub
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+    - name: Git Repositories  ----  Configure repositories on GitHub
+      ansible.builtin.shell: |
+        gh repo edit {{ item.org }}/{{ item.repo }} \
+          --enable-discussions \
+          --enable-issues \
+          --enable-projects \
+          --enable-wiki=false
+      args:
+        executable: /bin/bash
+      vars:
+        repositories: *repositories
+      loop: "{{ repositories }}"
+      register: gh_edit_output
+      changed_when: >
+        gh_edit_output.rc == 0 and
+        gh_edit_output.stdout is defined and
+        gh_edit_output.stdout | length > 0
 
 - name: Cleanup
   hosts: ubuntu_desktop:ubuntu_server:raspi
@@ -46,7 +71,6 @@
   vars_files:
     - ../vars/main.yml
   tasks:
-
     - name: Git Repositories  ----  Remove outdated repositories from host
       ansible.builtin.file:
         path: "{{ item }}"
@@ -56,5 +80,6 @@
         - "{{ dir_repos_sommerfeld_io }}/release-watcher"
         - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
         - "{{ dir_repos_sommerfeld_io }}/telemetry"
+        - "{{ dir_repos_sommerfeld_io }}/template-repository"
         - "{{ dir_repos_bad_android }}/katan"
         - "{{ dir_repos_bad_android }}/nhl-predictions-game-prototype"
