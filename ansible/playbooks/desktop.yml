@@ -79,3 +79,5 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/node
         tasks_from: modules-ai
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/claude

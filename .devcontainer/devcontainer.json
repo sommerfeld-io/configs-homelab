@@ -17,6 +17,7 @@
                 "github.vscode-github-actions",
                 "redhat.vscode-yaml",
                 "GitHub.copilot",
+                "anthropic.claude-code",
                 "Grafana.grafana-alloy",
                 "DavidAnson.vscode-markdownlint",
                 "EditorConfig.EditorConfig",

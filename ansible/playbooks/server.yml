@@ -41,6 +41,8 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/node
         tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/claude
 
 - name: Install and configure nodes (non-root)
   hosts: ubuntu_server
@@ -62,3 +64,5 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/node
         tasks_from: modules-ai
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/claude
