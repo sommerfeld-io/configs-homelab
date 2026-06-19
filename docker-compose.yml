@@ -38,7 +38,7 @@ services:
     tty: *tty
 
   lint-folders:
-    image: sommerfeldio/folderslint:0.20.1
+    image: sommerfeldio/folderslint:0.21.0
     volumes: *volumes
     working_dir: *default-workdir
     command: .
