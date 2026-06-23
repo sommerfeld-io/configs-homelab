@@ -162,15 +162,6 @@ jobs:
       - name: Push workflow metrics to Grafana Cloud
         uses: ./.github/actions/push-workflow-metrics
         with:
-          # NOTE: matrix job results are not individually tracked in Grafana Cloud metrics
-          job_results: >-
-            {
-              "shellcheck": "${{ needs.shellcheck.result }}",
-              "lint": "${{ needs.lint.result }}",
-              "check-inspec-profile": "${{ needs.check-inspec-profile.result }}",
-              "generate-docs": "${{ needs.generate-docs.result }}",
-              "release-code": "${{ needs.release-code.result }}"
-            }
           start_time: ${{ needs.metrics-start-time.outputs.start }}
           metrics_user: ${{ secrets.GRAFANA_CLOUD_USER }}
           metrics_token: ${{ secrets.GRAFANA_CLOUD_TOKEN }}

@@ -70,10 +70,6 @@ jobs:
       - name: Push workflow metrics to Grafana Cloud
         uses: ./.github/actions/push-workflow-metrics
         with:
-          job_results: >-
-            {
-              "playbook": "${{ needs.playbook.result }}"
-            }
           start_time: ${{ needs.metrics-start-time.outputs.start }}
           metrics_user: ${{ secrets.GRAFANA_CLOUD_USER }}
           metrics_token: ${{ secrets.GRAFANA_CLOUD_TOKEN }}

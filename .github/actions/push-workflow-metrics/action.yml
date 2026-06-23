@@ -1,14 +1,10 @@
 ---
 name: Push Workflow Metrics to Grafana Cloud
 description: >
-  Reports per-job outcomes and workflow duration to Grafana Cloud Mimir
-  via Influx line protocol. Called once per workflow from the final
-  send-metrics-to-grafana-cloud job.
+  Reports workflow duration to Grafana Cloud Mimir via Influx line protocol.
+  Called once per workflow from the final metrics-to-grafana-cloud job.
 
 inputs:
-  job_results:
-    required: true
-    description: 'JSON object mapping job name to result string, e.g. {"build":"success","test":"failure"}'
   start_time:
     required: true
     description: 'Unix timestamp (seconds since epoch) of workflow start'
@@ -48,14 +44,10 @@ runs:
 
         DURATION=$(( $(date +%s) - ${{ inputs.start_time }} ))
 
-        PAYLOAD=""
-        while IFS="=" read -r JOB RESULT; do
-          PAYLOAD+="github_workflow_run,org=${ORG},repo=${REPO},workflow=${WORKFLOW},workflow_file=${WORKFLOW_FILE},git_ref=${GIT_REF_NAME},git_ref_type=${REF_TYPE},job=${JOB},result=${RESULT},runner_os=${RUNNER_OS},run_id=${RUN_ID} duration_seconds=${DURATION},value=1"$'\n'
-        done < <(echo '${{ inputs.job_results }}' | jq -r 'to_entries[] | .key + "=" + .value')
+        PAYLOAD="github_workflow_run,org=${ORG},repo=${REPO},workflow=${WORKFLOW},workflow_file=${WORKFLOW_FILE},git_ref=${GIT_REF_NAME},git_ref_type=${REF_TYPE},runner_os=${RUNNER_OS},run_id=${RUN_ID} duration_seconds=${DURATION},value=1"
 
-        echo "Pushing ${#PAYLOAD} bytes to Grafana Cloud..."
-        echo "Payload preview:"
-        echo "${PAYLOAD}"
+        echo "Pushing to Grafana Cloud..."
+        echo "Payload: ${PAYLOAD}"
 
         HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
           -u "${{ inputs.metrics_user }}:${{ inputs.metrics_token }}" \
