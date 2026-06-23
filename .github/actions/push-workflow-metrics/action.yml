@@ -44,7 +44,7 @@ runs:
 
         DURATION=$(( $(date +%s) - ${{ inputs.start_time }} ))
 
-        PAYLOAD="github_workflow_run,org=${ORG},repo=${REPO},workflow=${WORKFLOW},workflow_file=${WORKFLOW_FILE},git_ref=${GIT_REF_NAME},git_ref_type=${REF_TYPE},runner_os=${RUNNER_OS},run_id=${RUN_ID} duration_seconds=${DURATION},value=1"
+        PAYLOAD="github_workflow_run,org=${ORG},repo=${REPO},workflow=${WORKFLOW},workflow_file=${WORKFLOW_FILE},git_ref=${GIT_REF_NAME},git_ref_type=${REF_TYPE},runner_os=${RUNNER_OS},run_id=${RUN_ID} duration_seconds=${DURATION}"
 
         echo "Pushing to Grafana Cloud..."
         echo "Payload: ${PAYLOAD}"
