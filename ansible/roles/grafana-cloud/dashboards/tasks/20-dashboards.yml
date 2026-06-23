@@ -27,5 +27,6 @@
   loop:
     - { base_url: "{{ dashboards_base_url }}", file: "summary-by-node.json", parent_folder: "", folder: "sommerfeldio" }
     - { base_url: "{{ dashboards_base_url }}", file: "ai/ollama-summary-by-node.json", parent_folder: "", folder: "sommerfeldio-ai" }
-    - { base_url: "{{ dashboards_base_url }}", file: "devops/cadvisor-exporter-by-node.json", parent_folder: "", folder: "sommerfeldio-node" }
-    - { base_url: "{{ dashboards_base_url }}", file: "devops/docker-containers-by-node.json", parent_folder: "", folder: "sommerfeldio-node" }
+    - { base_url: "{{ dashboards_base_url }}", file: "node/cadvisor-exporter-by-node.json", parent_folder: "", folder: "sommerfeldio-node" }
+    - { base_url: "{{ dashboards_base_url }}", file: "node/docker-containers-by-node.json", parent_folder: "", folder: "sommerfeldio-node" }
+    - { base_url: "{{ dashboards_base_url }}", file: "devops/github-actions-workflows.json", parent_folder: "", folder: "sommerfeldio-devops" }
