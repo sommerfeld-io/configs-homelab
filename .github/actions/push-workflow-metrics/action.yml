@@ -61,11 +61,10 @@ runs:
           -u "${{ inputs.metrics_user }}:${{ inputs.metrics_token }}" \
           -H "Content-Type: text/plain" \
           --data-binary "${PAYLOAD}" \
-          "${{ inputs.metrics_url }}/api/v1/push/influx")
+          "${{ inputs.metrics_url }}/api/v1/push/influx/write")
 
         echo "Grafana Cloud push HTTP status: ${HTTP_STATUS}"
         if [[ "${HTTP_STATUS}" != "204" && "${HTTP_STATUS}" != "200" ]]; then
-          echo "Warning: metrics push may have failed (status ${HTTP_STATUS})"
+          echo "Error: metrics push failed (status ${HTTP_STATUS})"
+          exit 1
         fi
-        # Always exit 0 — never fail the workflow over telemetry
-        exit 0
