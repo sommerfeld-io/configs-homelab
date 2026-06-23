@@ -1,0 +1,71 @@
+---
+name: Push Workflow Metrics to Grafana Cloud
+description: >
+  Reports per-job outcomes and workflow duration to Grafana Cloud Mimir
+  via Influx line protocol. Called once per workflow from the final
+  send-metrics-to-grafana-cloud job.
+
+inputs:
+  job_results:
+    required: true
+    description: 'JSON object mapping job name to result string, e.g. {"build":"success","test":"failure"}'
+  start_time:
+    required: true
+    description: 'Unix timestamp (seconds since epoch) of workflow start'
+  metrics_user:
+    required: true
+    description: 'Grafana Cloud numeric instance ID'
+  metrics_token:
+    required: true
+    description: 'Grafana Cloud service account token'
+  metrics_url:
+    required: true
+    description: 'Grafana Cloud base URL, e.g. https://prometheus-prod-24-prod-eu-west-2.grafana.net'
+
+runs:
+  using: composite
+  steps:
+    - name: Push metrics
+      shell: bash
+      run: |
+        ORG="${GITHUB_REPOSITORY_OWNER}"
+        REPO="${GITHUB_REPOSITORY##*/}"
+        WORKFLOW="${GITHUB_WORKFLOW// /_}"
+        WORKFLOW_FILE="${GITHUB_WORKFLOW_REF}"
+        WORKFLOW_FILE="${WORKFLOW_FILE##*workflows/}"
+        WORKFLOW_FILE="${WORKFLOW_FILE%%@*}"
+        RUN_ID="${GITHUB_RUN_ID}"
+
+        GIT_REF="${GITHUB_REF}"
+        GIT_REF_NAME="${GITHUB_REF_NAME}"
+        GIT_REF_NAME="${GIT_REF_NAME//\//_}"
+        case "${GIT_REF}" in
+          refs/heads/*) REF_TYPE="branch" ;;
+          refs/tags/*)  REF_TYPE="tag"    ;;
+          refs/pull/*)  REF_TYPE="pr"     ;;
+          *)            REF_TYPE="unknown" ;;
+        esac
+
+        DURATION=$(( $(date +%s) - ${{ inputs.start_time }} ))
+
+        PAYLOAD=""
+        while IFS="=" read -r JOB RESULT; do
+          PAYLOAD+="github_workflow_run,org=${ORG},repo=${REPO},workflow=${WORKFLOW},workflow_file=${WORKFLOW_FILE},git_ref=${GIT_REF_NAME},git_ref_type=${REF_TYPE},job=${JOB},result=${RESULT},runner_os=${RUNNER_OS},run_id=${RUN_ID} duration_seconds=${DURATION},value=1"$'\n'
+        done < <(echo '${{ inputs.job_results }}' | jq -r 'to_entries[] | .key + "=" + .value')
+
+        echo "Pushing ${#PAYLOAD} bytes to Grafana Cloud..."
+        echo "Payload preview:"
+        echo "${PAYLOAD}"
+
+        HTTP_STATUS=$(curl -sf -o /dev/null -w "%{http_code}" \
+          -u "${{ inputs.metrics_user }}:${{ inputs.metrics_token }}" \
+          -H "Content-Type: text/plain" \
+          --data-binary "${PAYLOAD}" \
+          "${{ inputs.metrics_url }}/api/v1/push/influx")
+
+        echo "Grafana Cloud push HTTP status: ${HTTP_STATUS}"
+        if [[ "${HTTP_STATUS}" != "204" && "${HTTP_STATUS}" != "200" ]]; then
+          echo "Warning: metrics push may have failed (status ${HTTP_STATUS})"
+        fi
+        # Always exit 0 — never fail the workflow over telemetry
+        exit 0

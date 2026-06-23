@@ -1,0 +1,19 @@
+---
+name: Record Workflow Start Time
+description: >
+  Records the current Unix timestamp as a step output. Called as the first
+  step in the metrics-start-time job so the timer begins before any real
+  job starts working.
+
+outputs:
+  start:
+    description: 'Unix timestamp (seconds since epoch) when this action ran'
+    value: ${{ steps.set_start_time.outputs.start }}
+
+runs:
+  using: composite
+  steps:
+    - name: Record timestamp
+      id: set_start_time
+      run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+      shell: bash

@@ -3,6 +3,7 @@
         ".ansible",
 		".devcontainer",
 
+        ".github/actions/*",
 		".github/prompts",
 		".github/skills/*",
 		".github/workflows",

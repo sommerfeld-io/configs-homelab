@@ -19,9 +19,20 @@ on:
     - cron: '0 5 * * 0'
 
 jobs:
+  metrics-start-time:
+    runs-on: ubuntu-latest
+    outputs:
+      start: ${{ steps.record-start.outputs.start }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record workflow start time
+        id: record-start
+        uses: ./.github/actions/record-workflow-start-time
+
   analyze:
     name: ${{ matrix.language }}
     runs-on: ubuntu-latest
+    needs: [metrics-start-time]
     permissions:
       security-events: write
       packages: read
@@ -62,3 +73,22 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
+
+  metrics-to-grafana-cloud:
+    runs-on: ubuntu-latest
+    needs: [metrics-start-time, analyze]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push workflow metrics to Grafana Cloud
+        uses: ./.github/actions/push-workflow-metrics
+        with:
+          # NOTE: matrix job results are not individually tracked in Grafana Cloud metrics
+          job_results: >-
+            {
+              "analyze": "${{ needs.analyze.result }}"
+            }
+          start_time: ${{ needs.metrics-start-time.outputs.start }}
+          metrics_user: ${{ secrets.GRAFANA_CLOUD_USER }}
+          metrics_token: ${{ secrets.GRAFANA_CLOUD_TOKEN }}
+          metrics_url: ${{ secrets.GRAFANA_CLOUD_URL }}

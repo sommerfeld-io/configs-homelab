@@ -21,8 +21,19 @@ env:
 
 jobs:
 
+  metrics-start-time:
+    runs-on: ubuntu-latest
+    outputs:
+      start: ${{ steps.record-start.outputs.start }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record workflow start time
+        id: record-start
+        uses: ./.github/actions/record-workflow-start-time
+
   shellcheck:
     runs-on: ubuntu-latest
+    needs: [metrics-start-time]
     permissions:
       contents: read
     steps:
@@ -38,6 +49,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: ${{ matrix.linter }}
+    needs: [metrics-start-time]
     permissions:
       contents: read
     strategy:
@@ -63,6 +75,7 @@ jobs:
   check-inspec-profile:
     runs-on: ubuntu-latest
     name: ${{ matrix.profile }}
+    needs: [metrics-start-time]
     permissions:
       contents: read
     env:
@@ -139,3 +152,26 @@ jobs:
       GH_TOKEN_REPO_AND_PROJECT: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
     permissions:
       contents: write
+
+  metrics-to-grafana-cloud:
+    runs-on: ubuntu-latest
+    needs: [metrics-start-time, shellcheck, lint, check-inspec-profile, generate-docs, release-code]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push workflow metrics to Grafana Cloud
+        uses: ./.github/actions/push-workflow-metrics
+        with:
+          # NOTE: matrix job results are not individually tracked in Grafana Cloud metrics
+          job_results: >-
+            {
+              "shellcheck": "${{ needs.shellcheck.result }}",
+              "lint": "${{ needs.lint.result }}",
+              "check-inspec-profile": "${{ needs.check-inspec-profile.result }}",
+              "generate-docs": "${{ needs.generate-docs.result }}",
+              "release-code": "${{ needs.release-code.result }}"
+            }
+          start_time: ${{ needs.metrics-start-time.outputs.start }}
+          metrics_user: ${{ secrets.GRAFANA_CLOUD_USER }}
+          metrics_token: ${{ secrets.GRAFANA_CLOUD_TOKEN }}
+          metrics_url: ${{ secrets.GRAFANA_CLOUD_URL }}

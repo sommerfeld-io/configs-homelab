@@ -7,11 +7,40 @@ on:
 
 jobs:
 
+  metrics-start-time:
+    runs-on: ubuntu-latest
+    outputs:
+      start: ${{ steps.record-start.outputs.start }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record workflow start time
+        id: record-start
+        uses: ./.github/actions/record-workflow-start-time
+
   triage-issues:
     uses: sommerfeld-io/.github/.github/workflows/housekeeping-issues-ai-refinement.yml@main
+    needs: [metrics-start-time]
     secrets:
       COPILOT_CLI_TOKEN: ${{ secrets.COPILOT_CLI_TOKEN }}
     permissions:
       contents: read
       issues: write
       models: read
+
+  metrics-to-grafana-cloud:
+    runs-on: ubuntu-latest
+    needs: [metrics-start-time, triage-issues]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push workflow metrics to Grafana Cloud
+        uses: ./.github/actions/push-workflow-metrics
+        with:
+          job_results: >-
+            {
+              "triage-issues": "${{ needs.triage-issues.result }}"
+            }
+          start_time: ${{ needs.metrics-start-time.outputs.start }}
+          metrics_user: ${{ secrets.GRAFANA_CLOUD_USER }}
+          metrics_token: ${{ secrets.GRAFANA_CLOUD_TOKEN }}
+          metrics_url: ${{ secrets.GRAFANA_CLOUD_URL }}
