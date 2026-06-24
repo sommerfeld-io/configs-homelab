@@ -49,8 +49,6 @@ tasks:
       - mkdir -p {{ .GRAFANA_CLOUD_DOCS }}
       - task: common:copy
         vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/alloy/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/alloy.md" }
-      - task: common:copy
-        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/dashboards/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/dashboards.md" }
 
   docs:run:
     desc: Run the documentation server
@@ -90,23 +88,9 @@ tasks:
     dir: *ansible-dir
     cmds: *ansible-cmd
 
-  ansible:grafana:
-    vars:
-      PLAYBOOK: grafana.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
   ansible:grafana:agents:
     vars:
       PLAYBOOK: grafana-agents.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:grafana:cloud:
-    vars:
-      PLAYBOOK: grafana-cloud.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd

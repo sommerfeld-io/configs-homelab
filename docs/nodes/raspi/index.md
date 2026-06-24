@@ -54,7 +54,7 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
     * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
     * [ ] Login to Docker registry on the new machine: `docker login`
     * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
-    * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana.md)
+    * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana-agents.md)
 
 ### Follow-Up Todos
 

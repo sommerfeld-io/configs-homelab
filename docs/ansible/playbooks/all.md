@@ -4,7 +4,7 @@ This Ansible playbook orchestrates a complete provisioning of all nodes in the h
 
 - [Include Grafana Playbook to provision desktop workstations on the homelab](./desktop.md)
 - [Include Grafana Playbook to provision RasPi nodes on the homelab](./raspi.md)
-- [Include Grafana Playbook to provision nodes on the homelab for use with Grafana Cloud](./grafana.md) (install agents)
+- [Include Grafana Playbook to provision nodes on the homelab for use with Grafana Cloud](./grafana-agents.md) (install agents)
 - [Include Grafana Playbook to clone repositories on the homelab nodes](./repositories.md)
 - [Include Grafana Playbook to clean up the homelab nodes from old files, etc.](./cleanup.md)
 

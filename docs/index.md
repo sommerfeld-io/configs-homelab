@@ -13,7 +13,6 @@ This project contains infrastructure configurations and docs for our workstation
 [![Development Environment](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/dev-environment.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/dev-environment.yml)
 [![Pipeline: Commit + Test](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/pipeline.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/pipeline.yml)
 [![Pipeline: Release](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/release.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/release.yml)
-[![Provision: Grafana Cloud](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/provision-grafana-cloud.yml/badge.svg)](https://github.com/sommerfeld-io/configs-homelab/actions/workflows/provision-grafana-cloud.yml)
 
 <!-- ===== END status badge ===== -->
 

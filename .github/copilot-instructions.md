@@ -46,7 +46,7 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
 
 ## Ansible Conventions
 
-- **Playbooks:** `ansible/playbooks/*.yml` - one playbook per concern (e.g. `desktop.yml`, `grafana.yml`)
+- **Playbooks:** `ansible/playbooks/*.yml` - one playbook per concern (e.g. `desktop.yml`, `grafana-agents.yml`)
 - **Roles:** `ansible/roles/ansible-roles-collection/{role-name}/` - each role has `tasks/`, optionally `defaults/`, `handlers/`, `files/`, `templates/`
 - **Inventory:** `ansible/hosts.yml` - groups: `ubuntu_desktop`, `raspi`, `ollama`
 - **Vars:** `ansible/vars/main.yml` (general), `raspi.yml`, `ubuntu.yml`; vault files for secrets

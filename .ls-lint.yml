@@ -39,6 +39,9 @@ ls:
   .gitkeep: lowercase
   .shellcheckrc: lowercase
 
+  grafana-cloud/manifests/git-sync:
+    .json: kebab-case | regex:^_folder$
+
 ignore:
   # commons
   - .git
