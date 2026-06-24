@@ -3431,7 +3431,7 @@
           "description": "CPU shares and quota spec for the container",
           "id": 60,
           "links": [],
-          "title": "CPU Shares (Spec)a t",
+          "title": "CPU Shares (Spec)",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
