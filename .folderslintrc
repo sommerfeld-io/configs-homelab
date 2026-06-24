@@ -29,6 +29,8 @@
         "docs/incident-responses",
 		"docs/nodes/**",
 
+        "grafana-cloud/manifests/git-sync/**",
+
         "nodes/*/*",
 
         "tests/inspec/*/controls",
