@@ -479,19 +479,23 @@
                         {
                           "options": {
                             "pull_request": {
-                              "color": "blue",
+                              "color": "purple",
                               "index": 1
                             },
                             "push": {
-                              "color": "green",
+                              "color": "blue",
                               "index": 0
+                            },
+                            "release": {
+                              "color": "green",
+                              "index": 4
                             },
                             "schedule": {
                               "color": "orange",
                               "index": 2
                             },
                             "workflow_dispatch": {
-                              "color": "purple",
+                              "color": "text",
                               "index": 3
                             }
                           },
@@ -827,7 +831,7 @@
                         "kind": "ElementReference",
                         "name": "panel-5"
                       },
-                      "height": 11,
+                      "height": 12,
                       "width": 24,
                       "x": 0,
                       "y": 0
@@ -911,7 +915,7 @@
       "1d"
     ],
     "fiscalYearStartMonth": 0,
-    "from": "now-7d",
+    "from": "now-30d",
     "hideTimepicker": false,
     "timezone": "browser",
     "to": "now"
