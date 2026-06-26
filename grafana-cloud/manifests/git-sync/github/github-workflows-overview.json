@@ -255,6 +255,7 @@
               ],
               "legend": {
                 "displayMode": "list",
+                "overflow": "ellipsis",
                 "placement": "bottom",
                 "showLegend": true,
                 "values": [
@@ -278,7 +279,7 @@
               }
             }
           },
-          "version": "13.1.0-27822252871"
+          "version": "13.1.0-27855457075"
         }
       }
     },
@@ -623,7 +624,7 @@
               ]
             }
           },
-          "version": "13.1.0-27822252871"
+          "version": "13.1.0-27855457075"
         }
       }
     },
@@ -792,6 +793,7 @@
               },
               "legend": {
                 "displayMode": "list",
+                "overflow": "ellipsis",
                 "placement": "bottom",
                 "showLegend": true
               },
@@ -805,7 +807,7 @@
               }
             }
           },
-          "version": "13.1.0-27822252871"
+          "version": "13.1.0-27855457075"
         }
       }
     },
@@ -1195,7 +1197,7 @@
               ]
             }
           },
-          "version": "13.1.0-27822252871"
+          "version": "13.1.0-27855457075"
         }
       }
     }
@@ -1298,7 +1300,8 @@
       "includeVars": false,
       "keepTime": false,
       "tags": [
-        "github-integration"
+        "github-integration",
+        "github"
       ],
       "targetBlank": false,
       "title": "GitHub Dashboards",
@@ -1317,7 +1320,9 @@
     }
   },
   "preload": false,
-  "tags": [],
+  "tags": [
+    "github"
+  ],
   "timeSettings": {
     "autoRefresh": "",
     "autoRefreshIntervals": [
