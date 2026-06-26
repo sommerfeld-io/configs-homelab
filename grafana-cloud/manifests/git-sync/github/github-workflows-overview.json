@@ -1,0 +1,1471 @@
+{
+  "annotations": [
+    {
+      "kind": "AnnotationQuery",
+      "spec": {
+        "builtIn": true,
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "query": {
+          "datasource": {
+            "name": "-- Grafana --"
+          },
+          "group": "grafana",
+          "kind": "DataQuery",
+          "spec": {},
+          "version": "v0"
+        }
+      }
+    }
+  ],
+  "cursorSync": "Off",
+  "description": "Overview of GitHub Actions workflow runs across repositories — status distribution and run history.",
+  "editable": true,
+  "elements": {
+    "panel-3": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "cfq4tb1lcmarkd"
+                    },
+                    "group": "grafana-github-datasource",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "options": {
+                        "workflow": "$workflow"
+                      },
+                      "owner": "$owner",
+                      "queryType": "Workflow_Runs",
+                      "range": true,
+                      "repository": "$repo"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": [
+              {
+                "group": "filterByValue",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "filters": [
+                      {
+                        "config": {
+                          "id": "regex",
+                          "options": {
+                            "value": "$branch"
+                          }
+                        },
+                        "fieldName": "head_branch"
+                      }
+                    ],
+                    "match": "any",
+                    "type": "include"
+                  }
+                }
+              },
+              {
+                "group": "groupBy",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "fields": {
+                      "conclusion": {
+                        "aggregations": [
+                          "count"
+                        ],
+                        "operation": "groupby"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "group": "organize",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "renameByName": {
+                      "conclusion": "Result",
+                      "conclusion (count)": "Count"
+                    }
+                  }
+                }
+              },
+              {
+                "group": "rowsToFields",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "nameField": "Result",
+                    "valueField": "Count"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "description": "Percentage breakdown of all workflow run conclusions (success, failure, cancelled, skipped, etc.).",
+        "id": 3,
+        "links": [],
+        "title": "Result Distribution",
+        "vizConfig": {
+          "group": "piechart",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "#73BF69",
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  }
+                },
+                "mappings": [
+                  {
+                    "options": {
+                      "cancelled": {
+                        "color": "text",
+                        "index": 0
+                      },
+                      "failure": {
+                        "color": "red",
+                        "index": 1
+                      },
+                      "skipped": {
+                        "color": "blue",
+                        "index": 2
+                      },
+                      "success": {
+                        "color": "green",
+                        "index": 3
+                      },
+                      "timed_out": {
+                        "color": "orange",
+                        "index": 4
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "success"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "green",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "failure"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "red",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "cancelled"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "text",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "skipped"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "timed_out"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "orange",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "options": {
+              "displayLabels": [
+                "name",
+                "percent"
+              ],
+              "legend": {
+                "displayMode": "list",
+                "overflow": "ellipsis",
+                "placement": "bottom",
+                "showLegend": true,
+                "values": [
+                  "percent",
+                  "value"
+                ]
+              },
+              "pieType": "donut",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "sort": "desc",
+              "tooltip": {
+                "hideZeros": false,
+                "mode": "multi",
+                "sort": "desc"
+              }
+            }
+          },
+          "version": "13.1.0-27855457075"
+        }
+      }
+    },
+    "panel-4": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "cfq4tb1lcmarkd"
+                    },
+                    "group": "grafana-github-datasource",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "options": {
+                        "workflow": "$workflow"
+                      },
+                      "owner": "$owner",
+                      "queryType": "Workflow_Runs",
+                      "range": true,
+                      "repository": "$repo"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": [
+              {
+                "group": "filterByValue",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "filters": [
+                      {
+                        "config": {
+                          "id": "regex",
+                          "options": {
+                            "value": "$branch"
+                          }
+                        },
+                        "fieldName": "head_branch"
+                      }
+                    ],
+                    "match": "any",
+                    "type": "include"
+                  }
+                }
+              },
+              {
+                "group": "organize",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "excludeByName": {
+                      "head_sha": true,
+                      "html_url": true,
+                      "run_number": true,
+                      "run_started_at": true,
+                      "updated_at": true,
+                      "url": true,
+                      "workflow_id": true
+                    },
+                    "indexByName": {
+                      "conclusion": 4,
+                      "created_at": 6,
+                      "event": 2,
+                      "head_branch": 3,
+                      "id": 7,
+                      "name": 0,
+                      "path": 1,
+                      "status": 5
+                    },
+                    "renameByName": {
+                      "conclusion": "Conclusion",
+                      "created_at": "Created At",
+                      "event": "Event",
+                      "head_branch": "Branch",
+                      "id": "Run ID",
+                      "name": "Name",
+                      "path": "Workflow File",
+                      "status": "Status"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "description": "Workflow: `${workflow}`",
+        "id": 4,
+        "links": [],
+        "title": "Recent Workflow Runs",
+        "vizConfig": {
+          "group": "table",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  },
+                  "footer": {
+                    "reducers": []
+                  },
+                  "inspect": false
+                },
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Run ID"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 110
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Name"
+                  },
+                  "properties": [
+                    {
+                      "id": "custom.width",
+                      "value": 280
+                    },
+                    {
+                      "id": "links",
+                      "value": [
+                        {
+                          "targetBlank": true,
+                          "title": "Open on GitHub",
+                          "url": "https://github.com/${owner}/${repo}/actions/runs/${__data.fields[\"Run ID\"]}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Branch"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "pill"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Event"
+                  },
+                  "properties": [
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {
+                          "options": {
+                            "pull_request": {
+                              "color": "purple",
+                              "index": 1
+                            },
+                            "push": {
+                              "color": "blue",
+                              "index": 0
+                            },
+                            "release": {
+                              "color": "green",
+                              "index": 4
+                            },
+                            "schedule": {
+                              "color": "orange",
+                              "index": 2
+                            },
+                            "workflow_dispatch": {
+                              "color": "text",
+                              "index": 3
+                            }
+                          },
+                          "type": "value"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "pill"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Conclusion"
+                  },
+                  "properties": [
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {
+                          "options": {
+                            "action_required": {
+                              "color": "orange",
+                              "index": 5,
+                              "text": "Action Required"
+                            },
+                            "cancelled": {
+                              "color": "text",
+                              "index": 2,
+                              "text": "Cancelled"
+                            },
+                            "failure": {
+                              "color": "red",
+                              "index": 1,
+                              "text": "Failure"
+                            },
+                            "skipped": {
+                              "color": "blue",
+                              "index": 3,
+                              "text": "Skipped"
+                            },
+                            "success": {
+                              "color": "green",
+                              "index": 0,
+                              "text": "Success"
+                            },
+                            "timed_out": {
+                              "color": "purple",
+                              "index": 4,
+                              "text": "Timed Out"
+                            }
+                          },
+                          "type": "value"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "color-text"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Status"
+                  },
+                  "properties": [
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {
+                          "options": {
+                            "completed": {
+                              "color": "green",
+                              "index": 0,
+                              "text": "Completed"
+                            },
+                            "in_progress": {
+                              "color": "blue",
+                              "index": 1,
+                              "text": "In Progress"
+                            },
+                            "queued": {
+                              "color": "text",
+                              "index": 2,
+                              "text": "Queued"
+                            },
+                            "waiting": {
+                              "color": "purple",
+                              "index": 3,
+                              "text": "Waiting"
+                            }
+                          },
+                          "type": "value"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "type": "color-text"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "options": {
+              "cellHeight": "sm",
+              "enablePagination": true,
+              "showHeader": true,
+              "sortBy": [
+                {
+                  "desc": true,
+                  "displayName": "Created At"
+                }
+              ]
+            }
+          },
+          "version": "13.1.0-27855457075"
+        }
+      }
+    },
+    "panel-5": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "cfq4tb1lcmarkd"
+                    },
+                    "group": "grafana-github-datasource",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "options": {
+                        "workflow": "$workflow"
+                      },
+                      "owner": "$owner",
+                      "queryType": "Workflow_Runs",
+                      "range": true,
+                      "repository": "$repo"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": [
+              {
+                "group": "filterByValue",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "filters": [
+                      {
+                        "config": {
+                          "id": "regex",
+                          "options": {
+                            "value": "$branch"
+                          }
+                        },
+                        "fieldName": "head_branch"
+                      }
+                    ],
+                    "match": "any",
+                    "type": "include"
+                  }
+                }
+              },
+              {
+                "group": "filterFieldsByName",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "include": {
+                      "pattern": "^(created_at|head_branch|conclusion)$"
+                    }
+                  }
+                }
+              },
+              {
+                "group": "partitionByValues",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "fields": [
+                      "head_branch"
+                    ],
+                    "keepFields": false
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "description": "⚠️ Bar length reflects time until the **next status change**, not workflow runtime. A failed nightly job stays red for ~24 h until the next run changes the state.",
+        "id": 5,
+        "links": [],
+        "title": "Workflow Run History",
+        "vizConfig": {
+          "group": "state-timeline",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "custom": {
+                  "axisPlacement": "auto",
+                  "fillOpacity": 70,
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "insertNulls": false,
+                  "lineWidth": 0,
+                  "spanNulls": false
+                },
+                "displayName": "${__field.labels.head_branch}",
+                "mappings": [
+                  {
+                    "options": {
+                      "action_required": {
+                        "color": "purple",
+                        "index": 5,
+                        "text": "Action Required"
+                      },
+                      "cancelled": {
+                        "color": "text",
+                        "index": 2,
+                        "text": "Cancelled"
+                      },
+                      "failure": {
+                        "color": "red",
+                        "index": 1,
+                        "text": "Failure"
+                      },
+                      "skipped": {
+                        "color": "blue",
+                        "index": 3,
+                        "text": "Skipped"
+                      },
+                      "success": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "Success"
+                      },
+                      "timed_out": {
+                        "color": "orange",
+                        "index": 4,
+                        "text": "Timed Out"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "options": {
+              "alignValue": "left",
+              "annotations": {
+                "clustering": -1,
+                "multiLane": false
+              },
+              "legend": {
+                "displayMode": "list",
+                "overflow": "ellipsis",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "mergeValues": true,
+              "rowHeight": 0.9,
+              "showValue": "auto",
+              "tooltip": {
+                "hideZeros": false,
+                "mode": "single",
+                "sort": "none"
+              }
+            }
+          },
+          "version": "13.1.0-27855457075"
+        }
+      }
+    },
+    "panel-8": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": true,
+                  "query": {
+                    "datasource": {
+                      "name": "cfq4tb1lcmarkd"
+                    },
+                    "group": "grafana-github-datasource",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "options": {
+                        "workflow": "$workflow"
+                      },
+                      "owner": "$owner",
+                      "queryType": "Workflow_Runs",
+                      "range": true,
+                      "repository": "$repo"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              },
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "__expr__"
+                    },
+                    "group": "__expr__",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "expression": "SELECT head_branch, ROUND(100.0 * SUM(CASE WHEN conclusion = 'success' THEN 1 ELSE 0 END) / COUNT(*), 1) AS success_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'failure' THEN 1 ELSE 0 END) / COUNT(*), 1) AS failure_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'cancelled' THEN 1 ELSE 0 END) / COUNT(*), 1) AS cancelled_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'timed_out' THEN 1 ELSE 0 END) / COUNT(*), 1) AS timed_out_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'skipped' THEN 1 ELSE 0 END) / COUNT(*), 1) AS skipped_pct, COUNT(*) AS total, ROUND(AVG(CASE WHEN status = 'completed' THEN TIMESTAMPDIFF(SECOND, run_started_at, updated_at) END), 1) AS avg_duration_s FROM A GROUP BY head_branch ORDER BY total DESC LIMIT 100",
+                      "type": "sql"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "B"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": [
+              {
+                "group": "filterByValue",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "filters": [
+                      {
+                        "config": {
+                          "id": "regex",
+                          "options": {
+                            "value": "$branch"
+                          }
+                        },
+                        "fieldName": "head_branch"
+                      }
+                    ],
+                    "match": "any",
+                    "type": "include"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "description": "",
+        "id": 8,
+        "links": [],
+        "title": "Result Rates — Bar Gauge",
+        "vizConfig": {
+          "group": "table",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  },
+                  "footer": {
+                    "reducers": []
+                  },
+                  "inspect": false
+                },
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "head_branch"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Branch"
+                    },
+                    {
+                      "id": "custom.width",
+                      "value": 220
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "success_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Success %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "green",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "failure_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Failure %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "red",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "cancelled_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Cancelled %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "gray",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "timed_out_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Timed Out %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "orange",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "skipped_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Skipped %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "total"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Total"
+                    },
+                    {
+                      "id": "custom.width",
+                      "value": 70
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "avg_duration_s"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Avg Duration"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "s"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 600
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "options": {
+              "cellHeight": "sm",
+              "showHeader": true,
+              "sortBy": [
+                {
+                  "desc": true,
+                  "displayName": "Total"
+                }
+              ]
+            }
+          },
+          "version": "13.1.0-27855457075"
+        }
+      }
+    }
+  },
+  "layout": {
+    "kind": "RowsLayout",
+    "spec": {
+      "rows": [
+        {
+          "kind": "RowsLayoutRow",
+          "spec": {
+            "collapse": false,
+            "fillScreen": false,
+            "hideHeader": false,
+            "layout": {
+              "kind": "GridLayout",
+              "spec": {
+                "items": [
+                  {
+                    "kind": "GridLayoutItem",
+                    "spec": {
+                      "element": {
+                        "kind": "ElementReference",
+                        "name": "panel-5"
+                      },
+                      "height": 13,
+                      "width": 21,
+                      "x": 0,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "kind": "GridLayoutItem",
+                    "spec": {
+                      "element": {
+                        "kind": "ElementReference",
+                        "name": "panel-3"
+                      },
+                      "height": 13,
+                      "width": 3,
+                      "x": 21,
+                      "y": 0
+                    }
+                  }
+                ]
+              }
+            },
+            "title": "Run History"
+          }
+        },
+        {
+          "kind": "RowsLayoutRow",
+          "spec": {
+            "collapse": false,
+            "fillScreen": false,
+            "hideHeader": false,
+            "layout": {
+              "kind": "GridLayout",
+              "spec": {
+                "items": [
+                  {
+                    "kind": "GridLayoutItem",
+                    "spec": {
+                      "element": {
+                        "kind": "ElementReference",
+                        "name": "panel-4"
+                      },
+                      "height": 13,
+                      "width": 10,
+                      "x": 0,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "kind": "GridLayoutItem",
+                    "spec": {
+                      "element": {
+                        "kind": "ElementReference",
+                        "name": "panel-8"
+                      },
+                      "height": 13,
+                      "width": 14,
+                      "x": 10,
+                      "y": 0
+                    }
+                  }
+                ]
+              }
+            },
+            "title": "Analysis"
+          }
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [
+        "github-integration",
+        "github"
+      ],
+      "targetBlank": false,
+      "title": "GitHub Dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "liveNow": false,
+  "preferences": {
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": []
+      }
+    }
+  },
+  "preload": false,
+  "tags": [
+    "github"
+  ],
+  "timeSettings": {
+    "autoRefresh": "",
+    "autoRefreshIntervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "fiscalYearStartMonth": 0,
+    "from": "now-30d",
+    "hideTimepicker": false,
+    "timezone": "browser",
+    "to": "now"
+  },
+  "title": "GitHub / Workflows / Overview by Repo and Workflow",
+  "variables": [
+    {
+      "kind": "DatasourceVariable",
+      "spec": {
+        "allowCustomValue": false,
+        "current": {
+          "text": "grafana-github-datasource",
+          "value": "cfq4tb1lcmarkd"
+        },
+        "hide": "inControlsMenu",
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "pluginId": "grafana-github-datasource",
+        "refresh": "onDashboardLoad",
+        "regex": "",
+        "skipUrlSync": false
+      }
+    },
+    {
+      "kind": "CustomVariable",
+      "spec": {
+        "allowCustomValue": true,
+        "current": {
+          "text": "sommerfeld-io",
+          "value": "sommerfeld-io"
+        },
+        "hide": "dontHide",
+        "includeAll": false,
+        "label": "Owner",
+        "multi": false,
+        "name": "owner",
+        "options": [],
+        "query": "sommerfeld-io,bad-android,sebastian-sommerfeld-io",
+        "skipUrlSync": false,
+        "valuesFormat": "csv"
+      }
+    },
+    {
+      "kind": "QueryVariable",
+      "spec": {
+        "allowCustomValue": true,
+        "current": {
+          "text": "configs-homelab",
+          "value": "configs-homelab"
+        },
+        "hide": "dontHide",
+        "includeAll": false,
+        "label": "Repository",
+        "multi": false,
+        "name": "repo",
+        "options": [],
+        "query": {
+          "datasource": {
+            "name": "$datasource"
+          },
+          "group": "grafana-github-datasource",
+          "kind": "DataQuery",
+          "spec": {
+            "owner": "$owner",
+            "queryType": "Repositories"
+          },
+          "version": "v0"
+        },
+        "refresh": "onDashboardLoad",
+        "regex": "",
+        "regexApplyTo": "value",
+        "skipUrlSync": false,
+        "sort": "alphabeticalAsc"
+      }
+    },
+    {
+      "kind": "QueryVariable",
+      "spec": {
+        "allowCustomValue": false,
+        "current": {
+          "text": "pipeline.yml",
+          "value": "pipeline.yml"
+        },
+        "hide": "dontHide",
+        "includeAll": false,
+        "label": "Workflow",
+        "multi": false,
+        "name": "workflow",
+        "options": [],
+        "query": {
+          "datasource": {
+            "name": "$datasource"
+          },
+          "group": "grafana-github-datasource",
+          "kind": "DataQuery",
+          "spec": {
+            "field": "path",
+            "owner": "$owner",
+            "queryType": "Workflows",
+            "repository": "$repo"
+          },
+          "version": "v0"
+        },
+        "refresh": "onDashboardLoad",
+        "regex": "/([^/]+)$/",
+        "regexApplyTo": "value",
+        "skipUrlSync": false,
+        "sort": "alphabeticalAsc"
+      }
+    },
+    {
+      "kind": "TextVariable",
+      "spec": {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "description": "Filter by branch, tag, or PR ref. Enter any text — all refs containing that text are shown. Leave empty to show all.",
+        "hide": "dontHide",
+        "label": "Branch / Tag",
+        "name": "branch",
+        "query": "",
+        "skipUrlSync": false
+      }
+    }
+  ]
+}
