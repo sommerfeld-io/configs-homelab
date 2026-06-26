@@ -215,241 +215,6 @@
           }
         }
       },
-      "panel-2": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "cfq4tb1lcmarkd"
-                      },
-                      "group": "grafana-github-datasource",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "app": "grafana-assistant-app",
-                        "options": {
-                          "workflow": "$workflow"
-                        },
-                        "owner": "$owner",
-                        "queryType": "Workflow_Runs",
-                        "range": true,
-                        "repository": "$repo"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": [
-                {
-                  "group": "filterByValue",
-                  "kind": "Transformation",
-                  "spec": {
-                    "disabled": false,
-                    "options": {
-                      "filters": [
-                        {
-                          "config": {
-                            "id": "regex",
-                            "options": {
-                              "value": "${branch}"
-                            }
-                          },
-                          "fieldName": "head_branch"
-                        }
-                      ],
-                      "match": "any",
-                      "type": "include"
-                    }
-                  }
-                },
-                {
-                  "group": "groupBy",
-                  "kind": "Transformation",
-                  "spec": {
-                    "disabled": false,
-                    "options": {
-                      "fields": {
-                        "conclusion": {
-                          "aggregations": [],
-                          "operation": "groupby"
-                        },
-                        "id": {
-                          "aggregations": [
-                            "count"
-                          ],
-                          "operation": "aggregate"
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "group": "organize",
-                  "kind": "Transformation",
-                  "spec": {
-                    "disabled": false,
-                    "options": {
-                      "renameByName": {
-                        "id (count)": "Count"
-                      }
-                    }
-                  }
-                },
-                {
-                  "group": "rowsToFields",
-                  "kind": "Transformation",
-                  "spec": {
-                    "disabled": false,
-                    "options": {
-                      "nameField": "conclusion",
-                      "valueField": "Count"
-                    }
-                  }
-                }
-              ]
-            }
-          },
-          "description": "",
-          "id": 2,
-          "links": [],
-          "title": "Result Distribution",
-          "vizConfig": {
-            "group": "piechart",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "fixedColor": "#73BF69",
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    }
-                  }
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "success"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "green",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "failure"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "red",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "cancelled"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "text",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "skipped"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "semi-dark-blue",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "timed_out"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "orange",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              "options": {
-                "displayLabels": [
-                  "name",
-                  "percent"
-                ],
-                "legend": {
-                  "displayMode": "list",
-                  "overflow": "ellipsis",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "pieType": "donut",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "sort": "desc",
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "single",
-                  "sort": "none"
-                }
-              }
-            },
-            "version": "13.1.0-27855457075"
-          }
-        }
-      },
       "panel-3": {
         "kind": "Panel",
         "spec": {
@@ -834,21 +599,8 @@
                           "name": "panel-1"
                         },
                         "height": 6,
-                        "width": 8,
+                        "width": 11,
                         "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-2"
-                        },
-                        "height": 6,
-                        "width": 3,
-                        "x": 8,
                         "y": 0
                       }
                     },
@@ -878,7 +630,20 @@
         ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-workflows-overview.json"
+      }
+    ],
     "liveNow": false,
     "preferences": {
       "layout": {
