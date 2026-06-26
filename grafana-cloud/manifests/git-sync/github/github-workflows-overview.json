@@ -162,7 +162,7 @@
                         "index": 3
                       },
                       "timed_out": {
-                        "color": "purple",
+                        "color": "orange",
                         "index": 4
                       }
                     },
@@ -254,8 +254,8 @@
                 "percent"
               ],
               "legend": {
-                "displayMode": "table",
-                "placement": "right",
+                "displayMode": "list",
+                "placement": "bottom",
                 "showLegend": true,
                 "values": [
                   "percent",
@@ -739,7 +739,7 @@
                   {
                     "options": {
                       "action_required": {
-                        "color": "orange",
+                        "color": "purple",
                         "index": 5,
                         "text": "Action Required"
                       },
@@ -764,7 +764,7 @@
                         "text": "Success"
                       },
                       "timed_out": {
-                        "color": "purple",
+                        "color": "orange",
                         "index": 4,
                         "text": "Timed Out"
                       }
@@ -808,6 +808,396 @@
           "version": "13.1.0-27822252871"
         }
       }
+    },
+    "panel-8": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": true,
+                  "query": {
+                    "datasource": {
+                      "name": "cfq4tb1lcmarkd"
+                    },
+                    "group": "grafana-github-datasource",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "options": {
+                        "workflow": "$workflow"
+                      },
+                      "owner": "$owner",
+                      "queryType": "Workflow_Runs",
+                      "range": true,
+                      "repository": "$repo"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              },
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "__expr__"
+                    },
+                    "group": "__expr__",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "app": "grafana-assistant-app",
+                      "expression": "SELECT head_branch, ROUND(100.0 * SUM(CASE WHEN conclusion = 'success' THEN 1 ELSE 0 END) / COUNT(*), 1) AS success_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'failure' THEN 1 ELSE 0 END) / COUNT(*), 1) AS failure_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'cancelled' THEN 1 ELSE 0 END) / COUNT(*), 1) AS cancelled_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'timed_out' THEN 1 ELSE 0 END) / COUNT(*), 1) AS timed_out_pct, ROUND(100.0 * SUM(CASE WHEN conclusion = 'skipped' THEN 1 ELSE 0 END) / COUNT(*), 1) AS skipped_pct, COUNT(*) AS total, ROUND(AVG(CASE WHEN status = 'completed' THEN TIMESTAMPDIFF(SECOND, run_started_at, updated_at) END), 1) AS avg_duration_s FROM A GROUP BY head_branch ORDER BY total DESC LIMIT 100",
+                      "type": "sql"
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "B"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": [
+              {
+                "group": "filterByValue",
+                "kind": "Transformation",
+                "spec": {
+                  "options": {
+                    "filters": [
+                      {
+                        "config": {
+                          "id": "regex",
+                          "options": {
+                            "value": "$branch"
+                          }
+                        },
+                        "fieldName": "head_branch"
+                      }
+                    ],
+                    "match": "any",
+                    "type": "include"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "description": "",
+        "id": 8,
+        "links": [],
+        "title": "Result Rates — Bar Gauge",
+        "vizConfig": {
+          "group": "table",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  },
+                  "footer": {
+                    "reducers": []
+                  },
+                  "inspect": false
+                },
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "head_branch"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Branch"
+                    },
+                    {
+                      "id": "custom.width",
+                      "value": 220
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "success_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Success %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "green",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "failure_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Failure %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "red",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "cancelled_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Cancelled %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "gray",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "timed_out_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Timed Out %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "orange",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "skipped_pct"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Skipped %"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "percent"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 100
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "total"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Total"
+                    },
+                    {
+                      "id": "custom.width",
+                      "value": 70
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "avg_duration_s"
+                  },
+                  "properties": [
+                    {
+                      "id": "displayName",
+                      "value": "Avg Duration"
+                    },
+                    {
+                      "id": "unit",
+                      "value": "s"
+                    },
+                    {
+                      "id": "min",
+                      "value": 0
+                    },
+                    {
+                      "id": "max",
+                      "value": 600
+                    },
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.cellOptions",
+                      "value": {
+                        "mode": "basic",
+                        "type": "gauge"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "options": {
+              "cellHeight": "sm",
+              "showHeader": true,
+              "sortBy": [
+                {
+                  "desc": true,
+                  "displayName": "Total"
+                }
+              ]
+            }
+          },
+          "version": "13.1.0-27822252871"
+        }
+      }
     }
   },
   "layout": {
@@ -831,9 +1221,22 @@
                         "kind": "ElementReference",
                         "name": "panel-5"
                       },
-                      "height": 12,
-                      "width": 24,
+                      "height": 13,
+                      "width": 21,
                       "x": 0,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "kind": "GridLayoutItem",
+                    "spec": {
+                      "element": {
+                        "kind": "ElementReference",
+                        "name": "panel-3"
+                      },
+                      "height": 13,
+                      "width": 3,
+                      "x": 21,
                       "y": 0
                     }
                   }
@@ -858,9 +1261,9 @@
                     "spec": {
                       "element": {
                         "kind": "ElementReference",
-                        "name": "panel-3"
+                        "name": "panel-4"
                       },
-                      "height": 10,
+                      "height": 13,
                       "width": 10,
                       "x": 0,
                       "y": 0
@@ -871,9 +1274,9 @@
                     "spec": {
                       "element": {
                         "kind": "ElementReference",
-                        "name": "panel-4"
+                        "name": "panel-8"
                       },
-                      "height": 10,
+                      "height": 13,
                       "width": 14,
                       "x": 10,
                       "y": 0
@@ -888,7 +1291,22 @@
       ]
     }
   },
-  "links": [],
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [
+        "github-integration"
+      ],
+      "targetBlank": false,
+      "title": "GitHub Dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "liveNow": false,
   "preferences": {
     "layout": {
@@ -920,17 +1338,17 @@
     "timezone": "browser",
     "to": "now"
   },
-  "title": "GitHub / Workflows / Overview",
+  "title": "GitHub / Workflows / Overview by Repo and Workflow",
   "variables": [
     {
       "kind": "DatasourceVariable",
       "spec": {
-        "allowCustomValue": true,
+        "allowCustomValue": false,
         "current": {
           "text": "grafana-github-datasource",
           "value": "cfq4tb1lcmarkd"
         },
-        "hide": "dontHide",
+        "hide": "inControlsMenu",
         "includeAll": false,
         "label": "Datasource",
         "multi": false,
@@ -997,7 +1415,7 @@
     {
       "kind": "QueryVariable",
       "spec": {
-        "allowCustomValue": true,
+        "allowCustomValue": false,
         "current": {
           "text": "pipeline.yml",
           "value": "pipeline.yml"
