@@ -299,7 +299,7 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
-                    "hidden": false,
+                    "hidden": true,
                     "query": {
                       "datasource": {
                         "name": "cfq4tb1lcmarkd"
@@ -319,6 +319,26 @@
                       "version": "v0"
                     },
                     "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "group": "__expr__",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "app": "grafana-assistant-app",
+                        "expression": "SELECT name, event, head_branch, status, TIMESTAMPDIFF(SECOND, run_started_at, updated_at) AS duration_s, conclusion, id FROM A ORDER BY created_at DESC LIMIT 500",
+                        "type": "sql"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
                   }
                 }
               ],
@@ -351,32 +371,25 @@
                   "spec": {
                     "options": {
                       "excludeByName": {
-                        "head_sha": true,
-                        "html_url": true,
-                        "run_number": true,
-                        "run_started_at": true,
-                        "updated_at": true,
-                        "url": true,
-                        "workflow_id": true
+                        "id": true
                       },
+                      "includeByName": {},
                       "indexByName": {
                         "conclusion": 4,
-                        "created_at": 6,
-                        "event": 2,
-                        "head_branch": 3,
-                        "id": 7,
+                        "duration_s": 5,
+                        "event": 1,
+                        "head_branch": 2,
+                        "id": 6,
                         "name": 0,
-                        "path": 1,
-                        "status": 5
+                        "status": 3
                       },
                       "renameByName": {
                         "conclusion": "Conclusion",
-                        "created_at": "Created At",
+                        "duration_s": "Duration",
                         "event": "Event",
                         "head_branch": "Branch",
                         "id": "Run ID",
                         "name": "Name",
-                        "path": "Workflow File",
                         "status": "Status"
                       }
                     }
@@ -615,6 +628,40 @@
                         }
                       }
                     ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Duration"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "min",
+                        "value": 0
+                      },
+                      {
+                        "id": "max",
+                        "value": 600
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "basic",
+                          "type": "gauge"
+                        }
+                      }
+                    ]
                   }
                 ]
               },
@@ -625,7 +672,7 @@
                 "sortBy": [
                   {
                     "desc": true,
-                    "displayName": "Created At"
+                    "displayName": "Run ID"
                   }
                 ]
               }
@@ -1301,6 +1348,18 @@
     },
     "links": [
       {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-workflows-overview-by-repo-and-workflow.json"
+      },
+      {
         "asDropdown": true,
         "icon": "external link",
         "includeVars": false,
@@ -1395,8 +1454,8 @@
         "spec": {
           "allowCustomValue": true,
           "current": {
-            "text": "configs-homelab",
-            "value": "configs-homelab"
+            "text": "ansible-roles-collection",
+            "value": "ansible-roles-collection"
           },
           "hide": "dontHide",
           "includeAll": false,
