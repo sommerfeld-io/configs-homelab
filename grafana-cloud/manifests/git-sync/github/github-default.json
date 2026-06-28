@@ -218,7 +218,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -310,7 +310,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -405,7 +405,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -530,7 +530,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -626,7 +626,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -733,7 +733,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -817,7 +817,7 @@
                 ]
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -924,7 +924,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1036,7 +1036,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1118,7 +1118,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1199,7 +1199,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1295,7 +1295,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1388,7 +1388,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1489,7 +1489,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1589,7 +1589,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1706,7 +1706,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1817,7 +1817,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1913,7 +1913,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -2006,7 +2006,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27822252871"
+            "version": "13.1.0-27942650397"
           }
         }
       }
@@ -2321,10 +2321,25 @@
         ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-default.json"
+      }
+    ],
     "liveNow": false,
     "preload": false,
-    "tags": [],
+    "tags": [
+      "github"
+    ],
     "timeSettings": {
       "autoRefresh": "",
       "autoRefreshIntervals": [
@@ -2345,7 +2360,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "GitHub Default",
+    "title": "GitHub / Default",
     "variables": [
       {
         "kind": "DatasourceVariable",
@@ -2385,8 +2400,8 @@
         "spec": {
           "allowCustomValue": true,
           "current": {
-            "text": "github-metrics-exporter",
-            "value": "github-metrics-exporter"
+            "text": ".task",
+            "value": ".task"
           },
           "definition": "GitHub - Repositories",
           "hide": "dontHide",
