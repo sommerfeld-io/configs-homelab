@@ -1,0 +1,1 @@
+/workspaces/configs-homelab/.github/copilot-instructions.md

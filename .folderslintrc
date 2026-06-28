@@ -1,6 +1,7 @@
 {
 	"rules": [
         ".ansible",
+        ".claude",
 		".devcontainer",
 
 		".github/prompts",

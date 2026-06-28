@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(task lint *)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "task lint",
+            "timeout": 300,
+            "statusMessage": "Lint the whole project"
+          }
+        ]
+      }
+    ]
+  }
+}

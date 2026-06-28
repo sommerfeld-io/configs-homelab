@@ -14,6 +14,11 @@ includes:
 
 tasks:
 
+  symlinks:
+    desc: Create symlinks for shared files
+    cmds:
+      - ln -sf "$(pwd)/.github/copilot-instructions.md" "$(pwd)/CLAUDE.md"
+
   cleanup:inspec:
     desc: Cleanup inspec profiles and lock files
     cmds:
@@ -29,6 +34,7 @@ tasks:
     cmds:
       - task: cleanup:inspec
       - task: cleanup:filesystem
+      - task: symlinks
       - task: docs:generate
       - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
