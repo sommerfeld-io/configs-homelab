@@ -656,6 +656,20 @@
         "tooltip": "",
         "type": "dashboards",
         "url": ""
+      },
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [
+          "github-integration"
+        ],
+        "targetBlank": false,
+        "title": "GitHub Integration Dashboards",
+        "tooltip": "",
+        "type": "dashboards",
+        "url": ""
       }
     ],
     "liveNow": false,
