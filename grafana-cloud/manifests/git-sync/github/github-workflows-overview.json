@@ -642,6 +642,20 @@
         "tooltip": "View source file in repository",
         "type": "link",
         "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-workflows-overview.json"
+      },
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [
+          "github"
+        ],
+        "targetBlank": false,
+        "title": "GitHub Dashboards",
+        "tooltip": "",
+        "type": "dashboards",
+        "url": ""
       }
     ],
     "liveNow": false,
@@ -654,7 +668,9 @@
       }
     },
     "preload": false,
-    "tags": [],
+    "tags": [
+      "github"
+    ],
     "timeSettings": {
       "autoRefresh": "",
       "autoRefreshIntervals": [
