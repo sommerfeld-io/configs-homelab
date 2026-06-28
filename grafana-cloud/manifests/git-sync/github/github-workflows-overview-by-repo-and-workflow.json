@@ -285,7 +285,7 @@
                 }
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -677,7 +677,7 @@
                 ]
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -860,7 +860,7 @@
                 }
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -1250,7 +1250,7 @@
                 ]
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       }
@@ -1365,11 +1365,24 @@
         "includeVars": false,
         "keepTime": false,
         "tags": [
-          "github-integration",
           "github"
         ],
         "targetBlank": false,
         "title": "GitHub Dashboards",
+        "tooltip": "",
+        "type": "dashboards",
+        "url": ""
+      },
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [
+          "github-integration"
+        ],
+        "targetBlank": false,
+        "title": "GitHub Integration Dashboards",
         "tooltip": "",
         "type": "dashboards",
         "url": ""
