@@ -211,7 +211,7 @@
                 }
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       },
@@ -572,7 +572,7 @@
                 ]
               }
             },
-            "version": "13.1.0-27855457075"
+            "version": "13.1.0-27942650397"
           }
         }
       }
@@ -598,7 +598,7 @@
                           "kind": "ElementReference",
                           "name": "panel-1"
                         },
-                        "height": 6,
+                        "height": 4,
                         "width": 11,
                         "x": 0,
                         "y": 0
@@ -611,7 +611,7 @@
                           "kind": "ElementReference",
                           "name": "panel-3"
                         },
-                        "height": 6,
+                        "height": 4,
                         "width": 13,
                         "x": 11,
                         "y": 0
@@ -670,7 +670,7 @@
         "1d"
       ],
       "fiscalYearStartMonth": 0,
-      "from": "now-6M",
+      "from": "now-7d",
       "hideTimepicker": false,
       "timezone": "browser",
       "to": "now"
@@ -716,10 +716,20 @@
           "allowCustomValue": true,
           "current": {
             "text": [
-              "All"
+              "configs-homelab",
+              "inspec-profiles",
+              "container-images",
+              "ansible-roles-collection",
+              "tech-radar",
+              ".github"
             ],
             "value": [
-              "$__all"
+              "configs-homelab",
+              "inspec-profiles",
+              "container-images",
+              "ansible-roles-collection",
+              "tech-radar",
+              ".github"
             ]
           },
           "hide": "dontHide",
