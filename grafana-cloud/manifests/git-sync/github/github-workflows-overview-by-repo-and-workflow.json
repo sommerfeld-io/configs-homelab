@@ -371,7 +371,7 @@
                   "spec": {
                     "options": {
                       "excludeByName": {
-                        "id": true
+                        "id": false
                       },
                       "includeByName": {},
                       "indexByName": {
