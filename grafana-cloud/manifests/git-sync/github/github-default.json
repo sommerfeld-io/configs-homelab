@@ -218,7 +218,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -310,7 +310,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -374,12 +374,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
+                        "color": "transparent",
                         "value": 0
-                      },
-                      {
-                        "color": "red",
-                        "value": 80
                       }
                     ]
                   }
@@ -396,6 +392,35 @@
                         "value": 323
                       }
                     ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "state",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "closed": {
+                                "color": "green",
+                                "index": 0
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-background"
+                        }
+                      }
+                    ]
                   }
                 ]
               },
@@ -405,7 +430,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -487,12 +512,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
+                        "color": "transparent",
                         "value": 0
-                      },
-                      {
-                        "color": "red",
-                        "value": 80
                       }
                     ]
                   }
@@ -521,6 +542,39 @@
                         "value": 259
                       }
                     ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "state",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "CLOSED": {
+                                "color": "red",
+                                "index": 1
+                              },
+                              "MERGED": {
+                                "color": "green",
+                                "index": 0
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -530,7 +584,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -626,7 +680,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -733,7 +787,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -817,7 +871,7 @@
                 ]
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -924,7 +978,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1036,7 +1090,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1118,7 +1172,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1199,7 +1253,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1295,7 +1349,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1388,7 +1442,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1489,7 +1543,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1589,7 +1643,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1706,7 +1760,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1817,7 +1871,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -1913,7 +1967,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       },
@@ -2006,7 +2060,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-27942650397"
+            "version": "13.2.0-28666480772"
           }
         }
       }
@@ -2400,8 +2454,8 @@
         "spec": {
           "allowCustomValue": true,
           "current": {
-            "text": ".task",
-            "value": ".task"
+            "text": "container-images",
+            "value": "container-images"
           },
           "definition": "GitHub - Repositories",
           "hide": "dontHide",
