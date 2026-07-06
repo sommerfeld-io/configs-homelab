@@ -79,6 +79,7 @@ jobs:
         uses: arduino/setup-task@v3.0.0
         with:
           version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Login to Container Registry
         uses: docker/login-action@v4
         with:
@@ -114,6 +115,7 @@ jobs:
         uses: arduino/setup-task@v3.0.0
         with:
           version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run task to generate docs
         run: task docs:generate
         shell: bash
