@@ -68,7 +68,9 @@ nav:
   # - Ubuntu Workstations:
   #     - Setup Guide: nodes/ubuntu-workstations/index.md
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
-  - nodes/raspi/index.md
+  - Raspberry Pi Nodes:
+      - Overview: nodes/raspi/index.md
+      - Security Monitoring: nodes/raspi/security-monitoring.md
   - Ansible Playbooks:
       - All (provision full Homelab): ansible/playbooks/all.md
       - Cleanup: ansible/playbooks/cleanup.md

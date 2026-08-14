@@ -41,6 +41,11 @@ ansible/
     security.yml                       ← non-secret variables
     security-vault.yml                 ← vault-encrypted secrets (CrowdSec API key, enroll token)
 
+docs/
+  nodes/
+    raspi/
+      security-monitoring.md          ← architecture documentation + PlantUML diagrams (NEW)
+
 grafana-cloud/
   manifests/
     git-sync/
@@ -49,6 +54,8 @@ grafana-cloud/
         security-summary.json          ← Dashboard 1 – all-nodes summary
         security-details.json          ← Dashboard 2 – per-node deep-dive
 ```
+
+The architecture and data-flow of the security monitoring stack is documented in prose and PlantUML diagrams in `docs/nodes/raspi/security-monitoring.md` and linked in the MkDocs site under **Raspberry Pi Nodes → Security Monitoring**.
 
 ---
 
