@@ -18,7 +18,7 @@ This plan integrates **CrowdSec** (real-time behavioural intrusion detection) an
 1. **No Python/shell HTTP middleware.** No custom exporter scripts, Pushgateway, or ad-hoc HTTP servers. Only dedicated, purpose-built exporter containers (e.g., cAdvisor) or Alloy built-in exporters are permitted.
 2. **Alloy scrapes exporters directly.** Every metrics source is a real Prometheus exporter endpoint that Alloy reaches via `prometheus.scrape`. There is no intermediary process between the exporter and Alloy.
 3. **Alloy must not raise errors on absent data.** When a scrape target is unreachable (e.g., CrowdSec not yet deployed on a node, Lynis cron not yet run), Alloy logs `up=0` silently and does **not** forward empty metric sets to Grafana Cloud. This is the natural behaviour of `prometheus.scrape` + `prometheus.relabel` with a `keep` rule — if a target is down the only metric forwarded is `up=0`, which is acceptable and expected.
-4. **The CrowdSec Alloy scrape block is only deployed to nodes that run the security stack.** The `config.alloy` snippet for CrowdSec is conditionally templated (via Ansible) so that it is only present on `raspi` nodes. Non-raspi nodes do not get a `discovery.relabel "integrations_crowdsec"` block and will never produce `up=0` noise for this target.
+4. **A single shared `config.alloy` is deployed to all nodes.** All managed nodes (workstations and `raspi`) are similar enough that no per-host or per-inventory-group Alloy config is needed. The CrowdSec scrape block is included in the shared `config.alloy`; when CrowdSec is not running on a node, Alloy records `up=0` for that target, which is acceptable and expected.
 5. **Dashboards must display data-freshness signals.** Every security dashboard must include **stat panels** showing "Metrics Last Received" and "Logs Last Received" per integration/node. These panels use `time() - timestamp(...)` for Prometheus metrics and `bytes_over_time` / `count_over_time` for Loki logs. Colour thresholds: **green** when within expected scrape/cron interval, **yellow** when moderately stale, **red** when severely stale or absent.
 
 Two Grafana dashboards (summary + per-node details) will live under `grafana-cloud/manifests/git-sync/security/`.
@@ -292,9 +292,9 @@ The metric carries `job="integrations/node_exporter"` and `instance=<hostname>`,
 
 Alloy scrapes CrowdSec's built-in Prometheus endpoint directly at `localhost:6060/metrics`. **No wrapper, middleware, or custom HTTP server is involved.**
 
-> **Deployment scope:** This block must only be present in the `config.alloy` deployed to `raspi` nodes. The `grafana-agents.yml` playbook (or a dedicated `raspi` Alloy config template) must template this block conditionally — nodes that are not part of the security stack must never include a `discovery.relabel "integrations_crowdsec"` block, to avoid spurious `up=0` noise.
+> **Deployment scope:** This block is added to the shared `config.alloy` deployed to all nodes. No per-host or per-inventory-group template split is required — all managed nodes are similar enough to share a single config. On nodes where CrowdSec is not running, Alloy records `up=0` for this target; this is intentional and allows dashboards to reflect the service state.
 
-Append to the `raspi`-specific `config.alloy` template:
+Append to the shared `config.alloy` template:
 
 ```alloy
 /*
@@ -338,7 +338,7 @@ prometheus.relabel "integrations_crowdsec" {
 
 **Behaviour when CrowdSec is not yet deployed on a node:** `prometheus.scrape` marks the target as `up=0`. The `keep` relabel rule passes only `up` and the listed `cs_*` metrics. Since none of the `cs_*` metrics exist when the target is down, only `up=0` is forwarded — which is intentional and allows the dashboard to show "CrowdSec not running". Alloy logs a single "context deadline exceeded" debug message per scrape cycle; this is expected and not an error condition.
 
-> The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service. If a shared `config.alloy` is in use, the CrowdSec scrape block must be guarded by an Ansible `when: inventory_hostname in groups['raspi']` condition or moved to a `raspi`-specific template so it is not applied to other host groups.
+> The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service. The CrowdSec scrape block is part of the shared template and requires no conditional guard — `up=0` on non-security nodes is an acceptable, expected state.
 
 ### 8.3 Ephemeral container logs
 
@@ -541,7 +541,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 | Exporters port range | cAdvisor uses `9110`; Ollama uses `9180`; CrowdSec metrics: `6060` – no conflicts with existing ports |
 | No Python/shell HTTP servers | Lynis metrics delivered via textfile collector (`.prom` file written by cron); CrowdSec metrics served by CrowdSec's own built-in Prometheus endpoint. No custom exporter scripts or Pushgateway. |
 | Alloy scrape pattern | Follows existing `discovery.relabel` → `prometheus.scrape` → `prometheus.relabel` → `prometheus.remote_write` chain |
-| Alloy scrape scope | CrowdSec scrape block is only present in Alloy configs deployed to `raspi` nodes. Non-raspi nodes do not reference `localhost:6060` and produce no spurious `up=0` metrics. |
+| Alloy scrape scope | CrowdSec scrape block is part of the shared `config.alloy` deployed to all nodes. On nodes where CrowdSec is not running, `up=0` is the only metric forwarded — this is intentional and requires no conditional template split. |
 | Alloy error behaviour | All `prometheus.scrape` blocks use explicit `scrape_interval` and `scrape_timeout`. When a target is unreachable, `up=0` is the only metric forwarded. No errors are raised; no empty metric sets are sent. |
 | Cron user | All cron jobs assigned to `{{ default_user }}` (`sebastian`) per `hosts.yml` |
 | Container log capture | `loki.source.docker` for long-running containers; `loki.source.file` for ephemeral container log files. `loki.source.file` silently waits if the log file does not yet exist. |
@@ -563,8 +563,8 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 5. **Write `tasks/main.yml`** – directory, copy, template, docker-compose-v2, assert tasks; also create `/var/lib/node_exporter/textfile_collector/` and `/var/log/lynis/` if they do not exist.
 6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job using `cisofy/lynis`; writes `lynis.prom` textfile atomically and appends run logs to `/var/log/lynis/lynis-run.log`.
 7. **Write `playbooks/deploy-security-stack.yml`** – standalone playbook targeting `raspi`.
-8. **Extend `raspi` Alloy config** – add `textfile` block to `prometheus.exporter.unix`, append CrowdSec scrape stanza (scoped to `raspi` nodes only), and add Lynis file-tail stanza.
-9. **Update `grafana-agents.yml`** playbook to ensure the CrowdSec Alloy block is only deployed to `raspi` hosts (conditional template or inventory-group check).
+8. **Extend the shared Alloy config** – add `textfile` block to `prometheus.exporter.unix`, append the CrowdSec scrape stanza, and add the Lynis file-tail stanza. The same `config.alloy` is used for all nodes; no per-group template split is needed.
+9. **Update `grafana-agents.yml`** playbook to deploy the updated shared `config.alloy` to all managed hosts (no conditional template guard required).
 10. **Create dashboard folder** – `grafana-cloud/manifests/git-sync/security/_folder.json`.
 11. **Create `security-summary.json`** – summary dashboard with Data Freshness row (stat panels for all integrations), Fleet Status row, Threat Overview row, and Recent Events row.
 12. **Create `security-details.json`** – per-node dashboard with Data Freshness row (scoped to `$node`), Node Status row, Threat Detail row, and Logs row.
