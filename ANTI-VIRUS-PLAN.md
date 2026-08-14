@@ -7,7 +7,7 @@
 
 ## 1. Overview
 
-This plan integrates **CrowdSec** (real-time behavioural intrusion detection) and **Lynis** (nightly system auditing) across the five `raspi` inventory nodes. All containers run from a dedicated `docker-compose.yml` deployed by a standalone Ansible playbook. Metrics and logs flow through the existing **Grafana Alloy** pipeline to Grafana Cloud (Loki + Prometheus). Two Grafana dashboards (summary + per-node details) will live under `grafana-cloud/manifests/git-sync/security/`.
+This plan integrates **CrowdSec** (real-time behavioural intrusion detection) and **Lynis** (nightly system auditing) across the five `raspi` inventory nodes. All containers run from a dedicated `docker-compose.yml` deployed by a standalone Ansible playbook. Metrics and logs flow through the existing **Grafana Alloy** pipeline to Grafana Cloud (Loki + Prometheus). No additional exporter containers are needed: Alloy's built-in `prometheus.exporter.unix` **textfile collector** exposes the Lynis hardening index directly, and CrowdSec's own `/metrics` endpoint is scraped by Alloy. Two Grafana dashboards (summary + per-node details) will live under `grafana-cloud/manifests/git-sync/security/`.
 
 ---
 
@@ -60,8 +60,9 @@ lynis_report_dir: /var/log/lynis
 lynis_schedule: "0 2 * * *"       # 02:00 every night
 lynis_image: "debian:bookworm-slim"
 
-# Prometheus exporter for Lynis scores
-lynis_exporter_port: 9117
+# Directory where the Lynis cron job writes Prometheus textfiles.
+# Alloy's prometheus.exporter.unix textfile collector reads *.prom files from here.
+lynis_textfile_dir: /var/lib/node_exporter/textfile_collector
 ```
 
 ### `ansible/vars/security-vault.yml` _(Ansible Vault encrypted)_
@@ -81,8 +82,8 @@ A **single** compose file holds every component:
 |---|---|---|---|
 | `crowdsec` | `crowdsecurity/crowdsec:latest` | `8080`, `6060` | LAPI + behavioural engine |
 | `crowdsec-firewall-bouncer` | `crowdsecurity/firewall-bouncer:latest` | – | Applies iptables/nftables bans |
-| `lynis-runner` | `debian:bookworm-slim` (ephemeral) | – | Runs `lynis audit system` on a schedule via cron + `docker run --rm` |
-| `lynis-exporter` | `prom/pushgateway:latest` | `9091` | Receives pushed Lynis metrics; scraped by Alloy |
+
+> **No separate exporter container is needed.** Lynis metrics are written as Prometheus textfiles by the cron job and consumed directly by the Alloy `prometheus.exporter.unix` textfile collector already running on each node (see Section 8).
 
 ### Compose YAML outline
 
@@ -127,19 +128,6 @@ services:
       crowdsec:
         condition: service_healthy
 
-  lynis-exporter:
-    image: prom/pushgateway:latest
-    container_name: lynis-exporter
-    restart: unless-stopped
-    ports:
-      - "${LYNIS_EXPORTER_PORT}:9091"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9091/-/healthy"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
 volumes:
   crowdsec-db:
   crowdsec-config:
@@ -176,8 +164,9 @@ Lynis runs as an **ephemeral** Docker container triggered by cron. The cron job 
 
 1. Spins up a `debian:bookworm-slim` container with `--rm`.
 2. Installs Lynis inline, runs `lynis audit system --quiet --cronjob`.
-3. Writes the report to a shared bind-mount (`lynis_report_dir`).
-4. Parses the hardening index and pushes a single Prometheus metric to `lynis-exporter` (Pushgateway) via `curl`.
+3. Writes the Lynis report to a bind-mounted host path (`lynis_report_dir`).
+4. Parses the hardening index and writes a **Prometheus textfile** (`.prom`) to `lynis_textfile_dir` on the host. Alloy's `prometheus.exporter.unix` textfile collector picks this up on the next scrape — no Pushgateway required.
+5. Redirects all stdout/stderr to `/var/log/lynis/lynis-run.log` so Alloy's file-tail source can capture the run logs even after the ephemeral container exits.
 
 ### Cron job (Ansible task)
 
@@ -190,18 +179,25 @@ Lynis runs as an **ephemeral** Docker container triggered by cron. The cron job 
     job: >
       docker run --rm
         -v /var/log/lynis:/var/log/lynis
+        -v /var/lib/node_exporter/textfile_collector:/textfile_collector
         -v /:/hostfs:ro
         --pid=host --network=host
         debian:bookworm-slim
         /bin/bash -c "
-          apt-get update -qq && apt-get install -yqq lynis curl &&
+          apt-get update -qq && apt-get install -yqq lynis &&
           lynis audit system --quiet --cronjob --logfile /var/log/lynis/lynis.log --report-file /var/log/lynis/lynis-report.dat &&
           SCORE=\$(grep hardening_index /var/log/lynis/lynis-report.dat | cut -d= -f2) &&
           HOSTNAME=\$(hostname) &&
-          curl -s --data-binary \"lynis_hardening_index{instance=\\\"\$HOSTNAME\\\",job=\\\"integrations/security\\\"} \$SCORE\" http://localhost:${LYNIS_EXPORTER_PORT}/metrics/job/lynis/instance/\$HOSTNAME
-        "
+          printf '# HELP lynis_hardening_index Lynis system hardening index (0-100)\n# TYPE lynis_hardening_index gauge\nlynis_hardening_index{instance=\"%s\",job=\"integrations/node_exporter\"} %s\n' \"\$HOSTNAME\" \"\$SCORE\" > /textfile_collector/lynis.prom
+        " >> /var/log/lynis/lynis-run.log 2>&1
     user: "{{ default_user }}"
 ```
+
+**How the metric reaches Grafana Cloud:**
+
+1. The cron job writes `/var/lib/node_exporter/textfile_collector/lynis.prom` on the host.
+2. Alloy's `prometheus.exporter.unix` component (already configured in `config.alloy`) is extended with a `textfile` block pointing at that directory.
+3. On the next scrape cycle Alloy reads the `.prom` file and forwards `lynis_hardening_index` through the existing `prometheus.relabel "integrations_node_exporter"` → `prometheus.remote_write "metrics_service"` chain to Grafana Cloud Prometheus.
 
 The Lynis report file at `/var/log/lynis/` is also readable by Alloy via a file-tail source (see Section 8).
 
@@ -231,21 +227,48 @@ The Lynis report file at `/var/log/lynis/` is also readable by Alloy via a file-
 2. **Copy** `files/docker-compose.yml` → `{{ security_stack_dir }}/docker-compose.yml`.
 3. **Copy** `files/crowdsec-acquis.yaml` → `{{ security_stack_dir }}/crowdsec-acquis.yaml`.
 4. **Template** `.env` file from vault values into `{{ security_stack_dir }}/.env` (mode `0600`, owner `{{ default_user }}`).
-5. **Ensure** `/var/log/lynis` directory exists (mode `0755`).
+5. **Ensure** `/var/log/lynis` and `/var/lib/node_exporter/textfile_collector` directories exist (mode `0755`).
 6. **Start** stack using `community.docker.docker_compose_v2`.
 7. **Restart** stack when any config file changes (`register: compose_file`, `when: compose_file.changed`).
-8. **Assert** `crowdsec` and `lynis-exporter` containers are running.
+8. **Assert** `crowdsec` container is running.
 9. **Include** `tasks/cron.yml` to install the Lynis cron job.
 
 ---
 
 ## 8. Grafana Alloy Integration
 
-The existing `config.alloy` already collects Docker container logs (`loki.source.docker`) and forwards to Grafana Cloud Loki. The security stack benefits from this **immediately** without code changes for log collection.
+The existing `config.alloy` already collects Docker container logs (`loki.source.docker`) and forwards to Grafana Cloud Loki. The security stack benefits from this **immediately** without code changes for CrowdSec container log collection.
 
-### Additional Alloy scrape config (append to `config.alloy`)
+### 8.1 Lynis metrics – textfile collector extension
 
-Add a new Prometheus scrape target for the **CrowdSec metrics endpoint** and **Lynis Pushgateway**:
+The `prometheus.exporter.unix` block already defined in `config.alloy` is extended with a `textfile` stanza so Alloy picks up `/var/lib/node_exporter/textfile_collector/lynis.prom` written by the cron job:
+
+```alloy
+prometheus.exporter.unix "integrations_node_exporter" {
+  disable_collectors = ["ipvs", "btrfs", "infiniband", "xfs", "zfs"]
+
+  // --- existing filesystem / netclass / netdev blocks unchanged ---
+
+  textfile {
+    directory = "/var/lib/node_exporter/textfile_collector"
+  }
+}
+```
+
+`lynis_hardening_index` flows through the **existing** scrape/relabel/remote-write chain:
+
+```
+prometheus.exporter.unix  →  discovery.relabel "integrations_node_exporter"
+  →  prometheus.scrape "integrations_node_exporter"
+  →  prometheus.relabel "integrations_node_exporter"
+  →  prometheus.remote_write "metrics_service"  (Grafana Cloud)
+```
+
+The metric carries `job="integrations/node_exporter"` and `instance=<hostname>`, so it lands in the same Prometheus namespace as all other node metrics — no new scrape target or remote-write endpoint required.
+
+### 8.2 CrowdSec metrics – new Alloy scrape block
+
+Append to `config.alloy`:
 
 ```alloy
 /*
@@ -283,42 +306,13 @@ prometheus.relabel "integrations_crowdsec" {
     action        = "keep"
   }
 }
-
-/*
- * Lynis Pushgateway metrics
- */
-discovery.relabel "integrations_lynis" {
-  targets = [{
-    __address__      = "localhost:9117",
-    __metrics_path__ = "/metrics",
-    __scheme__       = "http",
-  }]
-  rule {
-    target_label = "instance"
-    replacement  = constants.hostname
-  }
-  rule {
-    target_label = "job"
-    replacement  = "integrations/security"
-  }
-}
-
-prometheus.scrape "integrations_lynis" {
-  targets    = discovery.relabel.integrations_lynis.output
-  forward_to = [prometheus.remote_write.metrics_service.receiver]
-  job_name   = "integrations/security"
-  scrape_interval = "300s"
-  scrape_timeout  = "15s"
-}
 ```
 
-> **Note:** `lynis_exporter_port` defaults to `9117` in `security.yml`; this value is aligned across the compose file, the `.env` template, and the Alloy scrape config. The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service, so running that playbook after the Alloy snippets are appended will propagate the changes to all nodes.
+> The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service, so running that playbook after the Alloy changes are made will propagate them to all nodes.
 
-### Ephemeral container logs
+### 8.3 Ephemeral container logs
 
-The ephemeral `docker run --rm` Lynis container writes its output to **stdout/stderr**. Alloy's `loki.source.docker` component captures logs from currently-running containers; because the Lynis container is short-lived, its logs will not be captured by Docker socket discovery.
-
-To ensure Lynis run logs reach Loki, the cron job redirects stdout/stderr to a named log file at `/var/log/lynis/lynis-run.log`. An **Alloy file-tail** source will tail this file:
+The ephemeral `docker run --rm` Lynis container exits before Alloy's `loki.source.docker` can discover it. The cron job appends all stdout/stderr to `/var/log/lynis/lynis-run.log` on the host (via `>> /var/log/lynis/lynis-run.log 2>&1`). An **Alloy file-tail** source tails this file:
 
 ```alloy
 /*
@@ -334,7 +328,7 @@ loki.source.file "lynis_audit_logs" {
 }
 ```
 
-The `/var/log/lynis/` directory is bind-mounted into both the ephemeral Lynis container and is readable on the host. The `alloy` system user must be able to read this path; the Ansible task creates the directory with `mode: 0755`.
+The `alloy` system user can read `/var/log/lynis/` because the Ansible task creates it with `mode: 0755`.
 
 ---
 
@@ -409,7 +403,8 @@ The `/var/log/lynis/` directory is bind-mounted into both the ephemeral Lynis co
 | YAML style | Top-level `---`, 2-space indent, no quoted booleans (`yamllint`) |
 | Playbook structure | Mirrors `grafana-agents.yml` – single `hosts`, `become: true`, `vars_files`, `include_role` |
 | Stack deploy path | `docker_stacks_dir` in `main.yml` is `/home/{{ default_user }}/.docker-stacks`; security uses `/opt/security-stack` to keep it system-owned and outside the user home |
-| Exporters port range | cAdvisor uses `9110`; Ollama uses `9180`; CrowdSec metrics: `6060`; Lynis Pushgateway: `9117` – no conflicts |
+| Exporters port range | cAdvisor uses `9110`; Ollama uses `9180`; CrowdSec metrics: `6060` – no conflicts with existing ports |
+| Lynis metrics delivery | Cron job writes `.prom` textfile to `lynis_textfile_dir`; Alloy `prometheus.exporter.unix` textfile collector reads it – no separate exporter container or push step |
 | Alloy scrape pattern | Follows existing `discovery.relabel` → `prometheus.scrape` → `prometheus.relabel` → `prometheus.remote_write` chain |
 | Cron user | All cron jobs assigned to `{{ default_user }}` (`sebastian`) per `hosts.yml` |
 | Container log capture | `loki.source.docker` for long-running containers; `loki.source.file` for ephemeral container log files |
@@ -420,12 +415,12 @@ The `/var/log/lynis/` directory is bind-mounted into both the ephemeral Lynis co
 
 1. **Create vars files** – `ansible/vars/security.yml` (plain) and `ansible/vars/security-vault.yml` (Ansible Vault encrypted with `crowdsec_enroll_token`, `crowdsec_api_key`).
 2. **Create Ansible role skeleton** – `ansible/roles/security/crowdsec-lynis/{defaults,files,tasks}/`.
-3. **Write `files/docker-compose.yml`** – CrowdSec LAPI, firewall bouncer, Pushgateway, using env-var references for all secrets and ports.
+3. **Write `files/docker-compose.yml`** – CrowdSec LAPI and firewall bouncer only; no exporter container.
 4. **Write `files/crowdsec-acquis.yaml`** – syslog + nginx log sources.
-5. **Write `tasks/main.yml`** – directory, copy, template, docker-compose-v2, assert tasks.
-6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job with metric push.
+5. **Write `tasks/main.yml`** – directory, copy, template, docker-compose-v2, assert tasks; also create `/var/lib/node_exporter/textfile_collector/` if it does not exist.
+6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job; writes `lynis.prom` textfile and appends run logs to `/var/log/lynis/lynis-run.log`.
 7. **Write `playbooks/deploy-security-stack.yml`** – standalone playbook targeting `raspi`.
-8. **Extend `config.alloy`** – append CrowdSec scrape, Pushgateway scrape, and Lynis file-tail stanzas.
+8. **Extend `config.alloy`** – add `textfile` block to `prometheus.exporter.unix`, append CrowdSec scrape stanza, and add Lynis file-tail stanza.
 9. **Update `grafana-agents.yml`** playbook if any Alloy-related vars need to be wired up (may not be necessary).
 10. **Create dashboard folder** – `grafana-cloud/manifests/git-sync/security/_folder.json`.
 11. **Create dashboard JSONs** – `security-summary.json` and `security-details.json` with panels as specified above.
