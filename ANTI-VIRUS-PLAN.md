@@ -2,6 +2,8 @@
 
 > **Scope:** 5 Raspberry Pi Ubuntu Server nodes (`pi4-01.fritz.box`, `pi4-02.fritz.box`, `pi4-03.fritz.box`, `pi4-05.fritz.box`, `pi5-01.fritz.box`)
 > **Status:** Planning – no code changes yet.
+>
+> **Phase:** Detection and monitoring only. No active blocking or firewall changes are in scope for this phase.
 
 ---
 
@@ -9,12 +11,15 @@
 
 This plan integrates **CrowdSec** (real-time behavioural intrusion detection) and **Lynis** (nightly system auditing) across the five `raspi` inventory nodes. All containers run from a dedicated `docker-compose.yml` deployed by a standalone Ansible playbook. Metrics and logs flow through the existing **Grafana Alloy** pipeline to Grafana Cloud (Loki + Prometheus).
 
+**This phase is detection and monitoring only.** The firewall bouncer (active IP blocking via iptables/nftables) is intentionally excluded. It will be considered in a later phase once the detection signal has been validated through dashboards.
+
 ### Design Principles (established constraints)
 
 1. **No Python/shell HTTP middleware.** No custom exporter scripts, Pushgateway, or ad-hoc HTTP servers. Only dedicated, purpose-built exporter containers (e.g., cAdvisor) or Alloy built-in exporters are permitted.
 2. **Alloy scrapes exporters directly.** Every metrics source is a real Prometheus exporter endpoint that Alloy reaches via `prometheus.scrape`. There is no intermediary process between the exporter and Alloy.
 3. **Alloy must not raise errors on absent data.** When a scrape target is unreachable (e.g., CrowdSec not yet deployed on a node, Lynis cron not yet run), Alloy logs `up=0` silently and does **not** forward empty metric sets to Grafana Cloud. This is the natural behaviour of `prometheus.scrape` + `prometheus.relabel` with a `keep` rule — if a target is down the only metric forwarded is `up=0`, which is acceptable and expected.
-4. **Dashboards must display data-freshness signals.** Every security dashboard must include **stat panels** showing "Metrics Last Received" and "Logs Last Received" per integration/node. These panels use `time() - timestamp(...)` for Prometheus metrics and `bytes_over_time` / `count_over_time` for Loki logs. Colour thresholds: **green** when within expected scrape/cron interval, **yellow** when moderately stale, **red** when severely stale or absent.
+4. **The CrowdSec Alloy scrape block is only deployed to nodes that run the security stack.** The `config.alloy` snippet for CrowdSec is conditionally templated (via Ansible) so that it is only present on `raspi` nodes. Non-raspi nodes do not get a `discovery.relabel "integrations_crowdsec"` block and will never produce `up=0` noise for this target.
+5. **Dashboards must display data-freshness signals.** Every security dashboard must include **stat panels** showing "Metrics Last Received" and "Logs Last Received" per integration/node. These panels use `time() - timestamp(...)` for Prometheus metrics and `bytes_over_time` / `count_over_time` for Loki logs. Colour thresholds: **green** when within expected scrape/cron interval, **yellow** when moderately stale, **red** when severely stale or absent.
 
 Two Grafana dashboards (summary + per-node details) will live under `grafana-cloud/manifests/git-sync/security/`.
 
@@ -74,7 +79,7 @@ crowdsec_metrics_port: 6060        # Prometheus metrics endpoint
 # Lynis
 lynis_report_dir: /var/log/lynis
 lynis_schedule: "0 2 * * *"       # 02:00 every night
-lynis_image: "debian:bookworm-slim"
+lynis_image: "cisofy/lynis"        # Official Lynis image from DockerHub
 
 # Directory where the Lynis cron job writes Prometheus textfiles.
 # Alloy's prometheus.exporter.unix textfile collector reads *.prom files from here.
@@ -96,9 +101,10 @@ A **single** compose file holds every component:
 
 | Service | Image | Port(s) | Purpose |
 |---|---|---|---|
-| `crowdsec` | `crowdsecurity/crowdsec:latest` | `8080`, `6060` | LAPI + behavioural engine |
-| `crowdsec-firewall-bouncer` | `crowdsecurity/firewall-bouncer:latest` | – | Applies iptables/nftables bans |
+| `crowdsec` | `crowdsecurity/crowdsec:latest` | `8080` (LAPI, internal only), `127.0.0.1:6060` (metrics) | LAPI + behavioural engine |
 
+> **Firewall bouncer excluded in this phase.** Active IP blocking (iptables/nftables) is out of scope. The detection-only setup gives full visibility via Grafana dashboards without modifying host firewall rules. The bouncer can be added later once detection signal is trusted.
+>
 > **No separate exporter container is needed.** Lynis metrics are written as Prometheus textfiles by the cron job and consumed directly by the Alloy `prometheus.exporter.unix` textfile collector already running on each node (see Section 8).
 
 ### Compose YAML outline
@@ -121,28 +127,13 @@ services:
       - ./crowdsec-acquis.yaml:/etc/crowdsec/acquis.yaml:ro
     ports:
       - "${CROWDSEC_LAPI_PORT}:8080"
-      - "${CROWDSEC_METRICS_PORT}:6060"
+      - "127.0.0.1:${CROWDSEC_METRICS_PORT}:6060"   # metrics bound to localhost only
     healthcheck:
       test: ["CMD", "cscli", "version"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
-
-  crowdsec-firewall-bouncer:
-    image: crowdsecurity/firewall-bouncer:latest
-    container_name: crowdsec-firewall-bouncer
-    restart: unless-stopped
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    environment:
-      - CROWDSEC_LAPI_URL=http://crowdsec:8080
-      - CROWDSEC_LAPI_KEY=${CROWDSEC_API_KEY}
-    depends_on:
-      crowdsec:
-        condition: service_healthy
 
 volumes:
   crowdsec-db:
@@ -178,10 +169,10 @@ All log files are bind-mounted into the `crowdsec` container as read-only (`/var
 
 Lynis runs as an **ephemeral** Docker container triggered by cron. The cron job is owned by `default_user` (`sebastian`) and:
 
-1. Spins up a `debian:bookworm-slim` container with `--rm`.
-2. Installs Lynis inline, runs `lynis audit system --quiet --cronjob`.
+1. Spins up a `cisofy/lynis` container (official DockerHub image) with `--rm` — no inline package installation needed.
+2. Runs `lynis audit system --quiet --cronjob --rootdir /hostfs` — the `--rootdir` flag is **required** so Lynis inspects the bind-mounted host filesystem (`/hostfs`) rather than the container's own root.
 3. Writes the Lynis report to a bind-mounted host path (`lynis_report_dir`).
-4. Parses the hardening index and writes a **Prometheus textfile** (`.prom`) to `lynis_textfile_dir` on the host. Alloy's `prometheus.exporter.unix` textfile collector picks this up on the next scrape — no Pushgateway required.
+4. Parses the hardening index and writes a **Prometheus textfile** (`.prom`) atomically to `lynis_textfile_dir` on the host (write to a `.tmp` file, then `mv` to `.prom`). Alloy's `prometheus.exporter.unix` textfile collector picks this up on the next scrape — no Pushgateway required.
 5. Redirects all stdout/stderr to `/var/log/lynis/lynis-run.log` so Alloy's file-tail source can capture the run logs even after the ephemeral container exits.
 
 ### Cron job (Ansible task)
@@ -193,21 +184,32 @@ Lynis runs as an **ephemeral** Docker container triggered by cron. The cron job 
     minute: "0"
     hour: "2"
     job: >
+      HOST_HOSTNAME=$(hostname) &&
       docker run --rm
         -v /var/log/lynis:/var/log/lynis
         -v /var/lib/node_exporter/textfile_collector:/textfile_collector
         -v /:/hostfs:ro
+        -e HOST_HOSTNAME="$HOST_HOSTNAME"
         --pid=host --network=host
-        debian:bookworm-slim
-        /bin/bash -c "
-          apt-get update -qq && apt-get install -yqq lynis &&
-          lynis audit system --quiet --cronjob --logfile /var/log/lynis/lynis.log --report-file /var/log/lynis/lynis-report.dat &&
+        cisofy/lynis
+        /bin/sh -c "
+          lynis audit system --quiet --cronjob --rootdir /hostfs
+            --logfile /var/log/lynis/lynis.log
+            --report-file /var/log/lynis/lynis-report.dat &&
           SCORE=\$(grep hardening_index /var/log/lynis/lynis-report.dat | cut -d= -f2) &&
-          HOSTNAME=\$(hostname) &&
-          printf '# HELP lynis_hardening_index Lynis system hardening index (0-100)\n# TYPE lynis_hardening_index gauge\nlynis_hardening_index{instance=\"%s\",job=\"integrations/node_exporter\"} %s\n' \"\$HOSTNAME\" \"\$SCORE\" > /textfile_collector/lynis.prom
+          printf '# HELP lynis_hardening_index Lynis system hardening index (0-100)\n# TYPE lynis_hardening_index gauge\nlynis_hardening_index{instance=\"%s\",job=\"integrations/node_exporter\"} %s\n' \"\$HOST_HOSTNAME\" \"\$SCORE\" > /textfile_collector/lynis.prom.tmp &&
+          mv /textfile_collector/lynis.prom.tmp /textfile_collector/lynis.prom
         " >> /var/log/lynis/lynis-run.log 2>&1
     user: "{{ default_user }}"
 ```
+
+**Key fixes applied:**
+
+- **`cisofy/lynis` image** — the official Lynis image from DockerHub; no `apt-get install` needed, pinned version, faster startup.
+- **`--rootdir /hostfs`** — without this flag Lynis audits the container's own root, not the host. The mount is `/:/hostfs:ro`; `--rootdir` directs Lynis to use it.
+- **`HOST_HOSTNAME=$(hostname)`** — the host hostname is captured on the host before `docker run` and passed in as an environment variable (`-e HOST_HOSTNAME`). Inside the container `$(hostname)` would return the container ID, not the Pi's hostname.
+- **Atomic `.prom` write** — the textfile is written to `lynis.prom.tmp` first and then renamed to `lynis.prom`. A rename on the same filesystem is atomic; Alloy can never read a partial file.
+- **`/var/log/lynis/` logfile path** — the bind-mount exposes this path inside the container, so the `--logfile` and `--report-file` flags write to the host-visible directory directly.
 
 **How the metric reaches Grafana Cloud:**
 
@@ -290,7 +292,9 @@ The metric carries `job="integrations/node_exporter"` and `instance=<hostname>`,
 
 Alloy scrapes CrowdSec's built-in Prometheus endpoint directly at `localhost:6060/metrics`. **No wrapper, middleware, or custom HTTP server is involved.**
 
-Append to `config.alloy`:
+> **Deployment scope:** This block must only be present in the `config.alloy` deployed to `raspi` nodes. The `grafana-agents.yml` playbook (or a dedicated `raspi` Alloy config template) must template this block conditionally — nodes that are not part of the security stack must never include a `discovery.relabel "integrations_crowdsec"` block, to avoid spurious `up=0` noise.
+
+Append to the `raspi`-specific `config.alloy` template:
 
 ```alloy
 /*
@@ -334,7 +338,7 @@ prometheus.relabel "integrations_crowdsec" {
 
 **Behaviour when CrowdSec is not yet deployed on a node:** `prometheus.scrape` marks the target as `up=0`. The `keep` relabel rule passes only `up` and the listed `cs_*` metrics. Since none of the `cs_*` metrics exist when the target is down, only `up=0` is forwarded — which is intentional and allows the dashboard to show "CrowdSec not running". Alloy logs a single "context deadline exceeded" debug message per scrape cycle; this is expected and not an error condition.
 
-> The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service, so running that playbook after the Alloy changes are made will propagate them to all nodes.
+> The existing `grafana-agents.yml` playbook copies `config.alloy` to `/etc/alloy/config.alloy` and restarts the service. If a shared `config.alloy` is in use, the CrowdSec scrape block must be guarded by an Ansible `when: inventory_hostname in groups['raspi']` condition or moved to a `raspi`-specific template so it is not applied to other host groups.
 
 ### 8.3 Ephemeral container logs
 
@@ -453,8 +457,8 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 |---|---|---|---|
 | 1 | Stat (one per node) | CrowdSec Status – All Nodes | `up{job="integrations/crowdsec"}` per instance – green 1, red 0 |
 | 2 | Bar gauge | Hardening Index – All Nodes | `lynis_hardening_index` – <50 red, 50–74 orange, ≥75 green |
-| 3 | Stat | Total Blocked IPs (fleet) | `sum(cs_active_decisions)` |
-| 4 | Stat | Nodes with Active Threats | `count(cs_active_decisions > 0)` |
+| 3 | Stat | Total Detected Decisions (fleet) | `sum(cs_active_decisions)` |
+| 4 | Stat | Nodes with Active Detections | `count(cs_active_decisions > 0)` |
 
 #### Row: Threat Overview
 
@@ -469,7 +473,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 
 | # | Panel type | Title | Query / Metric |
 |---|---|---|---|
-| 9 | Table | Recent Ban Decisions | Loki: `{job="integrations/docker", container="crowdsec"} \|= "ban"` |
+| 9 | Table | Recent Decisions | Loki: `{job="integrations/docker", container="crowdsec"} \|= "decision"` |
 | 10 | Bar chart | Outdated Packages per Node | `node_update_outdated_packages_count` (node_exporter apt-update collector) |
 
 **Variables:** `$prometheus_datasource`, `$loki_datasource`, time range.
@@ -503,7 +507,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 |---|---|---|---|
 | 1 | Stat | CrowdSec Status | `up{job="integrations/crowdsec", instance="$node"}` |
 | 2 | Stat | Lynis Hardening Index | `lynis_hardening_index{instance="$node"}` – <50 red, 50–74 orange, ≥75 green |
-| 3 | Stat | Active Blocked IPs | `cs_active_decisions{instance="$node"}` |
+| 3 | Stat | Active Detected Decisions | `cs_active_decisions{instance="$node"}` |
 | 4 | Stat | Active Alerts | `cs_alerts{instance="$node"}` |
 | 5 | Gauge | Outdated Packages | `node_update_outdated_packages_count{instance="$node"}` |
 
@@ -537,24 +541,30 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 | Exporters port range | cAdvisor uses `9110`; Ollama uses `9180`; CrowdSec metrics: `6060` – no conflicts with existing ports |
 | No Python/shell HTTP servers | Lynis metrics delivered via textfile collector (`.prom` file written by cron); CrowdSec metrics served by CrowdSec's own built-in Prometheus endpoint. No custom exporter scripts or Pushgateway. |
 | Alloy scrape pattern | Follows existing `discovery.relabel` → `prometheus.scrape` → `prometheus.relabel` → `prometheus.remote_write` chain |
+| Alloy scrape scope | CrowdSec scrape block is only present in Alloy configs deployed to `raspi` nodes. Non-raspi nodes do not reference `localhost:6060` and produce no spurious `up=0` metrics. |
 | Alloy error behaviour | All `prometheus.scrape` blocks use explicit `scrape_interval` and `scrape_timeout`. When a target is unreachable, `up=0` is the only metric forwarded. No errors are raised; no empty metric sets are sent. |
 | Cron user | All cron jobs assigned to `{{ default_user }}` (`sebastian`) per `hosts.yml` |
 | Container log capture | `loki.source.docker` for long-running containers; `loki.source.file` for ephemeral container log files. `loki.source.file` silently waits if the log file does not yet exist. |
 | Dashboard data freshness | Every security dashboard includes a "Data Freshness" row with Prometheus `time() - timestamp(up{...})` stat panels and Loki `count_over_time` stat panels. Thresholds: green/yellow/red as specified in Section 9.2. |
+| No active blocking | Firewall bouncer is excluded. No `NET_ADMIN`/`NET_RAW` capabilities, no host-network containers, no iptables/nftables modifications in this phase. |
+| Lynis image | Uses `cisofy/lynis` (official DockerHub image). No inline package installation; version is controlled by image tag. |
+| Lynis host audit | `--rootdir /hostfs` passed to `lynis audit system` so the host OS is audited, not the container root. |
+| Lynis hostname label | Host hostname captured outside the container (`$(hostname)`) and passed via `-e HOST_HOSTNAME` to avoid reading the container ID. |
+| Lynis textfile atomicity | Written to `lynis.prom.tmp` then renamed to `lynis.prom` to prevent Alloy parsing a partial file. |
 
 ---
 
 ## 11. Implementation Steps (Ordered)
 
-1. **Create vars files** – `ansible/vars/security.yml` (plain) and `ansible/vars/security-vault.yml` (Ansible Vault encrypted with `crowdsec_enroll_token`, `crowdsec_api_key`).
+1. **Create vars files** – `ansible/vars/security.yml` (plain) and `ansible/vars/security-vault.yml` (Ansible Vault encrypted with `crowdsec_enroll_token`).
 2. **Create Ansible role skeleton** – `ansible/roles/security/crowdsec-lynis/{defaults,files,tasks}/`.
-3. **Write `files/docker-compose.yml`** – CrowdSec LAPI and firewall bouncer only; no exporter container (CrowdSec's built-in `:6060/metrics` is the only metrics endpoint).
+3. **Write `files/docker-compose.yml`** – CrowdSec LAPI only (no bouncer); metrics port bound to `127.0.0.1:6060:6060` only.
 4. **Write `files/crowdsec-acquis.yaml`** – syslog + nginx log sources.
 5. **Write `tasks/main.yml`** – directory, copy, template, docker-compose-v2, assert tasks; also create `/var/lib/node_exporter/textfile_collector/` and `/var/log/lynis/` if they do not exist.
-6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job; writes `lynis.prom` textfile and appends run logs to `/var/log/lynis/lynis-run.log`.
+6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job using `cisofy/lynis`; writes `lynis.prom` textfile atomically and appends run logs to `/var/log/lynis/lynis-run.log`.
 7. **Write `playbooks/deploy-security-stack.yml`** – standalone playbook targeting `raspi`.
-8. **Extend `config.alloy`** – add `textfile` block to `prometheus.exporter.unix`, append CrowdSec scrape stanza (with `scrape_interval`, `scrape_timeout`, and `keep` relabel rule), and add Lynis file-tail stanza.
-9. **Update `grafana-agents.yml`** playbook if any Alloy-related vars need to be wired up (may not be necessary).
+8. **Extend `raspi` Alloy config** – add `textfile` block to `prometheus.exporter.unix`, append CrowdSec scrape stanza (scoped to `raspi` nodes only), and add Lynis file-tail stanza.
+9. **Update `grafana-agents.yml`** playbook to ensure the CrowdSec Alloy block is only deployed to `raspi` hosts (conditional template or inventory-group check).
 10. **Create dashboard folder** – `grafana-cloud/manifests/git-sync/security/_folder.json`.
 11. **Create `security-summary.json`** – summary dashboard with Data Freshness row (stat panels for all integrations), Fleet Status row, Threat Overview row, and Recent Events row.
 12. **Create `security-details.json`** – per-node dashboard with Data Freshness row (scoped to `$node`), Node Status row, Threat Detail row, and Logs row.
@@ -568,5 +578,14 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 
 - `security-vault.yml` must be encrypted with Ansible Vault before committing. The `.gitignore` already ignores `.vault_pass`; the vault password itself is never committed.
 - The `.env` file on each node is written with `mode: 0600` and owned by `default_user` to prevent world-readable secrets.
-- The firewall bouncer container requires `NET_ADMIN` and `NET_RAW` capabilities and runs with `network_mode: host`; this is expected and documented.
-- Lynis runs inside a container with `/:/hostfs:ro` and `--pid=host` to audit the actual host OS. The container is ephemeral (`--rm`) and has no persistent writable access to the host filesystem beyond `/var/log/lynis`.
+- The CrowdSec metrics port (`6060`) is bound to `127.0.0.1` only — it is not accessible from the local network.
+- The firewall bouncer is **not deployed** in this phase. No `NET_ADMIN`/`NET_RAW` capabilities are granted and no iptables/nftables rules are modified.
+- Lynis runs inside a container with `/:/hostfs:ro` and `--pid=host` to audit the actual host OS. The container is ephemeral (`--rm`) and has no persistent writable access to the host filesystem beyond `/var/log/lynis` and the textfile collector directory.
+
+---
+
+## 13. Future Work (Out of Scope for This Phase)
+
+- **Grafana alerting rules** – once detection signal is understood via dashboards, add alert rules for `up{job="integrations/crowdsec"} == 0`, stale Lynis index, and spike in `cs_alerts`.
+- **Firewall bouncer** – add `crowdsec-firewall-bouncer` to the compose file after validating CrowdSec decision quality. Note the bouncer must use `network_mode: host` and connect to CrowdSec at `http://localhost:8080` (not `http://crowdsec:8080`, which is not resolvable from a host-networked container).
+- **`logrotate` for `/var/log/lynis/lynis-run.log`** – add a logrotate config to prevent unbounded log growth on long-running nodes.
