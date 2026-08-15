@@ -123,7 +123,7 @@ jobs:
         run: docker compose build docs-build
         shell: bash
       - name: Commit and push
-        uses: EndBug/add-and-commit@v10.0.0
+        uses: EndBug/add-and-commit@v11.0.0
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
