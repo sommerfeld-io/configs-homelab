@@ -38,13 +38,13 @@ ansible/
           main.yml                     ← role variables with defaults
         files/
           docker-compose.yml           ← single compose file (CrowdSec + Lynis + exporters)
-          crowdsec-acquis.yaml         ← CrowdSec log source / acquisition config
+          crowdsec-config.yml         ← CrowdSec log source / acquisition config
         tasks/
           main.yml                     ← orchestration task list
           cron.yml                     ← Lynis scheduled tasks (cron)
   vars/
     security.yml                       ← non-secret variables
-    security-vault.yml                 ← vault-encrypted secrets (CrowdSec API key, enroll token)
+    security-vault.yml                 ← non-encrypted secrets (CrowdSec API key, enroll token) ... encryption will be done manually later on. keep this instruction in mind no matter what is specified somewhere else in this document.
 
 docs/
   nodes/
@@ -56,8 +56,8 @@ grafana-cloud/
     git-sync/
       security/
         _folder.json                   ← Grafana folder descriptor
-        security-summary.json          ← Dashboard 1 – all-nodes summary
-        security-details.json          ← Dashboard 2 – per-node deep-dive
+        security-overview.json          ← Dashboard 1 – all-nodes summary - Name = "Security / Overview"
+        security-details.json          ← Dashboard 2 – per-node deep-dive - Name = "Security / Details by Node"
 ```
 
 The architecture and data-flow of the security monitoring stack is documented in prose and PlantUML diagrams in `docs/nodes/raspi/security-monitoring.md` and linked in the MkDocs site under **Raspberry Pi Nodes → Security Monitoring**.
@@ -86,12 +86,14 @@ lynis_image: "cisofy/lynis"        # Official Lynis image from DockerHub
 lynis_textfile_dir: /var/lib/node_exporter/textfile_collector
 ```
 
-### `ansible/vars/security-vault.yml` _(Ansible Vault encrypted)_
+### `ansible/vars/security-vault.yml`
 
 ```yaml
 crowdsec_enroll_token: "{{ vault_crowdsec_enroll_token }}"
 crowdsec_api_key: "{{ vault_crowdsec_api_key }}"
 ```
+
+This is not a vault just yet! it will become a vault through manual steps later on!
 
 ---
 
@@ -124,7 +126,7 @@ services:
       - /var/log:/var/log:ro
       - crowdsec-db:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
-      - ./crowdsec-acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - ./crowdsec-config.yml:/etc/crowdsec/acquis.yaml:ro
     ports:
       - "${CROWDSEC_LAPI_PORT}:8080"
       - "127.0.0.1:${CROWDSEC_METRICS_PORT}:6060"   # metrics bound to localhost only
@@ -144,7 +146,7 @@ volumes:
 
 ---
 
-## 5. CrowdSec Acquisition Config – `crowdsec-acquis.yaml`
+## 5. CrowdSec Acquisition Config – `crowdsec-config.yml`
 
 ```yaml
 ---
@@ -154,6 +156,7 @@ filenames:
   - /var/log/kern.log
 labels:
   type: syslog
+
 ---
 filenames:
   - /var/log/nginx/*.log
@@ -243,7 +246,7 @@ The Lynis report file at `/var/log/lynis/` is also readable by Alloy via a file-
 
 1. **Create directory** `security_stack_dir` owned by `default_user`.
 2. **Copy** `files/docker-compose.yml` → `{{ security_stack_dir }}/docker-compose.yml`.
-3. **Copy** `files/crowdsec-acquis.yaml` → `{{ security_stack_dir }}/crowdsec-acquis.yaml`.
+3. **Copy** `files/crowdsec-config.yml` → `{{ security_stack_dir }}/crowdsec-config.yml`.
 4. **Template** `.env` file from vault values into `{{ security_stack_dir }}/.env` (mode `0600`, owner `{{ default_user }}`).
 5. **Ensure** `/var/log/lynis` and `/var/lib/node_exporter/textfile_collector` directories exist (mode `0755`).
 6. **Start** stack using `community.docker.docker_compose_v2`.
@@ -382,7 +385,7 @@ Every dashboard **must** include a dedicated **"Data Freshness"** row with stat 
 #### Colour thresholds (applied uniformly)
 
 | State | Condition | Colour |
-|---|---|---|
+| --- | --- | --- |
 | Green | Received within expected interval | `green` |
 | Yellow | Moderately stale (2× expected interval) | `yellow` |
 | Red | Severely stale or no data | `red` |
@@ -398,7 +401,7 @@ time() - timestamp(up{job="<job>", instance=~"$node"})
 Unit: `s` (seconds). `reduceOptions.calcs = ["lastNotNull"]`.
 
 | Panel title | Job label | Expected interval | Green < | Yellow < | Red ≥ |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Metrics Last Received – CrowdSec | `integrations/crowdsec` | 30 s scrape | 120 s | 300 s | 300 s |
 | Metrics Last Received – Node Exporter | `integrations/node_exporter` | default 60 s | 180 s | 600 s | 600 s |
 | Metrics Last Received – Lynis Hardening Index | `integrations/node_exporter` + metric `lynis_hardening_index` | 24 h cron | 86 400 s | 172 800 s | 172 800 s |
@@ -435,11 +438,11 @@ count_over_time({job="integrations/security", instance=~"$node"}[15m])
 For Lynis (nightly cron) use `[25h]` window instead of `[15m]`.
 
 | Panel title | Log stream | Window | Green | Red |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Logs Last Received – Lynis Audit | `{job="integrations/security"}` | `[25h]` | > 0 | = 0 |
 | Logs Last Received – CrowdSec Container | `{job="integrations/docker", container="crowdsec"}` | `[15m]` | > 0 | = 0 |
 
-### 9.3 Dashboard 1 – Security Summary (`security-summary.json`)
+### 9.3 Dashboard 1 – Security Summary (`security-overview.json`)
 
 **Purpose:** High-level security health across all 5 Raspberry Pi nodes.
 
@@ -454,7 +457,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 #### Row: Fleet Status
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Stat (one per node) | CrowdSec Status – All Nodes | `up{job="integrations/crowdsec"}` per instance – green 1, red 0 |
 | 2 | Bar gauge | Hardening Index – All Nodes | `lynis_hardening_index` – <50 red, 50–74 orange, ≥75 green |
 | 3 | Stat | Total Detected Decisions (fleet) | `sum(cs_active_decisions)` |
@@ -463,7 +466,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 #### Row: Threat Overview
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 5 | Status History | SSH Brute-Force Detections | `cs_active_decisions{reason=~"crowdsecurity/ssh-bf.*"}` per instance |
 | 6 | Status History | Port Scan Detections | `cs_active_decisions{reason=~"crowdsecurity/portscan.*"}` per instance |
 | 7 | Status History | HTTP Attack Detections | `cs_active_decisions{reason=~"crowdsecurity/http.*"}` per instance |
@@ -472,7 +475,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 #### Row: Recent Events
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 9 | Table | Recent Decisions | Loki: `{job="integrations/docker", container="crowdsec"} \|= "decision"` |
 | 10 | Bar chart | Outdated Packages per Node | `node_update_outdated_packages_count` (node_exporter apt-update collector) |
 
@@ -485,6 +488,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 **UID:** `security-raspi-details`
 
 **Template variables:**
+
 - `$node` – instance selector: `label_values(up{job="integrations/crowdsec"}, instance)`
 
 **Rows and Panels:**
@@ -494,7 +498,7 @@ Stat panels as defined in Section 9.2 — one stat panel per integration (CrowdS
 All stat panels from Section 9.2, scoped to `instance="$node"`:
 
 | Panel title | Datasource | Thresholds |
-|---|---|---|
+| --- | --- | --- |
 | Metrics Last Received – CrowdSec | Prometheus | green < 120 s, yellow < 300 s, red ≥ 300 s |
 | Metrics Last Received – Node Exporter | Prometheus | green < 180 s, yellow < 600 s, red ≥ 600 s |
 | Metrics Last Received – Lynis Hardening Index | Prometheus | green < 86 400 s, yellow < 172 800 s, red ≥ 172 800 s |
@@ -504,7 +508,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 #### Row: Node Status
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Stat | CrowdSec Status | `up{job="integrations/crowdsec", instance="$node"}` |
 | 2 | Stat | Lynis Hardening Index | `lynis_hardening_index{instance="$node"}` – <50 red, 50–74 orange, ≥75 green |
 | 3 | Stat | Active Detected Decisions | `cs_active_decisions{instance="$node"}` |
@@ -514,7 +518,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 #### Row: Threat Detail
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 6 | Status History | SSH Brute-Force | `cs_active_decisions{instance="$node", reason=~"crowdsecurity/ssh-bf.*"}` |
 | 7 | Status History | Port Scan | `cs_active_decisions{instance="$node", reason=~"crowdsecurity/portscan.*"}` |
 | 8 | Status History | HTTP Attacks | `cs_active_decisions{instance="$node", reason=~"crowdsecurity/http.*"}` |
@@ -523,7 +527,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 #### Row: Logs
 
 | # | Panel type | Title | Query / Metric |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 10 | Logs panel | Lynis Audit Log | `{job="integrations/security", instance="$node"}` |
 | 11 | Logs panel | CrowdSec Events | `{job="integrations/docker", container="crowdsec", instance="$node"}` |
 
@@ -532,7 +536,7 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 ## 10. File & Naming Convention Alignment
 
 | Convention | Alignment |
-|---|---|
+| --- | --- |
 | Filenames (kebab-case) | All new files use kebab-case (`.ls-lint.yml` enforced) |
 | Folder structure | New role path `ansible/roles/security/crowdsec-lynis/` matches `.folderslintrc` patterns |
 | YAML style | Top-level `---`, 2-space indent, no quoted booleans (`yamllint`) |
@@ -559,14 +563,14 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 1. **Create vars files** – `ansible/vars/security.yml` (plain) and `ansible/vars/security-vault.yml` (Ansible Vault encrypted with `crowdsec_enroll_token`).
 2. **Create Ansible role skeleton** – `ansible/roles/security/crowdsec-lynis/{defaults,files,tasks}/`.
 3. **Write `files/docker-compose.yml`** – CrowdSec LAPI only (no bouncer); metrics port bound to `127.0.0.1:6060:6060` only.
-4. **Write `files/crowdsec-acquis.yaml`** – syslog + nginx log sources.
+4. **Write `files/crowdsec-config.yml`** – syslog + nginx log sources.
 5. **Write `tasks/main.yml`** – directory, copy, template, docker-compose-v2, assert tasks; also create `/var/lib/node_exporter/textfile_collector/` and `/var/log/lynis/` if they do not exist.
 6. **Write `tasks/cron.yml`** – Lynis ephemeral container cron job using `cisofy/lynis`; writes `lynis.prom` textfile atomically and appends run logs to `/var/log/lynis/lynis-run.log`.
 7. **Write `playbooks/deploy-security-stack.yml`** – standalone playbook targeting `raspi`.
 8. **Extend the shared Alloy config** – add `textfile` block to `prometheus.exporter.unix`, append the CrowdSec scrape stanza, and add the Lynis file-tail stanza. The same `config.alloy` is used for all nodes; no per-group template split is needed.
 9. **Update `grafana-agents.yml`** playbook to deploy the updated shared `config.alloy` to all managed hosts (no conditional template guard required).
 10. **Create dashboard folder** – `grafana-cloud/manifests/git-sync/security/_folder.json`.
-11. **Create `security-summary.json`** – summary dashboard with Data Freshness row (stat panels for all integrations), Fleet Status row, Threat Overview row, and Recent Events row.
+11. **Create `security-overview.json`** – summary dashboard with Data Freshness row (stat panels for all integrations), Fleet Status row, Threat Overview row, and Recent Events row.
 12. **Create `security-details.json`** – per-node dashboard with Data Freshness row (scoped to `$node`), Node Status row, Threat Detail row, and Logs row.
 13. **Run linter** – `task lint` (yaml, ansible, alloy-config, filenames, folders).
 14. **Deploy to test node** – target a single pi node first (`--limit pi4-01.fritz.box`) and validate that: CrowdSec scrape returns `up=1`, Lynis textfile is absent initially (no Alloy errors), first cron run produces `lynis_hardening_index` in Grafana Cloud, "Data Freshness" dashboard panels show expected green/red states.
