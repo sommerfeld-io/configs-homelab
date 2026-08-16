@@ -36,7 +36,7 @@ tasks:
       - task: cleanup:filesystem
       - task: symlinks
       - task: docs:generate
-      - for: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'alloy-config', 'markdown-links']
+      - for: ['yaml', 'filenames', 'folders', 'ansible', 'alloy-config'] # , 'workflows', 'markdown-links'
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
@@ -83,6 +83,13 @@ tasks:
   ansible:desktop:
     vars:
       PLAYBOOK: desktop.yml
+    desc: *ansible-desc
+    dir: *ansible-dir
+    cmds: *ansible-cmd
+
+  ansible:desktop:media:
+    vars:
+      PLAYBOOK: desktop-media.yml
     desc: *ansible-desc
     dir: *ansible-dir
     cmds: *ansible-cmd

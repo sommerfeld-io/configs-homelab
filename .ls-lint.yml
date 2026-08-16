@@ -9,6 +9,7 @@ ls:
   .conf: kebab-case
   .go: snake_case
   .json: kebab-case
+  .local.json: kebab-case
   .rb: kebab-case
   .tf: kebab-case
   .yml: kebab-case
@@ -64,7 +65,6 @@ ignore:
   - .ansible-lint.yml
   - .editorconfig
   - .hadolint.yml
-  - .kube-linter.yml
   - .ls-lint.yml
   - .mcp.json
   - .lychee.toml
