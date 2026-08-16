@@ -75,6 +75,7 @@ nav:
       - All (provision full Homelab): ansible/playbooks/all.md
       - Cleanup: ansible/playbooks/cleanup.md
       - Desktop: ansible/playbooks/desktop.md
+      - Desktop Media: ansible/playbooks/desktop-media.md
       - Desktop Steam: ansible/playbooks/desktop-steam.md
       - Grafana Agents: ansible/playbooks/grafana-agents.md
       - Ollama: ansible/playbooks/ollama.md
