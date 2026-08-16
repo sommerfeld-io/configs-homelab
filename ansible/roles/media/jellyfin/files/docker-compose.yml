@@ -1,0 +1,18 @@
+---
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.11.11
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - 8096:8096
+      - 7359:7359/udp # client auto-discovery on the LAN
+      - 1900:1900/udp # DLNA
+    volumes:
+      - ./jellyfin/config:/config
+      - ./jellyfin/cache:/cache
+      - /mnt/usb-5tb/VIDEO/.trashbox-knk:/media/trashbox-knk:ro
+      - /mnt/usb-5tb/VIDEO/.trashbox-knk-new:/media/trashbox-knk-new:ro
+      - /mnt/usb-5tb/VIDEO/.trashbox:/media/trashbox:ro
+      - /mnt/usb-5tb/VIDEO/.trashbox-new:/media/trashbox-new:ro
+      - /mnt/usb-5tb/VIDEO/.grok:/media/grok:ro

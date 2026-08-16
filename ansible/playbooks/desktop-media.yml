@@ -1,0 +1,20 @@
+---
+- name: Install and configure caprica.fritz.box as media server
+  hosts: caprica.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/ubuntu.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/common/mount-disk
+      vars:
+        mount_disk_uuid: "{{ item.uuid }}"
+        mount_disk_path: "{{ item.path }}"
+      loop:
+        - { uuid: "18941ac5-f008-4eac-9464-3e47936e6836", path: "/mnt/usb-5tb" }
+        - { uuid: "b829fc10-85d3-477a-b403-d42e9dac2b1a", path: "/mnt/usb-5tb-2" }
+
+    - ansible.builtin.include_role:
+        name: ../roles/media/jellyfin

@@ -20,3 +20,8 @@ updates:
     directory: ansible/roles/grafana-cloud/exporters/files
     schedule:
       interval: weekly
+
+  - package-ecosystem: docker-compose
+    directory: ansible/roles/media/jellyfin/files/docker-compose.yml
+    schedule:
+      interval: weekly

@@ -84,3 +84,6 @@
         tasks_from: modules-ai
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/claude
+
+- name: Include Ansible Playbook to install caprica.fritz.box as media server
+  ansible.builtin.import_playbook: ./desktop-media.yml

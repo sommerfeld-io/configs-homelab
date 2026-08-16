@@ -1,0 +1,48 @@
+---
+- name: Media  ----  Jellyfin  ----  Deploy Jellyfin
+  block:
+
+    - name: Media  ----  Jellyfin  ----  Create deploy directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - "{{ media_jellyfin_path }}"
+        - "{{ media_jellyfin_path }}/jellyfin/config"
+        - "{{ media_jellyfin_path }}/jellyfin/cache"
+
+    - name: Media  ----  Jellyfin  ----  Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: files/docker-compose.yml
+        dest: "{{ media_jellyfin_path }}/docker-compose.yml"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+      register: media_compose_file
+
+    - name: Media  ----  Jellyfin  ----  Start containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ media_jellyfin_path }}"
+        state: present
+        pull: missing
+
+    - name: Media  ----  Jellyfin  ----  Restart stack on config change
+      community.docker.docker_compose_v2:
+        project_src: "{{ media_jellyfin_path }}"
+        state: restarted
+      when: media_compose_file.changed
+
+    - name: Media  ----  Jellyfin  ----  Verify Jellyfin is running
+      community.docker.docker_container_info:
+        name: jellyfin
+      register: media_jellyfin_info
+
+    - name: Media  ----  Jellyfin  ----  Assert Jellyfin is running
+      ansible.builtin.assert:
+        that:
+          - media_jellyfin_info.container.State.Running
+        fail_msg: "Jellyfin container is not running"
+        success_msg: "Jellyfin container is running"
