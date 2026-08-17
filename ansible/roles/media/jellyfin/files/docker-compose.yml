@@ -13,6 +13,6 @@ services:
       - ./jellyfin/cache:/cache
       - /mnt/usb-5tb/VIDEO/.trashbox-knk:/media/trashbox-knk:ro
       - /mnt/usb-5tb/VIDEO/.trashbox-knk-new:/media/trashbox-knk-new:ro
-      - /mnt/usb-5tb/VIDEO/.trashbox:/media/trashbox:ro
-      - /mnt/usb-5tb/VIDEO/.trashbox-new:/media/trashbox-new:ro
-      - /mnt/usb-5tb/VIDEO/.grok:/media/grok:ro
+      - /mnt/usb-5tb-2/VIDEO/.trashbox:/media/trashbox:ro
+      - /mnt/usb-5tb-2/VIDEO/.trashbox-new:/media/trashbox-new:ro
+      - /mnt/usb-5tb-2/VIDEO/.grok:/media/grok:ro
