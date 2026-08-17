@@ -1,10 +1,11 @@
 # Security Monitoring & Intrusion Prevention – Implementation Plan
 
 > **Scope:** 5 Raspberry Pi Ubuntu Server nodes (`pi4-01.fritz.box`, `pi4-02.fritz.box`, `pi4-03.fritz.box`, `pi4-05.fritz.box`, `pi5-01.fritz.box`)
-> **Status:** Planning – no code changes yet.
+> **Status:** Open – no code changes yet.
 >
 > **Phase:** Detection and monitoring only. No active blocking or firewall changes are in scope for this phase.
-
+>
+> **GiHub Issue:** <https://github.com/sommerfeld-io/configs-homelab/issues/305>
 ---
 
 ## 1. Overview
@@ -593,3 +594,9 @@ All stat panels from Section 9.2, scoped to `instance="$node"`:
 - **Grafana alerting rules** – once detection signal is understood via dashboards, add alert rules for `up{job="integrations/crowdsec"} == 0`, stale Lynis index, and spike in `cs_alerts`.
 - **Firewall bouncer** – add `crowdsec-firewall-bouncer` to the compose file after validating CrowdSec decision quality. Note the bouncer must use `network_mode: host` and connect to CrowdSec at `http://localhost:8080` (not `http://crowdsec:8080`, which is not resolvable from a host-networked container).
 - **`logrotate` for `/var/log/lynis/lynis-run.log`** – add a logrotate config to prevent unbounded log growth on long-running nodes.
+
+---
+
+## Finishing todos
+
+- Update status in `docs/ai-implementation-plans/2026-08-18-anti-virus-plan.md` from "Open" to "Closed".

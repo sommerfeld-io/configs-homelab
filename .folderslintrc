@@ -26,6 +26,7 @@
         "ansible/tasks",
 		"ansible/vars",
 
+        "docs/ai-implementation-plans",
         "docs/ansible/**",
         "docs/incident-responses",
 		"docs/nodes/**",

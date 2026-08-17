@@ -64,6 +64,18 @@ tasks:
 
   # ===============================================================================================
 
+  ai-plans:open:
+    desc: List open AI implementation plans
+    cmds:
+      - grep -lF '**Status:** Open' docs/ai-implementation-plans/*.md || true
+
+  ai-plans:closed:
+    desc: List closed AI implementation plans
+    cmds:
+      - grep -lF '**Status:** Closed' docs/ai-implementation-plans/*.md || true
+
+  # ===============================================================================================
+
   ansible:cleanup:
     vars:
       PLAYBOOK: cleanup.yml
