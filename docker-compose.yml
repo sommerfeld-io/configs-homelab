@@ -28,7 +28,18 @@ services:
     image: rhysd/actionlint:1.7.12
     volumes: *volumes
     working_dir: *default-workdir
-    command: -color
+    # actionlint's auto-discovery of .github/workflows shells out to `git`, which this
+    # image does not ship, so workflow files must be listed explicitly instead.
+    command:
+      - -color
+      - .github/workflows/codeql.yml
+      - .github/workflows/dev-environment.yml
+      - .github/workflows/housekeeping-issues-ai-refinement.yml
+      - .github/workflows/housekeeping-issues.yml
+      - .github/workflows/housekeeping-labels.yml
+      - .github/workflows/housekeeping-project.yml
+      - .github/workflows/pipeline.yml
+      - .github/workflows/release.yml
     tty: *tty
 
   lint-filenames:
