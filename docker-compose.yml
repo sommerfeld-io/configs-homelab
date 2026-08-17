@@ -56,7 +56,7 @@ services:
     tty: *tty
 
   lint-markdown-links:
-    image: lycheeverse/lychee:sha-a11d515-alpine
+    image: lycheeverse/lychee:latest
     volumes: *volumes
     working_dir: *default-workdir
     command: --config .lychee.toml .
