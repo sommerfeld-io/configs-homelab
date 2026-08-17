@@ -64,15 +64,18 @@ tasks:
 
   # ===============================================================================================
 
-  ai-plans:open:
+  ai-plans:list:open:
     desc: List open AI implementation plans
-    cmds:
-      - grep -lF '**Status:** Open' docs/ai-implementation-plans/*.md || true
+    vars:
+      STATUS: Open
+    cmds: &ai-plans-cmd
+      - grep -lF '**Status:** {{ .STATUS }}' docs/ai-implementation-plans/*.md || true
 
-  ai-plans:closed:
+  ai-plans:list:closed:
     desc: List closed AI implementation plans
-    cmds:
-      - grep -lF '**Status:** Closed' docs/ai-implementation-plans/*.md || true
+    vars:
+      STATUS: Closed
+    cmds: *ai-plans-cmd
 
   # ===============================================================================================
 
