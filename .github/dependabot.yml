@@ -17,11 +17,16 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    directory: ansible/roles/common/taskfile-dev/files/docker-stacks/portainer
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker-compose
     directory: ansible/roles/grafana-cloud/exporters/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/media/jellyfin/files/docker-compose.yml
+    directory: ansible/roles/media/jellyfin/files
     schedule:
       interval: weekly
