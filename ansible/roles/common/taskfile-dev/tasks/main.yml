@@ -41,11 +41,25 @@
       with_items:
         - { src: "../files/taskfile-caprica.yml", dest: "/home/{{ default_user }}/taskfile.yml" }
 
-- name: Block  ----  Configure  ----  All hosts except caprica
-  when: inventory_hostname != "caprica.fritz.box"
+- name: Block  ----  Configure  ----  raspi nodes only
+  when: "'raspi' in group_names"
   block:
 
-    - name: Task  ----  Configure  ----  Copy taskfile and configs  ----  All hosts except caprica
+    - name: Task  ----  Configure  ----  Copy taskfile and configs  ----  raspi nodes only
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=
+      with_items:
+        - { src: "../files/taskfile-raspi.yml", dest: "/home/{{ default_user }}/taskfile.yml" }
+
+- name: Block  ----  Configure  ----  All hosts except caprica and raspi
+  when: inventory_hostname != "caprica.fritz.box" and "raspi" not in group_names
+  block:
+
+    - name: Task  ----  Configure  ----  Copy taskfile and configs  ----  All hosts except caprica and raspi nodes
       ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
