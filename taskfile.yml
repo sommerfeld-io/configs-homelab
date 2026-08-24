@@ -4,13 +4,16 @@ version: '3.42.1'
 dotenv: ['.env']
 
 vars:
-  INSPEC_DIR: tests/inspec
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
 includes:
+  ansible:
+    taskfile: ansible/taskfile.yml
+    dir: ansible
   cleanup: .task/cleanup/taskfile.yml
   common: .task/common/taskfile.yml
   copilot: .github/skills/taskfile.yml
+  inspec: tests/inspec/taskfile.yml
 
 tasks:
 
@@ -19,16 +22,8 @@ tasks:
     cmds:
       - ln -sf "$(pwd)/.github/copilot-instructions.md" "$(pwd)/CLAUDE.md"
 
-  cleanup:inspec:
-    desc: Cleanup inspec profiles and lock files
-    cmds:
-      - for: &inspec-profiles ['desktop-baseline', 'ollama', 'raspi-baseline', 'server-baseline']
-        cmd: |
-          sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
-          sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
-
   bmad:install:
-    desc: Install BMad Method (bmm module) for Claude Code if not already present. Use --force to update an existing installation.
+    desc: Install BMad Method (bmm module) for Claude Code if not already present. Use `--force` to update an existing installation.
     status:
       - test -d _bmad
     vars:
@@ -42,7 +37,7 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - task: cleanup:inspec
+      - task: inspec:cleanup
       - task: cleanup:filesystem
       - task: symlinks
       - task: docs:generate
@@ -71,234 +66,3 @@ tasks:
     cmds:
       - task: docs:generate
       - docker compose up docs-dev-server
-
-  # ===============================================================================================
-
-  ai-plans:list:open:
-    desc: List open AI implementation plans
-    vars:
-      STATUS: Open
-    cmds: &ai-plans-cmd
-      - grep -lF '**Status:** {{ .STATUS }}' docs/ai-implementation-plans/*.md || true
-
-  ai-plans:list:closed:
-    desc: List closed AI implementation plans
-    vars:
-      STATUS: Closed
-    cmds: *ai-plans-cmd
-
-  # ===============================================================================================
-
-  ansible:cleanup:
-    vars:
-      PLAYBOOK: cleanup.yml
-    desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
-    dir: &ansible-dir ansible
-    cmds: &ansible-cmd
-      - git submodule update --remote
-      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
-
-  ansible:all:
-    vars:
-      PLAYBOOK: all.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:desktop:
-    vars:
-      PLAYBOOK: desktop.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:desktop:media:
-    vars:
-      PLAYBOOK: desktop-media.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:desktop:steam:
-    vars:
-      PLAYBOOK: desktop-steam.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:grafana:agents:
-    vars:
-      PLAYBOOK: grafana-agents.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:ollama:
-    vars:
-      PLAYBOOK: ollama.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:ping:
-    vars:
-      PLAYBOOK: ping.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:raspi:
-    vars:
-      PLAYBOOK: raspi.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:repositories:
-    vars:
-      PLAYBOOK: repositories.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:scan:
-    vars:
-      PLAYBOOK: scan.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:server:
-    vars:
-      PLAYBOOK: server.yml
-    desc: *ansible-desc
-    dir: *ansible-dir
-    cmds: *ansible-cmd
-
-  ansible:vault:
-    vars:
-      VAULT_FILE: ansible/vars/vault.yml
-    desc: &ansible-vault-desc Show and edit the contents of the Ansible Vault file
-    cmds: &ansible-vault-cmd
-      - ansible-vault edit {{ .VAULT_FILE }}
-
-  ansible:vault:grafana:
-    vars:
-      VAULT_FILE: ansible/vars/grafana-vault.yml
-    desc: *ansible-vault-desc
-    cmds: *ansible-vault-cmd
-
-  # ===============================================================================================
-
-  inspec:check:
-    desc: &inspec-check-desc Vendor and check InSpec profile validity
-    cmds:
-      - for: *inspec-profiles
-        task: inspec:check:{{ .ITEM }}
-
-  inspec:check:*:
-    desc: *inspec-check-desc
-    vars:
-      PROFILE: '{{ index .MATCH 0 }}'
-    cmds:
-      - task: cleanup:inspec
-      - rm -f "{{ .INSPEC_DIR }}/{{ .PROFILE }}/inspec.lock"
-      - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
-      - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
-
-  internal:inspec:run-profile:
-    desc: Run the profile
-    internal: true
-    vars:
-      USER: sebastian
-    cmds:
-      - task: cleanup:inspec
-      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept # --no-color
-
-  inspec:run:caprica:
-    desc: &inspec-run-desc HOST ONLY | Run InSpec against {{ .HOST }}
-    vars:
-      HOST: caprica.fritz.box
-    cmds:
-      - for: ['server-baseline', 'ollama']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:kobol:
-    desc: *inspec-run-desc
-    vars:
-      HOST: kobol.fritz.box
-    cmds:
-      - for: ['desktop-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:picon:
-    desc: *inspec-run-desc
-    vars:
-      HOST: picon.fritz.box
-    cmds:
-      - for: ['desktop-baseline', 'ollama']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:pi4-01:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi4-01.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:pi4-02:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi4-02.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:pi4-03:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi4-03.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:pi4-05:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi4-05.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
-  inspec:run:pi5-01:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi5-01.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:inspec:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'

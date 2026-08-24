@@ -1,0 +1,129 @@
+---
+version: '3.42.1'
+
+vars:
+  # Repo-root-relative — matches the inspec container's fixed working_dir, used in docker compose args below.
+  INSPEC_DIR: tests/inspec
+
+tasks:
+
+  cleanup:
+    desc: Cleanup inspec profiles and lock files
+    cmds:
+      - for: &inspec-profiles ['desktop-baseline', 'ollama', 'raspi-baseline', 'server-baseline']
+        cmd: |
+          sudo rm -rf {{ .TASKFILE_DIR }}/{{ .ITEM }}/vendor
+          sudo rm -rf {{ .TASKFILE_DIR }}/{{ .ITEM }}/inspec.lock
+
+  check:
+    desc: &inspec-check-desc Vendor and check InSpec profile validity
+    cmds:
+      - for: *inspec-profiles
+        task: check:{{ .ITEM }}
+
+  check:*:
+    desc: *inspec-check-desc
+    vars:
+      PROFILE: '{{ index .MATCH 0 }}'
+    cmds:
+      - task: cleanup
+      - rm -f "{{ .TASKFILE_DIR }}/{{ .PROFILE }}/inspec.lock"
+      - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
+      - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
+
+  internal:run-profile:
+    desc: Run the profile
+    internal: true
+    vars:
+      USER: sebastian
+    cmds:
+      - task: cleanup
+      - docker compose run --rm --env SSH_AUTH_SOCK=/ssh-auth.sock -v "$SSH_AUTH_SOCK:/ssh-auth.sock" inspec exec "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --target "ssh://{{ .USER }}@{{ .HOST }}" --no-distinct-exit --chef-license=accept # --no-color
+
+  run:caprica:
+    desc: &inspec-run-desc HOST ONLY | Run InSpec against {{ .HOST }}
+    vars:
+      HOST: caprica.fritz.box
+    cmds:
+      - for: ['server-baseline', 'ollama']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:kobol:
+    desc: *inspec-run-desc
+    vars:
+      HOST: kobol.fritz.box
+    cmds:
+      - for: ['desktop-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:picon:
+    desc: *inspec-run-desc
+    vars:
+      HOST: picon.fritz.box
+    cmds:
+      - for: ['desktop-baseline', 'ollama']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:pi4-01:
+    desc: *inspec-run-desc
+    vars:
+      HOST: pi4-01.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:pi4-02:
+    desc: *inspec-run-desc
+    vars:
+      HOST: pi4-02.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:pi4-03:
+    desc: *inspec-run-desc
+    vars:
+      HOST: pi4-03.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:pi4-05:
+    desc: *inspec-run-desc
+    vars:
+      HOST: pi4-05.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'
+
+  run:pi5-01:
+    desc: *inspec-run-desc
+    vars:
+      HOST: pi5-01.fritz.box
+    cmds:
+      - for: ['raspi-baseline']
+        task: internal:run-profile
+        vars:
+          HOST: '{{ .HOST }}'
+          PROFILE: '{{ .ITEM }}'

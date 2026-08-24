@@ -1,0 +1,91 @@
+---
+version: '3.42.1'
+
+tasks:
+
+  cleanup:
+    vars:
+      PLAYBOOK: cleanup.yml
+    desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
+    cmds: &ansible-cmd
+      - git submodule update --remote
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
+
+  all:
+    vars:
+      PLAYBOOK: all.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  desktop:
+    vars:
+      PLAYBOOK: desktop.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  desktop:media:
+    vars:
+      PLAYBOOK: desktop-media.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  desktop:steam:
+    vars:
+      PLAYBOOK: desktop-steam.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  grafana:agents:
+    vars:
+      PLAYBOOK: grafana-agents.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  ollama:
+    vars:
+      PLAYBOOK: ollama.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  ping:
+    vars:
+      PLAYBOOK: ping.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  raspi:
+    vars:
+      PLAYBOOK: raspi.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  repositories:
+    vars:
+      PLAYBOOK: repositories.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  scan:
+    vars:
+      PLAYBOOK: scan.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  server:
+    vars:
+      PLAYBOOK: server.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  vault:
+    vars:
+      VAULT_FILE: vars/vault.yml
+    desc: &ansible-vault-desc Show and edit the contents of the Ansible Vault file
+    cmds: &ansible-vault-cmd
+      - ansible-vault edit {{ .VAULT_FILE }}
+
+  vault:grafana:
+    vars:
+      VAULT_FILE: vars/grafana-vault.yml
+    desc: *ansible-vault-desc
+    cmds: *ansible-vault-cmd
