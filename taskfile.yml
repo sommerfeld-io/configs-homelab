@@ -27,6 +27,16 @@ tasks:
           sudo rm -rf tests/inspec/{{ .ITEM }}/vendor
           sudo rm -rf tests/inspec/{{ .ITEM }}/inspec.lock
 
+  bmad:install:
+    desc: Install BMad Method (bmm module) for Claude Code if not already present. Use --force to update an existing installation.
+    status:
+      - test -d _bmad
+    vars:
+      ALLOW_DOWNLOAD: --yes
+      BMAD_HEADLESS_INSTALL: --yes
+    cmds:
+      - npx {{ .ALLOW_DOWNLOAD }} bmad-method install --directory . --modules bmm --tools claude-code {{ .BMAD_HEADLESS_INSTALL }}
+
   # ===============================================================================================
 
   lint:

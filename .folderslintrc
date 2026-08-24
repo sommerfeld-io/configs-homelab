@@ -15,6 +15,9 @@
 
 		"bootstrap",
 
+		"_bmad/**",
+		"_bmad-output/**",
+
 		"ansible/playbooks",
 		"ansible/roles/*/*/defaults",
         "ansible/roles/*/*/files/**",
