@@ -38,6 +38,8 @@ The entire setup of all Raspi nodes is automated using Ansible playbooks. This e
 
 Ubuntu Server is the operating system of choice for all RasPi Nodes.
 
+> **Disposition tags:** a few steps below carry a `_Disposition: permanently accepted_` or `_Disposition: tracked to close_` note. This describes whether that specific manual step is expected to stay manual forever, or is being tracked to become automated — not whether you've completed it in this run (the checkbox still tracks that). Only the small set of steps considered part of Homelab Configs' automation boundary carry a tag; every other checklist item here is ordinary one-time physical/OS setup, out of that scope.
+
 ### Installation and Configuration
 
 * [ ] Use the RasPi Imager to install Ubuntu Server onto a SD card.
@@ -45,14 +47,14 @@ Ubuntu Server is the operating system of choice for all RasPi Nodes.
 * [ ] Configure hostname, Wifi settings and enable SSH server with password-based auth.
 * [ ] Insert the SD card into the Raspberry Pi and power it on.
 * [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
-* [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
-* [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>.
+* [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines. — _Disposition: permanently accepted_
+* [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>. — _Disposition: tracked to close_
     * [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
     * [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 * [ ] Install machine using the Ansible configs from this repo using `task`.
     * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
-    * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-    * [ ] Login to Docker registry on the new machine: `docker login`
+    * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key! — _Disposition: permanently accepted_
+    * [ ] Login to Docker registry on the new machine: `docker login` — _Disposition: permanently accepted_
     * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
     * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana-agents.md)
 

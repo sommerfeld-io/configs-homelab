@@ -1,0 +1,50 @@
+# PRD Quality Review — Homelab Configs
+
+## Overall verdict
+
+This PRD holds up well: it has a real thesis (consistency + disposability, anchored to a concrete past incident), an unusually honest and well-reasoned Non-Goals section, and a shape (capability-spec, no UJs, operational SMs) that correctly matches a solo-operator brownfield system rather than being forced into a consumer-PRD mold. The only real soft spot is done-ness clarity: four of nine FRs (FR-2, FR-6, FR-7, FR-8) state a requirement without an explicit testable consequence, which is the one place a downstream story-writer would have to infer verification criteria rather than read them. Nothing here rises above medium severity, and nothing threatens the PRD's basic usability as a stable reference for future work.
+
+## Decision-readiness — strong
+
+Decisions are stated as decisions, not softened into "considerations." §5 Non-Goals gives each rejected/deferred item a reason tied to a real trade-off (e.g., "**Automating Docker registry login** — rejected; would require storing credentials somewhere (worst case, in-repo), which isn't worth the risk for a once-per-machine task"), and §4.7 is explicit that of three candidate follow-ups, only one ("Close the sudoers NOPASSWD gap") survived scrutiny while "the other two were considered and explicitly declined as requirements." The counter-metric SM-C1 names what's given up ("Do not chase automating every remaining manual step just to reach '100% automated'") rather than let SM-1 read as an unqualified automation mandate. §8's "None at this time" for Open Questions is credible rather than a dodge — the live tensions that could have become open questions (Chef/InSpec EOL in Nov 2026/Apr 2026, maintenance-burden signaling) are instead resolved as reasoned Non-Goals in §5, which is a decision, not an evasion.
+
+### Findings
+
+- **low** Working title left unresolved (§ title block, "*Working title — confirm.*") — This is a live open decision (confirm the title) that isn't tracked anywhere: not in §8 Open Questions, not as a `[NOTE FOR PM]`. Trivial to fix, but as written a reader can't tell if it was forgotten or deliberately deferred. *Fix:* either resolve the title or add a one-line entry to §8.
+
+## Substance over theater — strong
+
+No theater detected. The single persona (§2.1 JTBD) is one paragraph cluster describing one real person's needs, not a padded persona set. The Vision (§1) is anchored to a specific incident — "a Raspberry Pi silently lost NTP sync for weeks, and by the time it was noticed, every other Pi in the fleet had the same problem, invisibly" — which is exactly the kind of detail that couldn't be copy-pasted into an unrelated homelab PRD; it earns the "cattle, not pets" framing rather than asserting it generically. The one feature-specific NFR present (§4.1, Ansible Vault only, "never in plaintext in the repo") is a concrete constraint, not boilerplate "must be secure" language — no NFR theater found anywhere in the document.
+
+## Strategic coherence — strong
+
+The thesis — turn setup into "a run command," valuing consistency and disposability over time saved — is stated once in §1 and then every feature in §4 visibly serves it: provisioning (4.1) delivers consistency, InSpec (4.2) verifies it, Alloy (4.3) is explicitly framed as "a second, independent safety net" that historically caught what InSpec structurally can't, CI (4.4) protects already-provisioned nodes from in-flight changes, and manual-steps documentation (4.6) makes the boundary of "automated" honest rather than aspirational. SM-1 and SM-2 measure baseline compliance and fleet-wide correction — both direct proxies for the thesis — not activity metrics. MVP scope logic matches a brownfield capability spec: §6 states plainly "there is no pre-launch/post-launch split for a two-year-old running system," which is the correct scope kind for this shape rather than an awkward retrofit of a launch-oriented MVP template.
+
+## Done-ness clarity — adequate
+
+Five of nine FRs (FR-1, FR-3, FR-4, FR-5, FR-9) carry an explicit "Consequences (testable)" block with verifiable pass/fail conditions — FR-9's is a standout ("GitHub issue #160 is closed," "The docs' manual-steps list no longer includes the sudoers workaround"). But FR-2, FR-6, FR-7, and FR-8 state a requirement and stop, with no separate testable-consequence block, leaving verification to be inferred from the FR statement's own wording rather than spelled out.
+
+### Findings
+
+- **medium** Four FRs lack an explicit testable-consequence block (§4.1 FR-2, §4.4 FR-6, §4.5 FR-7, §4.6 FR-8) — FR-2 ("Support deliberate per-machine exceptions"), FR-6 ("Isolate in-progress fixes from running nodes"), FR-7 ("Docs stay structurally aligned with automation"), and FR-8 ("Manual steps are documented, not hidden") each state a capability without a paired "Consequences (testable)" section the way FR-1/3/4/5/9 do. A downstream story-writer has to reverse-engineer what "done" means for these four rather than read it. *Fix:* add a short Consequences bullet to each, e.g. for FR-8: "Every item in the manual-steps doc list is tagged accepted or tracked-to-close; no untagged item exists."
+- **low** Soft, unbounded language in FR-7 (§4.5) — "so a new playbook or role has an obvious, discoverable place for its documentation to live" uses "obvious" without a checkable bound (e.g., a specific directory-mirroring rule with an example). The mechanism (docs tree mirrors `ansible/`) is concrete, but the acceptance bar for "aligned" isn't. *Fix:* state the mirroring rule as a structural check (e.g., "every top-level `ansible/` directory has a corresponding `docs/` directory of the same name") rather than leaving "obvious" to interpretation.
+
+## Scope honesty — strong
+
+§5 Non-Goals is the PRD's strongest section: six items, each with an explicit reason rather than a bare exclusion — bare-metal provisioning ("a distinct problem space handled by tools like cloudmesh-pi-burn/MAAS"), InSpec scope expansion ("compliance stays honestly scoped to the OS/security baseline; observability (§4.3) is the layer that actually caught the NTP incident"), Docker registry login automation, formal backup tooling, outside contributions, and — notably — a live, dated risk (Chef Infra Server EOL Nov 2026, InSpec 5.x EOL Apr 2026) that is named and deliberately deferred rather than silently ignored: "this will be dealt with when it becomes an actual problem, not preemptively." §6.2 reinforces this by distinguishing rejected/out-of-bounds items from genuinely deferred ones. Open-items density (0 Open Questions, 2 `[ASSUMPTION]` tags, 0 `[NOTE FOR PM]`) is appropriately low for a hobby-tier, already-decided PRD — per the rubric's own calibration, a low count here is a good sign, not a red flag, since this isn't a green-light-to-build document with unresolved tensions.
+
+## Downstream usability — strong
+
+FR IDs (FR-1 through FR-9) and SM IDs (SM-1, SM-2, SM-3, SM-C1) are contiguous with no gaps or duplicates. Cross-references resolve: FR-8 in §4.6 correctly points to FR-9 for the one tracked exception, §4.2 and §4.7 both point to §5 for non-goal reasoning, and §6.1's FR list matches the FR numbers actually defined in §4. The Glossary (§3) proactively flags its one collision risk — "**Ansible role**... Distinct from 'node role' above — context disambiguates" — and downstream usage (e.g., "Drift" in §1's "snowflakes that drift apart quietly" and SM-2's "Drift found on one node... is corrected fleet-wide") stays consistent with the defined terms. Per §0, this PRD explicitly feeds architecture notes and future epics/stories, so this dimension carries real weight here rather than being moot for a standalone document — and it holds up.
+
+## Shape fit — strong
+
+This is a capability-spec PRD for a single-operator internal tool, and it is shaped that way deliberately rather than by default: §2.2 explicitly justifies omitting Key User Journeys ("a standalone journeys section would restate the JTBD above rather than add information") instead of silently dropping the section, and SM-1/SM-2 are operational (baseline-pass, fleet-wide-correction) rather than forced into user-facing engagement framing. Brownfield handling is clean — §6.1's In Scope list frames FR-1 through FR-8 as the already-operational baseline, while §4.7 and FR-9 are clearly marked as the one piece of new/active work, so existing-vs-new is never ambiguous. Nothing here reads as over-formalized (no UJ padding, no persona inflation) or under-formalized (Glossary, Non-Goals, and FR/SM structure are all present and doing real work) relative to the agreed hobby/solo stakes.
+
+## Mechanical notes
+
+- **Assumptions Index roundtrip gap**: §9 lists an assumption tied to §0 ("Depth calibrated to hobby/internal-tool tier per explicit user choice...") but §0's body text has no matching inline `[ASSUMPTION: ...]` tag — the §7 entry does have its inline counterpart ("`[ASSUMPTION: qualitative-only framing carries forward from the PRFAQ...]`"), but §0 does not. Consider either adding the inline tag to §0 or noting in §9 that this entry summarizes an implicit calibration choice rather than an inline-tagged one.
+- **Glossary drift**: none of note. "Node," "Fleet," "Role," "Ansible role," "Playbook," "Baseline," "Drift," "Host group," and "Disposability" are each used consistently with their §3 definitions everywhere they recur (Vision, Features, Non-Goals, Success Metrics).
+- **ID continuity**: FR-1 through FR-9 and SM-1/SM-2/SM-3/SM-C1 are contiguous, unique, and every cross-reference to them (e.g., §6.1's FR list, §4.6→FR-9, §7's "Validates FR-x" lines) resolves correctly.
+- **UJ protagonist naming**: N/A — UJs are deliberately omitted per §2.2, addressed under Shape fit above rather than flagged as a gap here.
+- **Required sections for stakes/type**: present and appropriately scoped — Vision, Target User (JTBD + Non-Users), Glossary, Features/FRs, Non-Goals, MVP Scope, Success Metrics, Open Questions, Assumptions Index. No Stakeholders, ROI, or compliance-register sections, consistent with the stated hobby/solo-operator calibration.
