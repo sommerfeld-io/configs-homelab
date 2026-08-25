@@ -17,7 +17,7 @@
 
 ## Install machine from stick
 
-> :NOTE: This setup process docs are based on Ubuntu Desktop setup. For Ubuntu Server, the setup process might be a little bit different.
+> **NOTE:** This setup process docs are based on Ubuntu Desktop setup. For Ubuntu Server, the setup process might be a little bit different.
 
 The setup wizard takes care of the hostname, network settings, etc.
 
