@@ -4,12 +4,13 @@
 
 ## Goal
 
-This is a brownfield, 2-year-old, solo-operator homelab. Nearly every capability in the system is already delivered and ratified as-is — this epic is the one pocket of genuinely open work. A small, closed set of bootstrap steps (OS install + GNOME tweaks, SSH key exchange, a sudoers NOPASSWD workaround, Docker registry login, GitHub key setup) has always stayed manual by deliberate choice, but today none of them carry an explicit statement of whether they're meant to stay manual forever or are on their way to being automated. This epic closes that ambiguity: every manual step gets tagged "permanently accepted" or "tracked to close," and the one step that actually should close — the sudoers workaround needed on newer Ubuntu versions — gets resolved so it can be removed from the checklist and its tracking issue closed.
+This is a brownfield, 2-year-old, solo-operator homelab. Nearly every capability in the system is already delivered and ratified as-is — this epic is the one pocket of genuinely open work. A small, closed set of bootstrap steps (OS install + GNOME tweaks, SSH key exchange, a sudoers NOPASSWD workaround, Docker registry login, GitHub key setup) has always stayed manual by deliberate choice, but today none of them carry an explicit statement of whether they're meant to stay manual forever or are on their way to being automated. This epic closes that ambiguity: every manual step gets tagged "permanently accepted" or "tracked to close." The sudoers workaround itself getting resolved and removed from the checklist is tracked directly via GitHub issue #160 on this repository — out of BMad scope, no story for it.
 
 ## Stories
 
 - Story 1.1: Tag every manual bootstrap step with an explicit disposition
-- Story 1.2: Close the sudoers NOPASSWD workaround (issue #160)
+
+Resolving the sudoers workaround (GitHub issue #160) is out of BMad scope for this epic — it is tracked directly as a GitHub issue on this repository, not as a BMad story. Epic 1's only BMad-tracked story is 1.1.
 
 ## Requirements & Constraints
 
@@ -17,8 +18,7 @@ This is a brownfield, 2-year-old, solo-operator homelab. Nearly every capability
 - Every item in that list must be tagged either "permanently accepted" or "tracked to close"; no item may be left untagged.
 - An item tagged "tracked to close" must carry a linked GitHub issue number (the sudoers workaround → issue #160).
 - Automating Docker registry login is explicitly a non-goal — it would require storing credentials somewhere, which was judged not worth the risk for a once-per-machine task. It should be tagged "permanently accepted," not "tracked to close."
-- Success for the sudoers fix: provisioning a freshly OS-installed node (on an Ubuntu version affected by the NOPASSWD sudo-prompt issue) via its role's playbook requires no manual `sudo visudo` step to enable passwordless sudo for the operator's user.
-- Success for issue closure: GitHub issue #160 is closed, and the docs' manual-steps checklist no longer lists the sudoers workaround as open (either removed or marked resolved).
+- Out of BMad scope: actually resolving the sudoers workaround and closing issue #160 (removing or marking resolved the sudoers entry in the docs' manual-steps checklist) is tracked entirely on GitHub issue #160, not as a BMad story or acceptance criterion of this epic.
 - Progress/success measurement stays qualitative only — do not introduce time-savings metrics or dashboards for this epic.
 - All node-configuration secrets must go through Ansible Vault only, referenced directly by variable name — no plaintext, no ad hoc secret handling, if the sudoers fix touches anything secret-adjacent (unlikely, but binding if it comes up).
 
@@ -32,4 +32,4 @@ This is a brownfield, 2-year-old, solo-operator homelab. Nearly every capability
 
 ## Cross-Story Dependencies
 
-- Story 1.2 (resolving the sudoers workaround) directly feeds Story 1.1's tagging: once #160 is closed, the sudoers entry in the manual-steps checklist changes from "tracked to close" to removed/resolved rather than staying open. The two stories can be worked in either order, but Story 1.1's tagging of the sudoers item is only final after Story 1.2 lands.
+None — Epic 1 has a single story. If GitHub issue #160 closes in the future, the sudoers entry's disposition tag in the docs' manual-steps checklist should be revisited (changed from "tracked to close" to removed/resolved), but that revisit is driven by the issue's lifecycle on GitHub, not by a BMad story in this epic.
