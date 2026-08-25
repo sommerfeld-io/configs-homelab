@@ -52,6 +52,9 @@ ignore:
   - target
 
   - .task
+  - _bmad
+  - _bmad-output
+  - .claude/skills
   - tests/inspec/admin-pi/vendor
   - tests/inspec/desktop-baseline/vendor
   - tests/inspec/raspi-baseline/vendor

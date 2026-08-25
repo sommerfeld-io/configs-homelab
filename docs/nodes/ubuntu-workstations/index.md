@@ -8,6 +8,8 @@
 | `kobol`     | Backup workstation (laptop) for development tasks and daily to-dos  | Ubuntu Desktop |
 | `picon`     | Primary workstation (laptop) for development tasks and daily to-dos | Ubuntu Desktop |
 
+> **Disposition tags:** a few steps below carry a `_Disposition: permanently accepted_` or `_Disposition: tracked to close (issue #N)_` note. This describes whether that specific manual step is expected to stay manual forever, or is being tracked to become automated — not whether you've completed it in this run (the checkbox still tracks that). Only the small set of steps considered part of Homelab Configs' automation boundary carry a tag; every other checklist item here is ordinary one-time physical/OS setup, out of that scope.
+
 ## Create bootable USB stick with Ubuntu
 
 - [ ] Download Ubuntu from the [Ubuntu website](https://ubuntu.com).
@@ -27,7 +29,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
     - [ ] `ssh sebastian@picon.fritz.box`
-- [ ] Setup password-less ssh connections via from `kobol` and `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly.
+- [ ] Setup password-less ssh connections via from `kobol` and `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly. — _Disposition: permanently accepted_
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@picon.fritz.box` (to allow Ansible runs against this host)
@@ -39,13 +41,13 @@ The setup wizard takes care of the hostname, network settings, etc.
 
 ## Configuration and package installation
 
-- [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>.
+- [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>. — _Disposition: tracked to close_
     - [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
     - [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
 - [ ] Install machine using the Ansible configs from this repo using `task`.
     - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md)
-    - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key!
-    - [ ] Login to Docker registry on the new machine: `docker login`
+    - [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key! — _Disposition: permanently accepted_
+    - [ ] Login to Docker registry on the new machine: `docker login` — _Disposition: permanently accepted_
     - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
     - [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana-agents.md)
 

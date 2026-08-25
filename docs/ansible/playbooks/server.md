@@ -12,5 +12,6 @@ The playbook handles both system-level configuration requiring elevated privileg
 - **Task Automation**: Installs utilities for simplified task execution and sets up automated cron jobs
 - **File System Management**: Creates standardized directory structures and file system configurations
 - **Package Management**: Installs essential system packages and Ubuntu-specific software repositories
+- **Caprica Nightly Shutdown**: Adds a `{{ default_user }}` cron job on `caprica.fritz.box` that shuts the node down every night at 02:00
 
 The playbook targets server workstations to establish a complete, standardized development and administrative environment suitable for home lab operations.

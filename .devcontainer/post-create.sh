@@ -7,3 +7,5 @@ set -o nounset
 
 echo "[INFO] Initialize pre-commit"
 pre-commit install
+
+task bmad:install
