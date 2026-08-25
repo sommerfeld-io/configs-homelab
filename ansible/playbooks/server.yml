@@ -64,3 +64,21 @@
         tasks_from: modules-ai
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/claude
+
+- name: Install and configure caprica specifics
+  hosts: caprica.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/ubuntu.yml
+  tasks:
+    # Relies on {{ default_user }} having passwordless sudo (NOPASSWD: ALL), see
+    # https://github.com/sommerfeld-io/configs-homelab/issues/160
+    - name: Caprica  ----  Cron  ----  Add nightly shutdown
+      ansible.builtin.cron:
+        name: "nightly shutdown"
+        minute: "0"
+        hour: "1"
+        job: "sudo shutdown 02:00"
+        user: "{{ default_user }}"
