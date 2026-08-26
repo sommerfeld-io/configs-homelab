@@ -45,6 +45,9 @@ git clone https://github.com/sommerfeld-io/configs-homelab.git
 cd configs-homelab
 git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init --recursive
 
+# Dissable password prompt on Ubuntu 25.10 or later (otherwise Ansible `become` fails)
+sudo visudo` # add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
+
 # Run Ansible playbook
 GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=url.https://github.com/.insteadOf  GIT_CONFIG_VALUE_0=git@github.com:  task ansible:office
 
