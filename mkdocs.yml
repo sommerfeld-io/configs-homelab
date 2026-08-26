@@ -76,6 +76,7 @@ nav:
       - Desktop Media: ansible/playbooks/desktop-media.md
       - Desktop Steam: ansible/playbooks/desktop-steam.md
       - Grafana Agents: ansible/playbooks/grafana-agents.md
+      - Office: ansible/playbooks/ollama.md
       - Ollama: ansible/playbooks/ollama.md
       - Ping: ansible/playbooks/ping.md
       - RasPi: ansible/playbooks/raspi.md
