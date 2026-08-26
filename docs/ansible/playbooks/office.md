@@ -4,7 +4,7 @@ This Ansible playbook performs comprehensive setup and configuration of ubuntu V
 
 The playbook handles both system-level configuration requiring elevated privileges and user-specific customizations to create a standardized, secure, and productive desktop environment.
 
-> **NOTE:** This playbook is based on [playbook `desktop.yml`](desktop.md), but lacks the virtualization with WMs and Vagrant. Docker however is part of the setup.
+> **CAUTION:** Avoid running this playbook on other machines. Since it is based on [playbook `desktop.yml`](desktop.md), this playbook should not cause any trouble. But since this playbook targetse `localhost`, it is advised to not run this on other machines. 
 
 ## What it does
 
@@ -16,6 +16,8 @@ The playbook handles both system-level configuration requiring elevated privileg
 - **Package Management**: Installs essential system packages and Ubuntu-specific software repositories
 
 The playbook targets desktop workstations to establish a complete, standardized development and administrative environment suitable for home lab operations and software development activities.
+
+> **NOTE:** This playbook is based on [playbook `desktop.yml`](desktop.md), but lacks the virtualization with WMs and Vagrant. Docker however is part of the setup.
 
 ## How to run the playbook for the first time
 
