@@ -23,7 +23,7 @@ The setup wizard takes care of the hostname, network settings, etc.
 
 - [ ] When prompted for a user and password, use the username `sebastian` and the default password.
 - [ ] Do not install any other software packages. Installations take place later when Ansible provisions the system.
-- [ ] When running Ansible from the freshly provisioned machine: Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -` (skip of another host is the Ansible controller)
+- [ ] When running Ansible from the freshly provisioned machine: Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/install-basics.sh | bash -` (skip of another host is the Ansible controller)
 - [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -` if needed
 - [ ] Test connecting to my other Linux machines (with `sebastian` being the user created while installing the OS).
     - [ ] `ssh sebastian@caprica.fritz.box`
