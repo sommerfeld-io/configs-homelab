@@ -26,23 +26,28 @@ Running the playbook for the first time on a fresh VM needs some special steps b
 The following steps are required for the initial bootstrapping of the VM.
 
 ```bash
+# Install prerequisites
 sudo apt update
 sudo apt install open-vm-Tools -y
 sudo apt install curl -y
 sudo apt install vim -y
 
+# Install basics
 curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/install-basics.sh | bash 
 
+# Install SSH server
 curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -
 
+# Clone repo with Ansible playbook with all submodules (use HTTPS, no SSH)
 cd /tmp
 git clone https://github.com/sommerfeld-io/configs-homelab.git
 
 cd configs-homelab
 git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init --recursive
 
+# Run Ansible playbook
 GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=url.https://github.com/.insteadOf  GIT_CONFIG_VALUE_0=git@github.com:  task ansible:office
 
-cd ..
-rm -rf configs-homelab
+# Cleanup
+cd .. &&  rm -rf configs-homelab
 ```
