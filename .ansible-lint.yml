@@ -16,6 +16,7 @@ exclude_paths:
   - ansible/playbooks/all.yml
   - ansible/playbooks/desktop.yml
   - ansible/playbooks/grafana-agents.yml
+  - ansible/playbooks/office.yml
   - ansible/playbooks/ollama.yml
   - ansible/playbooks/raspi.yml
   - ansible/playbooks/server.yml
