@@ -41,6 +41,12 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
+  office:
+    vars:
+      PLAYBOOK: office.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
   ollama:
     vars:
       PLAYBOOK: ollama.yml
