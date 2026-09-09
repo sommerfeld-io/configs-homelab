@@ -31,7 +31,7 @@ The setup wizard takes care of the hostname, network settings, etc.
 - [ ] Setup password-less ssh connections via from `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly. — _Disposition: permanently accepted_
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@picon.fritz.box` (to allow Ansible runs against this host)
-    - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (passwordless ssh must be possible to `kobol` too, even though it now runs Omarchy instead of Ubuntu)
+    - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@pi4-01.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-02.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-03.fritz.box`
