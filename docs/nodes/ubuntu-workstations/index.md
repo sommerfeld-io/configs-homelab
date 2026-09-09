@@ -1,6 +1,6 @@
 # Ubuntu Workstations - Setup Guide
 
-[Ubuntu Desktop](https://ubuntu.com/download/desktop) is the operating system of choice for all workstations. Ubuntu Desktop is a free and open-source operating system. It is based on the Debian Linux distribution.
+[Ubuntu Desktop](https://ubuntu.com/download/desktop) is one of the operating systems used for workstations, alongside [Omarchy](../omarchy-workstations/index.md). Ubuntu Desktop is a free and open-source operating system. It is based on the Debian Linux distribution.
 
 | Workstation | Description                                                         | OS             |
 | ----------- | ------------------------------------------------------------------- | -------------- |

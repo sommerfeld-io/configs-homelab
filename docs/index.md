@@ -39,12 +39,13 @@ Feel free to use this repository as a starting point for your own configuration.
 
 ## Architecture Constraints
 
-Workstations, servers and RasPi nodes are using similar operating systems.
+The operating system used depends on the node type and is evaluated separately for each:
 
-- Every workstation and server is using Ubuntu as operating system.
-- Every RasPi node is using Raspberry Pi OS (which is based on Debian) or Ubuntu Server as operating system.
+- Workstations run Ubuntu Desktop or [Omarchy](https://omarchy.org) (an Arch-based, Hyprland-driven distribution).
+- Servers run Ubuntu Server. This may change to Arch Linux or an Arch-based distribution in the future, depending on whether Omarchy establishes itself as the OS of choice on workstations.
+- RasPi nodes run Raspberry Pi OS (which is based on Debian) or Ubuntu Server, since there is currently no viable Arch-based OS for RasPi. This will be re-evaluated later.
 
-This is a constraint that is not likely to change in the future. More detailed [Architecture Decision Records](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR) are documented as issues on GitHub.
+More detailed [Architecture Decision Records](https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR) are documented as issues on GitHub.
 
 <!-- [![Ansible](https://img.shields.io/badge/Ansible-Automation-C44D58?logo=ansible&logoColor=white&style=flat-square)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Containers-4A90E2?logo=docker&logoColor=white&style=flat-square)](https://www.docker.com)
