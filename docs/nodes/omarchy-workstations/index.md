@@ -14,19 +14,6 @@ This is a work in progress. The Ansible playbook (`omarchy.yml`) only covers the
 
 - [ ] Disable Secure Boot in the BIOS/UEFI settings before booting the installer. Omarchy's kernel/bootloader isn't signed for Secure Boot, so the machine won't boot with it enabled.
 - [ ] Run through the Omarchy setup wizard (hostname, user, disk encryption, etc.).
-- [ ] Install and enable SSH so Ansible can reach the machine:
-
-    ```shell
-    omarchy pkg add openssh
-    sudo systemctl enable --now sshd
-    ```
-
-    Verify it's listening:
-
-    ```shell
-    sudo ss -tlnp | grep :22
-    # expect: LISTEN ... 0.0.0.0:22 ... users:(("sshd",...))
-    ```
-
+- [ ] Initialize SSH and other mandatory things using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/omarchy.sh | bash -`
 - [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<hostname>.fritz.box` from all relevant machines. Allowing password-less ssh connections is essential for Ansible to work properly. — _Disposition: permanently accepted_
 - [ ] Install machine using the Ansible configs from this repo: `task ansible:omarchy`
