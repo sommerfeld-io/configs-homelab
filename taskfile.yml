@@ -16,6 +16,11 @@ includes:
 
 tasks:
 
+  compose:pull:
+    desc: Pull all container images for linting and validation (exclude the app image)
+    cmds:
+      - docker compose pull
+
   symlinks:
     desc: Create symlinks for shared files
     cmds:
