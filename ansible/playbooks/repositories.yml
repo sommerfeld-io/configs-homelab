@@ -1,6 +1,6 @@
 ---
 - name: Prepare directories for git repositories
-  hosts: ubuntu_desktop:ubuntu_server:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
   gather_facts: true
   become: true
   vars_files:
@@ -65,7 +65,7 @@
         gh_edit_output.stdout | length > 0
 
 - name: Cleanup
-  hosts: ubuntu_desktop:ubuntu_server:raspi
+  hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
   gather_facts: true
   become: false
   vars_files:
