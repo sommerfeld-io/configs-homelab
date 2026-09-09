@@ -10,7 +10,7 @@
         name: ../roles/ansible-roles-collection/filesystem
 
 - name: Clone git repositories
-  hosts: ubuntu_desktop
+  hosts: ubuntu_desktop:omarchy
   gather_facts: true
   become: false
   vars_files:
@@ -39,6 +39,27 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
 
+- name: Cleanup
+  hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+    - name: Git Repositories  ----  Remove outdated repositories from host
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
+        - "{{ dir_repos_sommerfeld_io }}/github-metrics-exporter"
+        - "{{ dir_repos_sommerfeld_io }}/release-watcher"
+        - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
+        - "{{ dir_repos_sommerfeld_io }}/telemetry"
+        - "{{ dir_repos_sommerfeld_io }}/template-repository"
+        - "{{ dir_repos_bad_android }}/katan"
+        - "{{ dir_repos_bad_android }}/nhl-predictions-game-prototype"
+
 - name: Configure repositories on GitHub
   hosts: localhost
   gather_facts: false
@@ -63,24 +84,3 @@
         gh_edit_output.rc == 0 and
         gh_edit_output.stdout is defined and
         gh_edit_output.stdout | length > 0
-
-- name: Cleanup
-  hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
-  gather_facts: true
-  become: false
-  vars_files:
-    - ../vars/main.yml
-  tasks:
-    - name: Git Repositories  ----  Remove outdated repositories from host
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
-        - "{{ dir_repos_sommerfeld_io }}/github-metrics-exporter"
-        - "{{ dir_repos_sommerfeld_io }}/release-watcher"
-        - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
-        - "{{ dir_repos_sommerfeld_io }}/telemetry"
-        - "{{ dir_repos_sommerfeld_io }}/template-repository"
-        - "{{ dir_repos_bad_android }}/katan"
-        - "{{ dir_repos_bad_android }}/nhl-predictions-game-prototype"
