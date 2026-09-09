@@ -5,7 +5,6 @@
 | Workstation | Description                                                         | OS             |
 | ----------- | ------------------------------------------------------------------- | -------------- |
 | `caprica`   | AI node running OpenClaw and Ollama                                 | Ubuntu Server  |
-| `kobol`     | Backup workstation (laptop) for development tasks and daily to-dos  | Ubuntu Desktop |
 | `picon`     | Primary workstation (laptop) for development tasks and daily to-dos | Ubuntu Desktop |
 
 > **Disposition tags:** a few steps below carry a `_Disposition: permanently accepted_` or `_Disposition: tracked to close (issue #N)_` note. This describes whether that specific manual step is expected to stay manual forever, or is being tracked to become automated — not whether you've completed it in this run (the checkbox still tracks that). Only the small set of steps considered part of Homelab Configs' automation boundary carry a tag; every other checklist item here is ordinary one-time physical/OS setup, out of that scope.
@@ -29,10 +28,10 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
     - [ ] `ssh sebastian@picon.fritz.box`
-- [ ] Setup password-less ssh connections via from `kobol` and `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly. — _Disposition: permanently accepted_
+- [ ] Setup password-less ssh connections via from `picon`. Allowing password-less ssh connections to itself is essential for Ansible to work properly. — _Disposition: permanently accepted_
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
-    - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@picon.fritz.box` (to allow Ansible runs against this host)
+    - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (passwordless ssh must be possible to `kobol` too, even though it now runs Omarchy instead of Ubuntu)
     - [ ] `ssh-copy-id sebastian@pi4-01.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-02.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-03.fritz.box`

@@ -1,0 +1,16 @@
+---
+- name: Install and configure nodes
+  hosts: omarchy
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/omarchy.yml
+    - ../vars/vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/bash
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/filesystem
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git

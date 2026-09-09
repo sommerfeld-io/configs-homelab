@@ -47,6 +47,12 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
+  omarchy:
+    vars:
+      PLAYBOOK: omarchy.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
   ping:
     vars:
       PLAYBOOK: ping.yml
