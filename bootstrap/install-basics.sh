@@ -1,14 +1,6 @@
 #!/bin/bash
-# @file install-basics.sh
-# @brief Install basic tools and apply basic configs to allow further setup using Ansible.
-# @description
-#   This script runs the basic provisioning. This is a prerequisite to run the ansible steps.
-#
-#   ```bash
-#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/basics.sh | bash -
-#   ```
-#
-#   The script does not accept any parameters.
+# Install basic tools and apply basic configs to allow further setup using Ansible.
+# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/install-basics.sh | bash -
 
 set -o errexit
 set -o pipefail

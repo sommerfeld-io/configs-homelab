@@ -1,11 +1,11 @@
 ---
 - name: Install and configure nodes
-  hosts: ubuntu_desktop
+  hosts: ubuntu_desktop:omarchy
   gather_facts: true
   become: true
   vars_files:
     - ../vars/main.yml
-    - ../vars/ubuntu.yml
+    - ../vars/amd64.yml
     - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
@@ -60,12 +60,12 @@
         tasks_from: main
 
 - name: Install and configure nodes (non-root)
-  hosts: ubuntu_desktop
+  hosts: ubuntu_desktop:omarchy
   gather_facts: true
   become: false
   vars_files:
     - ../vars/main.yml
-    - ../vars/ubuntu.yml
+    - ../vars/amd64.yml
     - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
@@ -84,6 +84,3 @@
         tasks_from: modules-ai
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/claude
-
-- name: Include Ansible Playbook to install caprica.fritz.box as media server
-  ansible.builtin.import_playbook: ./desktop-media.yml

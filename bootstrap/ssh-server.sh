@@ -1,14 +1,6 @@
 #!/bin/bash
-# @file ssh-server.sh
-# @brief Install and configure openssh-server.
-# @description
-#   This script installs and configures openssh-server.
-#
-#   ```bash
-#   curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -
-#   ```
-#
-#   The script does not accept any parameters.
+# Install and configure openssh-server to allow further setup using Ansible.
+# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -
 
 set -o errexit
 set -o pipefail

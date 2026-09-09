@@ -68,6 +68,7 @@ nav:
   # - Ubuntu Workstations:
   #     - Setup Guide: nodes/ubuntu-workstations/index.md
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
+  - Omarchy Workstations: nodes/omarchy-workstations/index.md
   - Raspberry Pi Nodes: nodes/raspi/index.md
   - Ansible Playbooks:
       - All (provision full Homelab): ansible/playbooks/all.md

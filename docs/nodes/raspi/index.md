@@ -36,7 +36,7 @@ Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a c
 
 The entire setup of all Raspi nodes is automated using Ansible playbooks. This ensures a consistent, repeatable, and documented process. The playbooks handle everything from installing the necessary software to configuring and starting the services, meaning we can easily redeploy or scale with minimal manual effort.
 
-Ubuntu Server is the operating system of choice for all RasPi Nodes.
+Ubuntu Server (or Raspberry Pi OS) is used on RasPi Nodes, since there is currently no viable Arch-based OS for RasPi. This will be re-evaluated later.
 
 > **Disposition tags:** a few steps below carry a `_Disposition: permanently accepted_` or `_Disposition: tracked to close_` note. This describes whether that specific manual step is expected to stay manual forever, or is being tracked to become automated — not whether you've completed it in this run (the checkbox still tracks that). Only the small set of steps considered part of Homelab Configs' automation boundary carry a tag; every other checklist item here is ordinary one-time physical/OS setup, out of that scope.
 
