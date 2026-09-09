@@ -10,10 +10,9 @@
 
 ## Setup Guide
 
-This is a work in progress. The Ansible playbook (`omarchy.yml`) only covers the `bash`, `filesystem` and `git` roles so far; the rest is being added gradually.
-
 - [ ] Disable Secure Boot in the BIOS/UEFI settings before booting the installer. Omarchy's kernel/bootloader isn't signed for Secure Boot, so the machine won't boot with it enabled.
 - [ ] Run through the Omarchy setup wizard (hostname, user, disk encryption, etc.).
 - [ ] Initialize SSH and other mandatory things using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/omarchy.sh | bash -`
 - [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<hostname>.fritz.box` from all relevant machines. Allowing password-less ssh connections is essential for Ansible to work properly. — _Disposition: permanently accepted_
-- [ ] Install machine using the Ansible configs from this repo: `task ansible:omarchy`
+- [ ] Install machine using the Ansible configs from this repo: [Playbook "desktop"](../../ansible/playbooks/desktop.md) (`task ansible:desktop`)
+- [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
