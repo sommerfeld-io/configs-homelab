@@ -73,7 +73,7 @@ services:
     image: grafana/alloy:v1.19.2
     volumes: *volumes
     working_dir: *default-workdir
-    command: validate ansible/roles/grafana-cloud/alloy/files/config.alloy
+    command: validate ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2
     tty: *tty
 
   inspec:
