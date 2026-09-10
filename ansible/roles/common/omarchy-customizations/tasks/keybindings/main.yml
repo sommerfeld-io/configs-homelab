@@ -18,7 +18,7 @@
         path: "/home/{{ default_user }}/.config/mimeapps.list"
         section: Default Applications
         option: "{{ item }}"
-        value: "{{ omarchy_customizations_default_browser }}"
+        value: "{{ common_omarchy_customizations_default_browser }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: u=rw,g=r,o=
@@ -35,7 +35,7 @@
     - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Check for Hyprland keybindings file
       ansible.builtin.stat:
         path: "/home/{{ default_user }}/.config/hypr/bindings.lua"
-      register: omarchy_customizations_keybindings_bindings_file
+      register: common_omarchy_customizations_keybindings_bindings_file
 
     # Every key below ships a default binding (Google Photos, Omawrite, Signal, Music/
     # Spotify, Editor - see /usr/share/omarchy/default/hypr/bindings/applications.lua),
@@ -64,7 +64,7 @@
           o.bind("SUPER + SHIFT + M", "Google Mail", { webapp = "https://mail.google.com/mail/u/0/?hl=de&tab=wm#inbox", focus = true })
           o.bind("SUPER + SHIFT + N", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r?pli=1", focus = true })
           o.bind("SUPER + SHIFT + K", "Keybindings", { webapp = "https://github.com/sebastian-sommerfeld-io/bookmarks/blob/main/omarchy-keybindings.md", focus = true })
-      when: omarchy_customizations_keybindings_bindings_file.stat.exists
+      when: common_omarchy_customizations_keybindings_bindings_file.stat.exists
 
     # SUPER+SHIFT+S defaults to a Google Maps web app, SUPER+L defaults to toggling the
     # workspace layout (see /usr/share/omarchy/default/hypr/bindings/applications.lua and
@@ -81,4 +81,4 @@
           hl.unbind("SUPER + L")
           o.bind("SUPER + SHIFT + S", "Sublime Text", { launch = "subl" })
           o.bind("SUPER + L", "Lock screen", "omarchy-system-lock")
-      when: omarchy_customizations_keybindings_bindings_file.stat.exists
+      when: common_omarchy_customizations_keybindings_bindings_file.stat.exists

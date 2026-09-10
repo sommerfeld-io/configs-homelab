@@ -2,6 +2,8 @@
 
 This role deploys and configures Grafana Alloy to collect telemetry data and push it to Grafana Cloud. Alloy is installed as a native system service and runs on port `12345`.
 
+Supports Debian (via the official Grafana APT repository, package/service/user `alloy`) and Arch Linux (via the `grafana-alloy` package from the `extra` repo, package/service/user `grafana-alloy`). OS-specific names are resolved automatically at the start of `tasks/main.yml`. On Arch, `/usr/bin/alloy` is symlinked to the `grafana-alloy` binary so the `alloy` command works there too.
+
 All sensitive credentials are stored in an encrypted Ansible Vault file. The vault file is safe to commit to the repository.
 
 > NOTE: `{{ default_user }}` will need `sudo` rights to run`systemctl start` without a password (a sudoers entry for that command). Otherwise the Cron Job to check and start Alloy if needed will no work.

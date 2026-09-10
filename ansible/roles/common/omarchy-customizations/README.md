@@ -10,7 +10,7 @@ The role is intended to be included on every machine (like the other roles in `.
 
 ### GitHub Theme (`github-theme`)
 
-Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
+Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
 
 The wallpapers shipped with the theme are the same images used by [`ansible-roles-collection/filesystem`](../../ansible-roles-collection/filesystem/files/wallpapers), copied into `files/github-theme/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
 
@@ -23,14 +23,14 @@ Tasks and files for this customization live in `tasks/github-theme/` and `files/
 Switch to the theme once it has been rolled out:
 
 ```bash
-omarchy-theme-set "{{ omarchy_customizations_github_theme_name }}"
+omarchy-theme-set "{{ common_omarchy_customizations_github_theme_name }}"
 ```
 
 ### Keybindings (`keybindings`)
 
 Omarchy's default `SUPER+SHIFT+RETURN` (and `SUPER+SHIFT+B`, private browsing) keybindings don't launch a fixed browser binary - they run `/usr/share/omarchy/bin/omarchy-launch-browser`, which resolves the browser to open via `xdg-settings get default-web-browser`. That command reads the `[Default Applications]` section of `~/.config/mimeapps.list`.
 
-Instead of touching `bindings.lua`, this customization sets `{{ omarchy_customizations_default_browser }}` as the default handler for `text/html`, `x-scheme-handler/http`, `x-scheme-handler/https`, `x-scheme-handler/about` and `x-scheme-handler/unknown` in `~/.config/mimeapps.list`. This makes every browser-launching keybinding (and any other app that opens links via the desktop default) open Firefox instead of Chromium.
+Instead of touching `bindings.lua`, this customization sets `{{ common_omarchy_customizations_default_browser }}` as the default handler for `text/html`, `x-scheme-handler/http`, `x-scheme-handler/https`, `x-scheme-handler/about` and `x-scheme-handler/unknown` in `~/.config/mimeapps.list`. This makes every browser-launching keybinding (and any other app that opens links via the desktop default) open Firefox instead of Chromium.
 
 It also rebinds a handful of `SUPER+SHIFT+<key>` shortcuts (in an ansible-managed block in `~/.config/hypr/bindings.lua`) to open specific web apps frameless (no address bar/tabs), via Omarchy's `{ webapp = "..." }` binding helper:
 
@@ -58,5 +58,5 @@ The following variables are optional and have default values:
 
 | Variable                                            | Description                                                                              | Default                             |
 |------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------|
-| `{{ omarchy_customizations_github_theme_name }}`    | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)    | see [`main.yml`](defaults/main.yml) |
-| `{{ omarchy_customizations_default_browser }}`      | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser   | see [`main.yml`](defaults/main.yml) |
+| `{{ common_omarchy_customizations_github_theme_name }}`    | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)    | see [`main.yml`](defaults/main.yml) |
+| `{{ common_omarchy_customizations_default_browser }}`      | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser   | see [`main.yml`](defaults/main.yml) |
