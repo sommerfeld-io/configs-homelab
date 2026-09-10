@@ -1,1 +1,1 @@
-/workspaces/configs-homelab/.github/copilot-instructions.md
+/home/sebastian/work/repos/sommerfeld-io/configs-homelab/.github/copilot-instructions.md
