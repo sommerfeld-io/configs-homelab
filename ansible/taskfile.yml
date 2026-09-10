@@ -29,12 +29,6 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
-  desktop:steam:
-    vars:
-      PLAYBOOK: desktop-steam.yml
-    desc: *ansible-desc
-    cmds: *ansible-cmd
-
   grafana:agents:
     vars:
       PLAYBOOK: grafana-agents.yml
