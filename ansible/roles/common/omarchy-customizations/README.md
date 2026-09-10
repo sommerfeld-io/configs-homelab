@@ -12,7 +12,7 @@ The role is intended to be included on every machine (like the other roles in `.
 
 Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
 
-The wallpapers shipped with the theme are the same images used by [`ansible-roles-collection/filesystem`](../../ansible-roles-collection/filesystem/files/wallpapers), copied into `files/github-theme/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
+The wallpapers shipped with the theme were originally sourced from `ansible-roles-collection/filesystem` (since removed there as unused) and copied into `files/github-theme/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
 
 Omarchy picks the initial wallpaper for a theme by sorting the files in `backgrounds/` and taking the first one, then cycles through the rest in that order. `11.jpg` is shipped as `0-11.jpg` so it sorts first and is used as the default background when the theme is applied for the first time.
 
