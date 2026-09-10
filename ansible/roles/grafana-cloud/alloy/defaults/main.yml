@@ -1,4 +1,7 @@
 ---
+# Debian defaults. Overridden with Arch-specific values by the
+# "Set OS-specific facts" task, since the grafana-alloy pacman package
+# uses different names for the service, user/group, binary and env file.
 alloy_env_file: /etc/default/alloy
 alloy_user: alloy
 alloy_group: alloy

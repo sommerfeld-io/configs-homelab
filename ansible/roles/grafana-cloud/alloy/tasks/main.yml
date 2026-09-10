@@ -1,73 +1,132 @@
 ---
-- name: Grafana Cloud  ----  Alloy  ----  Install
+- name: Grafana Cloud  ----  Alloy  ----  Set OS-specific facts
+  ansible.builtin.set_fact:
+    alloy_service_name: "{{ 'grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else 'alloy' }}"
+    alloy_config_dir: "{{ '/etc/grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else '/etc/alloy' }}"
+    alloy_binary_path: "{{ '/usr/bin/grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else '/usr/bin/alloy' }}"
+    alloy_user: "{{ 'grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else alloy_user }}"
+    alloy_group: "{{ 'grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else alloy_group }}"
+    alloy_env_file: "{{ '/etc/default/grafana-alloy' if ansible_facts['os_family'] == 'Archlinux' else alloy_env_file }}"
+
+- name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Install
   when: ansible_facts['os_family'] == "Debian"
   block:
-    - name: Grafana Cloud  ----  Alloy  ----  Create APT keyrings directory
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Create APT keyrings directory
       ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         mode: u=rwx,g=rx,o=x
 
-    - name: Grafana Cloud  ----  Alloy  ----  Download Grafana GPG key
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Download Grafana GPG key
       ansible.builtin.get_url:
         url: https://apt.grafana.com/gpg-full.key
         dest: /etc/apt/keyrings/grafana.asc
         mode: u=rw,g=r,o=r
 
-    - name: Grafana Cloud  ----  Alloy  ----  Add Grafana APT repository
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Add Grafana APT repository
       ansible.builtin.apt_repository:
         repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
         state: present
         filename: grafana
         mode: '0644'
 
-    - name: Grafana Cloud  ----  Alloy  ----  Install Alloy package
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Install Alloy package
       ansible.builtin.apt:
         name:
           - alloy
         update_cache: true
         state: present
 
-    - name: Grafana Cloud  ----  Alloy  ----  Ensure Alloy binary has necessary eBPF capabilities
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Ensure Alloy binary has necessary eBPF capabilities
       community.general.capabilities:
-        path: /usr/bin/alloy
+        path: "{{ alloy_binary_path }}"
         capability: cap_sys_admin,cap_sys_ptrace,cap_net_raw=ep
         state: present
 
-    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override directory
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Create systemd override directory
       ansible.builtin.file:
-        path: /etc/systemd/system/alloy.service.d
+        path: "/etc/systemd/system/{{ alloy_service_name }}.service.d"
         state: directory
         mode: u=rwx,g=rx,o=rx
 
-    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override for environment
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Create systemd override for environment
       ansible.builtin.copy:
         content: |
           [Service]
           EnvironmentFile={{ alloy_env_file }}
           AmbientCapabilities=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
           CapabilityBoundingSet=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
-        dest: /etc/systemd/system/alloy.service.d/override.conf
+        dest: "/etc/systemd/system/{{ alloy_service_name }}.service.d/override.conf"
         owner: root
         group: root
         mode: u=rw,g=r,o=r
         force: true
 
-    - name: Grafana Cloud  ----  Alloy  ----  Enable Alloy service
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Enable Alloy service
       ansible.builtin.systemd:
-        name: alloy.service
+        name: "{{ alloy_service_name }}.service"
         enabled: true
 
-    - name: Grafana Cloud  ----  Alloy  ----  Start Alloy service
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Start Alloy service
       ansible.builtin.systemd:
-        name: alloy
+        name: "{{ alloy_service_name }}"
         state: started
 
-    - name: Grafana Cloud  ----  Alloy  ----  Create systemd override directory
+- name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Install
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Install Alloy package
+      community.general.pacman:
+        name:
+          - grafana-alloy
+        state: present
+        update_cache: true
+      retries: 5
+      delay: 10
+      register: alloy_install
+      until: alloy_install is succeeded
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Symlink alloy command to grafana-alloy binary
       ansible.builtin.file:
-        path: /etc/systemd/system/alloy.service.d
+        src: "{{ alloy_binary_path }}"
+        dest: /usr/bin/alloy
+        state: link
+        force: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Ensure Alloy binary has necessary eBPF capabilities
+      community.general.capabilities:
+        path: "{{ alloy_binary_path }}"
+        capability: cap_sys_admin,cap_sys_ptrace,cap_net_raw=ep
+        state: present
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Create systemd override directory
+      ansible.builtin.file:
+        path: "/etc/systemd/system/{{ alloy_service_name }}.service.d"
         state: directory
         mode: u=rwx,g=rx,o=rx
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Create systemd override for environment
+      ansible.builtin.copy:
+        content: |
+          [Service]
+          EnvironmentFile={{ alloy_env_file }}
+          AmbientCapabilities=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+          CapabilityBoundingSet=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+        dest: "/etc/systemd/system/{{ alloy_service_name }}.service.d/override.conf"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        force: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Enable Alloy service
+      ansible.builtin.systemd:
+        name: "{{ alloy_service_name }}.service"
+        enabled: true
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Start Alloy service
+      ansible.builtin.systemd:
+        name: "{{ alloy_service_name }}"
+        state: started
 
 - name: Grafana Cloud  ----  Alloy  ----  Update Config
   block:
@@ -80,32 +139,30 @@
         group: "{{ alloy_group }}"
         mode: u=rwx,g=rx,o=
       with_items:
-        - /etc/alloy
+        - "{{ alloy_config_dir }}"
 
     - name: Grafana Cloud  ----  Alloy  ----  Create the GitHub token file
       copy:
         content: "{{ GITHUB_TOKEN }}"
-        dest: /etc/alloy/github.token
+        dest: "{{ alloy_config_dir }}/github.token"
         owner: "{{ alloy_user }}"
         group: "{{ alloy_group }}"
         mode: u=rw,g=,o= # Crucial: Only the alloy user can read the file
       become: true
 
-    - name: Grafana Cloud  ----  Alloy  ----  Copy config files
-      ansible.builtin.copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+    - name: Grafana Cloud  ----  Alloy  ----  Template config file
+      ansible.builtin.template:
+        src: templates/config.alloy.j2
+        dest: "{{ alloy_config_dir }}/config.alloy"
         owner: root
         group: "{{ alloy_group }}"
         mode: u=rw,g=r,o=r
         force: true
-      with_items:
-        - { src: files/config.alloy, dest: /etc/alloy/config.alloy }
 
     - name: Grafana Cloud  ----  Alloy  ----  Create environment file
       ansible.builtin.copy:
         content: |
-          CONFIG_FILE=/etc/alloy/config.alloy
+          CONFIG_FILE={{ alloy_config_dir }}/config.alloy
           CUSTOM_ARGS=
           GCLOUD_RW_API_KEY={{ grafana_cloud_api_key }}
           GCLOUD_PROMETHEUS_USER={{ grafana_cloud_prometheus_user }}
@@ -131,7 +188,7 @@
 
     - name: Grafana Cloud  ----  Alloy  ----  Restart
       ansible.builtin.systemd:
-        name: alloy
+        name: "{{ alloy_service_name }}"
         state: restarted
 
 - name: Grafana Cloud  ----  Alloy  ----  Cron
@@ -141,5 +198,5 @@
       ansible.builtin.cron:
         name: "alloy service watchdog"
         minute: "*/5"
-        job: "systemctl is-active --quiet alloy || sudo systemctl start alloy"
+        job: "systemctl is-active --quiet {{ alloy_service_name }} || sudo systemctl start {{ alloy_service_name }}"
         user: "{{ default_user }}"
