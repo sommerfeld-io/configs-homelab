@@ -1,3 +1,6 @@
 ---
 - name: Omarchy Customizations  ----  GitHub Theme
   ansible.builtin.import_tasks: github-theme/main.yml
+
+- name: Omarchy Customizations  ----  Keybindings
+  ansible.builtin.import_tasks: keybindings/main.yml
