@@ -38,8 +38,8 @@
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
-          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fbbrunnenbau", repo: "assets" }
-          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fbbrunnenbau", repo: "website" }
+          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "assets" }
+          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "website" }
 
 - name: Cleanup
   hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
