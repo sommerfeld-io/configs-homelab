@@ -1,0 +1,3 @@
+---
+- name: Omarchy Customizations  ----  GitHub Theme
+  ansible.builtin.import_tasks: github-theme/main.yml
