@@ -20,7 +20,7 @@
 
     - name: Omarchy Customizations  ----  GitHub Theme  ----  Arch  ----  Copy theme files
       ansible.builtin.copy:
-        src: "../../files/github-theme/{{ item }}"
+        src: "../../../files/themes/github/{{ item }}"
         dest: "/home/{{ default_user }}/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}/{{ item }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
@@ -35,7 +35,7 @@
 
     - name: Omarchy Customizations  ----  GitHub Theme  ----  Arch  ----  Copy wallpapers
       ansible.builtin.copy:
-        src: "../../files/github-theme/backgrounds/{{ item }}"
+        src: "../../../files/themes/github/backgrounds/{{ item }}"
         dest: "/home/{{ default_user }}/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}/backgrounds/{{ item }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"

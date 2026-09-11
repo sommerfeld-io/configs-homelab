@@ -12,13 +12,13 @@ The role is intended to be included on every machine (like the other roles in `.
 
 Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
 
-The wallpapers shipped with the theme were originally sourced from `ansible-roles-collection/filesystem` (since removed there as unused) and copied into `files/github-theme/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
+The wallpapers shipped with the theme were originally sourced from `ansible-roles-collection/filesystem` (since removed there as unused) and copied into `files/themes/github/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
 
 Omarchy picks the initial wallpaper for a theme by sorting the files in `backgrounds/` and taking the first one, then cycles through the rest in that order. `11.jpg` is shipped as `0-11.jpg` so it sorts first and is used as the default background when the theme is applied for the first time.
 
 > **:bulb: NOTE:** Cosmetic-only assets that other themes ship (`preview.png`, `preview-unlock.png`, `unlock.png`) are generated screenshots, not hand-authored config, and are intentionally left out. The theme works without them, it's just missing a preview image in the theme picker.
 
-Tasks and files for this customization live in `tasks/github-theme/` and `files/github-theme/`.
+Tasks and files for this customization live in `tasks/themes/github/` and `files/themes/github/`.
 
 Switch to the theme once it has been rolled out:
 
@@ -56,7 +56,7 @@ Tasks for this customization live in `tasks/keybindings/`.
 
 The following variables are optional and have default values:
 
-| Variable                                            | Description                                                                              | Default                             |
-|------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------|
-| `{{ common_omarchy_customizations_github_theme_name }}`    | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)    | see [`main.yml`](defaults/main.yml) |
-| `{{ common_omarchy_customizations_default_browser }}`      | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser   | see [`main.yml`](defaults/main.yml) |
+| Variable                                                 | Description                                                                              | Default                             |
+|-------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------|
+| `{{ common_omarchy_customizations_github_theme_name }}`      | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)    | see [`main.yml`](defaults/main.yml) |
+| `{{ common_omarchy_customizations_default_browser }}`        | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser   | see [`main.yml`](defaults/main.yml) |
