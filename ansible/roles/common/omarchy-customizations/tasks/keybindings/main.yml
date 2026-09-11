@@ -60,7 +60,7 @@
           hl.unbind("SUPER + SHIFT + N")
           o.bind("SUPER + SHIFT + P", "GitHub Project", { webapp = "https://github.com/orgs/sommerfeld-io/projects/1/views/1", focus = true })
           o.bind("SUPER + SHIFT + W", "WhatsApp", { webapp = "https://web.whatsapp.com", focus = true })
-          o.bind("SUPER + SHIFT + G", "Grafana", { webapp = "https://sommerfeldio.grafana.net", focus = true })
+          o.bind("SUPER + SHIFT + G", "Grafana", { webapp = "https://sommerfeldio.grafana.net/d/node-fleet/linux-node-fleet-overview", focus = true })
           o.bind("SUPER + SHIFT + M", "Google Mail", { webapp = "https://mail.google.com/mail/u/0/?hl=de&tab=wm#inbox", focus = true })
           o.bind("SUPER + SHIFT + N", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r?pli=1", focus = true })
           o.bind("SUPER + SHIFT + K", "Keybindings", { webapp = "https://github.com/sebastian-sommerfeld-io/bookmarks/blob/main/omarchy-keybindings.md", focus = true })
