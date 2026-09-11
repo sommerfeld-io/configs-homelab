@@ -38,6 +38,7 @@ tasks:
       SOURCE_MDP: "0x10"
     desc: &screen-desc 'Switch inputs sources for screens'
     cmds:
+      ## Do not switch the curved monitor because caprica is only connected to the left monitor
       # - ddcutil -b {{ .MONITOR_CURVED }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_DP }}
       - ddcutil -b {{ .MONITOR_NORMAL }} setvcp {{ .CHANGE_INPUT_SOURCE }} {{ .SOURCE_HDMI_2 }}
 

@@ -60,6 +60,6 @@ Ubuntu Server (or Raspberry Pi OS) is used on RasPi Nodes, since there is curren
 
 ### Follow-Up Todos
 
-* [ ] Add the new RasPi Node to `ansible/playbooks/assets/global-taskfile.yml` for easy SSH connections.
+* [ ] Add the new RasPi Node to `ansible/roles/common/taskfile-dev/files/taskfile.yml` for easy SSH connections.
 * [ ] Setup password-less ssh connections from `picon` and `kobol` to the RasPi node
     * [ ] `ssh-copy-id sebastian@<NODE_NAME>.fritz.box`
