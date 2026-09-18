@@ -38,47 +38,42 @@
       register: common_omarchy_customizations_keybindings_bindings_file
 
     # Every key below ships a default binding (Google Photos, Omawrite, Signal, Music/
-    # Spotify, Editor - see /usr/share/omarchy/default/hypr/bindings/applications.lua),
-    # so the default must be unbound before the new one is added - otherwise Hyprland
-    # just stacks the new bind on top of the default and both fire.
+    # Spotify, Editor, Google Maps - see /usr/share/omarchy/default/hypr/bindings/
+    # applications.lua) or a default action (SUPER+L toggles the workspace layout - see
+    # tiling.lua), so each default must be unbound before the new one is added -
+    # otherwise Hyprland just stacks the new bind on top of the default and both fire.
     #
     # { webapp = "..." } resolves (helpers.lua) to `omarchy-launch-webapp`, which opens
     # the URL frameless (no address bar/tabs) via the installed Chromium-family
     # browser's --app mode - independent of the Firefox default-browser change above,
     # since omarchy-launch-webapp falls back to chromium.desktop for non-Chromium
     # browsers. `focus = true` makes repeat presses refocus the already-open window
-    # instead of opening a duplicate.
-    - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Rebind SUPER+SHIFT shortcuts to custom web apps
+    # instead of opening a duplicate. Sublime Text instead launches directly via `subl`
+    # ({ launch = "subl" }), and screen locking uses the omarchy-system-lock binary
+    # directly (the same command SUPER+CTRL+L already runs by default), not the
+    # interactive `omarchy system lock` CLI wrapper.
+    - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Rebind SUPER+SHIFT shortcuts to custom web apps, Sublime Text, and lock screen
       ansible.builtin.blockinfile:
         dest: "/home/{{ default_user }}/.config/hypr/bindings.lua"
-        marker: "-- {mark} ANSIBLE MANAGED BLOCK - custom web app keybindings"
+        marker: "-- {mark} ANSIBLE MANAGED BLOCK - custom web app, sublime text, and lock screen keybindings"
         block: |
-          hl.unbind("SUPER + SHIFT + P")
-          hl.unbind("SUPER + SHIFT + W")
+          hl.unbind("SUPER + SHIFT + A")
+          hl.unbind("SUPER + SHIFT + ALT +A")
+          hl.unbind("SUPER + SHIFT + B")
           hl.unbind("SUPER + SHIFT + G")
+          hl.unbind("SUPER + SHIFT + K")
           hl.unbind("SUPER + SHIFT + M")
           hl.unbind("SUPER + SHIFT + N")
+          hl.unbind("SUPER + SHIFT + P")
+          hl.unbind("SUPER + SHIFT + S")
+          hl.unbind("SUPER + SHIFT + W")
+          hl.unbind("SUPER + SHIFT + X")
+          hl.unbind("SUPER + L")
           o.bind("SUPER + SHIFT + P", "GitHub Project", { webapp = "https://github.com/orgs/sommerfeld-io/projects/1/views/1", focus = true })
+          o.bind("SUPER + SHIFT + S", "Sublime Text", { launch = "subl" })
           o.bind("SUPER + SHIFT + W", "WhatsApp", { webapp = "https://web.whatsapp.com", focus = true })
           o.bind("SUPER + SHIFT + G", "Grafana", { webapp = "https://sommerfeldio.grafana.net/d/node-fleet/linux-node-fleet-overview", focus = true })
           o.bind("SUPER + SHIFT + M", "Google Mail", { webapp = "https://mail.google.com/mail/u/0/?hl=de&tab=wm#inbox", focus = true })
           o.bind("SUPER + SHIFT + N", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r?pli=1", focus = true })
-          o.bind("SUPER + SHIFT + K", "Keybindings", { webapp = "https://github.com/sebastian-sommerfeld-io/bookmarks/blob/main/omarchy-keybindings.md", focus = true })
-      when: common_omarchy_customizations_keybindings_bindings_file.stat.exists
-
-    # SUPER+SHIFT+S defaults to a Google Maps web app, SUPER+L defaults to toggling the
-    # workspace layout (see /usr/share/omarchy/default/hypr/bindings/applications.lua and
-    # tiling.lua) - both must be unbound before the new bindings are added, otherwise
-    # Hyprland stacks the new bind on top of the default and both fire. Screen locking
-    # uses the omarchy-system-lock binary directly (the same command SUPER+CTRL+L already
-    # runs by default), not the interactive `omarchy system lock` CLI wrapper.
-    - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Rebind Sublime Text and lock screen shortcuts
-      ansible.builtin.blockinfile:
-        dest: "/home/{{ default_user }}/.config/hypr/bindings.lua"
-        marker: "-- {mark} ANSIBLE MANAGED BLOCK - sublime text and lock screen keybindings"
-        block: |
-          hl.unbind("SUPER + SHIFT + S")
-          hl.unbind("SUPER + L")
-          o.bind("SUPER + SHIFT + S", "Sublime Text", { launch = "subl" })
           o.bind("SUPER + L", "Lock screen", "omarchy-system-lock")
       when: common_omarchy_customizations_keybindings_bindings_file.stat.exists
