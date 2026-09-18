@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions
+# AI Agent Instructions
 
 ## Commit Messages: Conventional Commits
 
@@ -7,7 +7,7 @@ Always use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/
 **Format:** `<type>(optional scope): <description>`
 
 | Type | Effect | When to use |
-|------|--------|-------------|
+| ------ | -------- | ------------- |
 | `fix` | PATCH release | Patches a bug |
 | `feat` | MINOR release | Introduces a new feature |
 | `BREAKING CHANGE` footer | MAJOR release | Introduces a breaking API change |
