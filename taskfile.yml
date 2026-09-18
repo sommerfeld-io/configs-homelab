@@ -13,6 +13,9 @@ includes:
   cleanup: .task/cleanup/taskfile.yml
   common: .task/common/taskfile.yml
   inspec: tests/inspec/taskfile.yml
+  molecule:
+    taskfile: tests/molecule/taskfile.yml
+    dir: tests/molecule
 
 tasks:
 

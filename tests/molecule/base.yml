@@ -1,0 +1,32 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: ubuntu-25.04
+    image: ubuntu:25.04
+    pre_build_image: true
+    groups: [ubuntu]
+  - name: ubuntu-25.10
+    image: ubuntu:25.10
+    pre_build_image: true
+    groups: [ubuntu]
+  - name: ubuntu-26.04
+    image: ubuntu:26.04
+    pre_build_image: true
+    groups: [ubuntu]
+  - name: archlinux-base
+    image: archlinux:base
+    pre_build_image: true
+    groups: [archlinux]
+verifier:
+  name: ansible
+scenario:
+  test_sequence:
+    - dependency
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy

@@ -1,0 +1,11 @@
+---
+dependency:
+  name: galaxy
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "${MOLECULE_SCENARIO_DIRECTORY}/../../../../../ansible/roles/common"
+  playbooks:
+    prepare: ../../../prepare.yml
+    converge: converge.yml
+    verify: verify.yml

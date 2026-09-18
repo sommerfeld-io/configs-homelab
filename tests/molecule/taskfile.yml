@@ -1,0 +1,17 @@
+version: '3.42.1'
+
+vars:
+  MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config ../base.yml
+
+tasks:
+
+  test:
+    desc: Run every molecule scenario end-to-end
+    cmds:
+      - task: test:common
+
+  test:common:
+    desc: Run the common role group scenario end-to-end (taskfile-dev + omarchy-customizations, dependency, destroy, create, prepare, converge, idempotence, verify, destroy)
+    dir: common
+    cmds:
+      - "{{.MOLECULE_CMD}} test"
