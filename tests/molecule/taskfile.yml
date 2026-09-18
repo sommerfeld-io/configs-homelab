@@ -11,7 +11,9 @@ tasks:
       - task: test:common
 
   test:common:
-    desc: Run the common role group scenario end-to-end (taskfile-dev + omarchy-customizations, dependency, destroy, create, prepare, converge, idempotence, verify, destroy)
-    dir: common
-    cmds:
-      - "{{.MOLECULE_CMD}} test"
+    desc: &molecule-desc Run the {{ .DIR }} role group scenario end-to-end
+    vars:
+      DIR: common
+    dir: &molecule-dir "{{ .DIR }}"
+    cmds: &molecule-cmds
+      - "{{ .MOLECULE_CMD }} test"
