@@ -56,17 +56,29 @@ tasks:
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     vars:
-      GRAFANA_CLOUD_DOCS: docs/ansible/roles/grafana-cloud
-      GRAFANA_CLOUD_SRC: ansible/roles/grafana-cloud
+      ROLES_DOCS: docs/ansible/roles
+      ROLES_SRC: ansible/roles
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
         vars: { SRC: docs/index.md, DEST: README.md }
       - task: common:copy
         vars: { SRC: docs/license.md, DEST: LICENSE.md }
-      - mkdir -p {{ .GRAFANA_CLOUD_DOCS }}
+      - mkdir -p {{ .ROLES_DOCS }}/common
       - task: common:copy
-        vars: { SRC: "{{ .GRAFANA_CLOUD_SRC }}/alloy/README.md", DEST: "{{ .GRAFANA_CLOUD_DOCS }}/alloy.md" }
+        vars: { SRC: "{{ .ROLES_SRC }}/common/mount-disk/README.md", DEST: "{{ .ROLES_DOCS }}/common/mount-disk.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/common/omarchy-customizations/README.md", DEST: "{{ .ROLES_DOCS }}/common/omarchy-customizations.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/common/taskfile-dev/README.md", DEST: "{{ .ROLES_DOCS }}/common/taskfile-dev.md" }
+      - mkdir -p {{ .ROLES_DOCS }}/media
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/media/jellyfin/README.md", DEST: "{{ .ROLES_DOCS }}/media/jellyfin.md" }
+      - mkdir -p {{ .ROLES_DOCS }}/grafana-cloud
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/alloy/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/alloy.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/exporters/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/exporters.md" }
 
   docs:run:
     desc: Run the documentation server
