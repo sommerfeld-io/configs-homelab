@@ -41,6 +41,7 @@ task docs:generate          # Regenerate docs (copies index.md → README.md etc
 task ansible:ping           # Connectivity check
 task ansible:all            # Full provisioning
 task inspec:check           # Vendor & validate InSpec compliance profiles
+task molecule:test          # Run all Molecule scenarios (role groups) end-to-end
 ```
 
 Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run linters and fix errors.
@@ -63,4 +64,10 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
 
 ## Testing
 
-InSpec compliance profiles in `tests/inspec/{profile-name}/`. Run via `task inspec:run:<hostname>`.
+- **InSpec:** compliance profiles in `tests/inspec/{profile-name}/`. Run via `task inspec:run:<hostname>`.
+- **Molecule:** tests Ansible roles from `ansible/roles/ansible-roles-collection/` in Docker, without needing real hosts.
+    - Scenarios are grouped by role group under `tests/molecule/{role-group}/molecule/default/` (e.g. `common`), each defining `converge.yml` (applies the roles), `verify.yml` (asserts the result), and `molecule.yml` (points `ANSIBLE_ROLES_PATH` at the roles under test).
+    - Shared platform/driver config lives in `tests/molecule/base.yml` (Docker driver, Ubuntu + Arch Linux targets); shared OS bootstrapping (installing python3, creating the test user) lives in `tests/molecule/prepare.yml`.
+    - Run a single role group with `task molecule:test:<role-group>` (e.g. `task molecule:test:common`), or all of them with `task molecule:test`.
+    - Runs automatically in CI (`.github/workflows/pipeline.yml`, `molecule` job) after linting and InSpec checks, and gates the release stage.
+    - To test a new role group, add `tests/molecule/{role-group}/molecule/default/{converge,verify}.yml`, a `molecule.yml` following the `common` example, and a corresponding `test:{role-group}` task in `tests/molecule/taskfile.yml`.
