@@ -68,7 +68,7 @@ graph TD
 - **Binds:** `ansible/playbooks/*`, `ansible/hosts.yml`
 - **Prevents:** inventing a fourth ad hoc exception mechanism, or forcing an exception through the wrong one of the three
 - **Rule:**
-    - **(a) Per-host physical/hardware attachment** unique to one machine, with no accompanying service → an extra play scoped to that host, appended inside the group playbook (e.g. the pi4-01/pi4-02 disk-mount plays appended in `raspi.yml`, since a USB HDD is physically connected to only one Pi with no service layered on top).
+    - **(a) Per-host physical/hardware attachment** unique to one machine, with no accompanying service → an extra play scoped to that host, appended inside the group playbook (e.g. the pi4-0003/pi4-0001 disk-mount plays appended in `raspi.yml`, since a USB HDD is physically connected to only one Pi with no service layered on top).
     - **(b) A specific service/capability** not every node of a role needs → a playbook targeting the host(s) it applies to directly — either one named host, or the entire node-role group when the capability is opt-in and not run by the default umbrella playbook (e.g. `desktop-media.yml` targets `caprica.fritz.box` by name even though caprica is inventoried under `ubuntu_server`). **Tiebreaker with (a):** when a hardware attachment exists solely to support a specific service (e.g. caprica's mounted disks feeding `media/jellyfin`), treat the whole thing as (b) and bundle the mount into that service's playbook — (a) is reserved for hardware attachments with no accompanying service.
     - **(c) A capability that cuts across node-role groups** → a dedicated capability group in the inventory (e.g. `ollama`) carrying its own host-vars, when the capability needs per-host inventory data. When it needs no extra host-vars — just "run on the union of these groups" — an inline group-union in the playbook's `hosts:` line (e.g. `grafana-agents.yml`'s `hosts: ubuntu_desktop:ubuntu_server:raspi`) is equivalent and does not require inventing a dedicated group.
 
@@ -101,7 +101,7 @@ graph TD
 | Concern | Convention |
 | --- | --- |
 | Naming (entities, files, interfaces, events) | Ansible task names follow `Category  ----  Subcategory  ----  Action` (double-space + 4-dash separators). Task-runner tasks are namespaced by colon (`ansible:ping`, `inspec:check`), mirroring the root `taskfile.yml`'s sub-taskfile `includes:`. Adding a new playbook = a new task reusing the shared `&ansible-desc`/`&ansible-cmd` YAML anchors in `ansible/taskfile.yml`. |
-| Data & formats (host naming) | Workstations/servers: `<name>.fritz.box`, e.g. caprica, kobol, picon. Raspberry Pi nodes: `pi<model>-<NN>.fritz.box`, e.g. pi4-01..05, pi5-01. |
+| Data & formats (host naming) | Workstations/servers: `<name>.fritz.box`, e.g. caprica, kobol, picon. Raspberry Pi nodes: `pi<model>-<NN>.fritz.box`, e.g. pi4-0003..05, pi5-0004. |
 | State & cross-cutting (mutation, secrets, drift verification) | State ownership: AD-1. Secrets: AD-6. Drift verification is dual and independent (InSpec static baseline + Grafana Alloy live telemetry) — neither claims to be the sole source of truth on "is this node correct." |
 
 ## Stack
@@ -146,7 +146,7 @@ graph TD
     subgraph Inventory Groups
         UD["ubuntu_desktop<br/>kobol, picon"]
         US["ubuntu_server<br/>caprica"]
-        RP["raspi<br/>pi4-01, pi4-02, pi4-03, pi4-05, pi5-01"]
+        RP["raspi<br/>pi4-0003, pi4-0001, pi4-0002, pi4-dradis, pi5-0004"]
         OL["ollama (cross-cutting)<br/>caprica, picon"]
     end
     OP(["Operator<br/>runs ansible-playbook locally"])

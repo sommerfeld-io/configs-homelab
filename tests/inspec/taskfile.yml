@@ -73,10 +73,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-01:
+  run:pi4-0003:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-01.fritz.box
+      HOST: pi4-0003.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile
@@ -84,10 +84,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-02:
+  run:pi4-0001:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-02.fritz.box
+      HOST: pi4-0001.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile
@@ -95,10 +95,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-03:
+  run:pi4-0002:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-03.fritz.box
+      HOST: pi4-0002.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile
@@ -106,10 +106,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-05:
+  run:pi4-dradis:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-05.fritz.box
+      HOST: pi4-dradis.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile
@@ -117,10 +117,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi5-01:
+  run:pi5-0004:
     desc: *inspec-run-desc
     vars:
-      HOST: pi5-01.fritz.box
+      HOST: pi5-0004.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile

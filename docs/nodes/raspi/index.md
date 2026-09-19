@@ -6,29 +6,29 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as l
 
 The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle dedicated roles. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet. No Pi has password-less SSH connections configured so they cannot easily connect to any other node.
 
-| Name     | Model    | RAM | Main Storage  | Role            |
-|----------|----------|-----|---------------|-----------------|
-| `pi4-01` | RasPi 4B | 8GB | 32GB microSD  | -               |
-| `pi4-02` | RasPi 4B | 8GB | 32GB microSD  | -               |
-| `pi4-03` | RasPi 4B | 8GB | 64GB microSD  | -               |
-| `pi4-05` | RasPi 4B | 8GB | 64GB microSD  | Ubuntu Desktop  |
-| `pi5-01` | RasPi 5  | 8GB | 128GB microSD | -               |
+| Name         | Model    | RAM | Main Storage  | Role                             |
+| ------------ | -------- | --- | ------------- | -------------------------------- |
+| `pi4-dradis` | RasPi 4B | 8GB | 64GB microSD  | Connected to Fritz!Box via cable |
+| `pi4-0001`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi4-0002`   | RasPi 4B | 8GB | 64GB microSD  | -                                |
+| `pi4-0003`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi5-0004`   | RasPi 5  | 8GB | 128GB microSD | -                                |
 
 Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
 
 ```ditaa
-+-------------+      +----------+----------+      +-------------+
-|  SSD 120GB  +------+  pi4-01  |  pi4-02  +------+  SSD 240GB  |
-+-------------+      +----------+----------+      +-------------+
-                     |  pi5-01  |  pi4-03  |
-                     +----------+----------+
-                     |  Power              |
-                     +---------------------+
-                     |  Network Switch     |
-                     +---------------------+
++-------------+      +------------+------------+      +-------------+
+|  SSD 120GB  +------+  pi4-0003  |  pi4-0001  +------+  SSD 240GB  |
++-------------+      +------------+------------+      +-------------+
+                     |  pi5-0004  |  pi4-0002  |
+                     +------------+------------+
+                     |  Power                  |
+                     +-------------------------+
+                     |  Network Switch         |
+                     +-------------------------+
 ```
 
-`pi4-05` is in a separate case outside of the rack
+`pi4-dradis` is in a separate case outside of the rack
 
 > **:NOTE:** Node numbers are not necessarily sequential. When a node is reinstalled, its number is incremented to avoid hostname conflicts with the FritzBox router.
 

@@ -35,7 +35,7 @@ The PRD's §1 Vision keeps only the NTP incident as motivating narrative ("the a
 
 The PRFAQ's Internal FAQ and coaching notes explicitly address this: the README says Pi nodes can run "Raspberry Pi OS or Ubuntu Server," but every current Pi actually runs Ubuntu. This was investigated across two coaching stages — first flagged (Stage 1) as a possible cosmetic inaccuracy worth fixing, then explicitly corrected (Stage 4): "NOT an inaccuracy needing a fix... Raspberry Pi OS is deliberately kept available for a future Pi node needing a desktop environment... Retract the earlier finding."
 
-The PRD's Glossary (§3) defines the Pi fleet (pi4-01/02/03/05, pi5-01) without any mention of OS, and nowhere states that Raspberry Pi OS remains a deliberately-supported future option despite no current node using it. A reader of the PRD alone, cross-referencing the README, would rediscover the apparent discrepancy with none of the resolution already reached in the PRFAQ — re-opening a question that was deliberately closed.
+The PRD's Glossary (§3) defines the Pi fleet (pi4-0003/02/03/05, pi5-0004) without any mention of OS, and nowhere states that Raspberry Pi OS remains a deliberately-supported future option despite no current node using it. A reader of the PRD alone, cross-referencing the README, would rediscover the apparent discrepancy with none of the resolution already reached in the PRFAQ — re-opening a question that was deliberately closed.
 
 ### 4. The "why Ansible/InSpec/a whole repo instead of shell scripts" rationale isn't stated anywhere
 

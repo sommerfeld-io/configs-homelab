@@ -32,11 +32,11 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh-copy-id sebastian@caprica.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@picon.fritz.box` (to allow Ansible runs against this host)
     - [ ] `ssh-copy-id sebastian@kobol.fritz.box` (to allow Ansible runs against this host)
-    - [ ] `ssh-copy-id sebastian@pi4-01.fritz.box`
-    - [ ] `ssh-copy-id sebastian@pi4-02.fritz.box`
-    - [ ] `ssh-copy-id sebastian@pi4-03.fritz.box`
-    - [ ] `ssh-copy-id sebastian@pi4-05.fritz.box`
-    - [ ] `ssh-copy-id sebastian@pi5-01.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-0003.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-0001.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-0002.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi4-dradis.fritz.box`
+    - [ ] `ssh-copy-id sebastian@pi5-0004.fritz.box`
 
 ## Configuration and package installation
 
