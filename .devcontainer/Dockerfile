@@ -1,8 +1,6 @@
 FROM sommerfeldio/devcontainer:0.28.1
 LABEL maintainer="sebastian@sommerfeld.io"
 
-COPY --from=ghcr.io/astral-sh/uv:0.12.5 /uv /uvx /bin/
-
 # A plain uv-managed venv (not `pip install --break-system-packages`, which would pollute
 # the system Python) so every ansible-dev-tools console script (ansible-playbook,
 # ansible-lint, ansible-navigator, molecule, ...) lands directly on PATH. `uv tool install`
