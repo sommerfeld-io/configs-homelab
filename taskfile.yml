@@ -74,6 +74,9 @@ tasks:
       - mkdir -p {{ .ROLES_DOCS }}/media
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/media/jellyfin/README.md", DEST: "{{ .ROLES_DOCS }}/media/jellyfin.md" }
+      - mkdir -p {{ .ROLES_DOCS }}/raspi
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/raspi/pihole/README.md", DEST: "{{ .ROLES_DOCS }}/raspi/pihole.md" }
       - mkdir -p {{ .ROLES_DOCS }}/grafana-cloud
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/alloy/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/alloy.md" }

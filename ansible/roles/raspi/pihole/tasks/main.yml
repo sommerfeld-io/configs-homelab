@@ -1,0 +1,46 @@
+---
+- name: RasPi  ----  Pi-hole  ----  Deploy Pi-hole
+  block:
+
+    - name: RasPi  ----  Pi-hole  ----  Create deploy directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - "{{ raspi_pihole_path }}"
+
+    - name: RasPi  ----  Pi-hole  ----  Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: files/docker-compose.yml
+        dest: "{{ raspi_pihole_path }}/docker-compose.yml"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+      register: raspi_pihole_compose_file
+
+    - name: RasPi  ----  Pi-hole  ----  Start containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ raspi_pihole_path }}"
+        state: present
+        pull: missing
+
+    - name: RasPi  ----  Pi-hole  ----  Restart stack on config change
+      community.docker.docker_compose_v2:
+        project_src: "{{ raspi_pihole_path }}"
+        state: restarted
+      when: raspi_pihole_compose_file.changed
+
+    - name: RasPi  ----  Pi-hole  ----  Verify Pi-hole is running
+      community.docker.docker_container_info:
+        name: pihole
+      register: raspi_pihole_info
+
+    - name: RasPi  ----  Pi-hole  ----  Assert Pi-hole is running
+      ansible.builtin.assert:
+        that:
+          - raspi_pihole_info.container.State.Running
+        fail_msg: "Pi-hole container is not running"
+        success_msg: "Pi-hole container is running"

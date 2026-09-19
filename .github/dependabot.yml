@@ -30,3 +30,8 @@ updates:
     directory: ansible/roles/media/jellyfin/files
     schedule:
       interval: weekly
+
+  - package-ecosystem: docker-compose
+    directory: ansible/roles/raspi/pihole/files
+    schedule:
+      interval: weekly

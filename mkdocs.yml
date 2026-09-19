@@ -89,6 +89,7 @@ nav:
       - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
       - Grafana Cloud / Exporters: ansible/roles/grafana-cloud/exporters.md
       - Media / Jellyfin: ansible/roles/media/jellyfin.md
+      - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
   - ansible/molecule.md
   - license.md
   - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
