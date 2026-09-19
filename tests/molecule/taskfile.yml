@@ -1,5 +1,10 @@
 version: '3.42.1'
 
+env:
+  # Molecule/Ansible only colorize output when they detect a TTY. GitHub Actions runners
+  # attach a pipe, not a TTY, so force colors on regardless.
+  PY_COLORS: '1'
+
 vars:
   MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config ../base.yml
 
