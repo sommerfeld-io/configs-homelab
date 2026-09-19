@@ -12,6 +12,6 @@ LABEL maintainer="sebastian@sommerfeld.io"
 ENV ANSIBLE_DEV_TOOLS_VENV=/opt/venvs/ansible-dev-tools
 USER root
 RUN uv venv "${ANSIBLE_DEV_TOOLS_VENV}" \
-    && uv pip install --python "${ANSIBLE_DEV_TOOLS_VENV}/bin/python" ansible-dev-tools
+    && uv pip install --python "${ANSIBLE_DEV_TOOLS_VENV}/bin/python" --only-binary :all: ansible-dev-tools
 USER vscode
 ENV PATH="${ANSIBLE_DEV_TOOLS_VENV}/bin:${PATH}"
