@@ -1,0 +1,24 @@
+version: '3.42.1'
+
+env:
+  # Molecule/Ansible only colorize output when they detect a TTY. GitHub Actions runners
+  # attach a pipe, not a TTY, so force colors on regardless.
+  PY_COLORS: '1'
+
+vars:
+  MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config ../base.yml
+
+tasks:
+
+  test:
+    desc: Run every molecule scenario end-to-end
+    cmds:
+      - task: test:common
+
+  test:common:
+    desc: &molecule-desc Run the {{ .DIR }} role group scenario end-to-end
+    vars:
+      DIR: common
+    dir: &molecule-dir "{{ .DIR }}"
+    cmds: &molecule-cmds
+      - "{{ .MOLECULE_CMD }} test"

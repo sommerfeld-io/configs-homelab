@@ -70,7 +70,7 @@ nav:
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
   - Omarchy Workstations: nodes/omarchy-workstations/index.md
   - Raspberry Pi Nodes: nodes/raspi/index.md
-  - Ansible Playbooks:
+  - Ansible - Playbooks:
       - All (provision full Homelab): ansible/playbooks/all.md
       - Cleanup: ansible/playbooks/cleanup.md
       - Desktop: ansible/playbooks/desktop.md
@@ -82,8 +82,14 @@ nav:
       - Repositories: ansible/playbooks/repositories.md
       - Scan: ansible/playbooks/scan.md
       - Server: ansible/playbooks/server.md
-  - Ansible Roles:
+  - Ansible - Roles:
+      - Common / Mount HDD: ansible/roles/common/mount-disk.md
+      - Common / Omarchy Customizations: ansible/roles/common/omarchy-customizations.md
+      - Common / Taskfile Dev: ansible/roles/common/taskfile-dev.md
       - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
+      - Grafana Cloud / Exporters: ansible/roles/grafana-cloud/exporters.md
+      - Media / Jellyfin: ansible/roles/media/jellyfin.md
+  - ansible/molecule.md
   - license.md
   - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
   - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR

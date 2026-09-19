@@ -1,0 +1,30 @@
+---
+- name: Prepare (Ubuntu family)
+  hosts: ubuntu
+  gather_facts: false
+  tasks:
+    - name: Install python3
+      ansible.builtin.raw: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+      changed_when: false
+
+- name: Prepare (Archlinux family)
+  hosts: archlinux
+  gather_facts: false
+  tasks:
+    - name: Disable pacman sandboxed download user (breaks under Docker's default seccomp profile)
+      ansible.builtin.raw: sed -i 's/^DownloadUser/#DownloadUser/' /etc/pacman.conf
+      changed_when: false
+
+    - name: Install python3
+      ansible.builtin.raw: pacman -Sy --noconfirm python
+      changed_when: false
+
+- name: Prepare (all hosts)
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Create default_user test account (with home dir + skel .bashrc)
+      ansible.builtin.user:
+        name: molecule
+        state: present
+        create_home: true

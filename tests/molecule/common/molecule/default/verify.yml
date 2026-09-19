@@ -1,0 +1,60 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check docker_stacks_dir exists
+      ansible.builtin.stat:
+        path: /home/molecule/.docker-stacks
+      register: stacks_dir
+
+    - name: Assert docker_stacks_dir exists
+      ansible.builtin.assert:
+        that: stacks_dir.stat.exists and stacks_dir.stat.isdir
+
+    - name: Check taskfile.yml was copied
+      ansible.builtin.stat:
+        path: /home/molecule/taskfile.yml
+      register: taskfile
+
+    - name: Assert taskfile.yml exists
+      ansible.builtin.assert:
+        that: taskfile.stat.exists
+
+    - name: Check .bashrc contains TASK_X_REMOTE_TASKFILES
+      ansible.builtin.command: grep -q 'TASK_X_REMOTE_TASKFILES=1' /home/molecule/.bashrc
+      changed_when: false
+
+    - name: Verify Arch-specific customizations
+      when: ansible_facts['os_family'] == "Archlinux"
+      block:
+        - name: Check GitHub theme directory exists
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark
+          register: theme_dir
+
+        - name: Assert GitHub theme directory exists
+          ansible.builtin.assert:
+            that: theme_dir.stat.exists and theme_dir.stat.isdir
+
+        - name: Check colors.toml was copied
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark/colors.toml
+          register: colors_toml
+
+        - name: Assert colors.toml exists
+          ansible.builtin.assert:
+            that: colors_toml.stat.exists
+
+        - name: Check default background was copied
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark/backgrounds/0-11.jpg
+          register: background
+
+        - name: Assert default background exists
+          ansible.builtin.assert:
+            that: background.stat.exists
+
+        - name: Check mimeapps.list sets Firefox as default browser
+          ansible.builtin.command: grep -q 'text/html=firefox.desktop' /home/molecule/.config/mimeapps.list
+          changed_when: false

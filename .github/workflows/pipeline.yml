@@ -93,6 +93,34 @@ jobs:
         run: task "inspec:check:$PROFILE"
         shell: bash
 
+  # ----- Molecule stage --------------------------------------------------------------------------
+
+  molecule:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: [
+      'lint',
+      'shellcheck',
+      'check-inspec-profile',
+    ]
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Install Task
+        uses: arduino/setup-task@v3.0.0
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Run Molecule tests
+        run: task molecule:test
+        shell: bash
+
   # ----- Build Docs stage ------------------------------------------------------------------------
 
   generate-docs:
@@ -135,6 +163,7 @@ jobs:
     uses: sommerfeld-io/.github/.github/workflows/lib-release-code.yml@main
     needs: [
       'generate-docs',
+      'molecule',
     ]
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     secrets:
