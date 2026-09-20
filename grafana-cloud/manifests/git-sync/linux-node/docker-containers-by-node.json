@@ -4039,7 +4039,10 @@
     ],
     "liveNow": false,
     "preload": false,
-    "tags": [],
+    "tags": [
+      "cadvisor",
+      "docker"
+    ],
     "timeSettings": {
       "autoRefresh": "",
       "autoRefreshIntervals": [

@@ -842,6 +842,9 @@
       }
     ],
     "preload": false,
+    "tags": [
+      "summary"
+    ],
     "refresh": "",
     "schemaVersion": 42,
     "templating": {
