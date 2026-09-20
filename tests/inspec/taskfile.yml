@@ -73,10 +73,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-0003:
+  run:pi4-0006:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-0003.fritz.box
+      HOST: pi4-0006.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile
@@ -84,10 +84,10 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-0001:
+  run:pi4-0005:
     desc: *inspec-run-desc
     vars:
-      HOST: pi4-0001.fritz.box
+      HOST: pi4-0005.fritz.box
     cmds:
       - for: ['raspi-baseline']
         task: internal:run-profile

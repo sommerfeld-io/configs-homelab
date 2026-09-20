@@ -9,16 +9,16 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle ded
 | Name         | Model    | RAM | Main Storage  | Role                             |
 | ------------ | -------- | --- | ------------- | -------------------------------- |
 | `pi4-dradis` | RasPi 4B | 8GB | 64GB microSD  | Connected to Fritz!Box via cable |
-| `pi4-0001`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi4-0005`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
 | `pi4-0002`   | RasPi 4B | 8GB | 64GB microSD  | -                                |
-| `pi4-0003`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi4-0006`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
 | `pi5-0004`   | RasPi 5  | 8GB | 128GB microSD | -                                |
 
 Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
 
 ```ditaa
 +-------------+      +------------+------------+      +-------------+
-|  SSD 120GB  +------+  pi4-0003  |  pi4-0001  +------+  SSD 240GB  |
+|  SSD 120GB  +------+  pi4-0006  |  pi4-0005  +------+  SSD 240GB  |
 +-------------+      +------------+------------+      +-------------+
                      |  pi5-0004  |  pi4-0002  |
                      +------------+------------+

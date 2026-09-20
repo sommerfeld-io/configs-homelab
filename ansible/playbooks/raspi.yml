@@ -50,8 +50,8 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/atuin
 
-- name: Install and configure pi4-0001 specifics
-  hosts: pi4-0001.fritz.box
+- name: Install and configure pi4-0005 specifics
+  hosts: pi4-0005.fritz.box
   gather_facts: true
   become: true
   vars_files:
@@ -64,8 +64,8 @@
         mount_disk_uuid: "c9a69508-2ed1-4d74-9494-72da540a1421" # run `sudo blkid` to get ID
         mount_disk_path: "/mnt/data"
 
-- name: Install and configure pi4-0003 specifics
-  hosts: pi4-0003.fritz.box
+- name: Install and configure pi4-0006 specifics
+  hosts: pi4-0006.fritz.box
   gather_facts: true
   become: true
   vars_files:

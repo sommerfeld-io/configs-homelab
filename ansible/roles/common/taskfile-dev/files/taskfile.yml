@@ -84,10 +84,10 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:pi4-0001:
+  ssh:connect:pi4-0005:
     vars:
       USER: sebastian
-      HOST: pi4-0001.fritz.box
+      HOST: pi4-0005.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
@@ -98,10 +98,10 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:pi4-0003:
+  ssh:connect:pi4-0006:
     vars:
       USER: sebastian
-      HOST: pi4-0003.fritz.box
+      HOST: pi4-0006.fritz.box
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 

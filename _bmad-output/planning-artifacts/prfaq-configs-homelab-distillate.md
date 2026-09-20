@@ -42,7 +42,7 @@ purpose: "Token-efficient context for downstream PRD creation"
 
 ## Technical context (verified via artifact scan + user confirmation)
 
-- Fleet: 3 Ubuntu workstations/servers (caprica, kobol, picon) + 5 Raspberry Pi nodes (pi4-0003/02/03/05, pi5-0004, all currently Ubuntu Server or Desktop) + virtual machines.
+- Fleet: 3 Ubuntu workstations/servers (caprica, kobol, picon) + 5 Raspberry Pi nodes (pi4-0006/02/03/05, pi5-0004, all currently Ubuntu Server or Desktop) + virtual machines.
 - Automated via Ansible: ~24 roles in a separate git submodule (ansible-roles-collection) covering packages, shell config, filesystem, Docker, dev tools, Grafana Alloy telemetry, repo cloning, cleanup, ClamAV, hardening, and more.
 - The roles submodule runs its own CI test matrix against multiple Ubuntu versions, on every push and weekly — a real, already-operational safety net against the most likely failure mode (Ubuntu upgrades breaking role assumptions).
 - Compliance: 4 InSpec profiles (desktop-baseline, server-baseline, raspi-baseline, ollama) layering dev-sec/linux-baseline (pinned) + org's own sommerfeld-io/inspec-profiles.

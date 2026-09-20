@@ -155,7 +155,7 @@ Concept type: internal/personal tool — founding vision document for an existin
 
 Product name: "Homelab Configs" (chosen by user).
 
-Customer: sole homelab operator managing a mixed fleet — 3 Ubuntu workstations/servers (caprica, kobol, picon) + 5 Raspberry Pi nodes (pi4-0003/02/03/05, pi5-0004, all running Ubuntu despite README wording) + virtual machines.
+Customer: sole homelab operator managing a mixed fleet — 3 Ubuntu workstations/servers (caprica, kobol, picon) + 5 Raspberry Pi nodes (pi4-0006/02/03/05, pi5-0004, all running Ubuntu despite README wording) + virtual machines.
 
 Problem (concrete anecdotes, user-recalled, NOT documented in-repo — docs/incident-responses/ is empty, confirmed via artifact scan):
 - Docker containers meant to run identically across hosts behaved inconsistently.

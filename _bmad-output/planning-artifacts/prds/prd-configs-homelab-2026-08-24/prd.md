@@ -42,7 +42,7 @@ Homelab Configs turns "setting up a machine" from a remembered ritual into a run
 ## 3. Glossary
 
 - **Node** — Any managed machine in the fleet: an Ubuntu workstation/server or a Raspberry Pi. VMs are nodes too.
-- **Fleet** — The full set of nodes: caprica, kobol, picon (workstations/servers), pi4-0003/02/03/05 and pi5-0004 (Raspberry Pi), plus VMs. All current Pi nodes run Ubuntu (Server or Desktop); Raspberry Pi OS remains a deliberately supported target for a possible future Pi node that needs a desktop environment, even though no current node uses it.
+- **Fleet** — The full set of nodes: caprica, kobol, picon (workstations/servers), pi4-0006/02/03/05 and pi5-0004 (Raspberry Pi), plus VMs. All current Pi nodes run Ubuntu (Server or Desktop); Raspberry Pi OS remains a deliberately supported target for a possible future Pi node that needs a desktop environment, even though no current node uses it.
 - **Role** (node role) — The category a node belongs to for provisioning purposes: desktop, server, or raspi. Determines which playbook and InSpec profile apply.
 - **Ansible role** — A reusable, versioned unit of provisioning logic in the `ansible-roles-collection` submodule (packages, shell config, filesystem, Docker, dev tools, Grafana Alloy, repo cloning, cleanup, ClamAV, hardening, etc.). Distinct from "node role" above — context disambiguates.
 - **Playbook** — An Ansible entry point that applies one or more Ansible roles to nodes of a given node role.
