@@ -4,6 +4,8 @@ This role deploys [Pi-hole](https://pi-hole.net) as a Docker Compose service, pr
 
 The compose file is copied to `{{ raspi_pihole_path }}` and the container is brought up with `pull: missing` so the image is only pulled when not already present.
 
+Before the stack starts, the role frees host port 53 by disabling `systemd-resolved`'s DNS stub listener (`DNSStubListener=no` in `/etc/systemd/resolved.conf`) and re-pointing `/etc/resolv.conf` at the non-stub resolver — otherwise Pi-hole fails to bind port 53 with "address already in use". This is persistent across reboots since it's a config file change, not a runtime toggle.
+
 ## Default Variables
 
 | Variable            | Default       | Description                             |

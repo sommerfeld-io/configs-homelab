@@ -1,4 +1,36 @@
 ---
+- name: RasPi  ----  Pi-hole  ----  Free port 53 for DNS
+  when: ansible_facts['os_family'] == "Debian"
+  block:
+
+    - name: RasPi  ----  Pi-hole  ----  Disable systemd-resolved DNS stub listener
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#?DNSStubListener='
+        line: 'DNSStubListener=no'
+        state: present
+      register: raspi_pihole_resolved_conf
+
+    - name: RasPi  ----  Pi-hole  ----  Point resolv.conf at the non-stub resolver
+      ansible.builtin.file:
+        src: /run/systemd/resolve/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: true
+      register: raspi_pihole_resolv_conf
+
+    - name: RasPi  ----  Pi-hole  ----  Restart systemd-resolved
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: restarted
+      when: raspi_pihole_resolved_conf.changed or raspi_pihole_resolv_conf.changed
+
+    - name: RasPi  ----  Pi-hole  ----  Verify port 53 is free
+      ansible.builtin.wait_for:
+        port: 53
+        state: stopped
+        timeout: 10
+
 - name: RasPi  ----  Pi-hole  ----  Deploy Pi-hole
   block:
 
