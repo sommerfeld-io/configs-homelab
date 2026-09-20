@@ -27,6 +27,7 @@
         "ansible/roles/*/*/vars",
         "ansible/roles/ansible-roles-collection/tests/**",
         "ansible/tasks",
+		"ansible/templates",
 		"ansible/vars",
 
         "docs/ai-implementation-plans",

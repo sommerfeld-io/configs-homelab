@@ -70,6 +70,7 @@ nav:
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
   - Omarchy Workstations: nodes/omarchy-workstations/index.md
   - Raspberry Pi Nodes: nodes/raspi/index.md
+  - Node Configs: nodes/node-configs.md
   - Ansible - Playbooks:
       - All (provision full Homelab): ansible/playbooks/all.md
       - Cleanup: ansible/playbooks/cleanup.md

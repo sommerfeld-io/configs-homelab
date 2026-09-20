@@ -1,0 +1,101 @@
+# Node Configs
+
+<!--
+  This file is generated automatically by the "ping" Ansible playbook
+  (ansible/playbooks/ping.yml). Manual edits will be overwritten the
+  next time the playbook runs.
+-->
+
+{% macro node_detail(node) -%}
+### `{{ node.name }}`
+
+- **Groups:** {{ node.groups if node.groups else 'n/a' }}
+- **Primary IP:** `{{ node.primary_ip }}` (interface `{{ node.iface }}`, gateway `{{ node.gateway }}`)
+- **Network interfaces:**
+{{ node.interfaces_md }}
+- **OS:** {{ node.os_name }} {{ node.os_version }}
+- **Kernel:** `{{ node.kernel }}`
+- **Architecture:** `{{ node.arch }}`
+- **CPU:** {{ node.cpu }} ({{ node.vcpus }} vCPUs, {{ node.cores }} cores)
+- **Memory:** {{ node.mem_total }} MB total / {{ node.mem_free }} MB free
+- **Root filesystem:** {{ node.root_total_gb }} GB total / {{ node.root_avail_gb }} GB available
+- **Virtualization:** {{ node.virt_role }} / {{ node.virt_type }}
+- **Service manager:** `{{ node.service_mgr }}`
+- **Facts collected at:** {{ node.facts_at }}
+{%- endmacro %}
+{%- set noise_interfaces = '^(lo|docker|br-|veth|virbr)' %}
+{%- set nodes = [] %}
+{%- for host in ansible_play_hosts_all | sort %}
+{%-   set hv = hostvars[host] %}
+{%-   if hv.ansible_facts is defined %}
+{%-     set ifaces = [] %}
+{%-     for iface in hv.ansible_facts.interfaces | default([]) | sort %}
+{%-       if not (iface | regex_search(noise_interfaces)) %}
+{%-         set iface_facts = hv.ansible_facts[iface] | default({}) %}
+{%-         set has_ip = iface_facts.ipv4 is defined and iface_facts.ipv4.address is defined %}
+{%-         set _ = ifaces.append({
+              'name': iface,
+              'address': iface_facts.ipv4.address if has_ip else '',
+              'prefix': (iface_facts.ipv4.prefix | default('')) if has_ip else '',
+              'active': iface_facts.active | default(false),
+              'has_ip': has_ip,
+            }) %}
+{%-       endif %}
+{%-     endfor %}
+{%-     set iface_lines = [] %}
+{%-     for f in ifaces %}
+{%-       set _ = iface_lines.append('    - `' ~ f.name ~ '`' ~ ('' if f.active else ' (down)') ~ ': ' ~ ((f.address ~ (('/' ~ f.prefix) if f.prefix else '')) if f.has_ip else 'no IP assigned') ~ (' (default route)' if (f.has_ip and f.name == (hv.ansible_facts.default_ipv4.interface | default(''))) else '')) %}
+{%-     endfor %}
+{%-     set interfaces_md = (iface_lines | join('\n')) if iface_lines else '    - n/a (host unreachable)' %}
+{%-     set root_mount = (hv.ansible_facts.mounts | default([]) | selectattr('mount', 'equalto', '/') | list | first) | default({}) %}
+{%-     set release = hv.ansible_facts.distribution_release | default('') %}
+{%-     set _ = nodes.append({
+          'name': host,
+          'groups': hv.group_names | default([]) | join(', '),
+          'primary_ip': hv.ansible_facts.default_ipv4.address | default('n/a'),
+          'gateway': hv.ansible_facts.default_ipv4.gateway | default('n/a'),
+          'iface': hv.ansible_facts.default_ipv4.interface | default('n/a'),
+          'interfaces_md': interfaces_md,
+          'os_name': hv.ansible_facts.distribution | default('n/a'),
+          'os_version': (hv.ansible_facts.distribution_version | default('n/a')) ~ (' (' ~ release ~ ')' if release else ''),
+          'kernel': hv.ansible_facts.kernel | default('n/a'),
+          'arch': hv.ansible_facts.architecture | default('n/a'),
+          'cpu': (hv.ansible_facts.processor | default([]) | last) | default('n/a'),
+          'vcpus': hv.ansible_facts.processor_vcpus | default('n/a'),
+          'cores': hv.ansible_facts.processor_cores | default('n/a'),
+          'mem_total': hv.ansible_facts.memtotal_mb | default('n/a'),
+          'mem_free': hv.ansible_facts.memfree_mb | default('n/a'),
+          'root_total_gb': ((root_mount.size_total | default(0)) / (1024 ** 3)) | round(1),
+          'root_avail_gb': ((root_mount.size_available | default(0)) / (1024 ** 3)) | round(1),
+          'virt_role': hv.ansible_facts.virtualization_role | default('n/a'),
+          'virt_type': hv.ansible_facts.virtualization_type | default('n/a'),
+          'service_mgr': hv.ansible_facts.service_mgr | default('n/a'),
+          'facts_at': hv.ansible_facts.date_time.iso8601 | default('n/a'),
+        }) %}
+{%-   endif %}
+{%- endfor %}
+{%- set col_hostname = (['Hostname'] + (nodes | map(attribute='name') | list)) | map('length') | max %}
+{%- set col_groups = (['Groups'] + (nodes | map(attribute='groups') | list)) | map('length') | max %}
+{%- set col_ip = (['Primary IP'] + (nodes | map(attribute='primary_ip') | list)) | map('length') | max %}
+{%- set col_os = (['OS'] + (nodes | map(attribute='os_name') | list)) | map('length') | max %}
+{%- set col_osver = (['OS Version'] + (nodes | map(attribute='os_version') | list)) | map('length') | max %}
+{%- set node_blocks = [] %}
+{%- for node in nodes %}
+{%- set _ = node_blocks.append(node_detail(node)) %}
+{%- endfor %}
+{% set body %}
+## Fleet Overview
+
+| {{ '%-*s' % (col_hostname, 'Hostname') }} | {{ '%-*s' % (col_groups, 'Groups') }} | {{ '%-*s' % (col_ip, 'Primary IP') }} | {{ '%-*s' % (col_os, 'OS') }} | {{ '%-*s' % (col_osver, 'OS Version') }} |
+|{{ '-' * (col_hostname + 2) }}|{{ '-' * (col_groups + 2) }}|{{ '-' * (col_ip + 2) }}|{{ '-' * (col_os + 2) }}|{{ '-' * (col_osver + 2) }}|
+{% for node in nodes -%}
+| {{ '%-*s' % (col_hostname, node.name) }} | {{ '%-*s' % (col_groups, node.groups) }} | {{ '%-*s' % (col_ip, node.primary_ip) }} | {{ '%-*s' % (col_os, node.os_name) }} | {{ '%-*s' % (col_osver, node.os_version) }} |
+{% endfor %}
+
+## Node Details
+
+{{ node_blocks | join('\n\n') }}
+{% endset %}
+Last generated: {{ now(utc=true).strftime('%Y-%m-%d %H:%M UTC') }}
+
+{{ (body | regex_replace('\n{3,}', '\n\n') | trim) ~ '\n' }}

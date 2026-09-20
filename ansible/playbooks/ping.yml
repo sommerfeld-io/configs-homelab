@@ -1,7 +1,7 @@
 ---
 - name: Ping all nodes on the homelab
   hosts: all
-  gather_facts: false
+  gather_facts: true
   become: false
   tasks:
 
@@ -58,3 +58,12 @@
         - name: SSH  ----  Print id_rsa.pub
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
+
+    - name: Docs  ----  Generate node configs documentation
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/node-configs.md.j2"
+        dest: "{{ playbook_dir }}/../../docs/nodes/node-configs.md"
+        mode: "0644"
+      delegate_to: localhost
+      become: false
+      run_once: true

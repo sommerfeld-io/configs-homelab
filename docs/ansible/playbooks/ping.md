@@ -6,6 +6,7 @@ This Ansible playbook performs a lightweight connectivity and Python execution c
 
 - **Node Reachability Check**: Connects to every configured host in the Ansible inventory
 - **Ansible Ping Validation**: Executes `ansible.builtin.ping` to confirm remote module execution works
-- **Fast Health Verification**: Runs without fact gathering for a quick up/down status check
+- **Fact Gathering**: Collects OS, network, and hardware facts from every reachable node
+- **Node Configs Documentation**: Regenerates [`docs/nodes/node-configs.md`](../../nodes/node-configs.md) with each reachable node's IP addresses, OS/version, and other interesting facts
 
 The playbook targets all inventory nodes to provide a simple, centralized operational readiness check for the full home lab.
