@@ -92,6 +92,9 @@ nav:
       - Media / Jellyfin: ansible/roles/media/jellyfin.md
       - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
   - ansible/molecule.md
+  - Incidents:
+      - Runbooks:
+          - incidents/runbooks/pihole.md
   - license.md
   - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
   - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR

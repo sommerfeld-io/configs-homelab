@@ -32,7 +32,7 @@
 
         "docs/ai-implementation-plans",
         "docs/ansible/**",
-        "docs/incident-responses",
+        "docs/incidents/**",
 		"docs/nodes/**",
 
         "grafana-cloud/manifests/git-sync/**",
