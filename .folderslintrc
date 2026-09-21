@@ -37,7 +37,7 @@
 		"docs/nodes/**",
 
         "grafana-cloud/manifests/git-sync/**",
-
+        "grafana-cloud/manifests/unsycned/**",
         "nodes/*/*",
 
         "tests/inspec/*/controls",
