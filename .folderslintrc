@@ -32,7 +32,8 @@
 
         "docs/ai-implementation-plans",
         "docs/ansible/**",
-        "docs/incidents/**",
+        "docs/incidents/reports",
+        "docs/incidents/runbooks",
 		"docs/nodes/**",
 
         "grafana-cloud/manifests/git-sync/**",
