@@ -46,6 +46,15 @@
 - name: RasPi  ----  Fritz Box Exporter  ----  Apply pending stack restart
   ansible.builtin.meta: flush_handlers
 
+- name: RasPi  ----  Fritz Box Exporter  ----  Wait for exporter readiness
+  ansible.builtin.uri:
+    url: http://127.0.0.1:9042/ready
+    status_code: [200, 503]
+  register: raspi_fritz_box_exporter_ready_probe
+  until: raspi_fritz_box_exporter_ready_probe.status == 200
+  retries: 12
+  delay: 5
+
 - name: RasPi  ----  Fritz Box Exporter  ----  Verify metrics endpoint
   ansible.builtin.uri:
     url: http://127.0.0.1:9042/metrics
