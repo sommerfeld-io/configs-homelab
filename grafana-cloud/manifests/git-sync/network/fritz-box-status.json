@@ -110,9 +110,13 @@
                     {
                       "options": {
                         "0": {
+                          "color": "red",
+                          "index": 0,
                           "text": "Disconnected"
                         },
                         "1": {
+                          "color": "green",
+                          "index": 1,
                           "text": "Connected"
                         }
                       },
@@ -122,6 +126,8 @@
                       "options": {
                         "match": "null",
                         "result": {
+                          "color": "orange",
+                          "index": 2,
                           "text": "N/A"
                         }
                       },
@@ -132,12 +138,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "rgba(245, 54, 54, 0.9)",
+                        "color": "transparent",
                         "value": 0
-                      },
-                      {
-                        "color": "green",
-                        "value": 1
                       }
                     ]
                   },
@@ -271,12 +273,12 @@
                         "value": 0
                       },
                       {
-                        "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 33
+                        "color": "orange",
+                        "value": 66
                       },
                       {
                         "color": "red",
-                        "value": 66
+                        "value": 95
                       }
                     ]
                   },
@@ -420,12 +422,12 @@
                         "value": 0
                       },
                       {
-                        "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 33
+                        "color": "orange",
+                        "value": 66
                       },
                       {
-                        "color": "#e24d42",
-                        "value": 66
+                        "color": "red",
+                        "value": 95
                       }
                     ]
                   },
@@ -565,11 +567,7 @@
                         "value": 0
                       },
                       {
-                        "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 1
-                      },
-                      {
-                        "color": "rgba(50, 172, 45, 0.97)",
+                        "color": "green",
                         "value": 1
                       }
                     ]
@@ -691,7 +689,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "blue",
+                        "color": "purple",
                         "value": 0
                       }
                     ]
@@ -896,8 +894,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 30,
-                    "gradientMode": "opacity",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -921,17 +919,12 @@
                       "mode": "off"
                     }
                   },
-                  "max": 62000000,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
                         "color": "green",
                         "value": 0
-                      },
-                      {
-                        "color": "red",
-                        "value": 80
                       }
                     ]
                   },
@@ -1103,9 +1096,9 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
-                    "barWidthFactor": 0.6,
+                    "barWidthFactor": 0.8,
                     "drawStyle": "bars",
-                    "fillOpacity": 100,
+                    "fillOpacity": 50,
                     "gradientMode": "none",
                     "hideFrom": {
                       "legend": false,
@@ -1114,7 +1107,7 @@
                     },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
-                    "lineWidth": 1,
+                    "lineWidth": 0,
                     "pointSize": 5,
                     "scaleDistribution": {
                       "type": "linear"
@@ -1135,12 +1128,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
+                        "color": "text",
                         "value": 0
-                      },
-                      {
-                        "color": "red",
-                        "value": 80
                       }
                     ]
                   },
@@ -1171,7 +1160,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "fixedColor": "#e24d42",
+                          "fixedColor": "purple",
                           "mode": "fixed"
                         }
                       }
@@ -1186,7 +1175,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "fixedColor": "#ba43a9",
+                          "fixedColor": "orange",
                           "mode": "fixed"
                         }
                       }
@@ -1201,7 +1190,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "fixedColor": "#e24d42",
+                          "fixedColor": "yellow",
                           "mode": "fixed"
                         }
                       }
@@ -1328,7 +1317,7 @@
                         "value": 0
                       },
                       {
-                        "color": "rgba(50, 172, 45, 0.97)",
+                        "color": "green",
                         "value": 1
                       }
                     ]
@@ -1499,9 +1488,11 @@
                       "group": "prometheus",
                       "kind": "DataQuery",
                       "spec": {
+                        "editorMode": "code",
                         "expr": "gateway_wlan_current_connections",
                         "interval": "",
-                        "legendFormat": "{{wlan}}"
+                        "legendFormat": "{{wlan}}",
+                        "range": true
                       },
                       "version": "v0"
                     },
@@ -1516,7 +1507,7 @@
           "description": "",
           "id": 24,
           "links": [],
-          "title": "# WLAN Clients",
+          "title": "WLAN Clients - pegasus",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -1636,7 +1627,7 @@
           "description": "",
           "id": 26,
           "links": [],
-          "title": "# Active Hosts",
+          "title": "Active Hosts - Ethernet + all Wifi",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -1644,7 +1635,7 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "fixedColor": "blue",
+                    "fixedColor": "green",
                     "mode": "fixed"
                   },
                   "custom": {
@@ -1696,7 +1687,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "blue",
+                        "color": "text",
                         "value": 0
                       }
                     ]
@@ -1898,8 +1889,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 30,
-                    "gradientMode": "opacity",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1923,7 +1914,6 @@
                       "mode": "off"
                     }
                   },
-                  "max": 12000000,
                   "min": 0,
                   "thresholds": {
                     "mode": "absolute",
@@ -2250,6 +2240,7 @@
                       "group": "prometheus",
                       "kind": "DataQuery",
                       "spec": {
+                        "editorMode": "code",
                         "expr": "gateway_host_active",
                         "format": "table",
                         "instant": true,
@@ -2311,7 +2302,7 @@
           "description": "",
           "id": 32,
           "links": [],
-          "title": "Network Devices",
+          "title": "Network Devices - Ethernet + all Wifi",
           "vizConfig": {
             "group": "table",
             "kind": "VizConfig",
@@ -2333,15 +2324,23 @@
                     {
                       "options": {
                         "0": {
+                          "color": "orange",
+                          "index": 0,
                           "text": "inactive"
                         },
                         "1": {
+                          "color": "green",
+                          "index": 1,
                           "text": "active"
                         },
                         "802.11": {
+                          "color": "blue",
+                          "index": 2,
                           "text": "WLAN"
                         },
                         "Ethernet": {
+                          "color": "purple",
+                          "index": 3,
                           "text": "LAN"
                         }
                       },
@@ -2360,56 +2359,7 @@
                   },
                   "unit": "none"
                 },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Status"
-                    },
-                    "properties": [
-                      {
-                        "id": "thresholds",
-                        "value": {
-                          "mode": "absolute",
-                          "steps": [
-                            {
-                              "color": "red",
-                              "value": 0
-                            },
-                            {
-                              "color": "green",
-                              "value": 1
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Connection Type"
-                    },
-                    "properties": [
-                      {
-                        "id": "thresholds",
-                        "value": {
-                          "mode": "absolute",
-                          "steps": [
-                            {
-                              "color": "yellow",
-                              "value": 0
-                            },
-                            {
-                              "color": "green",
-                              "value": 80
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                ]
+                "overrides": []
               },
               "options": {
                 "cellHeight": "md",
@@ -2506,9 +2456,10 @@
                       "mode": "none"
                     },
                     "thresholdsStyle": {
-                      "mode": "off"
+                      "mode": "dashed"
                     }
                   },
+                  "fieldMinMax": false,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2893,7 +2844,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "blue",
+                        "color": "purple",
                         "value": 0
                       }
                     ]
@@ -3009,9 +2960,13 @@
                     {
                       "options": {
                         "0": {
+                          "color": "red",
+                          "index": 0,
                           "text": "Disconnected"
                         },
                         "1": {
+                          "color": "green",
+                          "index": 1,
                           "text": "Connected"
                         }
                       },
@@ -3021,6 +2976,8 @@
                       "options": {
                         "match": "null",
                         "result": {
+                          "color": "orange",
+                          "index": 2,
                           "text": "N/A"
                         }
                       },
@@ -3031,16 +2988,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "rgba(245, 54, 54, 0.9)",
+                        "color": "transparent",
                         "value": 0
-                      },
-                      {
-                        "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 1
-                      },
-                      {
-                        "color": "#1f78c1",
-                        "value": 1
                       }
                     ]
                   },
@@ -3127,7 +3076,7 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-13"
+                          "name": "panel-21"
                         },
                         "height": 4,
                         "width": 4,
@@ -3140,7 +3089,7 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-21"
+                          "name": "panel-13"
                         },
                         "height": 4,
                         "width": 4,
@@ -3374,22 +3323,23 @@
             "spec": {
               "collapse": false,
               "layout": {
-                "kind": "AutoGridLayout",
+                "kind": "GridLayout",
                 "spec": {
-                  "columnWidthMode": "wide",
                   "items": [
                     {
-                      "kind": "AutoGridLayoutItem",
+                      "kind": "GridLayoutItem",
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-32"
-                        }
+                        },
+                        "height": 27,
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
                       }
                     }
-                  ],
-                  "maxColumnCount": 1,
-                  "rowHeightMode": "tall"
+                  ]
                 }
               },
               "title": "Network Devices"
