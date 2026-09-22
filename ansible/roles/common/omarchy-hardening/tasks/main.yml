@@ -1,0 +1,6 @@
+---
+- name: Omarchy Hardening  ----  login.defs
+  ansible.builtin.import_tasks: login-defs/main.yml
+
+- name: Omarchy Hardening  ----  Mount Options
+  ansible.builtin.import_tasks: mount-options/main.yml

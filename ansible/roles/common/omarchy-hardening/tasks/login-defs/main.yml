@@ -1,0 +1,23 @@
+---
+# Omarchy-only hardening (Arch/Hyprland). Guarded by os_family so this never runs
+# against Debian/Ubuntu hosts, matching the internal os_family guard pattern used
+# elsewhere in the ansible-roles-collection (e.g. bash, docker) and in
+# omarchy-customizations.
+#
+# Fixes dev-sec linux-baseline control os-13: Arch's shadow package ships
+# /etc/login.defs without PASS_MAX_DAYS/PASS_MIN_DAYS/PASS_WARN_AGE at all, and with
+# an ENV_SUPATH/ENV_PATH that's missing /usr/sbin, /sbin and /bin compared to what
+# the profile expects.
+- name: Omarchy Hardening  ----  login.defs  ----  Arch
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+
+    - name: Omarchy Hardening  ----  login.defs  ----  Arch  ----  Configure password aging and PATH policy
+      ansible.builtin.lineinfile:
+        dest: /etc/login.defs
+        regexp: "^{{ item.key }}\\b"
+        line: "{{ item.key }}\t{{ item.value }}"
+        state: present
+      loop: "{{ common_omarchy_hardening_login_defs }}"
+      loop_control:
+        label: "{{ item.key }}"

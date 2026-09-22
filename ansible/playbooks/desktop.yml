@@ -50,6 +50,8 @@
     - ansible.builtin.include_role:
         name: ../roles/common/omarchy-customizations
     - ansible.builtin.include_role:
+        name: ../roles/common/omarchy-hardening
+    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/ansible
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/conky
