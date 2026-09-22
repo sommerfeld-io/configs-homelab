@@ -21,8 +21,10 @@
       ansible.builtin.assert:
         that: taskfile.stat.exists
 
-    - name: Check .bashrc contains TASK_X_REMOTE_TASKFILES
-      ansible.builtin.command: grep -q 'TASK_X_REMOTE_TASKFILES=1' /home/molecule/.bashrc
+    - name: Check .bashrc does not contain TASK_X_REMOTE_TASKFILES
+      ansible.builtin.command: grep -q 'TASK_X_REMOTE_TASKFILES=' /home/molecule/.bashrc
+      register: bashrc_grep
+      failed_when: bashrc_grep.rc == 0
       changed_when: false
 
     - name: Verify Arch-specific customizations

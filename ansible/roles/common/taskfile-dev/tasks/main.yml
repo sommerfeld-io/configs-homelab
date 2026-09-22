@@ -9,14 +9,6 @@
   with_items:
     - "{{ docker_stacks_dir }}"
 
-- name: Config  ----  Allows remote taskfiles to be used by adding param to .bashrc
-  ansible.builtin.lineinfile:
-    dest: "/home/{{ default_user }}/.bashrc"
-    state: present
-    line: "{{ item }}"
-  with_items:
-    - export TASK_X_REMOTE_TASKFILES=1
-
 - name: Task  ----  Configure  ----  Copy taskfile and configs
   ansible.builtin.copy:
     src: "{{ item.src }}"
