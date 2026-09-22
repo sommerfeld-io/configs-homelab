@@ -85,6 +85,12 @@
   vars_files:
     - ../vars/main.yml
     - ../vars/raspi.yml
+    - ../host_vars/pi4-dradis/fritz-box-vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/raspi/pihole
+
+    - ansible.builtin.include_role:
+        name: ../roles/raspi/fritz-box-exporter
+      tags:
+        - fritz-box-exporter

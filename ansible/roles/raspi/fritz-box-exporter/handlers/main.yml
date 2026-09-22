@@ -1,0 +1,9 @@
+---
+- name: RasPi  ----  Fritz Box Exporter  ----  Restart stack
+  community.docker.docker_compose_v2:
+    project_src: "{{ raspi_fritz_box_exporter_path }}"
+    state: restarted
+  environment:
+    FRITZBOX_USERNAME: "{{ fritzbox_username }}"
+    FRITZBOX_PASSWORD: "{{ fritzbox_password }}"
+  no_log: true

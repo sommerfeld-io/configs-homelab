@@ -443,3 +443,40 @@ prometheus.relabel "integrations_ollama" {
   // All Ollama metrics are forwarded as-is.
   // Add a keep rule here to limit cardinality if needed.
 }
+
+/*
+ * FRITZ!Box cable-modem metrics - only scraped on pi4-dradis, where the exporter runs.
+ * On other nodes, the target simply shows up=0; no Alloy errors.
+ */
+discovery.relabel "integrations_fritz_box_exporter" {
+  targets = [{
+    __address__      = "localhost:9042",
+    __metrics_path__ = "/metrics",
+    __scheme__       = "http",
+  }]
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/fritz-box-exporter"
+  }
+}
+
+prometheus.scrape "integrations_fritz_box_exporter" {
+  targets    = discovery.relabel.integrations_fritz_box_exporter.output
+  forward_to = [prometheus.relabel.integrations_fritz_box_exporter.receiver]
+  job_name   = "integrations/fritz-box-exporter"
+
+  scrape_interval = "30s"
+}
+
+prometheus.relabel "integrations_fritz_box_exporter" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  // All fritz-box-exporter metrics are forwarded as-is.
+  // Add a keep rule here to limit cardinality if needed, once real series names are confirmed.
+}
