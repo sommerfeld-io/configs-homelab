@@ -33,4 +33,5 @@ include_controls 'linux-baseline' do
   skip_control 'sysctl-27'
   skip_control 'sysctl-28'
   skip_control 'sysctl-30'
+  skip_control 'sysctl-35'
 end

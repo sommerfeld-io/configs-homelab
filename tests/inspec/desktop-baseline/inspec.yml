@@ -12,7 +12,7 @@ supports:
 depends:
   - name: linux-baseline
     git: https://github.com/dev-sec/linux-baseline.git
-    tag: 2.9.0
+    tag: 2.11.0
   - name: linux-essentials
     git: https://github.com/sommerfeld-io/inspec-profiles.git
     branch: main
