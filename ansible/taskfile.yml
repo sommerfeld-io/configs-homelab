@@ -74,9 +74,15 @@ tasks:
   vault:
     vars:
       VAULT_FILE: vars/vault.yml
-    desc: &ansible-vault-desc Show and edit the contents of the Ansible Vault file
+    desc: &ansible-vault-desc Show and edit the contents of the Ansible Vault file '{{ .VAULT_FILE }}'
     cmds: &ansible-vault-cmd
       - ansible-vault edit {{ .VAULT_FILE }}
+
+  vault:host_vars:pi4-dradis:fritz-box:
+    vars:
+      VAULT_FILE: host_vars/pi4-dradis/fritz-box-vault.yml
+    desc: *ansible-vault-desc
+    cmds: *ansible-vault-cmd
 
   vault:grafana:
     vars:

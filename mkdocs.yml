@@ -91,6 +91,7 @@ nav:
       - Grafana Cloud / Exporters: ansible/roles/grafana-cloud/exporters.md
       - Media / Jellyfin: ansible/roles/media/jellyfin.md
       - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
+      - RasPi / Fritz-Box Exporter: ansible/roles/raspi/fritz-box-exporter.md
   - ansible/molecule.md
   - Incidents:
       - Runbooks:

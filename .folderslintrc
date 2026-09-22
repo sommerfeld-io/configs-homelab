@@ -18,10 +18,12 @@
 		"_bmad/**",
 		"_bmad-output/**",
 
+		"ansible/host_vars/*",
 		"ansible/playbooks",
 		"ansible/roles/*/*/defaults",
         "ansible/roles/*/*/files/**",
         "ansible/roles/*/*/handlers",
+        "ansible/roles/*/*/meta",
         "ansible/roles/*/*/tasks/**",
         "ansible/roles/*/*/templates",
         "ansible/roles/*/*/vars",

@@ -77,6 +77,8 @@ tasks:
       - mkdir -p {{ .ROLES_DOCS }}/raspi
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/raspi/pihole/README.md", DEST: "{{ .ROLES_DOCS }}/raspi/pihole.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/raspi/fritz-box-exporter/README.md", DEST: "{{ .ROLES_DOCS }}/raspi/fritz-box-exporter.md" }
       - mkdir -p {{ .ROLES_DOCS }}/grafana-cloud
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/alloy/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/alloy.md" }

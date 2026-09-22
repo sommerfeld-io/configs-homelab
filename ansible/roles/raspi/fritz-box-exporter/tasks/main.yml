@@ -1,0 +1,69 @@
+---
+- name: RasPi  ----  Fritz Box Exporter  ----  Create deploy directory
+  ansible.builtin.file:
+    path: "{{ raspi_fritz_box_exporter_path }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rwx,g=rx,o=rx
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Copy docker-compose.yml
+  ansible.builtin.copy:
+    src: files/docker-compose.yml
+    dest: "{{ raspi_fritz_box_exporter_path }}/docker-compose.yml"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rw,g=r,o=r
+  register: raspi_fritz_box_exporter_compose_file
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Copy metrics-lua-cable.json
+  ansible.builtin.copy:
+    src: files/metrics-lua-cable.json
+    dest: "{{ raspi_fritz_box_exporter_path }}/metrics-lua-cable.json"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rw,g=r,o=r
+  register: raspi_fritz_box_exporter_metrics_file
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Start containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ raspi_fritz_box_exporter_path }}"
+    state: present
+    pull: always
+    wait: true
+  environment:
+    FRITZBOX_USERNAME: "{{ fritzbox_username }}"
+    FRITZBOX_PASSWORD: "{{ fritzbox_password }}"
+  no_log: true
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Notify restart handler on config change
+  ansible.builtin.debug:
+    msg: Config changed, stack will be recreated
+  changed_when: >-
+    raspi_fritz_box_exporter_compose_file.changed or raspi_fritz_box_exporter_metrics_file.changed
+  notify: RasPi  ----  Fritz Box Exporter  ----  Restart stack
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Apply pending stack restart
+  ansible.builtin.meta: flush_handlers
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Wait for exporter readiness
+  ansible.builtin.uri:
+    url: http://127.0.0.1:9042/ready
+    status_code: [200, 503]
+  register: raspi_fritz_box_exporter_ready_probe
+  until: raspi_fritz_box_exporter_ready_probe.status == 200
+  retries: 12
+  delay: 5
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Verify metrics endpoint
+  ansible.builtin.uri:
+    url: http://127.0.0.1:9042/metrics
+    return_content: true
+  register: raspi_fritz_box_exporter_metrics_probe
+
+- name: RasPi  ----  Fritz Box Exporter  ----  Assert exporter metrics are present
+  ansible.builtin.assert:
+    that:
+      - "'gateway_' in raspi_fritz_box_exporter_metrics_probe.content"
+    fail_msg: fritz-box-exporter /metrics did not return expected series
+    success_msg: fritz-box-exporter is serving metrics

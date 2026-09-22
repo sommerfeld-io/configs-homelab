@@ -1,0 +1,18 @@
+---
+## See <https://github.com/sberk42/fritzbox_exporter>
+services:
+  fritz-box-exporter:
+    image: ghcr.io/sberk42/fritzbox_exporter/fritzbox_exporter:latest
+    container_name: fritz-box-exporter
+    restart: unless-stopped
+    environment:
+      USERNAME: ${FRITZBOX_USERNAME}
+      PASSWORD: ${FRITZBOX_PASSWORD}
+      GATEWAY_URL: http://fritz.box:49000
+      GATEWAY_LUAURL: http://fritz.box
+      LISTEN_ADDRESS: 0.0.0.0:9042
+      LUA_METRICS_FILE: /config/metrics-lua-cable.json
+    volumes:
+      - ./metrics-lua-cable.json:/config/metrics-lua-cable.json:ro
+    ports:
+      - 9042:9042

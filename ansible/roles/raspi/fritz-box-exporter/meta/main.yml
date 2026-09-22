@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: fritz_box_exporter
+  description: Deploys a Prometheus exporter for AVM FRITZ!Box cable-modem metrics
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies: []

@@ -3,6 +3,11 @@
   when: ansible_facts['os_family'] == "Debian"
   block:
 
+    - name: RasPi  ----  Pi-hole  ----  Check for an already-running Pi-hole container
+      community.docker.docker_container_info:
+        name: pihole
+      register: raspi_pihole_existing_container
+
     - name: RasPi  ----  Pi-hole  ----  Disable systemd-resolved DNS stub listener
       ansible.builtin.lineinfile:
         path: /etc/systemd/resolved.conf
@@ -30,6 +35,9 @@
         port: 53
         state: stopped
         timeout: 10
+      when: >-
+        not (raspi_pihole_existing_container.exists and
+        raspi_pihole_existing_container.container.State.Running)
 
 - name: RasPi  ----  Pi-hole  ----  Deploy Pi-hole
   block:
