@@ -38,3 +38,4 @@ repos:
         name: lint-repo
         language: script
         entry: /bin/bash -c 'task lint'
+        pass_filenames: false
