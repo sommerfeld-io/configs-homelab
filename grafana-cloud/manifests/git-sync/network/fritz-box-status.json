@@ -136,11 +136,7 @@
                         "value": 0
                       },
                       {
-                        "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 1
-                      },
-                      {
-                        "color": "blue",
+                        "color": "green",
                         "value": 1
                       }
                     ]
@@ -3108,7 +3104,7 @@
                           "name": "panel-29"
                         },
                         "height": 4,
-                        "width": 4,
+                        "width": 7,
                         "x": 4,
                         "y": 0
                       }
@@ -3122,7 +3118,7 @@
                         },
                         "height": 4,
                         "width": 5,
-                        "x": 8,
+                        "x": 11,
                         "y": 0
                       }
                     },
@@ -3134,8 +3130,8 @@
                           "name": "panel-13"
                         },
                         "height": 4,
-                        "width": 3,
-                        "x": 13,
+                        "width": 4,
+                        "x": 16,
                         "y": 0
                       }
                     },
@@ -3147,8 +3143,8 @@
                           "name": "panel-21"
                         },
                         "height": 4,
-                        "width": 3,
-                        "x": 16,
+                        "width": 4,
+                        "x": 20,
                         "y": 0
                       }
                     }
