@@ -689,7 +689,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "purple",
+                        "color": "blue",
                         "value": 0
                       }
                     ]
@@ -1160,7 +1160,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "fixedColor": "purple",
+                          "fixedColor": "yellow",
                           "mode": "fixed"
                         }
                       }
@@ -2844,7 +2844,7 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "purple",
+                        "color": "blue",
                         "value": 0
                       }
                     ]
