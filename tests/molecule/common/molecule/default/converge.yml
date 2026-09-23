@@ -15,4 +15,3 @@
   roles:
     - taskfile-dev
     - omarchy-customizations
-    - omarchy-hardening
