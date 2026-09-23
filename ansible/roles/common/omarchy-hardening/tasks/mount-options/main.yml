@@ -13,6 +13,10 @@
 # corrupting fstab or failing to remount. This also makes the task a safe no-op
 # inside the Molecule test containers, where /boot, /home and /var/log are just
 # plain directories on the root filesystem rather than separate mounts.
+#
+# Always carries `nofail`: if the derived device/fstype ever mismatches what
+# fstab needs, a failed mount at boot degrades to a missing mountpoint instead
+# of blocking local-fs.target and dropping systemd into emergency mode.
 - name: Omarchy Hardening  ----  Mount Options  ----  Arch
   when: ansible_facts['os_family'] == "Archlinux"
   block:
@@ -20,7 +24,7 @@
     - name: Omarchy Hardening  ----  Mount Options  ----  Arch  ----  Harden nosuid/nodev
       vars:
         common_omarchy_hardening_mount_entry: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', item) | list | first | default({}) }}"
-        common_omarchy_hardening_mount_opts: "{{ (common_omarchy_hardening_mount_entry.get('options', '').split(',') + ['nosuid', 'nodev']) | unique | reject('equalto', '') | join(',') }}"
+        common_omarchy_hardening_mount_opts: "{{ (common_omarchy_hardening_mount_entry.get('options', '').split(',') + ['nosuid', 'nodev', 'nofail']) | unique | reject('equalto', '') | join(',') }}"
       ansible.posix.mount:
         path: "{{ item }}"
         src: "{{ common_omarchy_hardening_mount_entry.get('device', '') }}"
