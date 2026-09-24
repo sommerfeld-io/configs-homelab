@@ -12,7 +12,9 @@
     # which resolves the browser via `xdg-settings get default-web-browser`. That in
     # turn reads the [Default Applications] section of ~/.config/mimeapps.list, so
     # changing the system default browser here - not bindings.lua - is what makes
-    # those keybindings open Firefox instead of Chromium.
+    # those keybindings open Firefox instead of Chromium. SUPER+SHIFT+RETURN is
+    # additionally rebound to launch Firefox directly further below, so it no longer
+    # depends on the xdg default resolving correctly.
     - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Set default browser
       community.general.ini_file:
         path: "/home/{{ default_user }}/.config/mimeapps.list"
@@ -49,10 +51,12 @@
     # since omarchy-launch-webapp falls back to chromium.desktop for non-Chromium
     # browsers. `focus = true` makes repeat presses refocus the already-open window
     # instead of opening a duplicate. Sublime Text instead launches directly via `subl`
-    # ({ launch = "subl" }), and screen locking uses the omarchy-system-lock binary
-    # directly (the same command SUPER+CTRL+L already runs by default), not the
-    # interactive `omarchy system lock` CLI wrapper.
-    - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Rebind SUPER+SHIFT shortcuts to custom web apps, Sublime Text, and lock screen
+    # ({ launch = "subl" }), SUPER+SHIFT+RETURN launches Firefox directly
+    # ({ launch = "firefox" }) instead of going through omarchy-launch-browser, and
+    # screen locking uses the omarchy-system-lock binary directly (the same command
+    # SUPER+CTRL+L already runs by default), not the interactive `omarchy system lock`
+    # CLI wrapper.
+    - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Rebind SUPER+SHIFT shortcuts (Firefox, web apps, Sublime, lock)
       ansible.builtin.blockinfile:
         dest: "/home/{{ default_user }}/.config/hypr/bindings.lua"
         marker: "-- {mark} ANSIBLE MANAGED BLOCK - custom web app, sublime text, and lock screen keybindings"
@@ -70,7 +74,9 @@
           hl.unbind("SUPER + SHIFT + V")
           hl.unbind("SUPER + SHIFT + W")
           hl.unbind("SUPER + SHIFT + X")
+          hl.unbind("SUPER + SHIFT + RETURN")
           hl.unbind("SUPER + L")
+          o.bind("SUPER + SHIFT + RETURN", "Firefox", { launch = "firefox" })
           o.bind("SUPER + SHIFT + P", "GitHub Project", { webapp = "https://github.com/orgs/sommerfeld-io/projects/1/views/1", focus = true })
           o.bind("SUPER + SHIFT + S", "Sublime Text", { launch = "subl" })
           o.bind("SUPER + SHIFT + W", "WhatsApp", { webapp = "https://web.whatsapp.com", focus = true })

@@ -32,6 +32,8 @@ Omarchy's default `SUPER+SHIFT+RETURN` (and `SUPER+SHIFT+B`, private browsing) k
 
 Instead of touching `bindings.lua`, this customization sets `{{ common_omarchy_customizations_default_browser }}` as the default handler for `text/html`, `x-scheme-handler/http`, `x-scheme-handler/https`, `x-scheme-handler/about` and `x-scheme-handler/unknown` in `~/.config/mimeapps.list`. This makes every browser-launching keybinding (and any other app that opens links via the desktop default) open Firefox instead of Chromium.
 
+On top of that, `SUPER+SHIFT+RETURN` is explicitly rebound (in the ansible-managed block in `~/.config/hypr/bindings.lua`, see below) to launch `firefox` directly via `{ launch = "firefox" }`. This way the keybinding opens Firefox regardless of whether `omarchy-launch-browser` resolves the xdg default browser correctly.
+
 It also rebinds a handful of `SUPER+SHIFT+<key>` shortcuts (in an ansible-managed block in `~/.config/hypr/bindings.lua`) to open specific web apps frameless (no address bar/tabs), via Omarchy's `{ webapp = "..." }` binding helper:
 
 | Keybinding       | App             | URL                                                                 | Default it replaces        |
