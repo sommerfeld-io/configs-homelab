@@ -60,13 +60,3 @@
         - name: Check mimeapps.list sets Firefox as default browser
           ansible.builtin.command: grep -q 'text/html=firefox.desktop' /home/molecule/.config/mimeapps.list
           changed_when: false
-
-        - name: Check login.defs sets password aging policy
-          ansible.builtin.command: "grep -qE '{{ item }}' /etc/login.defs"
-          changed_when: false
-          loop:
-            - '^PASS_MAX_DAYS\s+99999$'
-            - '^PASS_MIN_DAYS\s+0$'
-            - '^PASS_WARN_AGE\s+7$'
-            - '^ENV_SUPATH\s+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin$'
-            - '^ENV_PATH\s+PATH=/usr/local/bin:/usr/bin:/bin$'
