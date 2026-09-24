@@ -14,5 +14,7 @@
 - [ ] Run through the Omarchy setup wizard (hostname, user, disk encryption, etc.).
 - [ ] Initialize SSH and other mandatory things using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/omarchy.sh | bash -`
 - [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<hostname>.fritz.box` from all relevant machines. Allowing password-less ssh connections is essential for Ansible to work properly. — _Disposition: permanently accepted_
-- [ ] Install machine using the Ansible configs from this repo: [Playbook "desktop"](../../ansible/playbooks/desktop.md) (`task ansible:desktop`)
-- [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
+- [ ] Install machine using the Ansible configs from this repo
+    - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md) (`task ansible:desktop`)
+    - [ ] [Playbook "desktop"](../../ansible/playbooks/grafana-agents.md) (`task ansible:grafana:agents`)
+    - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
