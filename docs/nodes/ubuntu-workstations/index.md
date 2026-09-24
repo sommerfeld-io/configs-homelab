@@ -37,6 +37,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh-copy-id sebastian@pi4-0002.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-dradis.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi5-0004.fritz.box`
+- [ ] Once the machine is provisioned, run the [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task ansible:ssh:trust`) for password-less SSH between the nodes themselves (e.g. from `caprica` to `picon`). The connections are configured in `ansible/vars/ssh-trust.yml`.
 
 ## Configuration and package installation
 

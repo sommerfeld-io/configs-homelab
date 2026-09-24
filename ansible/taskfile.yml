@@ -59,6 +59,12 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
+  ssh:trust:
+    vars:
+      PLAYBOOK: ssh-trust.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
   scan:
     vars:
       PLAYBOOK: scan.yml

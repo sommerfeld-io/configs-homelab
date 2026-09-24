@@ -83,6 +83,7 @@ nav:
       - Repositories: ansible/playbooks/repositories.md
       - Scan: ansible/playbooks/scan.md
       - Server: ansible/playbooks/server.md
+      - SSH Trust: ansible/playbooks/ssh-trust.md
   - Ansible - Roles:
       - Common / Mount HDD: ansible/roles/common/mount-disk.md
       - Common / Taskfile Dev: ansible/roles/common/taskfile-dev.md

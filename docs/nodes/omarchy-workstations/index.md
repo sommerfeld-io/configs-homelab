@@ -17,6 +17,7 @@
 - [ ] Install machine using the Ansible configs from this repo
     - [ ] [Playbook "desktop"](../../ansible/playbooks/desktop.md) (`task ansible:desktop`)
     - [ ] [Playbook "desktop"](../../ansible/playbooks/grafana-agents.md) (`task ansible:grafana:agents`)
+    - [ ] [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task ansible:ssh:trust`) for password-less SSH between the nodes
     - [ ] Configure SSH keys on GitHub.com for the machine
     - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) (`task ansible:repositories`)
 

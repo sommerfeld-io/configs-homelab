@@ -1,0 +1,135 @@
+---
+# Sets up password-less SSH between homelab nodes for the pairs in ../vars/ssh-trust.yml -
+# the idempotent equivalent of running `ssh-copy-id` on every `src` for every `dest`.
+#
+# Instead of ssh-copy-id (which needs an interactive password per pair), Ansible uses its
+# existing connection to every node: it reads src's public key and adds it to dest's
+# authorized_keys, then adds dest's host key to src's known_hosts so the first connection
+# doesn't prompt. Pairs that are already configured are left untouched (no change).
+#
+# Controller -> node access (required for Ansible itself) can't be bootstrapped this way
+# and stays a manual `ssh-copy-id` step. Unreachable nodes (e.g. laptops that are offline)
+# don't fail the run - their pairs are skipped and listed in the summary at the end.
+
+- name: SSH Trust  ----  Collect public keys from source nodes
+  hosts: all
+  gather_facts: false
+  become: false
+  ignore_unreachable: true
+  vars_files:
+    - ../vars/ssh-trust.yml
+  tasks:
+    # Checked once with a real connection (set_fact alone would also "succeed" on offline
+    # nodes, since it runs on the controller). The later plays end early for nodes that
+    # weren't reached, instead of waiting for an SSH timeout on every task.
+    - name: SSH  ----  Trust  ----  Check reachability
+      ansible.builtin.ping:
+      register: ssh_trust_ping
+
+    - name: SSH  ----  Trust  ----  Mark node as reachable
+      ansible.builtin.set_fact:
+        ssh_trust_reached: true
+      when: not (ssh_trust_ping.unreachable | default(false))
+
+    - name: SSH  ----  Trust  ----  Read public key
+      ansible.builtin.slurp:
+        src: "/home/{{ default_user }}/.ssh/id_rsa.pub"
+      register: ssh_trust_pubkey_file
+      failed_when: false
+      when:
+        - ssh_trust_reached is defined
+        - inventory_hostname in ssh_trust_pairs | map(attribute='src')
+
+    # The key pair is created by the ansible-roles-collection/bash role. A node that never
+    # ran it has nothing to share, so its pairs are skipped instead of failing the run.
+    - name: SSH  ----  Trust  ----  Store public key
+      ansible.builtin.set_fact:
+        ssh_trust_pubkey: "{{ ssh_trust_pubkey_file.content | b64decode | trim }}"
+      when: ssh_trust_pubkey_file.content is defined
+
+- name: SSH Trust  ----  Authorize source keys on destination nodes
+  hosts: all
+  gather_facts: false
+  become: false
+  ignore_unreachable: true
+  vars_files:
+    - ../vars/ssh-trust.yml
+  tasks:
+    - name: SSH  ----  Trust  ----  Skip unreachable node
+      ansible.builtin.meta: end_host
+      when: ssh_trust_reached is not defined
+
+    # authorized_key is idempotent: it only adds keys that are missing and never removes
+    # other keys (exclusive: false), so re-runs report changed only for new pairs.
+    - name: SSH  ----  Trust  ----  Add source public key to authorized_keys
+      ansible.posix.authorized_key:
+        user: "{{ default_user }}"
+        key: "{{ hostvars[ssh_trust_pair.src].ssh_trust_pubkey }}"
+        state: present
+        exclusive: false
+      loop: "{{ ssh_trust_pairs | selectattr('dest', 'equalto', inventory_hostname) | list }}"
+      loop_control:
+        loop_var: ssh_trust_pair
+        label: "{{ ssh_trust_pair.src }} -> {{ ssh_trust_pair.dest }}"
+      when: hostvars[ssh_trust_pair.src].ssh_trust_pubkey is defined
+
+- name: SSH Trust  ----  Trust destination host keys on source nodes
+  hosts: all
+  gather_facts: false
+  become: false
+  ignore_unreachable: true
+  vars_files:
+    - ../vars/ssh-trust.yml
+  tasks:
+    - name: SSH  ----  Trust  ----  Skip unreachable node
+      ansible.builtin.meta: end_host
+      when: ssh_trust_reached is not defined
+
+    # Runs on src, so the host key is looked up exactly the way `ssh <dest>` from src will
+    # resolve it. Fails soft when dest is offline (empty output -> nothing added).
+    - name: SSH  ----  Trust  ----  Scan destination host keys
+      ansible.builtin.command: ssh-keyscan -T 5 -t ed25519,rsa {{ ssh_trust_pair.dest }}
+      loop: "{{ ssh_trust_pairs | selectattr('src', 'equalto', inventory_hostname) | list }}"
+      loop_control:
+        loop_var: ssh_trust_pair
+        label: "{{ ssh_trust_pair.src }} -> {{ ssh_trust_pair.dest }}"
+      register: ssh_trust_keyscan
+      changed_when: false
+      failed_when: false
+      check_mode: false # read-only, and known_hosts below needs its output in --check runs too
+
+    - name: SSH  ----  Trust  ----  Add destination host keys to known_hosts
+      ansible.builtin.known_hosts:
+        path: "/home/{{ default_user }}/.ssh/known_hosts"
+        name: "{{ ssh_trust_hostkey.0.ssh_trust_pair.dest }}"
+        key: "{{ ssh_trust_hostkey.1 }}"
+        state: present
+      loop: "{{ ssh_trust_keyscan.results | default([]) | subelements('stdout_lines', skip_missing=true) }}"
+      loop_control:
+        loop_var: ssh_trust_hostkey
+        label: "{{ inventory_hostname }} -> {{ ssh_trust_hostkey.0.ssh_trust_pair.dest }} ({{ ssh_trust_hostkey.1.split(' ')[1] }})"
+      when: ssh_trust_hostkey.1 is match(ssh_trust_hostkey.0.ssh_trust_pair.dest ~ ' ')
+
+# Runs on the controller, so the summary is printed even when some nodes are unreachable.
+- name: SSH Trust  ----  Summary
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  vars_files:
+    - ../vars/ssh-trust.yml
+  tasks:
+    - name: SSH  ----  Trust  ----  Show skipped pairs
+      ansible.builtin.debug:
+        msg: >-
+          {{ ssh_trust_pair.src }} -> {{ ssh_trust_pair.dest }}: skipped
+          ({{ 'src unreachable' if hostvars[ssh_trust_pair.src].ssh_trust_reached is not defined
+              else 'dest unreachable' if hostvars[ssh_trust_pair.dest].ssh_trust_reached is not defined
+              else 'no ~/.ssh/id_rsa.pub on src' }})
+      loop: "{{ ssh_trust_pairs }}"
+      loop_control:
+        loop_var: ssh_trust_pair
+        label: "{{ ssh_trust_pair.src }} -> {{ ssh_trust_pair.dest }}"
+      when: >-
+        hostvars[ssh_trust_pair.src].ssh_trust_pubkey is not defined
+        or hostvars[ssh_trust_pair.dest].ssh_trust_reached is not defined

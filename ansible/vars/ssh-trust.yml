@@ -1,0 +1,38 @@
+---
+# Password-less SSH connections between homelab nodes, used by playbooks/ssh-trust.yml.
+#
+# Each entry lets `default_user` on `src` connect to `dest` without a password: src's
+# ~/.ssh/id_rsa.pub is added to dest's ~/.ssh/authorized_keys, and dest's host key is added
+# to src's ~/.ssh/known_hosts. Every entry is a trust edge - only add the pairs you need.
+# Hostnames must match the inventory (ansible/hosts.yml).
+ssh_trust_pairs:
+  - { src: picon.fritz.box, dest: picon.fritz.box }
+  - { src: picon.fritz.box, dest: kobol.fritz.box }
+  - { src: picon.fritz.box, dest: caprica.fritz.box }
+
+  - { src: kobol.fritz.box, dest: kobol.fritz.box }
+  - { src: kobol.fritz.box, dest: picon.fritz.box }
+  - { src: kobol.fritz.box, dest: caprica.fritz.box }
+
+  - { src: caprica.fritz.box, dest: caprica.fritz.box }
+  - { src: caprica.fritz.box, dest: picon.fritz.box }
+  - { src: caprica.fritz.box, dest: kobol.fritz.box }
+
+  # Workstations -> RasPi nodes (one way only: the RasPi nodes must not connect to other hosts)
+  - { src: picon.fritz.box, dest: pi4-dradis.fritz.box }
+  - { src: picon.fritz.box, dest: pi4-0002.fritz.box }
+  - { src: picon.fritz.box, dest: pi5-0004.fritz.box }
+  - { src: picon.fritz.box, dest: pi4-0005.fritz.box }
+  - { src: picon.fritz.box, dest: pi4-0006.fritz.box }
+
+  - { src: kobol.fritz.box, dest: pi4-dradis.fritz.box }
+  - { src: kobol.fritz.box, dest: pi4-0002.fritz.box }
+  - { src: kobol.fritz.box, dest: pi5-0004.fritz.box }
+  - { src: kobol.fritz.box, dest: pi4-0005.fritz.box }
+  - { src: kobol.fritz.box, dest: pi4-0006.fritz.box }
+
+  - { src: caprica.fritz.box, dest: pi4-dradis.fritz.box }
+  - { src: caprica.fritz.box, dest: pi4-0002.fritz.box }
+  - { src: caprica.fritz.box, dest: pi5-0004.fritz.box }
+  - { src: caprica.fritz.box, dest: pi4-0005.fritz.box }
+  - { src: caprica.fritz.box, dest: pi4-0006.fritz.box }
