@@ -20,7 +20,30 @@ snapper -c <config> create --description "{{ omarchy_snapshot_description }}" --
 - Snapshots use snapper's `number` cleanup algorithm, so snapper's regular cleanup prunes old ones and a snapshot per playbook run doesn't fill up the disk.
 - On Omarchy, `limine-snapper-sync` picks up new `root` snapshots and adds them to the Limine boot menu, which makes them bootable.
 
-The create task reports `changed` whenever it creates a snapshot and is skipped otherwise. To force a new snapshot within the interval, pass `-e omarchy_snapshot_min_interval_hours=0`.
+The create task reports `changed` whenever it creates a snapshot and is skipped otherwise - see [When no new snapshot is created](#when-no-new-snapshot-is-created) for all cases.
+
+## When no new snapshot is created
+
+The role creates a snapshot per snapper config on every run, except in these cases:
+
+| Situation                                                                                                                     | Result                                                                                                 |
+|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| Host is not Arch (Ubuntu, RasPi)                                                                                              | Nothing happens, the role is a no-op                                                                   |
+| `snapper` isn't installed (`/usr/bin/snapper` missing)                                                                        | No snapshot on that host                                                                               |
+| A config from `{{ omarchy_snapshot_configs }}` doesn't exist (`/etc/snapper/configs/<config>` missing)                        | No snapshot for that config, the other configs are still snapshotted                                   |
+| The most recent snapshot created by this role is younger than `{{ omarchy_snapshot_min_interval_hours }}` hours (default: 24) | No snapshot for that config; the existing one stays the rollback point                                 |
+| Playbook runs in check mode (`--check`)                                                                                       | No snapshot; the snapshots aren't even listed, so check mode can't tell whether a run would create one |
+| Host is unreachable, or not in the `omarchy` inventory group                                                                  | No snapshot, since the role doesn't run there                                                          |
+
+How the interval check works in detail:
+
+- **Rolling 24 hours, not calendar days:** the age is measured from the most recent snapshot's creation time. A snapshot taken on Monday at 09:00 blocks new snapshots until Tuesday 09:00 - running the playbook again on Monday at 23:00 or Tuesday at 08:00 creates none, while a run on Tuesday at 09:05 does.
+- **Per config:** `root` and `home` are checked independently. If one of them has no recent snapshot (e.g. because its snapshot was deleted), only that one gets a new snapshot.
+- **Only this role's snapshots count:** the automatic pre/post snapshots around `pacman` transactions, snapper timeline snapshots and manually created snapshots never block a new snapshot, because they have a different description.
+- **Deleting a snapshot resets the interval:** if the most recent snapshot created by this role is deleted, the next run compares against the one before it - or creates a new one right away if there is none left.
+- **Changing the description resets the interval:** snapshots are matched by `{{ omarchy_snapshot_description }}`, so after changing it, older snapshots no longer count and the next run creates a new one.
+
+To force a new snapshot anyway (e.g. right before trying something risky), run with `-e omarchy_snapshot_min_interval_hours=0`.
 
 ## Rollback
 
