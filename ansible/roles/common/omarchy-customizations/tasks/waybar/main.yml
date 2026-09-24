@@ -1,0 +1,42 @@
+---
+# Omarchy-only customization (Arch/Hyprland). Guarded by os_family so this never runs
+# against Debian/Ubuntu hosts, matching the internal os_family guard pattern used
+# elsewhere in the ansible-roles-collection (e.g. bash, docker).
+
+- name: Omarchy Customizations  ----  Waybar  ----  Arch
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+
+    # Only present on actual Omarchy hosts (not vanilla Arch/test containers), so
+    # check for it first instead of creating it.
+    - name: Omarchy Customizations  ----  Waybar  ----  Arch  ----  Check for Waybar config file
+      ansible.builtin.stat:
+        path: "/home/{{ default_user }}/.config/waybar/config.jsonc"
+      register: common_omarchy_customizations_waybar_config_file
+
+    # Omarchy's "hyprland/workspaces" module only lists workspaces 1-5 as persistent,
+    # so 6-10 only show up in the bar while they hold a window. Listing all ten keeps
+    # every SUPER+1..0 target visible. The module's format-icons already map
+    # 1-9 to their number and 10 to "0" (matching the 0 key). config.jsonc allows
+    # comments, so the persistent-workspaces object is replaced in place via regex
+    # instead of parsing/rewriting the file as JSON. The replacement matches the regex
+    # again, so re-runs are idempotent.
+    - name: Omarchy Customizations  ----  Waybar  ----  Arch  ----  Show all ten workspaces
+      ansible.builtin.replace:
+        path: "/home/{{ default_user }}/.config/waybar/config.jsonc"
+        regexp: '("persistent-workspaces"\s*:\s*)\{[^}]*\}'
+        replace: >-
+          \g<1>{
+                "1": [],
+                "2": [],
+                "3": [],
+                "4": [],
+                "5": [],
+                "6": [],
+                "7": [],
+                "8": [],
+                "9": [],
+                "10": []
+              }
+      when: common_omarchy_customizations_waybar_config_file.stat.exists
+      notify: Omarchy Customizations  ----  Reload Waybar

@@ -48,6 +48,14 @@ Each of these keys ships an Omarchy default binding, so the block unbinds it fir
 
 Tasks for this customization live in `tasks/keybindings/`.
 
+### Waybar Workspaces (`waybar`)
+
+Omarchy's Waybar (top bar) only lists workspaces `1` - `5` as persistent in the `hyprland/workspaces` module of `~/.config/waybar/config.jsonc`, so workspaces `6` - `10` only show up in the upper left corner while they hold a window. This customization replaces the `persistent-workspaces` object with all ten workspaces (`1` - `10`), so every workspace reachable via the number keys is always visible. The module's `format-icons` already label workspace `10` as `0`, matching the `0` key.
+
+The file is only changed if it exists (i.e. on actual Omarchy hosts). Because `config.jsonc` may contain comments, the object is replaced in place via regex instead of parsing and rewriting the file as JSON. On change, a handler sends `SIGUSR2` to the running Waybar (as `{{ default_user }}`), which makes it reload its config without a restart.
+
+Tasks for this customization live in `tasks/waybar/`.
+
 ## Expected Variables
 
 | Variable             | Description                                                          |

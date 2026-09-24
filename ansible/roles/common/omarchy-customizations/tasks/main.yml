@@ -4,3 +4,6 @@
 
 - name: Omarchy Customizations  ----  Keybindings
   ansible.builtin.import_tasks: keybindings/main.yml
+
+- name: Omarchy Customizations  ----  Waybar
+  ansible.builtin.import_tasks: waybar/main.yml
