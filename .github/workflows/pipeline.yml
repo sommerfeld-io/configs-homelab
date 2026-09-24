@@ -96,6 +96,7 @@ jobs:
   # ----- Molecule stage --------------------------------------------------------------------------
 
   molecule:
+    name: molecule (${{ matrix.scenario }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -105,6 +106,12 @@ jobs:
       'check-inspec-profile',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
+    strategy:
+      # Run every scenario to the end, so one failing role group doesn't hide failures in another.
+      fail-fast: false
+      matrix:
+        # One entry per test:<scenario> task in tests/molecule/taskfile.yml - keep in sync.
+        scenario: ['common', 'omarchy']
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -117,9 +124,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install uv
         uses: astral-sh/setup-uv@v7
-      - name: Run Molecule tests
-        run: task molecule:test
+      - name: Run Molecule tests (${{ matrix.scenario }})
+        run: task molecule:test:${{ matrix.scenario }}
         shell: bash
+        env:
+          # Molecule wraps each step (converge, verify, ...) in a collapsed ::group:: when it
+          # detects GitHub Actions via CI, which hides the Ansible output - including which
+          # task failed and why. An empty CI disables the grouping so the output shows inline.
+          CI: ''
+          # Same as `molecule -v`: passes ANSIBLE_VERBOSITY=1, so task results are printed
+          # in detail instead of just ok/changed/failed.
+          MOLECULE_VERBOSITY: '1'
 
   # ----- Build Docs stage ------------------------------------------------------------------------
 
