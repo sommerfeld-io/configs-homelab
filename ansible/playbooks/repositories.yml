@@ -9,7 +9,7 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
 
-- name: Clone git repositories
+- name: Clone git repositories 1
   hosts: ubuntu_desktop:omarchy
   gather_facts: true
   become: false
@@ -40,6 +40,23 @@
           - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
           - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "assets" }
           - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "website" }
+
+- name: Clone git repositories 2
+  hosts: ubuntu_server
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+    - name: Git Repositories  ----  Clone
+      ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git-repositories
+        tasks_from: main
+      vars:
+        git_repositories_ssh_base: &ssh-base git@github.com
+        repositories: &repositories
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "ansible-roles-collection" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
 
 - name: Cleanup
   hosts: ubuntu_desktop:ubuntu_server:raspi:omarchy
