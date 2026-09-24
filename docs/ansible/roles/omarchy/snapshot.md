@@ -15,7 +15,7 @@ snapper -c <config> create --description "{{ omarchy_snapshot_description }}" --
 - **One snapshot per day:** running the playbook several times in direct succession (e.g. while iterating on a role) doesn't create a new snapshot every time. Within the interval, the existing snapshot is kept as the rollback point, so it still reflects the state before the *first* run of the day - usually the last known-good state.
 - **Only this role's snapshots count:** they are matched by their description (`{{ omarchy_snapshot_description }}`). The automatic pre/post snapshots Omarchy creates around every `pacman` transaction are ignored, otherwise they would almost always be "recent" and suppress the snapshot.
 - The age check compares snapshot dates in UTC (`snapper --utc`) with the target's fact time, so timezones don't matter.
-- The role is included as the very first role in the desktop playbook (`ansible/playbooks/desktop.yml`), so the snapshot captures the system state before any other role runs.
+- The role is run by the Omarchy Snapshot playbook (`ansible/playbooks/omarchy-snapshot.yml`), which is imported at the very top of the desktop playbook, so the snapshot captures the system state before any other role runs. To take a snapshot on its own, run `task ansible:omarchy:snapshot`.
 - The created snapshot numbers are printed in the playbook output. Note them down in case you need to roll back.
 - Snapshots use snapper's `number` cleanup algorithm, so snapper's regular cleanup prunes old ones and a snapshot per playbook run doesn't fill up the disk.
 - On Omarchy, `limine-snapper-sync` picks up new `root` snapshots and adds them to the Limine boot menu, which makes them bootable.

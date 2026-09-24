@@ -1,0 +1,11 @@
+---
+# Creates a snapper snapshot of Omarchy workstations (at most once per day, see the
+# omarchy/snapshot role). Imported at the top of desktop.yml so the snapshot is taken
+# before any provisioning changes, and runnable on its own via `task ansible:omarchy:snapshot`.
+- name: Snapshot Omarchy workstations
+  hosts: omarchy
+  gather_facts: true # the role needs os_family and the current time (date_time)
+  become: true
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/omarchy/snapshot

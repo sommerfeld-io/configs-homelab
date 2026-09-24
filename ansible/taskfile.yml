@@ -41,6 +41,15 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
+  omarchy:snapshot:
+    vars:
+      PLAYBOOK: omarchy-snapshot.yml
+    desc: *ansible-desc
+    cmds:
+      # The vault isn't needed, so don't prompt for its password.
+      - git submodule update --remote
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass
+
   ping:
     vars:
       PLAYBOOK: ping.yml
