@@ -3384,7 +3384,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "FRITZ!Box Status",
+    "title": "FRITZ!Box / Status",
     "variables": []
   }
 }
