@@ -19,7 +19,6 @@
         line: "{{ item }}"
       loop:
         - "export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}"
-        - "export GITHUB_METRICS_EXPORTER_TOKEN={{ GITHUB_METRICS_EXPORTER_TOKEN }}"
 
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
