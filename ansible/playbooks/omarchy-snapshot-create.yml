@@ -1,7 +1,7 @@
 ---
 # Creates a snapper snapshot of Omarchy workstations (at most once per day, see the
 # omarchy/snapshot role). Imported at the top of desktop.yml so the snapshot is taken
-# before any provisioning changes, and runnable on its own via `task ansible:omarchy:snapshot`.
+# before any provisioning changes, and runnable on its own via `task ansible:omarchy:snapshot:create`.
 - name: Snapshot Omarchy workstations
   hosts: omarchy
   gather_facts: true # the role needs os_family and the current time (date_time)
@@ -9,3 +9,7 @@
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/omarchy/snapshot
+
+# Show all snapshots afterwards, so the new (or reused) rollback point is visible in the output.
+- name: Include Ansible Playbook to list all snapshots of Omarchy workstations
+  ansible.builtin.import_playbook: ./omarchy-snapshot-list.yml

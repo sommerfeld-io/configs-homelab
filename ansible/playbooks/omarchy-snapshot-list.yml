@@ -1,0 +1,29 @@
+---
+# Lists all snapper snapshots (of all snapper configs, e.g. root and home) of Omarchy
+# workstations. Read-only, so it never changes anything. Imported at the end of
+# omarchy-snapshot-create.yml, and runnable on its own via `task ansible:omarchy:snapshot:list`.
+- name: List snapshots of Omarchy workstations
+  hosts: omarchy
+  gather_facts: true # needed for os_family
+  become: true
+  tasks:
+    # Same guards as the omarchy/snapshot role: only Arch hosts with snapper installed.
+    - name: Omarchy Snapshot  ----  Arch
+      when: ansible_facts['os_family'] == "Archlinux"
+      block:
+        - name: Omarchy Snapshot  ----  Arch  ----  Check for snapper
+          ansible.builtin.stat:
+            path: /usr/bin/snapper
+          register: omarchy_snapshot_list_snapper_binary
+
+        - name: Omarchy Snapshot  ----  Arch  ----  List all snapshots
+          ansible.builtin.command: snapper --iso list --all-configs
+          register: omarchy_snapshot_list_snapshots
+          changed_when: false
+          check_mode: false # read-only, so also list in check mode
+          when: omarchy_snapshot_list_snapper_binary.stat.exists
+
+        - name: Omarchy Snapshot  ----  Arch  ----  Show all snapshots
+          ansible.builtin.debug:
+            var: omarchy_snapshot_list_snapshots.stdout_lines
+          when: omarchy_snapshot_list_snapshots.stdout_lines is defined

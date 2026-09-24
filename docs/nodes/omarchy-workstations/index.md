@@ -23,6 +23,7 @@
 
 ## Snapshots
 
-The [desktop playbook](../../ansible/playbooks/desktop.md) creates a btrfs snapshot (via snapper) of the workstation before it changes anything, or run the [Omarchy Snapshot playbook](../../ansible/playbooks/omarchy-snapshot.md) on its own (`task ansible:omarchy:snapshot`).
+The [desktop playbook](../../ansible/playbooks/desktop.md) creates a btrfs snapshot (via snapper) of the workstation before it changes anything, or run the [Omarchy Snapshot Create playbook](../../ansible/playbooks/omarchy-snapshot-create.md) on its own (`task ansible:omarchy:snapshot:create`).
+To see all existing snapshots, run the [Omarchy Snapshot List playbook](../../ansible/playbooks/omarchy-snapshot-list.md) (`task ansible:omarchy:snapshot:list`).
 If a playbook run breaks the system, boot into that snapshot from the Limine boot menu or revert the changes with snapper.
 See the [Omarchy Snapshot role](../../ansible/roles/omarchy/snapshot.md) for how to roll back step by step.

@@ -1,6 +1,6 @@
 ---
 - name: Include Ansible Playbook to snapshot Omarchy workstations before provisioning
-  ansible.builtin.import_playbook: ./omarchy-snapshot.yml
+  ansible.builtin.import_playbook: ./omarchy-snapshot-create.yml
 
 - name: Install and configure nodes
   hosts: ubuntu_desktop:omarchy
