@@ -3,7 +3,6 @@
   hosts: all
   vars:
     default_user: molecule
-    docker_stacks_dir: /home/molecule/.docker-stacks
   pre_tasks:
     - name: Ensure ~/.config exists for the test user
       ansible.builtin.file:
@@ -13,4 +12,5 @@
         group: "{{ default_user }}"
         mode: u=rwx,g=rx,o=
   roles:
-    - taskfile-dev
+    - monitor-config
+    - customizations

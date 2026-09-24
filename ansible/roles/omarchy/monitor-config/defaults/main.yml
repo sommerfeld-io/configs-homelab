@@ -1,0 +1,2 @@
+---
+omarchy_monitor_config_hypr_monitors_file: "/home/{{ default_user }}/.config/hypr/monitors.lua"

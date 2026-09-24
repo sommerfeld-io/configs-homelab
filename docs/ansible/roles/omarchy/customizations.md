@@ -2,7 +2,7 @@
 
 Omarchy (Arch/Hyprland) specific customizations that don't fit into any of the other roles.
 
-The role is intended to be included on every machine (like the other roles in `../common`), but all tasks run inside a `block` guarded by `when: ansible_facts['os_family'] == "Archlinux"`. This makes the role a no-op on Ubuntu/RasPi hosts, so it can safely run in the same playbook as non-Arch machines and does not need to be excluded there.
+The role is intended to be included on every machine (like the other roles in `../omarchy`), but all tasks run inside a `block` guarded by `when: ansible_facts['os_family'] == "Archlinux"`. This makes the role a no-op on Ubuntu/RasPi hosts, so it can safely run in the same playbook as non-Arch machines and does not need to be excluded there.
 
 `tasks/main.yml` only imports further task files - one subfolder per customization, each with its own tasks and assets. More will be added over time.
 
@@ -10,7 +10,7 @@ The role is intended to be included on every machine (like the other roles in `.
 
 ### GitHub Theme (`github-theme`)
 
-Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ common_omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
+Installs a custom Omarchy theme to `~/.config/omarchy/themes/{{ omarchy_customizations_github_theme_name }}`. The theme follows the same file layout as the built-in `Tokyo Night` theme (`colors.toml`, `icons.theme`, `neovim.lua`, `vscode.json`, `shell.lock.toml`, `keyboard.rgb`, `backgrounds/`), but the palette in `colors.toml` is recolored to resemble GitHub's dark mode (Primer dark) instead.
 
 The wallpapers shipped with the theme were originally sourced from `ansible-roles-collection/filesystem` (since removed there as unused) and copied into `files/themes/github/backgrounds/` so the whole theme - colors and wallpapers - is version controlled in this role instead of only existing on a target machine.
 
@@ -23,14 +23,14 @@ Tasks and files for this customization live in `tasks/themes/github/` and `files
 Switch to the theme once it has been rolled out:
 
 ```bash
-omarchy-theme-set "{{ common_omarchy_customizations_github_theme_name }}"
+omarchy-theme-set "{{ omarchy_customizations_github_theme_name }}"
 ```
 
 ### Keybindings (`keybindings`)
 
 Omarchy's default `SUPER+SHIFT+RETURN` (and `SUPER+SHIFT+B`, private browsing) keybindings don't launch a fixed browser binary - they run `/usr/share/omarchy/bin/omarchy-launch-browser`, which resolves the browser to open via `xdg-settings get default-web-browser`. That command reads the `[Default Applications]` section of `~/.config/mimeapps.list`.
 
-Instead of touching `bindings.lua`, this customization sets `{{ common_omarchy_customizations_default_browser }}` as the default handler for `text/html`, `x-scheme-handler/http`, `x-scheme-handler/https`, `x-scheme-handler/about` and `x-scheme-handler/unknown` in `~/.config/mimeapps.list`. This makes every browser-launching keybinding (and any other app that opens links via the desktop default) open Firefox instead of Chromium.
+Instead of touching `bindings.lua`, this customization sets `{{ omarchy_customizations_default_browser }}` as the default handler for `text/html`, `x-scheme-handler/http`, `x-scheme-handler/https`, `x-scheme-handler/about` and `x-scheme-handler/unknown` in `~/.config/mimeapps.list`. This makes every browser-launching keybinding (and any other app that opens links via the desktop default) open Firefox instead of Chromium.
 
 On top of that, `SUPER+SHIFT+RETURN` is explicitly rebound (in the ansible-managed block in `~/.config/hypr/bindings.lua`, see below) to launch `firefox` directly via `{ launch = "firefox" }`. This way the keybinding opens Firefox regardless of whether `omarchy-launch-browser` resolves the xdg default browser correctly.
 
@@ -66,7 +66,7 @@ Tasks for this customization live in `tasks/waybar/`.
 
 The following variables are optional and have default values:
 
-| Variable                                                 | Description                                                                              | Default                             |
-|-------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------|
-| `{{ common_omarchy_customizations_github_theme_name }}`      | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)    | see [`main.yml`](https://github.com/sommerfeld-io/configs-homelab/blob/main/ansible/roles/common/omarchy-customizations/defaults/main.yml) |
-| `{{ common_omarchy_customizations_default_browser }}`        | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser   | see [`main.yml`](https://github.com/sommerfeld-io/configs-homelab/blob/main/ansible/roles/common/omarchy-customizations/defaults/main.yml) |
+| Variable                                         | Description                                                                           | Default           |
+|--------------------------------------------------|---------------------------------------------------------------------------------------|-------------------|
+| `{{ omarchy_customizations_github_theme_name }}` | Name of the installed theme (the target directory under `~/.config/omarchy/themes/`)  | `github-dark`     |
+| `{{ omarchy_customizations_default_browser }}`   | Desktop file (`xdg-settings`/`mimeapps.list` entry) set as the system default browser | `firefox.desktop` |

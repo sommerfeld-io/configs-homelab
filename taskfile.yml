@@ -68,14 +68,15 @@ tasks:
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/common/mount-disk/README.md", DEST: "{{ .ROLES_DOCS }}/common/mount-disk.md" }
       - task: common:copy
-        vars: { SRC: "{{ .ROLES_SRC }}/common/omarchy-monitor-config/README.md", DEST: "{{ .ROLES_DOCS }}/common/omarchy-monitor-config.md" }
-      - task: common:copy
-        vars: { SRC: "{{ .ROLES_SRC }}/common/omarchy-customizations/README.md", DEST: "{{ .ROLES_DOCS }}/common/omarchy-customizations.md" }
-      - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/common/taskfile-dev/README.md", DEST: "{{ .ROLES_DOCS }}/common/taskfile-dev.md" }
       - mkdir -p {{ .ROLES_DOCS }}/media
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/media/jellyfin/README.md", DEST: "{{ .ROLES_DOCS }}/media/jellyfin.md" }
+      - mkdir -p {{ .ROLES_DOCS }}/omarchy
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/omarchy/customizations/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/customizations.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/omarchy/monitor-config/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/monitor-config.md" }
       - mkdir -p {{ .ROLES_DOCS }}/raspi
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/raspi/pihole/README.md", DEST: "{{ .ROLES_DOCS }}/raspi/pihole.md" }

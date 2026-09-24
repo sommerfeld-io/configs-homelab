@@ -12,7 +12,7 @@
     - name: Omarchy Customizations  ----  Waybar  ----  Arch  ----  Check for Waybar config file
       ansible.builtin.stat:
         path: "/home/{{ default_user }}/.config/waybar/config.jsonc"
-      register: common_omarchy_customizations_waybar_config_file
+      register: omarchy_customizations_waybar_config_file
 
     # Omarchy's "hyprland/workspaces" module only lists workspaces 1-5 as persistent,
     # so 6-10 only show up in the bar while they hold a window. Listing all ten keeps
@@ -38,5 +38,5 @@
                 "9": [],
                 "10": []
               }
-      when: common_omarchy_customizations_waybar_config_file.stat.exists
+      when: omarchy_customizations_waybar_config_file.stat.exists
       notify: Omarchy Customizations  ----  Reload Waybar

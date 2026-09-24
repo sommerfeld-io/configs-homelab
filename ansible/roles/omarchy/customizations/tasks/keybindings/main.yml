@@ -20,7 +20,7 @@
         path: "/home/{{ default_user }}/.config/mimeapps.list"
         section: Default Applications
         option: "{{ item }}"
-        value: "{{ common_omarchy_customizations_default_browser }}"
+        value: "{{ omarchy_customizations_default_browser }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: u=rw,g=r,o=
@@ -37,7 +37,7 @@
     - name: Omarchy Customizations  ----  Keybindings  ----  Arch  ----  Check for Hyprland keybindings file
       ansible.builtin.stat:
         path: "/home/{{ default_user }}/.config/hypr/bindings.lua"
-      register: common_omarchy_customizations_keybindings_bindings_file
+      register: omarchy_customizations_keybindings_bindings_file
 
     # Every key below ships a default binding (Google Photos, Omawrite, Signal, Music/
     # Spotify, Editor, Google Maps - see /usr/share/omarchy/default/hypr/bindings/
@@ -87,4 +87,4 @@
           o.bind("SUPER + SHIFT + M", "Google Mail", { webapp = "https://mail.google.com/mail/u/0/?hl=de&tab=wm#inbox", focus = true })
           o.bind("SUPER + SHIFT + N", "Google Calendar", { webapp = "https://calendar.google.com/calendar/u/0/r?pli=1", focus = true })
           o.bind("SUPER + L", "Lock screen", "omarchy-system-lock")
-      when: common_omarchy_customizations_keybindings_bindings_file.stat.exists
+      when: omarchy_customizations_keybindings_bindings_file.stat.exists

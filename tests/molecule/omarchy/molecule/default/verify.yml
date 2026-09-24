@@ -1,0 +1,38 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Verify Arch-specific customizations
+      when: ansible_facts['os_family'] == "Archlinux"
+      block:
+        - name: Check GitHub theme directory exists
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark
+          register: theme_dir
+
+        - name: Assert GitHub theme directory exists
+          ansible.builtin.assert:
+            that: theme_dir.stat.exists and theme_dir.stat.isdir
+
+        - name: Check colors.toml was copied
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark/colors.toml
+          register: colors_toml
+
+        - name: Assert colors.toml exists
+          ansible.builtin.assert:
+            that: colors_toml.stat.exists
+
+        - name: Check default background was copied
+          ansible.builtin.stat:
+            path: /home/molecule/.config/omarchy/themes/github-dark/backgrounds/0-11.jpg
+          register: background
+
+        - name: Assert default background exists
+          ansible.builtin.assert:
+            that: background.stat.exists
+
+        - name: Check mimeapps.list sets Firefox as default browser
+          ansible.builtin.command: grep -q 'text/html=firefox.desktop' /home/molecule/.config/mimeapps.list
+          changed_when: false

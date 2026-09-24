@@ -6,6 +6,6 @@
   become: true
   become_user: "{{ default_user }}"
   ansible.builtin.command: pkill -SIGUSR2 -x waybar
-  register: common_omarchy_customizations_waybar_reload
-  changed_when: common_omarchy_customizations_waybar_reload.rc == 0
-  failed_when: common_omarchy_customizations_waybar_reload.rc not in [0, 1]
+  register: omarchy_customizations_waybar_reload
+  changed_when: omarchy_customizations_waybar_reload.rc == 0
+  failed_when: omarchy_customizations_waybar_reload.rc not in [0, 1]

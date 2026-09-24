@@ -14,6 +14,7 @@ tasks:
     desc: Run every molecule scenario end-to-end
     cmds:
       - task: test:common
+      - task: test:omarchy
 
   test:common:
     desc: &molecule-desc Run the {{ .DIR }} role group scenario end-to-end
@@ -22,3 +23,10 @@ tasks:
     dir: &molecule-dir "{{ .DIR }}"
     cmds: &molecule-cmds
       - "{{ .MOLECULE_CMD }} test"
+
+  test:omarchy:
+    desc: *molecule-desc
+    vars:
+      DIR: omarchy
+    dir: *molecule-dir
+    cmds: *molecule-cmds

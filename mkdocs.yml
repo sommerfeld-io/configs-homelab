@@ -85,12 +85,12 @@ nav:
       - Server: ansible/playbooks/server.md
   - Ansible - Roles:
       - Common / Mount HDD: ansible/roles/common/mount-disk.md
-      - Common / Omarchy Monitor Config: ansible/roles/common/omarchy-monitor-config.md
-      - Common / Omarchy Customizations: ansible/roles/common/omarchy-customizations.md
       - Common / Taskfile Dev: ansible/roles/common/taskfile-dev.md
       - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
       - Grafana Cloud / Exporters: ansible/roles/grafana-cloud/exporters.md
       - Media / Jellyfin: ansible/roles/media/jellyfin.md
+      - Omarchy / Customizations: ansible/roles/omarchy/customizations.md
+      - Omarchy / Monitor Config: ansible/roles/omarchy/monitor-config.md
       - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
       - RasPi / Fritz-Box Exporter: ansible/roles/raspi/fritz-box-exporter.md
   - ansible/molecule.md

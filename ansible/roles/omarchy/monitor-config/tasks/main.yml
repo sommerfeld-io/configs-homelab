@@ -1,7 +1,7 @@
 ---
 # Arch/Hyprland-only customization. Guarded by os_family so this never runs against
 # Debian/Ubuntu hosts, matching the internal os_family guard pattern used elsewhere
-# (e.g. omarchy-customizations).
+# (e.g. omarchy/customizations).
 
 - name: Omarchy Monitor Config  ----  Arch
   when: ansible_facts['os_family'] == "Archlinux"
@@ -11,12 +11,12 @@
     # so check for it first instead of forcing blockinfile to create it.
     - name: Omarchy Monitor Config  ----  Arch  ----  Check for Hyprland monitors file
       ansible.builtin.stat:
-        path: "{{ common_omarchy_monitor_config_hypr_monitors_file }}"
-      register: common_omarchy_monitor_config_monitors_file
+        path: "{{ omarchy_monitor_config_hypr_monitors_file }}"
+      register: omarchy_monitor_config_monitors_file
 
     - name: Omarchy Monitor Config  ----  Arch  ----  Hyprland monitor layout and workspace pinning
       ansible.builtin.blockinfile:
-        path: "{{ common_omarchy_monitor_config_hypr_monitors_file }}"
+        path: "{{ omarchy_monitor_config_hypr_monitors_file }}"
         marker: "-- {mark} ANSIBLE MANAGED: monitor layout + workspace pinning"
         insertafter: EOF
         backup: true
@@ -32,5 +32,5 @@
           hl.workspace_rule({ workspace = "1", monitor = "desc:Dell Inc. DELL UP2716D KRXTR69IASPL", default = true })
           hl.workspace_rule({ workspace = "2", monitor = "desc:Dell Inc. DELL S3422DWG B9BSS63", default = true })
           hl.workspace_rule({ workspace = "3", monitor = "eDP-1", default = true })
-      when: common_omarchy_monitor_config_monitors_file.stat.exists
+      when: omarchy_monitor_config_monitors_file.stat.exists
       notify: Omarchy Monitor Config  ----  Reload Hyprland
