@@ -77,6 +77,8 @@ tasks:
         vars: { SRC: "{{ .ROLES_SRC }}/omarchy/customizations/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/customizations.md" }
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/omarchy/monitor-config/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/monitor-config.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/omarchy/snapshot/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/snapshot.md" }
       - mkdir -p {{ .ROLES_DOCS }}/raspi
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/raspi/pihole/README.md", DEST: "{{ .ROLES_DOCS }}/raspi/pihole.md" }

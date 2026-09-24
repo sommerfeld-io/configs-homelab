@@ -12,5 +12,6 @@
         group: "{{ default_user }}"
         mode: u=rwx,g=rx,o=
   roles:
+    - snapshot
     - monitor-config
     - customizations

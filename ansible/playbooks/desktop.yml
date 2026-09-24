@@ -9,6 +9,8 @@
     - ../vars/vault.yml
   tasks:
     - ansible.builtin.include_role:
+        name: ../roles/omarchy/snapshot
+    - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash

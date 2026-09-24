@@ -19,3 +19,9 @@
     - [ ] [Playbook "desktop"](../../ansible/playbooks/grafana-agents.md) (`task ansible:grafana:agents`)
     - [ ] Configure SSH keys on GitHub.com for the machine
     - [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md) (`task ansible:repositories`)
+
+## Snapshots
+
+The [desktop playbook](../../ansible/playbooks/desktop.md) creates a btrfs snapshot (via snapper) of the workstation before it changes anything.
+If a playbook run breaks the system, boot into that snapshot from the Limine boot menu or revert the changes with snapper.
+See the [Omarchy Snapshot role](../../ansible/roles/omarchy/snapshot.md) for how to roll back step by step.

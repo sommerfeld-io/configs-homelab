@@ -1,0 +1,6 @@
+---
+omarchy_snapshot_configs:
+  - root
+  - home
+omarchy_snapshot_description: "ansible: before desktop playbook run"
+omarchy_snapshot_min_interval_hours: 24

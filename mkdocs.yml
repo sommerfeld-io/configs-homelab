@@ -91,6 +91,7 @@ nav:
       - Media / Jellyfin: ansible/roles/media/jellyfin.md
       - Omarchy / Customizations: ansible/roles/omarchy/customizations.md
       - Omarchy / Monitor Config: ansible/roles/omarchy/monitor-config.md
+      - Omarchy / Snapshot: ansible/roles/omarchy/snapshot.md
       - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
       - RasPi / Fritz-Box Exporter: ansible/roles/raspi/fritz-box-exporter.md
   - ansible/molecule.md

@@ -1,0 +1,80 @@
+---
+# Omarchy-only (Arch/btrfs + snapper). Guarded by os_family so this never runs against
+# Debian/Ubuntu hosts, matching the internal os_family guard pattern used elsewhere
+# (e.g. omarchy/customizations).
+
+- name: Omarchy Snapshot  ----  Arch
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+
+    # Only present on actual Omarchy hosts (not vanilla Arch/test containers), so
+    # check for snapper and each snapper config first instead of failing the play.
+    - name: Omarchy Snapshot  ----  Arch  ----  Check for snapper
+      ansible.builtin.stat:
+        path: /usr/bin/snapper
+      register: omarchy_snapshot_snapper_binary
+
+    - name: Omarchy Snapshot  ----  Arch  ----  Check for snapper configs
+      ansible.builtin.stat:
+        path: "/etc/snapper/configs/{{ item }}"
+      loop: "{{ omarchy_snapshot_configs }}"
+      register: omarchy_snapshot_snapper_configs
+      when: omarchy_snapshot_snapper_binary.stat.exists
+
+    # --utc/--iso make the snapshot dates comparable with the target's UTC fact time,
+    # regardless of the controller's or target's timezone.
+    - name: Omarchy Snapshot  ----  Arch  ----  List existing snapshots
+      ansible.builtin.command: snapper --utc --iso --jsonout -c {{ item.item }} list
+      loop: "{{ omarchy_snapshot_snapper_configs.results | default([]) }}"
+      loop_control:
+        label: "{{ item.item }}"
+      register: omarchy_snapshot_existing
+      changed_when: false
+      when:
+        - omarchy_snapshot_snapper_binary.stat.exists
+        - item.stat is defined
+        - item.stat.exists
+
+    # Only snapshots created by this role (matched by description) count - Omarchy also
+    # creates pre/post snapshots around every pacman transaction, which would otherwise
+    # almost always be "recent" and suppress the pre-playbook snapshot. Running the
+    # playbook repeatedly within the interval therefore reuses the existing snapshot
+    # instead of piling up new ones.
+    #
+    # The "number" cleanup algorithm lets snapper's regular cleanup prune old snapshots.
+    # On Omarchy, limine-snapper-sync picks up new root snapshots and adds them to the
+    # Limine boot menu, which is what makes them bootable for a rollback.
+    - name: Omarchy Snapshot  ----  Arch  ----  Create snapshot (if the most recent one is too old)
+      ansible.builtin.command: >-
+        snapper -c {{ item.item.item }} create
+        --description "{{ omarchy_snapshot_description }}"
+        --cleanup-algorithm number
+        --print-number
+      vars:
+        omarchy_snapshot_last_date: >-
+          {{ (item.stdout | from_json)[item.item.item] | default([])
+             | selectattr('description', 'equalto', omarchy_snapshot_description)
+             | sort(attribute='number') | map(attribute='date') | list | last | default('', true) }}
+        omarchy_snapshot_age_hours: >-
+          {{ ((ansible_facts['date_time']['iso8601'] | to_datetime('%Y-%m-%dT%H:%M:%SZ'))
+             - (omarchy_snapshot_last_date | to_datetime('%Y-%m-%d %H:%M:%S'))).total_seconds() / 3600
+             if omarchy_snapshot_last_date | length > 0 else -1 }}
+      loop: "{{ omarchy_snapshot_existing.results | default([]) }}"
+      loop_control:
+        label: "{{ item.item.item | default('n/a') }}"
+      register: omarchy_snapshot_created
+      changed_when: true
+      # Creates a snapshot on the first run (per interval), so it can't be idempotent.
+      tags: molecule-idempotence-notest
+      when:
+        - item.stdout is defined
+        - omarchy_snapshot_age_hours | float < 0
+          or omarchy_snapshot_age_hours | float >= omarchy_snapshot_min_interval_hours | float
+
+    - name: Omarchy Snapshot  ----  Arch  ----  Show created snapshots
+      ansible.builtin.debug:
+        msg: "snapper config '{{ item.item.item.item }}': created snapshot #{{ item.stdout }}"
+      loop: "{{ omarchy_snapshot_created.results | default([]) }}"
+      loop_control:
+        label: "{{ item.item.item.item | default('n/a') }}"
+      when: item.stdout is defined
