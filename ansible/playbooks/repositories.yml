@@ -53,7 +53,7 @@
         name: ../roles/ansible-roles-collection/git-repositories
         tasks_from: main
       vars:
-        git_repositories_ssh_base: &ssh-base git@github.com
+        git_repositories_ssh_base: *ssh-base
         repositories: &repositories
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "ansible-roles-collection" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
