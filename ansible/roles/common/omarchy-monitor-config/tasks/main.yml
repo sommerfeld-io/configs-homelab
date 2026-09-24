@@ -1,0 +1,36 @@
+---
+# Arch/Hyprland-only customization. Guarded by os_family so this never runs against
+# Debian/Ubuntu hosts, matching the internal os_family guard pattern used elsewhere
+# (e.g. omarchy-customizations).
+
+- name: Omarchy Monitor Config  ----  Arch
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+
+    # Only present on actual Omarchy/Hyprland hosts (not vanilla Arch/test containers),
+    # so check for it first instead of forcing blockinfile to create it.
+    - name: Omarchy Monitor Config  ----  Arch  ----  Check for Hyprland monitors file
+      ansible.builtin.stat:
+        path: "{{ common_omarchy_monitor_config_hypr_monitors_file }}"
+      register: common_omarchy_monitor_config_monitors_file
+
+    - name: Omarchy Monitor Config  ----  Arch  ----  Hyprland monitor layout and workspace pinning
+      ansible.builtin.blockinfile:
+        path: "{{ common_omarchy_monitor_config_hypr_monitors_file }}"
+        marker: "-- {mark} ANSIBLE MANAGED: monitor layout + workspace pinning"
+        insertafter: EOF
+        backup: true
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        block: |
+          -- Left to right: Dell UP2716D | curved Dell S3422DWG | laptop screen
+          hl.monitor({ output = "desc:Dell Inc. DELL UP2716D KRXTR69IASPL", mode = "preferred", position = "0x0", scale = 1 })
+          hl.monitor({ output = "desc:Dell Inc. DELL S3422DWG B9BSS63", mode = "preferred", position = "2560x0", scale = 1 })
+          hl.monitor({ output = "eDP-1", mode = "preferred", position = "6000x0", scale = 1 })
+
+          -- Pin workspaces to screens: 1 = left, 2 = middle, 3 = right
+          hl.workspace_rule({ workspace = "1", monitor = "desc:Dell Inc. DELL UP2716D KRXTR69IASPL", default = true })
+          hl.workspace_rule({ workspace = "2", monitor = "desc:Dell Inc. DELL S3422DWG B9BSS63", default = true })
+          hl.workspace_rule({ workspace = "3", monitor = "eDP-1", default = true })
+      when: common_omarchy_monitor_config_monitors_file.stat.exists
+      notify: Omarchy Monitor Config  ----  Reload Hyprland

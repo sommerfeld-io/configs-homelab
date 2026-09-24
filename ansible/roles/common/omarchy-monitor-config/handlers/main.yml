@@ -1,0 +1,16 @@
+---
+# Runs as the desktop user (not root) so hyprctl finds the user's Hyprland instance
+# socket under /run/user/<uid>/hypr. Exits cleanly when no Hyprland session is running.
+- name: Omarchy Monitor Config  ----  Reload Hyprland
+  become: true
+  become_user: "{{ default_user }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    sig=$(ls -t "$XDG_RUNTIME_DIR/hypr" 2>/dev/null | head -n1)
+    [ -n "$sig" ] || exit 0
+    HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl reload
+    HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl configerrors
+  args:
+    executable: /bin/bash
+  changed_when: true

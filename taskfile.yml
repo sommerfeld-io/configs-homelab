@@ -68,6 +68,8 @@ tasks:
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/common/mount-disk/README.md", DEST: "{{ .ROLES_DOCS }}/common/mount-disk.md" }
       - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/common/omarchy-monitor-config/README.md", DEST: "{{ .ROLES_DOCS }}/common/omarchy-monitor-config.md" }
+      - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/common/omarchy-customizations/README.md", DEST: "{{ .ROLES_DOCS }}/common/omarchy-customizations.md" }
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/common/taskfile-dev/README.md", DEST: "{{ .ROLES_DOCS }}/common/taskfile-dev.md" }
