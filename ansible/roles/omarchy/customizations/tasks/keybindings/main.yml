@@ -77,6 +77,7 @@
           hl.unbind("SUPER + SHIFT + RETURN")
           hl.unbind("SUPER + L")
           o.bind("SUPER + SHIFT + RETURN", "Firefox", { launch = "firefox" })
+          o.bind("SUPER + SHIFT + B", "Bitwarden", { webapp = "https://vault.bitwarden.com", focus = true })
           o.bind("SUPER + SHIFT + P", "GitHub Project", { webapp = "https://github.com/orgs/sommerfeld-io/projects/1/views/1", focus = true })
           o.bind("SUPER + SHIFT + S", "Sublime Text", { launch = "subl" })
           o.bind("SUPER + SHIFT + W", "WhatsApp", { webapp = "https://web.whatsapp.com", focus = true })
