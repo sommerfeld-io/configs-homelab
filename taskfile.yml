@@ -10,6 +10,7 @@ includes:
   ansible:
     taskfile: ansible/taskfile.yml
     dir: ansible
+  bmad: .task/bmad/taskfile.yml
   cleanup: .task/cleanup/taskfile.yml
   common: .task/common/taskfile.yml
   inspec: tests/inspec/taskfile.yml
@@ -28,16 +29,6 @@ tasks:
     desc: Create symlinks for shared files
     cmds:
       - ln -sf "$(pwd)/.github/copilot-instructions.md" "$(pwd)/CLAUDE.md"
-
-  bmad:install:
-    desc: Install BMad Method (bmm module) for Claude Code if not already present. Use `--force` to update an existing installation.
-    status:
-      - test -d _bmad
-    vars:
-      ALLOW_DOWNLOAD: --yes
-      BMAD_HEADLESS_INSTALL: --yes
-    cmds:
-      - npx {{ .ALLOW_DOWNLOAD }} bmad-method install --directory . --modules bmm --tools claude-code {{ .BMAD_HEADLESS_INSTALL }}
 
   # ===============================================================================================
 
