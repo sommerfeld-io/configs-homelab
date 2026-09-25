@@ -48,8 +48,6 @@
     - ansible.builtin.include_role:
         name: ../../ansible/roles/common/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/omarchy/monitor-config
-    - ansible.builtin.include_role:
         name: ../../ansible/roles/omarchy/customizations
     - ansible.builtin.include_role:
         name: ../../ansible/roles/ansible-roles-collection/ansible
