@@ -62,7 +62,7 @@
     - name: Docker  ----  List running containers
       ansible.builtin.shell: |
         if command -v docker >/dev/null 2>&1; then
-          {% raw %}docker ps --format '{{.Names}}|{{.Image}}|{{.Ports}}'{% endraw %}
+          {% raw %}docker ps --format '{{json .}}'{% endraw %}
         fi
       args:
         executable: /bin/bash
