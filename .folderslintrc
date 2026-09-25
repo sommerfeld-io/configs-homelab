@@ -45,6 +45,8 @@
         "tests/inspec/*/controls",
         "tests/inspec/*/vendor/**",
         "tests/molecule/**",
+        "virtual-machines",
+        "virtual-machines/**",
 
 		"node_modules/**",
 		"public/**",

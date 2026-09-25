@@ -59,6 +59,48 @@
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
 
+    - name: Docker  ----  List running containers
+      ansible.builtin.shell: |
+        if command -v docker >/dev/null 2>&1; then
+          {% raw %}docker ps --format '{{json .}}'{% endraw %}
+        fi
+      args:
+        executable: /bin/bash
+      register: docker_containers
+      changed_when: false
+      failed_when: false
+
+    - name: Docker  ----  Prepare container metadata for docs
+      ansible.builtin.set_fact:
+        docker_containers_for_docs: >-
+          {%- set rows = [] -%}
+          {%- for line in docker_containers.stdout_lines | default([]) -%}
+            {%- if line | trim | regex_search('^\\{.*\\}$') -%}
+              {%- set container = line | from_json -%}
+              {%- if container.Names is defined and container.Image is defined -%}
+                {%- set image_ref = container.Image -%}
+                {%- set base_image_ref = image_ref.split('@', 1)[0] if ('@' in image_ref) else image_ref -%}
+                {%- set image_name = base_image_ref -%}
+                {%- set image_tag = 'n/a' -%}
+                {%- set last_colon = base_image_ref.rfind(':') -%}
+                {%- set last_slash = base_image_ref.rfind('/') -%}
+                {%- if last_colon > last_slash -%}
+                  {%- set image_name = base_image_ref.rsplit(':', 1)[0] -%}
+                  {%- set image_tag = base_image_ref.rsplit(':', 1)[1] -%}
+                {%- endif -%}
+                {%- set ports_value = container.Ports if (container.Ports | default('')) else 'n/a' -%}
+                {%- set ports_value = ports_value | replace('\r', ' ') | replace('\n', ' ') | replace('`', '\\`') -%}
+                {%- set _ = rows.append({
+                      'name': container.Names,
+                      'image': image_name,
+                      'tag': image_tag,
+                      'ports': ports_value | replace('|', '\\|'),
+                    }) -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ rows if rows else [{'name': 'n/a', 'image': 'n/a', 'tag': 'n/a', 'ports': 'n/a'}] }}
+
     - name: Docs  ----  Generate node configs documentation
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/node-configs.md.j2"
