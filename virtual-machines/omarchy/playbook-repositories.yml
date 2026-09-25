@@ -1,0 +1,63 @@
+---
+- name: Prepare directories for git repositories
+  hosts: localhost
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../../ansible/vars/main.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../../ansible/roles/ansible-roles-collection/filesystem
+
+- name: Clone git repositories 1
+  hosts: localhost
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../../ansible/vars/main.yml
+  tasks:
+    - name: Git Repositories  ----  Clone
+      ansible.builtin.include_role:
+        name: ../../ansible/roles/ansible-roles-collection/git-repositories
+        tasks_from: main
+      vars:
+        git_repositories_ssh_base: &ssh-base git@github.com
+        repositories: &repositories
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".github" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".task" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: ".vscode" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "ansible-roles-collection" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "configs-homelab" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "fantasy-hockey" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "skills" }
+          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "tech-radar" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "mkdocs-material" }
+          - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "tabler" }
+          - { dest: "{{ dir_repos_bad_android }}", org: "bad-android", repo: ".github" }
+          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "assets" }
+          - { dest: "{{ dir_repos_fbbrunnenbau }}", org: "fb-brunnenbau", repo: "website" }
+
+- name: Cleanup
+  hosts: localhost
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../../ansible/vars/main.yml
+  tasks:
+    - name: Git Repositories  ----  Remove outdated repositories from host
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
+        - "{{ dir_repos_sommerfeld_io }}/github-metrics-exporter"
+        - "{{ dir_repos_sommerfeld_io }}/release-watcher"
+        - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
+        - "{{ dir_repos_sommerfeld_io }}/telemetry"
+        - "{{ dir_repos_sommerfeld_io }}/template-repository"
+        - "{{ dir_repos_bad_android }}/katan"
+        - "{{ dir_repos_bad_android }}/nhl-predictions-game-prototype"

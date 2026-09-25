@@ -1,0 +1,18 @@
+---
+version: '3.42.1'
+
+tasks:
+
+  omarchy:ansible:provision:
+    vars:
+      PLAYBOOK: omarchy/playbook-provision.yml
+    desc: &ansible-desc VM ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
+    cmds: &ansible-cmd
+      - git submodule update --remote
+      - ansible-playbook "{{ .PLAYBOOK }}" --ask-become-pass --ask-vault-pass
+
+  omarchy:ansible:repositorie:
+    vars:
+      PLAYBOOK: omarchy/playbook-repositorie.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd

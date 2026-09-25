@@ -17,6 +17,9 @@ includes:
   molecule:
     taskfile: tests/molecule/taskfile.yml
     dir: tests/molecule
+  vm:
+    taskfile: virtual-machines/taskfile.yml
+    dir: virtual-machines
 
 tasks:
 
@@ -80,6 +83,8 @@ tasks:
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/alloy/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/alloy.md" }
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/exporters/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/exporters.md" }
+      - task: common:copy
+        vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/nodes/omarchy-workstations/vm.md" }
 
   docs:run:
     desc: Run the documentation server

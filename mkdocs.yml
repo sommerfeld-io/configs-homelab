@@ -65,10 +65,9 @@ extra:
 
 nav:
   - Introduction: index.md
-  # - Ubuntu Workstations:
-  #     - Setup Guide: nodes/ubuntu-workstations/index.md
   - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
   - Omarchy Workstations: nodes/omarchy-workstations/index.md
+  - Omarchy in Virtual Machine: nodes/omarchy-workstations/vm.md
   - Raspberry Pi Nodes: nodes/raspi/index.md
   - Node Configs: nodes/node-configs.md
   - Ansible - Playbooks:
