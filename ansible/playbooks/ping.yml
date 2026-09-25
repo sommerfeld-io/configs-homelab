@@ -59,6 +59,21 @@
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
 
+    - name: Docker  ----  List running containers
+      ansible.builtin.shell: |
+        if command -v docker >/dev/null 2>&1; then
+          {% raw %}docker ps --format '{{.Names}}|{{.Image}}|{{.Ports}}'{% endraw %}
+        fi
+      args:
+        executable: /bin/bash
+      register: docker_containers
+      changed_when: false
+      failed_when: false
+
+    - name: Docker  ----  Print running containers
+      ansible.builtin.debug:
+        var: docker_containers.stdout_lines
+
     - name: Docs  ----  Generate node configs documentation
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/node-configs.md.j2"

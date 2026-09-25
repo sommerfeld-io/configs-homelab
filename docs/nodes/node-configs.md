@@ -40,6 +40,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Service manager:** `systemd`
 - **Facts collected at:** 2026-09-24T11:03:27Z
 
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
+
 ### `kobol.fritz.box`
 
 - **Groups:** ollama, omarchy
@@ -55,6 +61,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Virtualization:** host / kvm
 - **Service manager:** `systemd`
 - **Facts collected at:** 2026-09-24T11:03:25Z
+
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
 
 ### `pi4-0002.fritz.box`
 
@@ -73,6 +85,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Service manager:** `systemd`
 - **Facts collected at:** 2026-09-24T11:03:28Z
 
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
+
 ### `pi4-0005.fritz.box`
 
 - **Groups:** raspi
@@ -89,6 +107,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Service manager:** `n/a`
 - **Facts collected at:** n/a
 
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
+
 ### `pi4-0006.fritz.box`
 
 - **Groups:** raspi
@@ -104,6 +128,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Virtualization:** n/a / n/a
 - **Service manager:** `n/a`
 - **Facts collected at:** n/a
+
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
 
 ### `pi4-dradis.fritz.box`
 
@@ -122,6 +152,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Service manager:** `systemd`
 - **Facts collected at:** 2026-09-24T11:03:29Z
 
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
+
 ### `pi5-0004.fritz.box`
 
 - **Groups:** raspi
@@ -139,6 +175,12 @@ Last generated: 2026-09-24 11:03 UTC
 - **Service manager:** `systemd`
 - **Facts collected at:** 2026-09-24T11:03:26Z
 
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
+
 ### `picon.fritz.box`
 
 - **Groups:** ollama, omarchy
@@ -154,3 +196,9 @@ Last generated: 2026-09-24 11:03 UTC
 - **Virtualization:** n/a / n/a
 - **Service manager:** `n/a`
 - **Facts collected at:** n/a
+
+#### Docker Containers
+
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+| n/a  | n/a   | n/a | n/a           |
