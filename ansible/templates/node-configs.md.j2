@@ -53,37 +53,7 @@
 {%-     set interfaces_md = (iface_lines | join('\n')) if iface_lines else '    - n/a (host unreachable)' %}
 {%-     set root_mount = (hv.ansible_facts.mounts | default([]) | selectattr('mount', 'equalto', '/') | list | first) | default({}) %}
 {%-     set release = hv.ansible_facts.distribution_release | default('') %}
-{%-     set docker_lines = hv.docker_containers.stdout_lines | default([]) %}
-{%-     set docker_rows = [] %}
-{%-     for line in docker_lines %}
-{%-       if line | trim | regex_search('^\\{.*\\}$') %}
-{%-         set container = line | from_json %}
-{%-       else %}
-{%-         set container = {} %}
-{%-       endif %}
-{%-       if container.Names is defined and container.Image is defined %}
-{%-         set container_name = container.Names %}
-{%-         set image_ref = container.Image %}
-{%-         set exposed_ports = container.Ports | default('') %}
-{%-         set image_name = image_ref %}
-{%-         set image_tag = 'n/a' %}
-{%-         if '@' in image_ref %}
-{%-           set image_tag = 'n/a' %}
-{%-         elif ':' in (image_ref.split('/') | last) %}
-{%-           set image_name = image_ref.rsplit(':', 1)[0] %}
-{%-           set image_tag = image_ref.rsplit(':', 1)[1] %}
-{%-         endif %}
-{%-         set _ = docker_rows.append({
-              'name': container_name,
-              'image': image_name,
-              'tag': image_tag,
-              'ports': exposed_ports if exposed_ports else 'n/a',
-            }) %}
-{%-       endif %}
-{%-     endfor %}
-{%-     if not docker_rows %}
-{%-       set _ = docker_rows.append({'name': 'n/a', 'image': 'n/a', 'tag': 'n/a', 'ports': 'n/a'}) %}
-{%-     endif %}
+{%-     set docker_rows = hv.docker_containers_for_docs | default([{'name': 'n/a', 'image': 'n/a', 'tag': 'n/a', 'ports': 'n/a'}]) %}
 {%-     set docker_name_width = (['Name'] + (docker_rows | map(attribute='name') | list)) | map('length') | max %}
 {%-     set docker_image_width = (['Image'] + (docker_rows | map(attribute='image') | list)) | map('length') | max %}
 {%-     set docker_tag_width = (['Tag'] + (docker_rows | map(attribute='tag') | list)) | map('length') | max %}

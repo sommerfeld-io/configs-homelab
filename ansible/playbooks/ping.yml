@@ -70,9 +70,33 @@
       changed_when: false
       failed_when: false
 
-    - name: Docker  ----  Print running containers
-      ansible.builtin.debug:
-        var: docker_containers.stdout_lines
+    - name: Docker  ----  Prepare container metadata for docs
+      ansible.builtin.set_fact:
+        docker_containers_for_docs: >-
+          {%- set rows = [] -%}
+          {%- for line in docker_containers.stdout_lines | default([]) -%}
+            {%- if line | trim | regex_search('^\\{.*\\}$') -%}
+              {%- set container = line | from_json -%}
+              {%- if container.Names is defined and container.Image is defined -%}
+                {%- set image_ref = container.Image -%}
+                {%- set image_name = image_ref -%}
+                {%- set image_tag = 'n/a' -%}
+                {%- if '@' in image_ref -%}
+                  {%- set image_name = image_ref.split('@', 1)[0] -%}
+                {%- elif ':' in (image_ref.split('/') | last) -%}
+                  {%- set image_name = image_ref.rsplit(':', 1)[0] -%}
+                  {%- set image_tag = image_ref.rsplit(':', 1)[1] -%}
+                {%- endif -%}
+                {%- set _ = rows.append({
+                      'name': container.Names,
+                      'image': image_name,
+                      'tag': image_tag,
+                      'ports': (container.Ports if (container.Ports | default('')) else 'n/a'),
+                    }) -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ rows if rows else [{'name': 'n/a', 'image': 'n/a', 'tag': 'n/a', 'ports': 'n/a'}] }}
 
     - name: Docs  ----  Generate node configs documentation
       ansible.builtin.template:
