@@ -56,13 +56,17 @@
 {%-     set docker_lines = hv.docker_containers.stdout_lines | default([]) %}
 {%-     set docker_rows = [] %}
 {%-     for line in docker_lines %}
-{%-       set container = line | from_json %}
+{%-       if line | trim | regex_search('^\\{.*\\}$') %}
+{%-         set container = line | from_json %}
+{%-       else %}
+{%-         set container = {} %}
+{%-       endif %}
 {%-       if container.Names is defined and container.Image is defined %}
 {%-         set container_name = container.Names %}
 {%-         set image_ref = container.Image %}
 {%-         set exposed_ports = container.Ports | default('') %}
 {%-         set image_name = image_ref %}
-{%-         set image_tag = 'latest' %}
+{%-         set image_tag = 'n/a' %}
 {%-         if '@' in image_ref %}
 {%-           set image_tag = 'n/a' %}
 {%-         elif ':' in (image_ref.split('/') | last) %}
