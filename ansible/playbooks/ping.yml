@@ -81,9 +81,11 @@
                 {%- set image_ref = container.Image -%}
                 {%- set image_name = image_ref -%}
                 {%- set image_tag = 'n/a' -%}
+                {%- set last_colon = image_ref.rfind(':') -%}
+                {%- set last_slash = image_ref.rfind('/') -%}
                 {%- if '@' in image_ref -%}
                   {%- set image_name = image_ref.split('@', 1)[0] -%}
-                {%- elif ':' in (image_ref.split('/') | last) -%}
+                {%- elif last_colon > last_slash -%}
                   {%- set image_name = image_ref.rsplit(':', 1)[0] -%}
                   {%- set image_tag = image_ref.rsplit(':', 1)[1] -%}
                 {%- endif -%}

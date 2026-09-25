@@ -25,7 +25,11 @@
 
 #### Docker Containers
 
-{{ node.docker_table_md }}
+| Name | Image | Tag | Exposed Ports |
+|------|-------|-----|---------------|
+{% for row in node.docker_rows %}
+| {{ row.name }} | {{ row.image }} | {{ row.tag }} | {{ row.ports }} |
+{% endfor %}
 {%- endmacro %}
 {%- set noise_interfaces = '^(lo|docker|br-|veth|virbr)' %}
 {%- set nodes = [] %}
@@ -54,17 +58,6 @@
 {%-     set root_mount = (hv.ansible_facts.mounts | default([]) | selectattr('mount', 'equalto', '/') | list | first) | default({}) %}
 {%-     set release = hv.ansible_facts.distribution_release | default('') %}
 {%-     set docker_rows = hv.docker_containers_for_docs | default([{'name': 'n/a', 'image': 'n/a', 'tag': 'n/a', 'ports': 'n/a'}]) %}
-{%-     set docker_name_width = (['Name'] + (docker_rows | map(attribute='name') | list)) | map('length') | max %}
-{%-     set docker_image_width = (['Image'] + (docker_rows | map(attribute='image') | list)) | map('length') | max %}
-{%-     set docker_tag_width = (['Tag'] + (docker_rows | map(attribute='tag') | list)) | map('length') | max %}
-{%-     set docker_ports_width = (['Exposed Ports'] + (docker_rows | map(attribute='ports') | list)) | map('length') | max %}
-{%-     set docker_table_lines = [] %}
-{%-     set _ = docker_table_lines.append('| ' ~ ('%-*s' % (docker_name_width, 'Name')) ~ ' | ' ~ ('%-*s' % (docker_image_width, 'Image')) ~ ' | ' ~ ('%-*s' % (docker_tag_width, 'Tag')) ~ ' | ' ~ ('%-*s' % (docker_ports_width, 'Exposed Ports')) ~ ' |') %}
-{%-     set _ = docker_table_lines.append('|' ~ ('-' * (docker_name_width + 2)) ~ '|' ~ ('-' * (docker_image_width + 2)) ~ '|' ~ ('-' * (docker_tag_width + 2)) ~ '|' ~ ('-' * (docker_ports_width + 2)) ~ '|') %}
-{%-     for row in docker_rows %}
-{%-       set _ = docker_table_lines.append('| ' ~ ('%-*s' % (docker_name_width, row.name)) ~ ' | ' ~ ('%-*s' % (docker_image_width, row.image)) ~ ' | ' ~ ('%-*s' % (docker_tag_width, row.tag)) ~ ' | ' ~ ('%-*s' % (docker_ports_width, row.ports)) ~ ' |') %}
-{%-     endfor %}
-{%-     set docker_table_md = docker_table_lines | join('\n') %}
 {%-     set _ = nodes.append({
           'name': host,
           'groups': hv.group_names | default([]) | join(', '),
@@ -87,7 +80,7 @@
           'virt_type': hv.ansible_facts.virtualization_type | default('n/a'),
           'service_mgr': hv.ansible_facts.service_mgr | default('n/a'),
           'facts_at': hv.ansible_facts.date_time.iso8601 | default('n/a'),
-          'docker_table_md': docker_table_md,
+          'docker_rows': docker_rows,
         }) %}
 {%-   endif %}
 {%- endfor %}
