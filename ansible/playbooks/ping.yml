@@ -79,15 +79,14 @@
               {%- set container = line | from_json -%}
               {%- if container.Names is defined and container.Image is defined -%}
                 {%- set image_ref = container.Image -%}
-                {%- set image_name = image_ref -%}
+                {%- set base_image_ref = image_ref.split('@', 1)[0] if ('@' in image_ref) else image_ref -%}
+                {%- set image_name = base_image_ref -%}
                 {%- set image_tag = 'n/a' -%}
-                {%- set last_colon = image_ref.rfind(':') -%}
-                {%- set last_slash = image_ref.rfind('/') -%}
-                {%- if '@' in image_ref -%}
-                  {%- set image_name = image_ref.split('@', 1)[0] -%}
-                {%- elif last_colon > last_slash -%}
-                  {%- set image_name = image_ref.rsplit(':', 1)[0] -%}
-                  {%- set image_tag = image_ref.rsplit(':', 1)[1] -%}
+                {%- set last_colon = base_image_ref.rfind(':') -%}
+                {%- set last_slash = base_image_ref.rfind('/') -%}
+                {%- if last_colon > last_slash -%}
+                  {%- set image_name = base_image_ref.rsplit(':', 1)[0] -%}
+                  {%- set image_tag = base_image_ref.rsplit(':', 1)[1] -%}
                 {%- endif -%}
                 {%- set _ = rows.append({
                       'name': container.Names,
