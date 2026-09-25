@@ -7,7 +7,6 @@ This Ansible playbook performs a lightweight connectivity and Python execution c
 - **Node Reachability Check**: Connects to every configured host in the Ansible inventory
 - **Ansible Ping Validation**: Executes `ansible.builtin.ping` to confirm remote module execution works
 - **Fact Gathering**: Collects OS, network, and hardware facts from every reachable node
-- **Docker Runtime Snapshot**: Collects running Docker containers per reachable host (name, image, tag, and exposed ports)
-- **Node Configs Documentation**: Regenerates [`docs/nodes/node-configs.md`](../../nodes/node-configs.md) with each reachable node's IP addresses, OS/version, other interesting facts, and a dedicated Docker containers table per node
+- **Node Configs Documentation**: Regenerates [`docs/nodes/node-configs.md`](../../nodes/node-configs.md) with each reachable node's IP addresses, OS/version, and other interesting facts
 
 The playbook targets all inventory nodes to provide a simple, centralized operational readiness check for the full home lab.
