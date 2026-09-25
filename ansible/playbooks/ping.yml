@@ -88,11 +88,12 @@
                   {%- set image_name = base_image_ref.rsplit(':', 1)[0] -%}
                   {%- set image_tag = base_image_ref.rsplit(':', 1)[1] -%}
                 {%- endif -%}
+                {%- set ports_value = container.Ports if (container.Ports | default('')) else 'n/a' -%}
                 {%- set _ = rows.append({
                       'name': container.Names,
                       'image': image_name,
                       'tag': image_tag,
-                      'ports': (container.Ports if (container.Ports | default('')) else 'n/a'),
+                      'ports': ports_value | replace('|', '\\|'),
                     }) -%}
               {%- endif -%}
             {%- endif -%}
