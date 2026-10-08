@@ -94,3 +94,14 @@
         name: ../roles/raspi/fritz-box-exporter
       tags:
         - fritz-box-exporter
+
+- name: Install and configure pi4-0002 specifics
+  hosts: pi4-0002.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/raspi/fantasy-hockey

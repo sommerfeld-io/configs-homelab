@@ -1,0 +1,109 @@
+---
+- name: RasPi  ----  Fantasy Hockey  ----  Deploy Fantasy Hockey
+  block:
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Create deploy directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rwx,g=rx,o=rx
+      with_items:
+        - "{{ raspi_fantasy_hockey_path }}"
+        - "{{ raspi_fantasy_hockey_path }}/nginx"
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Create data directory
+      ansible.builtin.file:
+        path: "{{ raspi_fantasy_hockey_path }}/data"
+        state: directory
+        owner: "1000"
+        group: "1000"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: files/docker-compose.yml
+        dest: "{{ raspi_fantasy_hockey_path }}/docker-compose.yml"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+      register: raspi_fantasy_hockey_compose_file
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Copy nginx config
+      ansible.builtin.copy:
+        src: files/nginx/default.conf
+        dest: "{{ raspi_fantasy_hockey_path }}/nginx/default.conf"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+      register: raspi_fantasy_hockey_nginx_conf
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Template .env
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: "{{ raspi_fantasy_hockey_path }}/.env"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=,o=
+      register: raspi_fantasy_hockey_env_file
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Check for an existing data file
+      ansible.builtin.stat:
+        path: "{{ raspi_fantasy_hockey_path }}/data/fantasy-hockey.yml"
+      register: raspi_fantasy_hockey_data_file
+
+    # fantasy-hockey.yml is the app's working file, hand-edited by the pool
+    # operator and mutated at runtime. Once it exists on the target, Ansible
+    # must never touch it again - not its content, not its ownership/mode -
+    # no matter how it differs from this template. Gating on the stat result
+    # above (rather than relying on the template module's own force/diff
+    # behavior) keeps that guarantee explicit and independent of the file's
+    # contents.
+    - name: RasPi  ----  Fantasy Hockey  ----  Seed initial data file
+      ansible.builtin.template:
+        src: templates/fantasy-hockey.yml.j2
+        dest: "{{ raspi_fantasy_hockey_path }}/data/fantasy-hockey.yml"
+        owner: "1000"
+        group: "1000"
+        mode: u=rw,g=r,o=r
+      when: not raspi_fantasy_hockey_data_file.stat.exists
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Start containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ raspi_fantasy_hockey_path }}"
+        state: present
+        pull: missing
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Restart stack on config change
+      community.docker.docker_compose_v2:
+        project_src: "{{ raspi_fantasy_hockey_path }}"
+        state: restarted
+      when: >-
+        raspi_fantasy_hockey_compose_file.changed or
+        raspi_fantasy_hockey_nginx_conf.changed or
+        raspi_fantasy_hockey_env_file.changed
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Verify Fantasy Hockey app is running
+      community.docker.docker_container_info:
+        name: fantasy-hockey-app
+      register: raspi_fantasy_hockey_app_info
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Verify Fantasy Hockey nginx is running
+      community.docker.docker_container_info:
+        name: fantasy-hockey-nginx
+      register: raspi_fantasy_hockey_nginx_info
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Assert Fantasy Hockey app is running
+      ansible.builtin.assert:
+        that:
+          - raspi_fantasy_hockey_app_info.container.State.Running
+        fail_msg: "Fantasy Hockey app container is not running"
+        success_msg: "Fantasy Hockey app container is running"
+
+    - name: RasPi  ----  Fantasy Hockey  ----  Assert Fantasy Hockey nginx is running
+      ansible.builtin.assert:
+        that:
+          - raspi_fantasy_hockey_nginx_info.container.State.Running
+        fail_msg: "Fantasy Hockey nginx container is not running"
+        success_msg: "Fantasy Hockey nginx container is running"

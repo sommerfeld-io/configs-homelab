@@ -102,6 +102,12 @@ tasks:
     desc: *ansible-vault-desc
     cmds: *ansible-vault-cmd
 
+  vault:fantasy-hockey:
+    vars:
+      VAULT_FILE: roles/raspi/fantasy-hockey/defaults/main.yml
+    desc: *ansible-vault-desc
+    cmds: *ansible-vault-cmd
+
   vault:grafana:
     vars:
       VAULT_FILE: vars/grafana-vault.yml
