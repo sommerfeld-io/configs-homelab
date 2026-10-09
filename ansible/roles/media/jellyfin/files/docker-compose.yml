@@ -1,7 +1,7 @@
 ---
 services:
   jellyfin:
-    image: jellyfin/jellyfin:12.1.20260915-010956
+    image: jellyfin/jellyfin:12.2.20261005-225228
     container_name: jellyfin
     restart: unless-stopped
     ports:
