@@ -22,6 +22,7 @@
         line: "{{ item }}"
       loop:
         - "export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}"
+        - "export DIGITALOCEAN_TOKEN={{ DIGITALOCEAN_TOKEN }}"
 
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
