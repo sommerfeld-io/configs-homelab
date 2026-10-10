@@ -7,7 +7,7 @@ paradigm: 'declarative-convergence (Ansible-driven, dual-verified)'
 scope: 'Whole Homelab Configs system — brownfield, ratifying existing conventions (Ansible provisioning, InSpec compliance, observability, docs, CI safety net)'
 status: final
 created: '2026-08-24'
-updated: '2026-08-24'
+updated: '2026-10-10'
 binds: ['FR-1', 'FR-2', 'FR-3', 'FR-4', 'FR-5', 'FR-6', 'FR-7', 'FR-8', 'FR-9']
 sources: ['../../prds/prd-configs-homelab-2026-08-24/prd.md']
 companions: []
@@ -43,7 +43,7 @@ graph TD
 
 - **Binds:** all
 - **Prevents:** node-specific configuration drifting into a separate, unreconciled state store
-- **Rule:** every persistent node configuration must be expressible in and derived from the Ansible declaration (playbooks, roles, vars, inventory; vault-encrypted where secret). No tool that maintains its own separate state file about node reality (e.g. Terraform-style state) is the source of truth for this system.
+- **Rule:** every persistent node configuration must be expressible in and derived from the Ansible declaration (playbooks, roles, vars, inventory; vault-encrypted where secret). Cloud resources are the one place a state file is used: OpenTofu declares them and its state is their record (see AD-10). That state records cloud infrastructure only. Software and configuration on any node, cloud or fleet, stays declared in Ansible, and no other tool keeps a separate record of node reality.
 
 ### AD-2 — Ansible is the default; imperative one-offs are a narrow exception [ADOPTED]
 
@@ -61,7 +61,7 @@ graph TD
 
 - **Binds:** `ansible/roles/*`
 - **Prevents:** reusable OS-level logic leaking into homelab-specific local roles (unreusable, untestable outside this repo) and vice versa (repo-specific config bloating the reusable collection)
-- **Rule:** the test is reusability to someone else, not mechanism genericity — a role belongs in the `ansible-roles-collection` submodule when it would be generally useful to another project or user independent of this specific homelab, even if implemented generically. A role belongs in local `ansible/roles/{common,grafana-cloud,media}/*` when it exists only to serve this homelab's specific needs, even if its implementation is itself parameter-driven and generic (e.g. `common/mount-disk` takes only a UUID and a path — nothing homelab-specific in the code — but stays local, because "mount an arbitrary disk" only matters here because specific Pis have specific USB drives; no other project would want this role standalone). A local role may share a submodule role's name to layer concrete content on top of a generic mechanism (e.g. `common/taskfile-dev` on `ansible-roles-collection/taskfile-dev`) — when it does, the submodule role is always included first, the local role second. *Enforcement note (Deferred):* this ordering is discipline-enforced only — no lint checks `include_role` sequence.
+- **Rule:** the test is reusability to someone else, not mechanism genericity — a role belongs in the `ansible-roles-collection` submodule when it would be generally useful to another project or user independent of this specific homelab, even if implemented generically. A role belongs in local `ansible/roles/{common,grafana-cloud,media}/*` when it exists only to serve this homelab's specific needs, even if its implementation is itself parameter-driven and generic (e.g. `common/mount-disk` takes only a UUID and a path — nothing homelab-specific in the code — but stays local, because "mount an arbitrary disk" only matters here because specific Pis have specific USB drives; no other project would want this role standalone). A local role may share a submodule role's name to layer concrete content on top of a generic mechanism (e.g. `common/taskfile-dev` on `ansible-roles-collection/taskfile-dev`) — when it does, the submodule role is always included first, the local role second. *Enforcement note (Deferred):* this ordering is discipline-enforced only — no lint checks `include_role` sequence. *Carve-out:* cloud-specific roles live under `cloud-configs/<provider>/ansible/roles` (see AD-10).
 
 ### AD-5 — Per-machine exceptions: three mechanisms, each fit to its trigger [ADOPTED]
 
@@ -76,7 +76,7 @@ graph TD
 
 - **Binds:** node-configuration secrets (any secret consumed by a playbook/role/task)
 - **Prevents:** plaintext secrets, ad hoc per-playbook secret handling, vault files hand-edited outside the task runner
-- **Rule:** all node-configuration secrets live in an Ansible Vault-encrypted file under `ansible/vars/` (e.g. `vault.yml`, `grafana-vault.yml`), referenced directly by variable name in tasks — no `vault_`-prefixed indirection layer. The only sanctioned way to edit a vault file is its `task ansible:vault[:name]` task. **Out of scope:** CI/build-time secrets consumed by GitHub Actions itself (e.g. `secrets.DOCKERHUB_TOKEN`, `secrets.GITHUB_TOKEN`) — those live in GitHub's own encrypted-secrets store, a separate and already-adequate mechanism this AD does not govern.
+- **Rule:** all node-configuration secrets live in an Ansible Vault-encrypted file under `ansible/vars/` (e.g. `vault.yml`, `grafana-vault.yml`), referenced directly by variable name in tasks — no `vault_`-prefixed indirection layer. The only sanctioned way to edit a vault file is its `task ansible:vault[:name]` task. **Out of scope:** CI/build-time secrets consumed by GitHub Actions itself (e.g. `secrets.DOCKERHUB_TOKEN`, `secrets.GITHUB_TOKEN`) — those live in GitHub's own encrypted-secrets store, a separate and already-adequate mechanism this AD does not govern. *Carve-out:* for cloud deployments under `cloud-configs/`, the provider token and the vault password in CI are also org-level GitHub secrets (see AD-10).
 
 ### AD-7 — Dependency pinning: pin third-party, float only your own [ADOPTED]
 
@@ -88,13 +88,24 @@ graph TD
 
 - **Binds:** `.github/workflows/*`, the `ansible-roles-collection` submodule
 - **Prevents:** this repo's CI growing into a redundant second role-testing matrix; assuming the submodule's CI validates this repo's own playbooks/inventory
-- **Rule:** this repo's own CI performs linting, InSpec-profile vendor/validity checks, docs generation, and release. A read-only, no-target playbook syntax-check or dry-run (`--syntax-check` / `--check`, nothing applied) is compatible with this rule as a playbook-level smoke test; this repo's CI must never *apply and verify* a playbook against a live or containerized target — that would be the redundant role-testing matrix this AD prevents. Multi-Ubuntu-version role-level testing is owned exclusively by the `ansible-roles-collection` submodule's own CI.
+- **Rule:** this repo's own CI performs linting, InSpec-profile vendor/validity checks, docs generation, and release. A read-only, no-target playbook syntax-check or dry-run (`--syntax-check` / `--check`, nothing applied) is compatible with this rule as a playbook-level smoke test; this repo's CI must never *apply and verify* a playbook against a live or containerized target — that would be the redundant role-testing matrix this AD prevents. Multi-Ubuntu-version role-level testing is owned exclusively by the `ansible-roles-collection` submodule's own CI. *Carve-out:* `cloud-deployment.yml` may apply OpenTofu and playbooks against live cloud resources (see AD-10); fleet playbooks are still never applied by CI.
 
 ### AD-9 — Docs mirror playbooks only [ADOPTED]
 
 - **Binds:** `docs/ansible/*`
 - **Prevents:** an expectation that every `ansible/` subdirectory needs a `docs/` counterpart
-- **Rule:** every playbook under `ansible/playbooks/` has exactly one corresponding `docs/ansible/playbooks/*.md`; renaming or removing a playbook renames or removes its doc in the same change. `ansible/roles/`, `ansible/tasks/`, and `ansible/vars/` carry no docs-mirroring *requirement* — but a role doc is a permitted, narrow exception when a role has meaningful shared-variable documentation worth surfacing in the published docs site (the existing `docs/ansible/roles/grafana-cloud/alloy.md`, generated from that role's own README, is this exception in practice — not a pattern obligated to repeat for every role, but not forbidden either).
+- **Rule:** every playbook under `ansible/playbooks/` has exactly one corresponding `docs/ansible/playbooks/*.md`; renaming or removing a playbook renames or removes its doc in the same change. `ansible/roles/`, `ansible/tasks/`, and `ansible/vars/` carry no docs-mirroring *requirement* — but a role doc is a permitted, narrow exception when a role has meaningful shared-variable documentation worth surfacing in the published docs site (the existing `docs/ansible/roles/grafana-cloud/alloy.md`, generated from that role's own README, is this exception in practice — not a pattern obligated to repeat for every role, but not forbidden either). *Carve-out:* cloud deployments are documented per topic under `docs/cloud/` (see AD-10).
+
+### AD-10 — Cloud deployments are a bounded context with their own declaration [ADOPTED]
+
+- **Binds:** `cloud-configs/*`, `.github/workflows/cloud-deployment.yml`, `docs/cloud/*`, `cloud-configs/taskfile.yml`
+- **Prevents:** forcing cloud resources under fleet-node rules (which they cannot meet), and, in reverse, weakening AD-1/4/6/8/9 for fleet nodes because cloud work needed an exception
+- **Rule:** a cloud deployment (the first is `cloud-configs/digital-ocean`, a DigitalOcean droplet running the fantasy hockey app) is declared in its own folder, one folder per provider, and is outside the fleet's node roles, inventory and InSpec baseline. It is declared in two layers: OpenTofu declares the cloud resources (droplet, volume, reserved IP), and Ansible under `cloud-configs/<provider>/ansible` provisions and deploys the software on them. GitHub Actions applies both. The fleet rules continue to apply unchanged to everything outside `cloud-configs/`. Carve-outs, each limited to `cloud-configs/*`:
+    - **AD-1:** OpenTofu and its state are the accepted declaration of cloud resources, and the state must be managed (location, backup, locking; see the state decisions in the cloud spec). The Ansible declaration stays the source of truth for software and configuration on the droplet. Ansible discovers cloud hosts through the provider's dynamic inventory (by tag), not through the state file or a static inventory.
+    - **AD-4:** cloud-specific roles live under `cloud-configs/<provider>/ansible/roles`. Roles in `ansible/roles` are reused through relative paths, not `roles_path`, and are not moved. The one move is the fantasy-hockey compose role out of `ansible/roles/raspi`.
+    - **AD-6:** secrets consumed by cloud playbooks are still vault-encrypted and share the one vault password. In CI, the provider token and the vault password come from organization-level GitHub secrets, because OpenTofu runs before Ansible and cannot read the vault. Locally the token is exported as an env var through `ansible/tasks/bash-secrets.yml`.
+    - **AD-8:** `cloud-deployment.yml` may apply playbooks and OpenTofu against live cloud resources, because the cloud setup has no counterpart in the roles submodule's CI. It never applies fleet playbooks.
+    - **AD-9:** cloud docs are organized by topic, not mirrored per playbook.
 
 ## Consistency Conventions
 

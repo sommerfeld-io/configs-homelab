@@ -1,4 +1,3 @@
----
 # STATUS DEFINITIONS:
 # ==================
 # Epic Status:
@@ -30,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 08-25-2026 19:28
+last_updated: 10-10-2026 21:47
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -39,6 +38,38 @@ development_status:
   epic-1: done
   1-1-tag-every-manual-bootstrap-step-with-an-explicit-disposition: done
   epic-1-retrospective: done
+
+  epic-2: backlog
+  2-1-devcontainer-tools-and-digitalocean_token-delivery: backlog
+  2-2-cloud-configs-scaffold-with-taskfile-and-linters: backlog
+  2-3-docs-skeleton-for-cloud-digital-ocean: backlog
+  2-4-opentofu-droplet-ssh-keys-tag-and-project: backlog
+  2-5-reserved-ip-and-2-gb-volume-with-prevent_destroy: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-dynamic-inventory-and-base-provision-yml: backlog
+  3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-lab: backlog
+  3-3-environment-homelab-label-in-the-homelab-alloy-config: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-move-fantasy-hockey-role-and-deploy-services-yml-with-nginx: backlog
+  4-2-dependabot-compose-bumps-for-cloud-configs: backlog
+  4-3-droplet-replacement-drill: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-grafana-dashboard-for-the-droplet-and-the-app: backlog
+  5-2-synthetic-monitoring-check-for-the-public-url: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-ci-static-checks-for-opentofu-and-ansible: backlog
+  6-2-remote-state-with-locking: backlog
+  6-3-cloud-deployment-yml-with-org-secrets-and-ci-ssh-key: backlog
+  epic-6-retrospective: optional
+
 action_items:
   - id: "epic-1-retro-item-1-reconcile-epic-1-context-md-story-1-2-re"
     epic: 1

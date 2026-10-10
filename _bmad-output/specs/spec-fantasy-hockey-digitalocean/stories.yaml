@@ -1,0 +1,102 @@
+- id: "1"
+  title: Devcontainer tools and DIGITALOCEAN_TOKEN delivery
+  description: >-
+    Install doctl and OpenTofu in the devcontainer, and deliver DIGITALOCEAN_TOKEN as a local env var through vault.yml and bash-secrets.yml (CAP-6, constraint on secrets).
+    Update the docs for the manual token setup.
+- id: "2"
+  title: cloud-configs scaffold with taskfile and linters
+  description: >-
+    Create cloud-configs/digital-ocean/{opentofu,ansible}, cloud-configs/taskfile.yml included in the main taskfile with prefix cloud, and make folderslint, ls-lint, ansible-lint and a new OpenTofu linter cover the folder (CAP-6).
+    Docs updated in the same change.
+- id: "3"
+  title: Docs skeleton for Cloud - Digital Ocean
+  description: >-
+    Add docs/cloud/digital-ocean and the "Cloud - Digital Ocean" nav item in mkdocs.yml with the first pages and kroki.io diagram setup (CAP-7).
+    Later stories add their pages here.
+- id: "4"
+  title: OpenTofu droplet, SSH keys, tag and project
+  description: >-
+    Define the prod-fantasy-hockey droplet (s-1vcpu-1gb, fra1, Ubuntu 26.04, monitoring, tag prod, project sommerfeld.io) with both existing SSH keys, pinned versions and local state, built so a second droplet is a new map entry (CAP-1).
+    Stage is defined once and reused.
+- id: "5"
+  title: Reserved IP and 2 GB volume with prevent_destroy
+  description: >-
+    Add the reserved IP and the 2 GB ext4 volume attached at droplet creation, both protected by prevent_destroy (CAP-1).
+    This is where real resources and spend begin.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Verify first that the declaratively attached volume is auto-mounted under /mnt/<volume-name> and survives a reboot.
+    If it does not, stop and ask before falling back to an Ansible mount.
+- id: "6"
+  title: Dynamic inventory and base provision.yml
+  description: >-
+    Add the DigitalOcean dynamic inventory selecting by tag with groups ubuntu and fantasy-hockey, and a provision.yml that applies the bash config with the yellow user@host prompt and Docker, reusing roles from ansible/roles through relative paths (CAP-2).
+    Explain the inventory in the docs.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Inventory selects by tag only: no static IPs, no generated or committed inventory.
+    Confirm the community.digitalocean plugin options (tag filter, groups from tags, public IPv4, token from env) before building on them.
+- id: "7"
+  title: Swap and Alloy on the droplet with environment and stage labels
+  description: >-
+    Extend provision.yml with a swap file and Alloy via the existing grafana-cloud role, scraping the app at :8080/metrics and shipping OS metrics and logs with labels environment=digitalocean and stage=prod (CAP-2, CAP-4).
+    Docs updated in the same change.
+- id: "8"
+  title: environment=homelab label in the homelab Alloy config
+  description: >-
+    Add the environment=homelab label to ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 so homelab and DigitalOcean series can be told apart (CAP-4).
+    Existing labels, including source, stay untouched.
+- id: "9"
+  title: Move fantasy-hockey role and deploy-services.yml with nginx
+  description: >-
+    Move the fantasy-hockey compose role from ansible/roles/raspi into cloud-configs/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    Use git mv for the move and update the docs.
+  done_checkpoint: true
+  invoke_dev_with: >-
+    The data file fantasy-hockey.yml is seeded from the default template only when absent; when present it is never overwritten from the template.
+    Check that the fantasy_hockey_ rename passes ansible-lint.
+- id: "10"
+  title: Dependabot compose bumps for cloud-configs
+  description: >-
+    Configure Dependabot to bump the docker images in the cloud-configs compose file so a bump is a change under cloud-configs/digital-ocean (CAP-3).
+    The redeploy itself is wired in story 16.
+- id: "11"
+  title: Droplet replacement drill
+  description: >-
+    Prove that changing the image slug replaces the droplet while the reserved IP and the volume with fantasy-hockey.yml are re-attached and the app returns at the same address after a short outage (CAP-8).
+    Document the procedure.
+- id: "12"
+  title: Grafana dashboard for the droplet and the app
+  description: >-
+    Add a comprehensive dashboard to grafana-cloud/manifests/git-sync/apps covering CPU, memory and more, the app itself, containers and logs of all containers (CAP-4).
+    No alerts.
+- id: "13"
+  title: Synthetic monitoring check for the public URL
+  description: >-
+    Add a Grafana Cloud synthetic monitoring check for the public URL, probed from outside like the existing checks from Frankfurt and Paris (CAP-4).
+    Confirm the current limits and how existing checks are provisioned first.
+- id: "14"
+  title: CI static checks for OpenTofu and Ansible
+  description: >-
+    Run the new linters and static checks for cloud-configs in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
+    Docs updated in the same change.
+- id: "15"
+  title: Remote state with locking
+  description: >-
+    Choose and set up a shared remote OpenTofu state with locking (DO Spaces is the candidate) so localhost and GitHub Actions can alternate runs without corrupting state (CAP-5).
+    Document the backend and its backup.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    The backend is not decided yet: prototype and confirm locking support before migrating the local state.
+    Spaces keys are separate from DIGITALOCEAN_TOKEN.
+- id: "16"
+  title: cloud-deployment.yml with org secrets and CI SSH key
+  description: >-
+    Add .github/workflows/cloud-deployment.yml triggered by changes in cloud-configs/digital-ocean that runs static checks, OpenTofu, provisioning and deployment using org-level secrets (DO token, vault password, CI SSH key) (CAP-5).
+    Register the fresh CI SSH public key on DigitalOcean and document the manual setup.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    All GitHub secrets are organization-level, not repo-level.
+    Never commit generated inventory: it would retrigger the workflow.
