@@ -33,14 +33,14 @@
 
 ## Inventory and playbooks
 
-- Dynamic inventory with the `community.digitalocean` plugin, selected by tag, needing only `DIGITALOCEAN_TOKEN`; groups `ubuntu` and `fantasy-hockey` are composed from tags.
+- Dynamic inventory with the `community.digitalocean` plugin, selected by tag, authenticated with `DIGITALOCEAN_TOKEN` passed as the plugin's `oauth_token` from an env lookup (the plugin does not read that env var by default; add `tags` to its `attributes`); groups `ubuntu` and `fantasy-hockey` are composed from tags.
 - `provision.yml` targets `ubuntu`; `deploy-services.yml` targets `fantasy-hockey`.
 - Bash prompt is the same as for the ubuntu server in `ansible/hosts.yml`, with `user@host` in yellow.
 
 ## Observability
 
 - Alloy installed through `ansible/roles/grafana-cloud`, secrets from `ansible/vars/grafana-vault.yml`; scrapes the app at `:8080/metrics`, ships OS metrics and logs.
-- Labels: `environment` (`homelab` or `digitalocean`) in both Alloy configs; `stage=prod` on the droplet.
+- Labels: `environment` (`homelab` or `digital-ocean`) in both Alloy configs; `stage=prod` on the droplet only (the homelab has no `stage` label).
 - External availability through Grafana Cloud synthetic monitoring; no alerts yet.
 
 ## Exposure

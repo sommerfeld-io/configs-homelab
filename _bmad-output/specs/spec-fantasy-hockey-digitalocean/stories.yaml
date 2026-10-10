@@ -40,7 +40,7 @@
 - id: "7"
   title: Swap and Alloy on the droplet with environment and stage labels
   description: >-
-    Extend provision.yml with a swap file and Alloy via the existing grafana-cloud role, scraping the app at :8080/metrics and shipping OS metrics and logs with labels environment=digitalocean and stage=prod (CAP-2, CAP-4).
+    Extend provision.yml with a swap file and Alloy via the existing grafana-cloud role, scraping the app at :8080/metrics and shipping OS metrics and logs with labels environment=digital-ocean and stage=prod (CAP-2, CAP-4).
     Docs updated in the same change.
 - id: "8"
   title: environment=homelab label in the homelab Alloy config
@@ -50,12 +50,14 @@
 - id: "9"
   title: Move fantasy-hockey role and deploy-services.yml with nginx
   description: >-
-    Move the fantasy-hockey compose role from ansible/roles/raspi into cloud-configs/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
-    Use git mv for the move and update the docs.
+    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from ansible/roles/raspi into cloud-configs/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    Also clean up the old Pi deployment: remove the role from raspi.yml, move the vault:fantasy-hockey taskfile entry into the cloud taskfile, repoint Dependabot, and add a cleanup that removes /opt/fantasy-hockey and stops and removes the containers on the Pi. Use git mv for the move and update the docs.
   done_checkpoint: true
   invoke_dev_with: >-
     The data file fantasy-hockey.yml is seeded from the default template only when absent; when present it is never overwritten from the template.
     Check that the fantasy_hockey_ rename passes ansible-lint.
+    The pi4-0002 play in raspi.yml only runs this role, so replace it with the cleanup play and leave no reference to ansible/roles/raspi/fantasy-hockey in raspi.yml, ansible/taskfile.yml or .github/dependabot.yml.
+    Run the Pi cleanup only after the app is verified reachable on the droplet. Scope the container removal to pi4-0002 and check first that no other service runs in containers there.
 - id: "10"
   title: Dependabot compose bumps for cloud-configs
   description: >-

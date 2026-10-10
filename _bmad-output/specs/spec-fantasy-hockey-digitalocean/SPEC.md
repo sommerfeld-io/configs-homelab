@@ -24,11 +24,11 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-3**
     - **intent:** Operator can deploy the fantasy hockey app as docker compose on the droplet and reach it on a static public address.
-    - **success:** After the deploy task, `http://<reserved-ip>` (port 80, nginx in front of the app on 8080) serves the app from outside the home network; a Dependabot compose-image bump followed by a redeploy updates the running containers.
+    - **success:** After the deploy task, `http://<reserved-ip>` (port 80, nginx in front of the app on 8080) serves the app from outside the home network; a Dependabot compose-image bump followed by a redeploy updates the running containers; the old Pi deployment is removed (role out of `raspi.yml`, `/opt/fantasy-hockey` and its containers gone, taskfile and Dependabot entries moved).
 
 - **CAP-4**
     - **intent:** Operator can see the droplet, the app and its containers in Grafana Cloud, distinguished from the homelab.
-    - **success:** Grafana Cloud shows OS metrics, container metrics, logs and the app's `:8080/metrics` for the droplet, every series labeled `environment=digitalocean` and `stage=prod`; homelab series carry `environment=homelab`; a dashboard in `grafana-cloud/manifests/git-sync/apps` covers host, app, containers and logs; a synthetic monitoring check probes the public URL from outside.
+    - **success:** Grafana Cloud shows OS metrics, container metrics, logs and the app's `:8080/metrics` for the droplet, every series labeled `environment=digital-ocean` and `stage=prod`; homelab series carry `environment=homelab`; a dashboard in `grafana-cloud/manifests/git-sync/apps` covers host, app, containers and logs; a synthetic monitoring check probes the public URL from outside.
 
 - **CAP-5**
     - **intent:** A change under `cloud-configs/digital-ocean` is applied automatically by a GitHub Actions workflow, decoupled from app releases.
@@ -52,7 +52,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-10**
     - **intent:** (E7) The droplet stays healthy without attention.
-    - **success:** Unattended-upgrades, logrotate and disk cleanup, memory limits (compose `mem_limit`, Alloy `MemoryMax`) and a post-deploy smoke test of the public URL are in place; the Raspberry Pi deployment is decommissioned.
+    - **success:** Unattended-upgrades, logrotate and disk cleanup, memory limits (compose `mem_limit`, Alloy `MemoryMax`) and a post-deploy smoke test of the public URL are in place.
 
 - **CAP-11**
     - **intent:** (E8) The data file survives loss of the volume through a backup the app knows nothing about.
@@ -69,6 +69,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 - `stage` is defined once and reused in the droplet tag, droplet name, inventory group and the Alloy label. `source` is already taken as a label, so the new label is `environment`.
 - Budget is about $6 per month for the droplet plus about $0.20 for the volume; resize CPU and RAM only, never disk.
 - Pin OpenTofu and provider versions. Containers use `restart: unless-stopped`, Alloy runs as a systemd service, cron handles regular jobs.
+- `cloud-deployment.yml` is the single CI apply path: it runs only on `main`, serialized by a concurrency group, and applies only `cloud-configs/` content. OpenTofu is the sole owner of SSH key injection into the droplet (adding the CI key in the GitHub Actions epic replaces the droplet once, which is accepted). A Dependabot bump may replace the droplet; this risk is accepted.
 - Architecture rule AD-10 in the adopted `ARCHITECTURE-SPINE.md` governs this work: cloud deployments are a bounded context under `cloud-configs/` with carve-outs from AD-1, AD-4, AD-6, AD-8 and AD-9. The fleet rules stay unchanged outside it.
 - All other platform decisions (droplet spec, naming, monitoring wiring) are in `platform-decisions.md`.
 
@@ -78,6 +79,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 - Tailscale, Cloudflare, DO App Platform and DO Load Balancer.
 - HTTPS or a custom domain before E6; backup and restore before E8; alerts (observe first).
 - Building a second droplet (test stage or another app); the design only has to make it cheap later.
+- Migrating existing data from the Raspberry Pi to the droplet.
 
 ## Success signal
 

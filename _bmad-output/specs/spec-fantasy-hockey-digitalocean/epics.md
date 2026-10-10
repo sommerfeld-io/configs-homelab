@@ -35,7 +35,8 @@ CAP-7 (docs) applies to every epic.
 
 - `deploy-services.yml` and the fantasy-hockey compose role moved from `ansible/roles/raspi/fantasy-hockey` into `cloud-configs/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
 - nginx on port 80, data on the volume at `/mnt/<volume-name>/fantasy-hockey`, default-seed rule for `fantasy-hockey.yml`.
-- Dependabot bumps of compose images.
+- Dependabot bumps of compose images; the Dependabot entry moves with the role.
+- Cleanup of the old Pi deployment: remove the role from `raspi.yml` (the pi4-0002 play is replaced by a cleanup play), move the `vault:fantasy-hockey` taskfile entry into the cloud taskfile, remove `/opt/fantasy-hockey` and stop and remove the containers on the Pi.
 - Droplet replacement keeps IP and data (CAP-8).
 
 ## E4 Grafana dashboard
@@ -57,7 +58,7 @@ CAP-7 (docs) applies to every epic.
 
 ## E7 Operations hardening
 
-- Unattended-upgrades, logrotate and disk cleanup, memory limits, post-deploy smoke test, Raspberry Pi decommission, token expiry and Ubuntu EOL planning.
+- Unattended-upgrades, logrotate and disk cleanup, memory limits, post-deploy smoke test, remaining Raspberry Pi decommission (the app cleanup is in E3), token expiry and Ubuntu EOL planning.
 
 ## E8 Backup and restore
 

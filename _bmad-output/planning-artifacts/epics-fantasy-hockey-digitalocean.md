@@ -181,7 +181,7 @@ So that it survives memory pressure and reports to Grafana Cloud.
 
 **Given** Alloy is running
 **When** I query Grafana Cloud
-**Then** OS metrics, logs and the app's `:8080/metrics` carry `environment=digitalocean` and `stage=prod`
+**Then** OS metrics, logs and the app's `:8080/metrics` carry `environment=digital-ocean` and `stage=prod`
 
 ### Story 3.3: environment=homelab label in the homelab Alloy config
 
@@ -216,10 +216,21 @@ So that it is reachable from the internet at a static address.
 **When** the deploy runs again
 **Then** the file is not overwritten from the default template
 
+**Given** the role, its files, README and vault-encrypted defaults now live under `cloud-configs/digital-ocean/ansible/roles`
+**When** I search `raspi.yml`, `ansible/taskfile.yml` and `.github/dependabot.yml`
+**Then** none references `ansible/roles/raspi/fantasy-hockey`
+**And** the `vault:fantasy-hockey` entry lives in the cloud taskfile as `cloud:digital-ocean:vault:fantasy-hockey`
+**And** the Dependabot entry points at the moved `files` folder
+
+**Given** the app is verified reachable on the droplet
+**When** I run the cleanup in `raspi.yml` against pi4-0002
+**Then** `/opt/fantasy-hockey` is removed
+**And** the containers on that Pi are stopped and removed, after checking that no other service runs in containers there
+
 ### Story 4.2: Dependabot compose bumps for cloud-configs
 
 As an operator,
-I want Dependabot to bump the compose images,
+I want Dependabot to bump the compose images (the entry itself is moved in Story 4.1),
 So that updates arrive as changes under `cloud-configs/digital-ocean`.
 
 **Acceptance Criteria:**
