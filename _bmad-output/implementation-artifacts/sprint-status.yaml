@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-12-2026 21:23
+last_updated: 10-12-2026 22:07
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -40,13 +40,13 @@ development_status:
   1-1-tag-every-manual-bootstrap-step-with-an-explicit-disposition: done
   epic-1-retrospective: done
 
-  epic-2: in-progress
+  epic-2: done
   2-1-devcontainer-tools-and-digitalocean_token-delivery: done
   2-2-cloud-configs-scaffold-with-taskfile-and-linters: done
   2-3-docs-skeleton-for-cloud-digital-ocean: done
   2-4-opentofu-droplet-ssh-keys-tag-and-project: done
   2-5-reserved-ip-and-2-gb-volume-with-prevent_destroy: done
-  epic-2-retrospective: optional
+  epic-2-retrospective: done
 
   epic-3: backlog
   3-1-dynamic-inventory-and-base-provision-yml: backlog
@@ -84,5 +84,42 @@ action_items:
     action: "Resolve or commit the dirty ansible-roles-collection submodule pointer
       currently in the working tree"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-08-25.md"
+  - id: "epic-2-retro-item-3-reconcile-the-planning-docs-with-the-as"
+    epic: 2
+    action: "Reconcile the planning docs with the as-built droplet before Story 3.1:
+      DIGITALOCEAN_ACCESS_TOKEN (incl. the inventory env lookup), one SSH key, the
+      underscores mount path"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-4-clean-up-the-bashrc-token-exports-in-bas"
+    epic: 2
+    action: "Clean up the .bashrc token exports in bash-secrets.yml: remove the stale
+      DIGITALOCEAN_TOKEN export and replace instead of append on rotation"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-5-decide-the-opentofu-pin-strategy-exact-r"
+    epic: 2
+    action: "Decide the OpenTofu pin strategy (exact required_version vs ~> constraint,
+      host install) and fix the 1.12.x wording in api-token.md"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-6-verify-the-digitalocean-token-scopes-nee"
+    epic: 2
+    action: "Verify the DigitalOcean token scopes needed for droplets with tags, trim
+      ssh_key to read, and update api-token.md"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-7-record-the-epic-2-process-lessons-as-pro"
+    epic: 2
+    action: "Record the Epic 2 process lessons as project pitfalls (run documented
+      commands first, reconcile planning docs with decisions, copy epic resource constraints
+      into story specs, grep all consumers on cross-tool renames)"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
