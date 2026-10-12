@@ -27,8 +27,8 @@ cloud "DigitalOcean" as digitalocean {
 
   frame "Project sommerfeld.io" as project {
     node "Droplet prod-fantasy-hockey\ns-1vcpu-1gb, fra1, tag prod\n(declared)" as droplet
-    component "Reserved IP\n(planned)" as reservedip
-    storage "Volume 2 GB ext4\n/mnt/<volume-name>\n(planned)" as volume
+    component "Reserved IP\n(declared)" as reservedip
+    storage "Volume 2 GB ext4\n/mnt/prod_fantasy_hockey_data\n(declared)" as volume
   }
 }
 
@@ -54,18 +54,18 @@ volume ..> droplet : attached to
 
 All resources belong to the project `sommerfeld.io`.
 
-| Resource    | Details                                                                                                                                                     | Status   |
-|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| Droplet     | [`prod-fantasy-hockey`](droplet.md), `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, tag `prod`, DigitalOcean monitoring on, SSH key `picon___id_rsa.pub` | declared |
-| Reserved IP | Stable public address, survives droplet rebuilds                                                                                                            | planned  |
-| Volume      | 2 GB, ext4, attached at creation and mounted at `/mnt/<volume-name>`, survives rebuilds                                                                     | planned  |
+| Resource    | Details                                                                                                                                                                                | Status   |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| Droplet     | [`prod-fantasy-hockey`](droplet.md), `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, tag `prod`, DigitalOcean monitoring on, SSH key `picon___id_rsa.pub`                            | declared |
+| Reserved IP | [Stable public address](droplet.md#reserved-ip-and-volume), survives droplet rebuilds, `prevent_destroy`                                                                               | declared |
+| Volume      | [`prod-fantasy-hockey-data`](droplet.md#reserved-ip-and-volume), 2 GB, ext4, attached at creation and mounted at `/mnt/prod_fantasy_hockey_data`, survives rebuilds, `prevent_destroy` | declared |
 
 The droplet is configured with Ansible later. Ansible will find it through a dynamic inventory by its tag.
 
 ## Pages
 
-| Page                                      | Content                                                                 |
-|-------------------------------------------|-------------------------------------------------------------------------|
-| [API Token](api-token.md)                 | Token scopes, how the token reaches the shell, manual steps and checks  |
-| [Tasks and Linters](tasks-and-linters.md) | Folder layout, go-task entry points, OpenTofu state and linter coverage |
-| [Droplet](droplet.md)                     | Droplet attributes, stage and droplet map, SSH keys, apply steps        |
+| Page                                      | Content                                                                        |
+|-------------------------------------------|--------------------------------------------------------------------------------|
+| [API Token](api-token.md)                 | Token scopes, how the token reaches the shell, manual steps and checks         |
+| [Tasks and Linters](tasks-and-linters.md) | Folder layout, go-task entry points, OpenTofu state and linter coverage        |
+| [Droplet](droplet.md)                     | Droplet attributes, reserved IP and volume, droplet map, SSH keys, apply steps |

@@ -33,3 +33,9 @@
 
 - No token-free `tofu init -backend=false && tofu validate` in `task lint` or the CI lint matrix, while the new `opentofu` Dependabot entry opens weekly provider bumps that can merge green; same item as the spec-2-4 validate entry above (Story 6.1).
 - `required_version = "1.12.7"` is a third exact OpenTofu pin next to the devcontainer feature and the `lint-opentofu` image, with nothing keeping them in sync; same item as the spec-2-4 pin entry above.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-5-reserved-ip-and-2-gb-volume-with-prevent-destroy.md`
+  summary: Add a repeatable check that `prevent_destroy` on the volume and the reserved IP still refuses a destroy plan.
+  evidence: Only a one-time manual `tofu plan -destroy` proved it; deleting a `lifecycle` block passes `fmt -check` and CI. Needs real state, so it belongs with the remote-state and CI work in Epic 6.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-5-reserved-ip-and-2-gb-volume-with-prevent-destroy.md`
+  summary: Prove a droplet replacement with an already existing volume and reserved IP assignment (detach, re-attach, still mounted, IP re-assigned).
+  evidence: Story 2.5 created the volume and the assignment in the same apply as the replacement; Story 4.3 is the planned drill.

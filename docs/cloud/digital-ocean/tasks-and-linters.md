@@ -24,7 +24,7 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` an
 
 Run `init` once before `plan` and `apply`, and again after provider changes. `plan`, `apply` and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 
-There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds.
+There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds, so both have `lifecycle { prevent_destroy = true }` and OpenTofu refuses any plan that would destroy them, including `tofu plan -destroy`, with `Resource instance cannot be destroyed`. The droplet itself stays replaceable.
 
 OpenTofu state stays local in `cloud-configs/digital-ocean/opentofu/terraform.tfstate` for now and is not committed: `.terraform/`, `*.tfstate*` and `*.tfvars` are in `.gitignore`. The single local copy is an accepted risk until state moves to a remote backend in a later epic, so do not delete the working copy while resources exist. The OpenTofu version (`required_version`) and the `digitalocean/digitalocean` provider are pinned exactly in `versions.tf`. The provider lock file `.terraform.lock.hcl` is committed with hashes for every platform the provider is released for, as published by the OpenTofu registry. Dependabot (`opentofu` ecosystem) opens weekly pull requests that bump the provider pin and the lock file together.
 

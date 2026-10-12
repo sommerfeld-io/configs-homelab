@@ -11,6 +11,8 @@ locals {
       # Resize CPU and RAM only. A grown disk can never shrink again, so a
       # later downsize would be impossible without replacing the droplet.
       resize_disk = false
+      # Size of the data volume in GB, see volumes.tf.
+      volume_size_gb = 2
     }
   }
 
@@ -36,4 +38,7 @@ resource "digitalocean_droplet" "this" {
   resize_disk = each.value.resize_disk
   tags        = [local.stage]
   ssh_keys    = [for key in data.digitalocean_ssh_key.this : key.id]
+  # Attach the data volume at creation so DigitalOcean mounts it automatically
+  # (the volume itself is formatted at volume creation).
+  volume_ids = [digitalocean_volume.this[each.key].id]
 }
