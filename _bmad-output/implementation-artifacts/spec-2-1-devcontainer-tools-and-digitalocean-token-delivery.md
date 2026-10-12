@@ -20,12 +20,12 @@ context: []
 
 ## Implementation Notes
 
-- Pin per AD-7: `tofu` 1.12.7 (1.12.x line), `doctl` 1.183.0. Installed in `.devcontainer/Dockerfile` (build args, checksum-verified release downloads, `USER root` then back to `vscode`). Initially done via devcontainer features; switched to the Dockerfile at the user's request. `DIGITALOCEAN_TOKEN` stays in `devcontainer.json`.
+- Pin per AD-7: `tofu` 1.12.7 (1.12.x line), `doctl` 1.183.0. Features: `ghcr.io/devcontainers-extra/features/opentofu:1` and `.../digitalocean-cli:1`, each with a `version` option; add both to `devcontainer-lock.json`.
 - `ansible/playbooks/desktop.yml` already exports `DIGITALOCEAN_TOKEN` (commit afb0751); no change there. The vault value cannot be verified without the vault password.
 - Docs page: `docs/cloud/digital-ocean/api-token.md` plus a "Cloud - Digital Ocean" nav item in `mkdocs.yml`; Story 2.3 extends the skeleton.
 - Token scopes: droplet, ssh_key, volume, reserved IP, project (firewall or domain only if needed).
-- Files changed: `.devcontainer/Dockerfile`, `.devcontainer/devcontainer.json`, `docs/cloud/digital-ocean/api-token.md`, `mkdocs.yml`, `.folderslintrc` (allow `docs/cloud/**`, required by folderslint).
-- Verified: the Dockerfile builds and `doctl version` / `tofu version` report 1.183.0 / 1.12.7. Not verified: the vault entry (needs the vault password).
+- Files changed: `.devcontainer/devcontainer.json`, `.devcontainer/devcontainer-lock.json`, `docs/cloud/digital-ocean/api-token.md`, `mkdocs.yml`, `.folderslintrc` (allow `docs/cloud/**`, required by folderslint).
+- Not verified here: devcontainer rebuild (`doctl version`, `tofu version`) and the vault entry; both need the operator's machine / vault password.
 
 ## Review Triage Log
 
