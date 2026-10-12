@@ -1,6 +1,6 @@
 # DigitalOcean API Token
 
-All DigitalOcean steps (`doctl`, OpenTofu) authenticate with a personal access token exposed as the environment variable `DIGITALOCEAN_TOKEN`. The token is never committed in plain text.
+All DigitalOcean steps (`doctl`, OpenTofu) authenticate with a personal access token exposed as the environment variable `DIGITALOCEAN_ACCESS_TOKEN`, which both tools read directly. The token is never committed in plain text.
 
 ## Token Scopes
 
@@ -21,10 +21,10 @@ Add `firewall` or `domain` only if a later story needs them. DigitalOcean firewa
 
 ## How the Token Reaches the Shell
 
-1. Add a `DIGITALOCEAN_TOKEN` entry to `ansible/vars/vault.yml` (`task ansible:vault`). The entry must exist before the `desktop` playbook runs, because the playbook references it.
-2. Provision the workstation with the `desktop` playbook. It writes `export DIGITALOCEAN_TOKEN=...` to the default user's `.bashrc` through `ansible/tasks/bash-secrets.yml`.
+1. Add a `DIGITALOCEAN_TOKEN` entry to `ansible/vars/vault.yml` (`task ansible:vault`). The vault key keeps this name; only the exported shell variable is called `DIGITALOCEAN_ACCESS_TOKEN`. The entry must exist before the `desktop` playbook runs, because the playbook references it.
+2. Provision the workstation with the `desktop` playbook. It writes `export DIGITALOCEAN_ACCESS_TOKEN=...` to the default user's `.bashrc` through `ansible/tasks/bash-secrets.yml`.
 3. Open a new shell on the workstation. The variable is now exported.
-4. The devcontainer forwards the variable from the host through `containerEnv`, so start VS Code from a shell where it is set, then rebuild the devcontainer.
+4. The devcontainer sets `DIGITALOCEAN_ACCESS_TOKEN` from the host environment through `containerEnv`, so start VS Code from a shell where it is set, then rebuild the devcontainer.
 
 ## Manual Steps
 
@@ -40,7 +40,7 @@ tofu version
 doctl account get   # fails with 401 if the token is missing or invalid
 ```
 
-If `doctl` reports an unauthorized error inside the devcontainer, the variable was probably empty when the container started (VS Code launched from a desktop launcher does not read `.bashrc`). Check `echo "${DIGITALOCEAN_TOKEN:+set}"`, start VS Code from a shell where the token is set, and rebuild the container.
+If `doctl` reports an unauthorized error inside the devcontainer, the variable was probably empty when the container started (VS Code launched from a desktop launcher does not read `.bashrc`). Check `echo "${DIGITALOCEAN_ACCESS_TOKEN:+set}"`, start VS Code from a shell where the token is set, and rebuild the container.
 
 ## Tool Versions
 
