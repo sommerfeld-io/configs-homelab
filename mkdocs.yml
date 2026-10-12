@@ -97,6 +97,8 @@ nav:
       - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
       - RasPi / Fritz-Box Exporter: ansible/roles/raspi/fritz-box-exporter.md
   - ansible/molecule.md
+  - Cloud - Digital Ocean:
+      - API Token: cloud/digital-ocean/api-token.md
   - Incidents:
       - Runbooks:
           - incidents/runbooks/pihole.md

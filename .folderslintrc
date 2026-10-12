@@ -34,6 +34,7 @@
 
         "docs/ai-implementation-plans",
         "docs/ansible/**",
+        "docs/cloud/**",
         "docs/incidents/reports",
         "docs/incidents/runbooks",
 		"docs/nodes/**",
