@@ -4,16 +4,6 @@
       "version": "4.0.0",
       "resolved": "ghcr.io/devcontainers/features/docker-in-docker@sha256:4fa87399214366e320d489991769c4f3f461e1ffe461f54eea78a41b34945bb5",
       "integrity": "sha256:4fa87399214366e320d489991769c4f3f461e1ffe461f54eea78a41b34945bb5"
-    },
-    "ghcr.io/devcontainers-extra/features/opentofu:1.0.0": {
-      "version": "1.0.0",
-      "resolved": "ghcr.io/devcontainers-extra/features/opentofu@sha256:893ba9242583e18cc0b91b0882f736029f0ba7617164b99ca1c6b34871d12e32",
-      "integrity": "sha256:893ba9242583e18cc0b91b0882f736029f0ba7617164b99ca1c6b34871d12e32"
-    },
-    "ghcr.io/devcontainers-extra/features/digitalocean-cli:1.0.4": {
-      "version": "1.0.4",
-      "resolved": "ghcr.io/devcontainers-extra/features/digitalocean-cli@sha256:663db259e0804eeb924cb973aba99e9a1028e778cc5ce994ea9d1182a34f7983",
-      "integrity": "sha256:663db259e0804eeb924cb973aba99e9a1028e778cc5ce994ea9d1182a34f7983"
     }
   }
 }

@@ -30,12 +30,6 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:4.0.0": {
             "moby": false
-        },
-        "ghcr.io/devcontainers-extra/features/opentofu:1.0.0": {
-            "version": "1.12.7"
-        },
-        "ghcr.io/devcontainers-extra/features/digitalocean-cli:1.0.4": {
-            "version": "1.183.0"
         }
     },
 

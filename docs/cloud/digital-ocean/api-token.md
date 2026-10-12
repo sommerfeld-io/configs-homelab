@@ -44,4 +44,4 @@ If `doctl` reports an unauthorized error inside the devcontainer, the variable w
 
 ## Tool Versions
 
-The devcontainer installs pinned versions of `doctl` and OpenTofu (the 1.12.x line) through devcontainer features. The versions are set in `.devcontainer/devcontainer.json`.
+The devcontainer image installs pinned versions of `doctl` and OpenTofu (the 1.12.x line) in `.devcontainer/Dockerfile`. The versions are the `DOCTL_VERSION` and `TOFU_VERSION` build args, and the downloads are checksum verified. The token itself is forwarded in `.devcontainer/devcontainer.json`.
