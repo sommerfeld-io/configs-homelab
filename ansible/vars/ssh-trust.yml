@@ -36,3 +36,6 @@ ssh_trust_pairs:
   - { src: caprica.fritz.box, dest: pi5-0004.fritz.box }
   - { src: caprica.fritz.box, dest: pi4-0005.fritz.box }
   - { src: caprica.fritz.box, dest: pi4-0006.fritz.box }
+
+  # DigitalOcean
+  - { src: caprica.fritz.box, dest: 164.90.238.181 }
