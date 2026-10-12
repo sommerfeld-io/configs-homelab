@@ -1,7 +1,7 @@
 - id: "1"
   title: Devcontainer tools and DIGITALOCEAN_TOKEN delivery
   description: >-
-    Install doctl and OpenTofu in the devcontainer, and deliver DIGITALOCEAN_TOKEN as a local env var through vault.yml and bash-secrets.yml (CAP-6, constraint on secrets).
+    Install doctl and OpenTofu in the devcontainer, and deliver the vault key DIGITALOCEAN_TOKEN as the local env var DIGITALOCEAN_ACCESS_TOKEN through vault.yml and bash-secrets.yml (CAP-6, constraint on secrets).
     Update the docs for the manual token setup.
 - id: "2"
   title: configs-cloud scaffold with taskfile and linters
@@ -16,7 +16,7 @@
 - id: "4"
   title: OpenTofu droplet, SSH keys, tag and project
   description: >-
-    Define the prod-fantasy-hockey droplet (s-1vcpu-1gb, fra1, Ubuntu 26.04, monitoring, tag prod, project sommerfeld.io) with both existing SSH keys, pinned versions and local state, built so a second droplet is a new map entry (CAP-1).
+    Define the prod-fantasy-hockey droplet (s-1vcpu-1gb, fra1, Ubuntu 26.04, monitoring, tag prod, project sommerfeld.io) with the SSH key picon___id_rsa.pub (the CI key follows with the GitHub Actions stories), pinned versions and local state, built so a second droplet is a new map entry (CAP-1).
     Stage is defined once and reused.
 - id: "5"
   title: Reserved IP and 2 GB volume with prevent_destroy
@@ -26,7 +26,7 @@
   spec_checkpoint: true
   done_checkpoint: true
   invoke_dev_with: >-
-    Verify first that the declaratively attached volume is auto-mounted under /mnt/<volume-name> and survives a reboot.
+    Verify first that the declaratively attached volume is auto-mounted under /mnt/<volume_name> (hyphens become underscores) and survives a reboot.
     If it does not, stop and ask before falling back to an Ansible mount.
 - id: "6"
   title: Dynamic inventory and base provision.yml
@@ -50,7 +50,7 @@
 - id: "9"
   title: Move fantasy-hockey role and deploy-services.yml with nginx
   description: >-
-    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from configs-homelab/ansible/roles/raspi into configs-cloud/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from configs-homelab/ansible/roles/raspi into configs-cloud/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/prod_fantasy_hockey_data/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
     Also clean up the old Pi deployment: remove the role from raspi.yml, move the vault:fantasy-hockey taskfile entry into the cloud taskfile, repoint Dependabot, and add a cleanup that removes /opt/fantasy-hockey and stops and removes the containers on the Pi. Use git mv for the move and update the docs.
   done_checkpoint: true
   invoke_dev_with: >-
@@ -91,7 +91,7 @@
   spec_checkpoint: true
   invoke_dev_with: >-
     The backend is not decided yet: prototype and confirm locking support before migrating the local state.
-    Spaces keys are separate from DIGITALOCEAN_TOKEN.
+    Spaces keys are separate from the DigitalOcean API token.
 - id: "16"
   title: cloud-deployment.yml with org secrets and CI SSH key
   description: >-

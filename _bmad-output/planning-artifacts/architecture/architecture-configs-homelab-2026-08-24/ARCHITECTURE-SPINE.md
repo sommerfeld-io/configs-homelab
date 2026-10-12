@@ -135,7 +135,7 @@ graph TD
 | go-task (Taskfile schema) | 3.42.1 |
 | OpenTofu (cloud context) | 1.12.x line (verified current 2026-10-10; exact version pinned in `required_version` in story 2.4) |
 | OpenTofu `digitalocean` provider (cloud context) | version and lock file pinned in story 2.4 |
-| `community.digitalocean` Ansible collection (cloud context) | version pinned in story 3.1; the inventory plugin does not read `DIGITALOCEAN_TOKEN` by default, so the token is set via `oauth_token` from an env lookup |
+| `community.digitalocean` Ansible collection (cloud context) | version pinned in story 3.1; the token is passed to the inventory plugin explicitly via `oauth_token` from an env lookup of `DIGITALOCEAN_ACCESS_TOKEN`, instead of relying on the plugin's default env vars |
 
 ## Structural Seed
 

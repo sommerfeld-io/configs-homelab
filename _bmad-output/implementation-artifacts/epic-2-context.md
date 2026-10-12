@@ -18,11 +18,11 @@ Create the production DigitalOcean droplet, a reserved IP and a 2 GB data volume
 
 - Every step runs through go-task entry points and is covered by the repo's linters (folderslint, ls-lint, ansible-lint and an OpenTofu linter).
 - Every story updates the docs under `docs/cloud/digital-ocean` in the same change.
-- `DIGITALOCEAN_ACCESS_TOKEN` is delivered locally from `configs-homelab/ansible/vars/vault.yml` (vault key `DIGITALOCEAN_TOKEN`) through the `bash-secrets.yml` loop in `desktop.yml`. Token scopes: droplet, ssh_key, volume, reserved IP, project (firewall or domain only if needed). Document the scopes and manual steps.
-- Droplet: one instance, `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, public IPv4 plus reserved IP, name starting with `prod-fantasy-hockey`, tag `prod`, project `sommerfeld.io` named explicitly, DO improved monitoring on.
+- `DIGITALOCEAN_ACCESS_TOKEN` is delivered locally from `configs-homelab/ansible/vars/vault.yml` (vault key `DIGITALOCEAN_TOKEN`) through the `bash-secrets.yml` loop in `desktop.yml`. Token scopes: droplet, ssh_key, block_storage, reserved_ip, project, actions (firewall or domain only if needed). Document the scopes and manual steps.
+- Droplet: one instance, `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, public IPv4 plus reserved IP, name `prod-fantasy-hockey`, tag `prod`, project `sommerfeld.io` named explicitly, DO improved monitoring on.
 - Not allowed: DO firewall, user-data scripts, managed DB. Budget about $6 plus $0.20 per month.
-- SSH keys: the existing DO key (from local `id_rsa.pub`) and the key named `picon___id_rsa.pub`.
-- Volume: 2 GB, ext4 via `initial_filesystem_type`, attached at creation, mounted at `/mnt/<volume-name>`. Resizing is CPU/RAM only, never disk.
+- SSH key: `picon___id_rsa.pub`, the same key as the local `id_rsa.pub`; the CI keypair follows in Story 6.3.
+- Volume: 2 GB, ext4 via `initial_filesystem_type`, attached at creation, mounted at `/mnt/prod_fantasy_hockey_data` (DigitalOcean turns the hyphens of the volume name into underscores). Resizing is CPU/RAM only, never disk.
 - Applying twice must plan no changes. Adding a second droplet should be a new map entry, with stage defined once.
 - Destroy of the volume and reserved IP must be blocked by `prevent_destroy`.
 

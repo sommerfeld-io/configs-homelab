@@ -123,7 +123,7 @@ So that the server exists without manual clicks.
 
 **Given** `DIGITALOCEAN_ACCESS_TOKEN` is set
 **When** I run the OpenTofu apply task
-**Then** one droplet `prod-fantasy-hockey…` exists (`s-1vcpu-1gb`, fra1, Ubuntu 26.04, monitoring on, tag `prod`, project `sommerfeld.io`) with both existing SSH keys
+**Then** one droplet `prod-fantasy-hockey` exists (`s-1vcpu-1gb`, fra1, Ubuntu 26.04, monitoring on, tag `prod`, project `sommerfeld.io`) with the SSH key `picon___id_rsa.pub`
 
 **Given** the droplet is applied
 **When** I apply again
@@ -140,7 +140,7 @@ So that the URL and the data file persist.
 
 **Given** the apply task
 **When** the droplet is created
-**Then** a reserved IP is assigned and a 2 GB ext4 volume is attached and mounted under `/mnt/<volume-name>`
+**Then** a reserved IP is assigned and a 2 GB ext4 volume is attached and mounted under `/mnt/<volume_name>` (`/mnt/prod_fantasy_hockey_data`)
 
 **Given** the volume and the reserved IP
 **When** I run a destroy
@@ -209,7 +209,7 @@ So that it is reachable from the internet at a static address.
 
 **Given** the role moved with `git mv` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars
 **When** I run the deploy task
-**Then** the app runs as docker compose with nginx on port 80 and data under `/mnt/<volume-name>/fantasy-hockey`
+**Then** the app runs as docker compose with nginx on port 80 and data under `/mnt/prod_fantasy_hockey_data/fantasy-hockey`
 **And** `http://<reserved-ip>` serves the app from outside the home network
 
 **Given** `fantasy-hockey.yml` already exists on the volume

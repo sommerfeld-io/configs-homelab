@@ -16,7 +16,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-1**
     - **intent:** Operator can create the production droplet and its supporting resources (reserved IP, 2 GB block volume) with OpenTofu from this repo.
-    - **success:** From a clean checkout with `DIGITALOCEAN_TOKEN` set, the `cloud:digital-ocean` OpenTofu task creates one droplet `prod-fantasy-hockey…` (tag `prod`, project `sommerfeld.io`, ext4 volume mounted under `/mnt/<volume-name>`); a second run shows no changes; a destroy attempt is blocked for the volume and the reserved IP.
+    - **success:** From a clean checkout with `DIGITALOCEAN_ACCESS_TOKEN` set, the `cloud:digital-ocean` OpenTofu task creates one droplet `prod-fantasy-hockey` (tag `prod`, project `sommerfeld.io`, ext4 volume mounted under `/mnt/<volume_name>`, e.g. `/mnt/prod_fantasy_hockey_data`); a second run shows no changes; a destroy attempt is blocked for the volume and the reserved IP.
 
 - **CAP-2**
     - **intent:** Operator can provision the droplet's base software with Ansible against a tag-discovered dynamic inventory, reusing existing roles.
@@ -62,7 +62,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - Epic order is E1 droplet, E2 provisioning, E3 deploy, E4 dashboard, E5 GitHub Actions (a Must, fifth), E6 HTTPS, E7 hardening, E8 backup last. Everything runs locally via go-task before CI is built. Details in `epics.md`.
 - `fantasy-hockey.yml` is seeded from the default template only when absent; when present it may be overwritten only from a backup, never from template contents.
-- `DIGITALOCEAN_TOKEN` is the token env var. Locally it comes from `configs-homelab/ansible/vars/vault.yml` via `configs-homelab/ansible/tasks/bash-secrets.yml`, not from playbooks that target DigitalOcean. CI needs separate org-level GitHub secrets for the token and the vault password (OpenTofu runs before Ansible); all vaults share one password. The CI SSH keypair is fresh and its private key never leaves CI.
+- `DIGITALOCEAN_ACCESS_TOKEN` is the token env var that `doctl`, OpenTofu and the dynamic inventory read. Locally it is exported from the vault key `DIGITALOCEAN_TOKEN` in `configs-homelab/ansible/vars/vault.yml` via `configs-homelab/ansible/tasks/bash-secrets.yml`, not from playbooks that target DigitalOcean. CI needs separate org-level GitHub secrets for the token and the vault password (OpenTofu runs before Ansible); all vaults share one password. The CI SSH keypair is fresh and its private key never leaves CI.
 - Inventory is the DigitalOcean dynamic inventory plugin selecting by tag; no static IPs and no generated or committed inventory (a commit under `configs-cloud/digital-ocean` would retrigger the pipeline).
 - Only the fantasy-hockey compose role moves out of `configs-homelab/ansible/` (into `configs-cloud/digital-ocean/ansible/roles`); all other roles are reused through relative paths, not `roles_path`.
 - The volume is formatted and mounted declaratively by OpenTofu (`initial_filesystem_type` ext4, attached at creation); no DO user-data scripts, no DO firewall, no managed DB, one droplet.
@@ -89,7 +89,7 @@ The app is reachable from the internet at a static address while nothing is expo
 
 - Docs live at `docs/cloud/digital-ocean` (the source said `docscloud/digital-ocean`).
 - "Shipped to digital ocean" in the monitoring requirement meant Grafana Cloud.
-- `picon___id_rsa.pub` is the name of an SSH key already registered on DigitalOcean, alongside the key from the local `id_rsa.pub`.
+- `picon___id_rsa.pub` is the SSH key already registered on DigitalOcean; it is the same key as the operator workstation's local `id_rsa.pub`. The CI keypair is added with E5.
 - This spec is separate from `spec-configs-homelab`, which governs the existing fleet. Its non-goal on formal backup tooling is read as scoped to fleet nodes, so it does not block CAP-11.
 
 ## Open Questions

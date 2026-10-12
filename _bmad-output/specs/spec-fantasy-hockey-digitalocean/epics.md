@@ -20,7 +20,7 @@ CAP-7 (docs) applies to every epic.
 - Droplet, tag, project, SSH keys, 2 GB volume (declarative ext4, auto-mount), reserved IP, `prevent_destroy` on volume and IP, local state, provider version pinning.
 - `configs-cloud/taskfile.yml` included with prefix `cloud`; OpenTofu linter; folderslint and ls-lint updates.
 - Devcontainer installs `doctl` and OpenTofu.
-- `DIGITALOCEAN_TOKEN` delivered through `vault.yml` and `bash-secrets.yml`.
+- `DIGITALOCEAN_ACCESS_TOKEN` delivered from the vault key `DIGITALOCEAN_TOKEN` through `vault.yml` and `bash-secrets.yml`.
 - Droplet defined as a module or `for_each` keyed by name and stage.
 
 ## E2 Provisioning via Ansible
@@ -34,7 +34,7 @@ CAP-7 (docs) applies to every epic.
 ## E3 App deployment
 
 - `deploy-services.yml` and the fantasy-hockey compose role moved from `configs-homelab/ansible/roles/raspi/fantasy-hockey` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
-- nginx on port 80, data on the volume at `/mnt/<volume-name>/fantasy-hockey`, default-seed rule for `fantasy-hockey.yml`.
+- nginx on port 80, data on the volume at `/mnt/prod_fantasy_hockey_data/fantasy-hockey`, default-seed rule for `fantasy-hockey.yml`.
 - Dependabot bumps of compose images; the Dependabot entry moves with the role.
 - Cleanup of the old Pi deployment: remove the role from `raspi.yml` (the pi4-0002 play is replaced by a cleanup play), move the `vault:fantasy-hockey` taskfile entry into the cloud taskfile, remove `/opt/fantasy-hockey` and stop and remove the containers on the Pi.
 - Droplet replacement keeps IP and data (CAP-8).
