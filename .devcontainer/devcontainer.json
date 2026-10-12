@@ -44,7 +44,7 @@
       "SONARQUBE_TOKEN": "${localEnv:SONARCLOUD_TOKEN}",
       "SONARQUBE_URL": "https://sonarcloud.io",
       "SONARQUBE_ORGANIZATION": "sommerfeld-io",
-      "DIGITALOCEAN_TOKEN": "${localEnv:DIGITALOCEAN_TOKEN}"
+      "DIGITALOCEAN_ACCESS_TOKEN": "${localEnv:DIGITALOCEAN_TOKEN}"
     },
 
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",

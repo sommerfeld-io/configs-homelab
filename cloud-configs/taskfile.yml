@@ -9,26 +9,26 @@ vars:
 
 tasks:
 
-  digital-ocean:init:
+  digital-ocean:opentofu:init:
     desc: Initialize the OpenTofu working directory for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} init"
 
-  digital-ocean:fmt:
+  digital-ocean:opentofu:fmt:
     desc: Format the OpenTofu files for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} fmt -recursive"
 
-  digital-ocean:plan:
-    desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_TOKEN)
+  digital-ocean:opentofu:plan:
+    desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: &do-token
-      - sh: test -n "$DIGITALOCEAN_TOKEN"
-        msg: DIGITALOCEAN_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
+      - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
+        msg: DIGITALOCEAN_ACCESS_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
     cmds:
       - "{{ .DO_TOFU }} plan"
 
-  digital-ocean:apply:
-    desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_TOKEN)
+  digital-ocean:opentofu:apply:
+    desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - "{{ .DO_TOFU }} apply"
@@ -36,10 +36,6 @@ tasks:
   digital-ocean:info:
     desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_TOKEN)
     preconditions: *do-token
-    # doctl reads DIGITALOCEAN_ACCESS_TOKEN, not DIGITALOCEAN_TOKEN
-    env:
-      DIGITALOCEAN_ACCESS_TOKEN:
-        sh: printenv DIGITALOCEAN_TOKEN || true
     cmds:
       - doctl account get
       - doctl compute droplet list
