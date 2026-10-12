@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-12-2026 21:20
+last_updated: 10-12-2026 21:23
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -45,7 +45,7 @@ development_status:
   2-2-cloud-configs-scaffold-with-taskfile-and-linters: done
   2-3-docs-skeleton-for-cloud-digital-ocean: done
   2-4-opentofu-droplet-ssh-keys-tag-and-project: done
-  2-5-reserved-ip-and-2-gb-volume-with-prevent_destroy: review
+  2-5-reserved-ip-and-2-gb-volume-with-prevent_destroy: done
   epic-2-retrospective: optional
 
   epic-3: backlog
