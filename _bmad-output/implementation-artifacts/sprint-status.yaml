@@ -35,6 +35,7 @@ project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 development_status:
+
   epic-1: done
   1-1-tag-every-manual-bootstrap-step-with-an-explicit-disposition: done
   epic-1-retrospective: done
