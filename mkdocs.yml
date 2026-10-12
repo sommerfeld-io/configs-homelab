@@ -102,6 +102,7 @@ nav:
       - API Token: cloud/digital-ocean/api-token.md
       - Tasks and Linters: cloud/digital-ocean/tasks-and-linters.md
       - Droplet: cloud/digital-ocean/droplet.md
+  - Pipelines: pipelines.md
   - Incidents:
       - Runbooks:
           - incidents/runbooks/pihole.md

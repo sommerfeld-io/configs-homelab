@@ -7,11 +7,11 @@ create issue for this
 
 ## Pipeline
 
-Check with inspec or something of app is up-and-running
+Check with inspec or something if app is up-and-running
 
 ## Ansible
 
-create a user for the app to avoid runnig it as root
+create a user for the app on the droplet to avoid running it as root
 
 ## Versions
 
