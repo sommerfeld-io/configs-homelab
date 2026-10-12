@@ -32,5 +32,8 @@ indent_size = 2
 [*.sh]
 indent_size = 2
 
+[*.tf]
+indent_size = 2
+
 [Vagrantfile]
 indent_size = 2

@@ -11,10 +11,6 @@
   evidence: `.github/dependabot.yml` has `docker-compose` for `/` but no `devcontainers` entry, so a compose bump leaves the devcontainer behind.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-2-cloud-configs-scaffold-with-taskfile-and-linters.md`
-  summary: Add a `terraform` Dependabot ecosystem for `cloud-configs/digital-ocean/opentofu` once Story 2.4 commits the provider and `.terraform.lock.hcl`.
-  evidence: No provider exists yet in Story 2.2, so the entry would have nothing to update; Story 2.4 pins the provider.
-
-- source_spec: `_bmad-output/implementation-artifacts/spec-2-2-cloud-configs-scaffold-with-taskfile-and-linters.md`
   summary: Update `.github/copilot-instructions.md` (symlinked as `CLAUDE.md`) to mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks and the `opentofu` linter in the `task lint` list.
   evidence: The Key Commands comment still lists the linters without `opentofu`; agent-instruction edits are out of scope for a build review fix.
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-3-docs-skeleton-for-cloud-digital-ocean.md`
@@ -23,3 +19,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-3-docs-skeleton-for-cloud-digital-ocean.md`
   summary: Update `epics-fantasy-hockey-digitalocean.md` (Story 2.4 AC and related text) to the `DIGITALOCEAN_ACCESS_TOKEN` shell variable name.
   evidence: Story 2.4 AC still says "Given `DIGITALOCEAN_TOKEN` is set"; the implementer of 2.4 would read the stale name. Editing planning artifacts also invalidates the cached epic-2 context.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
+  summary: Add a token-free `tofu init -backend=false && tofu validate` check for `cloud-configs/digital-ocean/opentofu` to `task lint` and the CI lint matrix (Story 6.1).
+  evidence: `lint-opentofu` (`docker-compose.yml:76`) runs only `fmt -check`; a wrong attribute reference or a breaking Dependabot provider bump passes CI and fails only at a manual `plan`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
+  summary: Keep the three exact OpenTofu pins in sync: devcontainer feature, `lint-opentofu` image and `required_version` in `cloud-configs/digital-ocean/opentofu/versions.tf`.
+  evidence: Story 2.4 added `required_version = "1.12.7"`; a devcontainer bump to another version without editing `versions.tf` makes local `init`/`plan` fail on the version constraint, and no check catches it first.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
+  summary: Agent instructions (`.github/copilot-instructions.md` / `CLAUDE.md`) should mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks, the `opentofu` linter and that `task lint` now runs `opentofu:fmt` first.
+  evidence: Agent-context file edits are out of scope for a build review fix; the Key Commands list is still unchanged.
