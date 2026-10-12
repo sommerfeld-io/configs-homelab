@@ -23,6 +23,7 @@ The provider reads the API token from `DIGITALOCEAN_ACCESS_TOKEN`. The token is 
 | Region     | `fra1`                                    |
 | Image      | `ubuntu-26-04-x64` (Ubuntu 26.04 LTS x64) |
 | Monitoring | DigitalOcean monitoring agent on          |
+| Resize     | CPU and RAM only, the disk never grows    |
 | Tags       | `prod`                                    |
 | SSH keys   | `picon___id_rsa.pub`                      |
 | Project    | `sommerfeld.io`                           |
@@ -40,8 +41,9 @@ locals {
 
   droplets = {
     fantasy-hockey = {
-      size  = "s-1vcpu-1gb"
-      image = "ubuntu-26-04-x64"
+      size        = "s-1vcpu-1gb"
+      image       = "ubuntu-26-04-x64"
+      resize_disk = false
     }
   }
 }
@@ -56,12 +58,14 @@ Add one entry to the `droplets` map. Nothing else changes:
 ```hcl
   droplets = {
     fantasy-hockey = {
-      size  = "s-1vcpu-1gb"
-      image = "ubuntu-26-04-x64"
+      size        = "s-1vcpu-1gb"
+      image       = "ubuntu-26-04-x64"
+      resize_disk = false
     }
     example-app = {
-      size  = "s-1vcpu-1gb"
-      image = "ubuntu-26-04-x64"
+      size        = "s-1vcpu-1gb"
+      image       = "ubuntu-26-04-x64"
+      resize_disk = false
     }
   }
 ```

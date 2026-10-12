@@ -40,4 +40,6 @@ OpenTofu state stays local in `cloud-configs/digital-ocean/opentofu/terraform.tf
 | ansible-lint | `cloud-configs` is linted together with `ansible`                                                                                           |
 | OpenTofu     | `tofu fmt -check -diff -recursive cloud-configs` (service `lint-opentofu`, keep the image version in sync with the devcontainer's OpenTofu) |
 
-Run a single linter with `docker compose up lint-opentofu --exit-code-from lint-opentofu`. If the OpenTofu linter fails, run `task cloud:digital-ocean:opentofu:fmt` and commit the result.
+Before the linters run, `task lint` formats the OpenTofu code with `task cloud:digital-ocean:opentofu:fmt`. The `lint-repo` pre-commit hook runs `task lint`, so OpenTofu files are formatted on every commit and only formatted code reaches the remote repository, which avoids conflicting whitespace changes. Only the OpenTofu code is formatted; all other files are only linted. Locally, the OpenTofu linter therefore checks freshly formatted files; stage the files the hook reformatted and commit again.
+
+Run a single linter with `docker compose up lint-opentofu --exit-code-from lint-opentofu`. CI runs the linters without formatting first, so if the OpenTofu linter fails there, run `task cloud:digital-ocean:opentofu:fmt` and commit the result.

@@ -69,6 +69,33 @@ context: []
 - Given `droplets.tf`, when a second droplet is needed, then it is one new map entry and `stage` is not repeated.
 - Given `task lint`, when it runs, then all linters (including `lint-opentofu`) pass.
 
+### Review Findings
+
+Code review of `a528145` (2026-10-12), layers: blind-hunter, edge-case-hunter, verification-gap, acceptance-auditor.
+
+- [x] [Review][Patch] Document that `task lint` (and the `lint-repo` pre-commit hook) formats the OpenTofu code before linting; the stale "run fmt by hand when the linter fails" line applies only to CI [docs/cloud/digital-ocean/tasks-and-linters.md:43] — decision: keep the fmt step as is (user: auto-format in pre-commit so only formatted OpenTofu reaches the remote; format OpenTofu only, lint everything)
+- [x] [Review][Patch] Set `resize_disk = false` so a resize changes CPU/RAM only, never disk, as the epic requires; add it to the attributes table [cloud-configs/digital-ocean/opentofu/droplets.tf:27]
+- [x] [Review][Defer] No token-free `tofu validate` in lint/CI while Dependabot provider bumps are now enabled [docker-compose.yml:76] — deferred: Story 6.1; already recorded in deferred-work.md
+- [x] [Review][Defer] Three exact OpenTofu pins with no sync [cloud-configs/digital-ocean/opentofu/versions.tf:2] — deferred: epic decision for exact pins; already recorded in deferred-work.md
+
+Rejected:
+
+- low: empty `ssh_key_names` gives a droplet with a root password (edge-case) — unlikely, fix adds a precondition.
+- low: map key with invalid hostname characters fails only at apply (edge-case) — unlikely, fix adds a precondition.
+- low: empty `droplets` map leaves `digitalocean_project_resources` empty (edge-case) — unlikely, fix adds a `count` branch.
+- false: no `ignore_changes = [ssh_keys]` / `prevent_destroy` on the droplet (blind) — the architecture makes OpenTofu the sole key owner and accepts replacement; Story 4.3 drills replacement.
+- low: duplicate or overlapping deferred-work entries (blind) — the workflow mandates append-only entries.
+- false: deferred-work entries lack blank lines (blind) — the file already mixes both styles (the spec-2-3 entries have none).
+- false: reused RSA key and no firewall (blind) — the key was the user's decision; the epic forbids a DO firewall.
+- low: doctl checks do not show the SSH key or compare the output IP (blind) — plan/state show `ssh_keys = ["59972151"]`; extra commands add little.
+- low: "declared" vs "planned" in the diagram is ambiguous (blind) — cosmetic.
+- reject: root `taskfile.yml` and `.editorconfig` not in the spec (acceptance-auditor) — deliberate user edits; fix would edit the spec.
+- reject: docs say all platforms while the spec says amd64/arm64 (acceptance-auditor) — the constraint is met (registry hashes cover all platforms); fix would edit the spec.
+- false: spec `done` vs sprint `review` (acceptance-auditor) — build sets the spec done and the story to review until code review, by design.
+- false: AC1/AC2 not provable from the diff (acceptance-auditor) — verified live in the session: droplet `608504988` via doctl, second plan `No changes.`
+- false: submodule modified (acceptance-auditor) — not part of commit `a528145`.
+- false: replacement doc ahead of reality (acceptance-auditor) — the auditor itself found it correctly worded as future.
+
 ## Implementation Notes
 
 - Implemented by a subagent: `versions.tf`, `droplets.tf`, `project.tf`, `outputs.tf`, lock file (`linux_amd64` + `linux_arm64`), `.gitkeep` removed, `opentofu` Dependabot entry, `droplet.md` + overview/tasks/nav updates, resolved deferred item removed.
@@ -77,6 +104,8 @@ context: []
 - User confirmed; `task cloud:digital-ocean:opentofu:apply` created droplet `608504988` (`142.93.102.167`) and the project assignment (2 added). Second plan: `No changes.` doctl: `s-1vcpu-1gb`, fra1, Ubuntu 26.04 (LTS) x64, tag `prod`, features include `monitoring`, project lists `do:droplet:608504988`. State in `cloud-configs/digital-ocean/opentofu/terraform.tfstate` (gitignored).
 - Surprise: doctl has no `Size` column; fixed the check in `droplet.md` and Verification to `SizeSlug`.
 - SSH login test from the agent was blocked by the permission classifier; key injection is shown by `ssh_keys = ["59972151"]` in plan/state; the user runs the login check.
+
+- Code review fixes: `resize_disk = false` per droplet map entry (epic: resize CPU/RAM only), applied in place (`0 added, 1 changed, 0 destroyed`, droplet `608504988` unchanged), second plan `No changes.`; `tasks-and-linters.md` documents that `task lint` and the `lint-repo` pre-commit hook format OpenTofu code first.
 
 ## Spec Change Log
 

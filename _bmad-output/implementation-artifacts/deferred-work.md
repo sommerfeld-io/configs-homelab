@@ -28,3 +28,8 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
   summary: Agent instructions (`.github/copilot-instructions.md` / `CLAUDE.md`) should mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks, the `opentofu` linter and that `task lint` now runs `opentofu:fmt` first.
   evidence: Agent-context file edits are out of scope for a build review fix; the Key Commands list is still unchanged.
+
+## Deferred from: code review of spec-2-4-opentofu-droplet-ssh-keys-tag-and-project (2026-10-12)
+
+- No token-free `tofu init -backend=false && tofu validate` in `task lint` or the CI lint matrix, while the new `opentofu` Dependabot entry opens weekly provider bumps that can merge green; same item as the spec-2-4 validate entry above (Story 6.1).
+- `required_version = "1.12.7"` is a third exact OpenTofu pin next to the devcontainer feature and the `lint-opentofu` image, with nothing keeping them in sync; same item as the spec-2-4 pin entry above.

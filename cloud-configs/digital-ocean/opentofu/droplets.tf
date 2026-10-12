@@ -8,6 +8,9 @@ locals {
     fantasy-hockey = {
       size  = "s-1vcpu-1gb"
       image = "ubuntu-26-04-x64"
+      # Resize CPU and RAM only. A grown disk can never shrink again, so a
+      # later downsize would be impossible without replacing the droplet.
+      resize_disk = false
     }
   }
 
@@ -25,11 +28,12 @@ data "digitalocean_ssh_key" "this" {
 resource "digitalocean_droplet" "this" {
   for_each = local.droplets
 
-  name       = "${local.stage}-${each.key}"
-  region     = local.region
-  size       = each.value.size
-  image      = each.value.image
-  monitoring = true
-  tags       = [local.stage]
-  ssh_keys   = [for key in data.digitalocean_ssh_key.this : key.id]
+  name        = "${local.stage}-${each.key}"
+  region      = local.region
+  size        = each.value.size
+  image       = each.value.image
+  monitoring  = true
+  resize_disk = each.value.resize_disk
+  tags        = [local.stage]
+  ssh_keys    = [for key in data.digitalocean_ssh_key.this : key.id]
 }
