@@ -12,7 +12,7 @@ cloud-configs/
 
 ## Tasks
 
-All steps run through go-task from the repository root. The tasks wrap `tofu` from the devcontainer and work on `cloud-configs/digital-ocean/opentofu`.
+All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `cloud-configs/digital-ocean/opentofu`.
 
 | Task                             | What it does                                                   |
 |----------------------------------|----------------------------------------------------------------|
@@ -20,8 +20,9 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` fr
 | `task cloud:digital-ocean:fmt`   | Format the OpenTofu files                                      |
 | `task cloud:digital-ocean:plan`  | Show the changes OpenTofu would make                           |
 | `task cloud:digital-ocean:apply` | Apply the OpenTofu configuration                               |
+| `task cloud:digital-ocean:info`  | Print the account and all droplets with `doctl`                |
 
-Run `init` once before `plan` and `apply`, and again after provider changes. `plan` and `apply` stop early when `DIGITALOCEAN_TOKEN` is not set. See [API Token](api-token.md).
+Run `init` once before `plan` and `apply`, and again after provider changes. `plan`, `apply` and `info` stop early when `DIGITALOCEAN_TOKEN` is not set. See [API Token](api-token.md).
 
 There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds.
 

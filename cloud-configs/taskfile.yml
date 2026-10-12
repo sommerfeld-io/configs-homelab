@@ -32,3 +32,14 @@ tasks:
     preconditions: *do-token
     cmds:
       - "{{ .DO_TOFU }} apply"
+
+  digital-ocean:info:
+    desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_TOKEN)
+    preconditions: *do-token
+    # doctl reads DIGITALOCEAN_ACCESS_TOKEN, not DIGITALOCEAN_TOKEN
+    env:
+      DIGITALOCEAN_ACCESS_TOKEN:
+        sh: printenv DIGITALOCEAN_TOKEN || true
+    cmds:
+      - doctl account get
+      - doctl compute droplet list
