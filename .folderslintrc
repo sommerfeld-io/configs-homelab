@@ -15,6 +15,9 @@
 
 		"bootstrap",
 
+		"cloud-configs/*/ansible/**",
+		"cloud-configs/*/opentofu",
+
 		"_bmad/**",
 		"_bmad-output/**",
 

@@ -99,6 +99,7 @@ nav:
   - ansible/molecule.md
   - Cloud - Digital Ocean:
       - API Token: cloud/digital-ocean/api-token.md
+      - Tasks and Linters: cloud/digital-ocean/tasks-and-linters.md
   - Incidents:
       - Runbooks:
           - incidents/runbooks/pihole.md

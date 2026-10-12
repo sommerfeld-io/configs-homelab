@@ -1,0 +1,34 @@
+---
+version: '3.42.1'
+
+# Included in the root taskfile with prefix `cloud` and `dir: cloud-configs`,
+# so every task here is called as `task cloud:<name>`.
+
+vars:
+  DO_TOFU: tofu -chdir=digital-ocean/opentofu
+
+tasks:
+
+  digital-ocean:init:
+    desc: Initialize the OpenTofu working directory for DigitalOcean
+    cmds:
+      - "{{ .DO_TOFU }} init"
+
+  digital-ocean:fmt:
+    desc: Format the OpenTofu files for DigitalOcean
+    cmds:
+      - "{{ .DO_TOFU }} fmt -recursive"
+
+  digital-ocean:plan:
+    desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_TOKEN)
+    preconditions: &do-token
+      - sh: test -n "$DIGITALOCEAN_TOKEN"
+        msg: DIGITALOCEAN_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
+    cmds:
+      - "{{ .DO_TOFU }} plan"
+
+  digital-ocean:apply:
+    desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - "{{ .DO_TOFU }} apply"
