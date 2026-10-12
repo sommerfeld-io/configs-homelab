@@ -34,7 +34,7 @@ tasks:
       - "{{ .DO_TOFU }} apply"
 
   digital-ocean:info:
-    desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_TOKEN)
+    desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - doctl account get
