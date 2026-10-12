@@ -8,6 +8,9 @@
 - name: Include Ansible Playbook to provision RasPi nodes on the homelab
   ansible.builtin.import_playbook: ./raspi.yml
 
+- name: Include Ansible Playbook to set up password-less SSH between the homelab nodes
+  ansible.builtin.import_playbook: ./ssh-trust.yml
+
 - name: Include Ansible Playbook to provision nodes on the homelab for use with Grafana Cloud
   ansible.builtin.import_playbook: ./grafana-agents.yml
 
