@@ -113,7 +113,7 @@ action_items:
     action: "Verify the DigitalOcean token scopes needed for droplets with tags, trim
       ssh_key to read, and update api-token.md"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
   - id: "epic-2-retro-item-7-record-the-epic-2-process-lessons-as-pro"
     epic: 2
