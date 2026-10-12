@@ -17,3 +17,9 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-2-cloud-configs-scaffold-with-taskfile-and-linters.md`
   summary: Update `.github/copilot-instructions.md` (symlinked as `CLAUDE.md`) to mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks and the `opentofu` linter in the `task lint` list.
   evidence: The Key Commands comment still lists the linters without `opentofu`; agent-instruction edits are out of scope for a build review fix.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-3-docs-skeleton-for-cloud-digital-ocean.md`
+  summary: Map the devcontainer `DIGITALOCEAN_ACCESS_TOKEN` from host `${localEnv:DIGITALOCEAN_ACCESS_TOKEN}` (and drop the stale `export DIGITALOCEAN_TOKEN` line from existing `.bashrc` files via `bash-secrets.yml`).
+  evidence: Since `a12d7ff`, `desktop.yml:25` exports only `DIGITALOCEAN_ACCESS_TOKEN`, but `.devcontainer/devcontainer.json:47` reads host `DIGITALOCEAN_TOKEN`; a freshly provisioned workstation gets an empty token in the devcontainer. Existing hosts still work only because their `.bashrc` keeps the old export line.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-3-docs-skeleton-for-cloud-digital-ocean.md`
+  summary: Update `epics-fantasy-hockey-digitalocean.md` (Story 2.4 AC and related text) to the `DIGITALOCEAN_ACCESS_TOKEN` shell variable name.
+  evidence: Story 2.4 AC still says "Given `DIGITALOCEAN_TOKEN` is set"; the implementer of 2.4 would read the stale name. Editing planning artifacts also invalidates the cached epic-2 context.
