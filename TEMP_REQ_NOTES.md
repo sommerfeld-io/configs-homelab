@@ -13,11 +13,6 @@ Check with inspec or something of app is up-and-running
 
 create a user for the app to avoid runnig it as root
 
-## Folders
-
-move folders `ansible`, `bootstrap` and `tests` into the new folder `configs-homelab`.
-rename `cloud-configs` into `configs-cloud`.
-
 ## Versions
 
 use dependabot do watch opentofu??
