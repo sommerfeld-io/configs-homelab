@@ -5,6 +5,10 @@
 instead of a traditional nginx reverse proxy ...
 create issue for this
 
+## Taskfile
+
+Create 1 single command to run all cloud provisionings from taskfile
+
 ## Pipeline
 
 Check with inspec or something if app is up-and-running
