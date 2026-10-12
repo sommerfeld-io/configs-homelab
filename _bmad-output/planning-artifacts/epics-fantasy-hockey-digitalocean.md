@@ -25,7 +25,7 @@ FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-
 ### NonFunctional Requirements
 
 NFR1: `fantasy-hockey.yml` is seeded from the default template only when absent, and overwritten only from a backup. (SPEC constraint)
-NFR2: `DIGITALOCEAN_TOKEN` comes locally from `vault.yml` through `bash-secrets.yml`; CI uses org-level GitHub secrets for the token and the vault password. (SPEC constraint, AD-10)
+NFR2: `DIGITALOCEAN_ACCESS_TOKEN` comes locally from `vault.yml` (vault key `DIGITALOCEAN_TOKEN`) through `bash-secrets.yml`; CI uses org-level GitHub secrets for the token and the vault password. (SPEC constraint, AD-10)
 NFR3: Inventory is the DigitalOcean dynamic inventory by tag, with no static or committed inventory. (SPEC constraint)
 NFR4: Only the fantasy-hockey role moves out of `ansible/`; other roles are reused through relative paths. (SPEC constraint)
 NFR5: No DO firewall, user-data scripts or managed DB; one droplet; budget about $6 plus $0.20 per month. (SPEC constraint)
@@ -70,7 +70,7 @@ The droplet, reserved IP and volume exist and are managed locally with OpenTofu.
 ### Story 2.1: Devcontainer tools and DIGITALOCEAN_TOKEN delivery
 
 As an operator,
-I want `doctl`, OpenTofu and `DIGITALOCEAN_TOKEN` available in my devcontainer,
+I want `doctl`, OpenTofu and `DIGITALOCEAN_ACCESS_TOKEN` available in my devcontainer,
 So that I can run every DigitalOcean step locally.
 
 **Acceptance Criteria:**
@@ -81,7 +81,7 @@ So that I can run every DigitalOcean step locally.
 
 **Given** the token var in `ansible/vars/vault.yml` and the `bash-secrets.yml` loop in `desktop.yml`
 **When** I provision my machine and open a new shell
-**Then** `DIGITALOCEAN_TOKEN` is exported
+**Then** `DIGITALOCEAN_ACCESS_TOKEN` is exported
 **And** the docs describe the token scopes and the manual steps
 
 ### Story 2.2: cloud-configs scaffold with taskfile and linters
@@ -121,7 +121,7 @@ So that the server exists without manual clicks.
 
 **Acceptance Criteria:**
 
-**Given** `DIGITALOCEAN_TOKEN` is set
+**Given** `DIGITALOCEAN_ACCESS_TOKEN` is set
 **When** I run the OpenTofu apply task
 **Then** one droplet `prod-fantasy-hockey…` exists (`s-1vcpu-1gb`, fra1, Ubuntu 26.04, monitoring on, tag `prod`, project `sommerfeld.io`) with both existing SSH keys
 
