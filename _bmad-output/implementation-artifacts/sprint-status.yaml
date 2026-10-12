@@ -99,7 +99,7 @@ action_items:
     action: "Clean up the .bashrc token exports in bash-secrets.yml: remove the stale
       DIGITALOCEAN_TOKEN export and replace instead of append on rotation"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
   - id: "epic-2-retro-item-5-decide-the-opentofu-pin-strategy-exact-r"
     epic: 2

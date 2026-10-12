@@ -21,3 +21,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-5-reserved-ip-and-2-gb-volume-with-prevent-destroy.md`
   summary: Prove a droplet replacement with an already existing volume and reserved IP assignment (detach, re-attach, still mounted, IP re-assigned).
   evidence: Story 2.5 created the volume and the assignment in the same apply as the replacement; Story 4.3 is the planned drill.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-2-retro-item-4-bashrc-token-cleanup.md`
+  summary: Add `no_log: true` to the secret-carrying tasks in `bash-secrets.yml` and to the `include_tasks` loop in `desktop.yml`.
+  evidence: The token travels through `line`/`item`, which Ansible prints in task output and diffs; this predates the change.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-2-retro-item-4-bashrc-token-cleanup.md`
+  summary: Add a Molecule scenario that seeds an old `.bashrc` export and asserts a rotated secret leaves one line and `DIGITALOCEAN_TOKEN` is gone.
+  evidence: The behavior was verified only by a manual scratch run; no automated test covers `bash-secrets.yml`.
