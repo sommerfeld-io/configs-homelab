@@ -8,7 +8,8 @@ exclude_path = [
 ]
 exclude_loopback = true
 exclude = [
-    '.*fritz\.box.*'
+    '.*fritz\.box.*',
+    '.*sommerfeldio\.grafana\.net.*'
 ]
 
 format = 'detailed' # compact, detailed, json, markdown, raw
