@@ -3,7 +3,7 @@ version: '3.42.1'
 
 vars:
   # Repo-root-relative — matches the inspec container's fixed working_dir, used in docker compose args below.
-  INSPEC_DIR: tests/inspec
+  INSPEC_DIR: configs-homelab/tests/inspec
 
 tasks:
 

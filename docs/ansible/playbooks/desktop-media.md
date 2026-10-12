@@ -7,4 +7,4 @@ This Ansible playbook installs and configures `caprica.fritz.box` as a media ser
 - **Disk Mounting**: Mounts the media server's external USB disks (via UUID) to dedicated paths under `/mnt`, adding persistent `fstab` entries
 - **Jellyfin**: Deploys the Jellyfin media server as a Docker Compose stack, serving the video library from the mounted disks
 
-The playbook targets `caprica.fritz.box` and is imported automatically as part of `ansible/playbooks/desktop.yml`.
+The playbook targets `caprica.fritz.box` and is imported automatically as part of `configs-homelab/ansible/playbooks/desktop.yml`.

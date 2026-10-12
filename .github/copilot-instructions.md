@@ -26,8 +26,8 @@ Write commit messages using the Conventional Commits format, ensuring the header
 Infrastructure-as-Code (IaC) repository managing homelab workstations, servers, and Raspberry Pi nodes. Primary automation tool is **Ansible**; all linters run in Docker via **go-task**.
 
 - Docs: [docs/](../docs/) rendered with MkDocs (Material theme)
-- Ansible roles live in `ansible/roles/ansible-roles-collection/` (git submodule)
-- Encrypted secrets: `ansible/vars/vault.yml`, `ansible/vars/grafana-vault.yml` (Ansible Vault)
+- Ansible roles live in `configs-homelab/ansible/roles/ansible-roles-collection/` (git submodule)
+- Encrypted secrets: `configs-homelab/ansible/vars/vault.yml`, `configs-homelab/ansible/vars/grafana-vault.yml` (Ansible Vault)
 - Target nodes: `*.fritz.box` workstations and `pi*.fritz.box` Raspberry Pi nodes
 
 ## Key Commands
@@ -48,10 +48,10 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
 
 ## Ansible Conventions
 
-- **Playbooks:** `ansible/playbooks/*.yml` - one playbook per concern (e.g. `desktop.yml`, `grafana-agents.yml`)
-- **Roles:** `ansible/roles/ansible-roles-collection/{role-name}/` - each role has `tasks/`, optionally `defaults/`, `handlers/`, `files/`, `templates/`
-- **Inventory:** `ansible/hosts.yml` - groups: `ubuntu_desktop`, `raspi`, `ollama`
-- **Vars:** `ansible/vars/main.yml` (general), `raspi.yml`, `ubuntu.yml`; vault files for secrets
+- **Playbooks:** `configs-homelab/ansible/playbooks/*.yml` - one playbook per concern (e.g. `desktop.yml`, `grafana-agents.yml`)
+- **Roles:** `configs-homelab/ansible/roles/ansible-roles-collection/{role-name}/` - each role has `tasks/`, optionally `defaults/`, `handlers/`, `files/`, `templates/`
+- **Inventory:** `configs-homelab/ansible/hosts.yml` - groups: `ubuntu_desktop`, `raspi`, `ollama`
+- **Vars:** `configs-homelab/ansible/vars/main.yml` (general), `raspi.yml`, `ubuntu.yml`; vault files for secrets
 - Run `task lint` (includes `lint-ansible`) before committing any Ansible changes
 
 ## File & Folder Conventions
@@ -60,14 +60,14 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
 - Folder structure enforced by folderslint (`.folderslintrc`)
 - YAML style enforced by yamllint (`.yamllint.yml`) - do **not** quote top-level `on:` keys in GitHub Actions workflows
 - Markdown link validity enforced by lychee (`.lychee.toml`)
-- Docs in `docs/` mirror the `ansible/` structure; update docs when adding playbooks or roles
+- Docs in `docs/` mirror the `configs-homelab/ansible/` structure; update docs when adding playbooks or roles
 
 ## Testing
 
-- **InSpec:** compliance profiles in `tests/inspec/{profile-name}/`. Run via `task inspec:run:<hostname>`.
-- **Molecule:** tests Ansible roles from `ansible/roles/ansible-roles-collection/` in Docker, without needing real hosts.
-    - Scenarios are grouped by role group under `tests/molecule/{role-group}/molecule/default/` (e.g. `common`), each defining `converge.yml` (applies the roles), `verify.yml` (asserts the result), and `molecule.yml` (points `ANSIBLE_ROLES_PATH` at the roles under test).
-    - Shared platform/driver config lives in `tests/molecule/base.yml` (Docker driver, Ubuntu + Arch Linux targets); shared OS bootstrapping (installing python3, creating the test user) lives in `tests/molecule/prepare.yml`.
+- **InSpec:** compliance profiles in `configs-homelab/tests/inspec/{profile-name}/`. Run via `task inspec:run:<hostname>`.
+- **Molecule:** tests Ansible roles from `configs-homelab/ansible/roles/ansible-roles-collection/` in Docker, without needing real hosts.
+    - Scenarios are grouped by role group under `configs-homelab/tests/molecule/{role-group}/molecule/default/` (e.g. `common`), each defining `converge.yml` (applies the roles), `verify.yml` (asserts the result), and `molecule.yml` (points `ANSIBLE_ROLES_PATH` at the roles under test).
+    - Shared platform/driver config lives in `configs-homelab/tests/molecule/base.yml` (Docker driver, Ubuntu + Arch Linux targets); shared OS bootstrapping (installing python3, creating the test user) lives in `configs-homelab/tests/molecule/prepare.yml`.
     - Run a single role group with `task molecule:test:<role-group>` (e.g. `task molecule:test:common`), or all of them with `task molecule:test`.
     - Runs automatically in CI (`.github/workflows/pipeline.yml`, `molecule` job) after linting and InSpec checks, and gates the release stage.
-    - To test a new role group, add `tests/molecule/{role-group}/molecule/default/{converge,verify}.yml`, a `molecule.yml` following the `common` example, and a corresponding `test:{role-group}` task in `tests/molecule/taskfile.yml`.
+    - To test a new role group, add `configs-homelab/tests/molecule/{role-group}/molecule/default/{converge,verify}.yml`, a `molecule.yml` following the `common` example, and a corresponding `test:{role-group}` task in `configs-homelab/tests/molecule/taskfile.yml`.

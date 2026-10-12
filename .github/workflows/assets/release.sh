@@ -14,7 +14,7 @@ VERSION="$1"
 function increment_versions_in_yaml() {
   yaml_files=(
   )
-  for file in tests/inspec/*/inspec.yml; do
+  for file in configs-homelab/tests/inspec/*/inspec.yml; do
     yaml_files+=("$file")
   done
 

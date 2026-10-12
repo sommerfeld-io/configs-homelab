@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install and configure openssh-server to allow further setup using Ansible.
-# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -
+# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/configs-homelab/bootstrap/ssh-server.sh | bash -
 
 set -o errexit
 set -o pipefail

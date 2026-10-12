@@ -106,11 +106,12 @@ nav:
       - Runbooks:
           - incidents/runbooks/pihole.md
   - license.md
-  - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
-  - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
-  - Development Guide ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/development-guide.md
-  - Other Code Guidelines ⧉: https://github.com/sommerfeld-io/.github/blob/main/.github/copilot-instructions.md
-  - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
-  - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
-  - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
-  - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
+  - On GitHub ⧉:
+      - Releases: https://github.com/sommerfeld-io/configs-homelab/releases
+      - Architecture Decision Records: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
+      - Development Guide: https://github.com/sommerfeld-io/.github/blob/main/docs/development-guide.md
+      - Other Code Guidelines: https://github.com/sommerfeld-io/.github/blob/main/.github/copilot-instructions.md
+      - How to Contribute: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
+      - Code of Conduct: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
+      - Security Policy: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
+      - Terms of Use: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md

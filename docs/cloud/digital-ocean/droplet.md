@@ -1,6 +1,6 @@
 # Droplet
 
-The production droplet for the fantasy hockey app, its reserved IP and its data volume are declared with OpenTofu in `cloud-configs/digital-ocean/opentofu/`. Nothing is clicked together in the DigitalOcean web console.
+The production droplet for the fantasy hockey app, its reserved IP and its data volume are declared with OpenTofu in `configs-cloud/digital-ocean/opentofu/`. Nothing is clicked together in the DigitalOcean web console.
 
 ## Files
 
@@ -124,7 +124,7 @@ Run the steps from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 For the record: `prod-fantasy-hockey` existed before the volume was added. DigitalOcean only mounts a volume automatically when it is attached at droplet creation, so the empty droplet was replaced once on 2026-10-12, when the volume was added. This was a one-time migration that already ran; do not repeat it. New droplets get their volume attached at creation by the normal apply above.
 
 ```bash
-tofu -chdir=cloud-configs/digital-ocean/opentofu apply -replace='digitalocean_droplet.this["fantasy-hockey"]'
+tofu -chdir=configs-cloud/digital-ocean/opentofu apply -replace='digitalocean_droplet.this["fantasy-hockey"]'
 ```
 
 The plan showed `4 to add, 1 to change, 1 to destroy`: only the old droplet was destroyed, the volume and the reserved IP were created. There is no task for this step.

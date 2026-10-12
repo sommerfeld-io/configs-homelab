@@ -35,11 +35,11 @@
 
 - Dynamic inventory with the `community.digitalocean` plugin, selected by tag, authenticated with `DIGITALOCEAN_TOKEN` passed as the plugin's `oauth_token` from an env lookup (the plugin does not read that env var by default; add `tags` to its `attributes`); groups `ubuntu` and `fantasy-hockey` are composed from tags.
 - `provision.yml` targets `ubuntu`; `deploy-services.yml` targets `fantasy-hockey`.
-- Bash prompt is the same as for the ubuntu server in `ansible/hosts.yml`, with `user@host` in yellow.
+- Bash prompt is the same as for the ubuntu server in `configs-homelab/ansible/hosts.yml`, with `user@host` in yellow.
 
 ## Observability
 
-- Alloy installed through `ansible/roles/grafana-cloud`, secrets from `ansible/vars/grafana-vault.yml`; scrapes the app at `:8080/metrics`, ships OS metrics and logs.
+- Alloy installed through `configs-homelab/ansible/roles/grafana-cloud`, secrets from `configs-homelab/ansible/vars/grafana-vault.yml`; scrapes the app at `:8080/metrics`, ships OS metrics and logs.
 - Labels: `environment` (`homelab` or `digital-ocean`) in both Alloy configs; `stage=prod` on the droplet only (the homelab has no `stage` label).
 - External availability through Grafana Cloud synthetic monitoring; no alerts yet.
 
@@ -50,6 +50,6 @@
 
 ## Repo layout
 
-- `cloud-configs/digital-ocean/opentofu` and `cloud-configs/digital-ocean/ansible` (own playbooks, roles, inventory config); `cloud-configs/taskfile.yml` included in the main taskfile with prefix `cloud`, DO tasks as `cloud:digital-ocean:*`.
+- `configs-cloud/digital-ocean/opentofu` and `configs-cloud/digital-ocean/ansible` (own playbooks, roles, inventory config); `configs-cloud/taskfile.yml` included in the main taskfile with prefix `cloud`, DO tasks as `cloud:digital-ocean:*`.
 - Docs in `docs/cloud/digital-ocean` with a `mkdocs.yml` nav item "Cloud - Digital Ocean".
 - Dashboard in `grafana-cloud/manifests/git-sync/apps`.

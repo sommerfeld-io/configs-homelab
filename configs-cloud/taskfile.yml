@@ -1,7 +1,7 @@
 ---
 version: '3.42.1'
 
-# Included in the root taskfile with prefix `cloud` and `dir: cloud-configs`,
+# Included in the root taskfile with prefix `cloud` and `dir: configs-cloud`,
 # so every task here is called as `task cloud:<name>`.
 
 vars:

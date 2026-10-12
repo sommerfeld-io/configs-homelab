@@ -18,7 +18,7 @@ CAP-7 (docs) applies to every epic.
 ## E1 Droplet via OpenTofu
 
 - Droplet, tag, project, SSH keys, 2 GB volume (declarative ext4, auto-mount), reserved IP, `prevent_destroy` on volume and IP, local state, provider version pinning.
-- `cloud-configs/taskfile.yml` included with prefix `cloud`; OpenTofu linter; folderslint and ls-lint updates.
+- `configs-cloud/taskfile.yml` included with prefix `cloud`; OpenTofu linter; folderslint and ls-lint updates.
 - Devcontainer installs `doctl` and OpenTofu.
 - `DIGITALOCEAN_TOKEN` delivered through `vault.yml` and `bash-secrets.yml`.
 - Droplet defined as a module or `for_each` keyed by name and stage.
@@ -27,13 +27,13 @@ CAP-7 (docs) applies to every epic.
 
 - `provision.yml` against the dynamic inventory (groups `ubuntu` and `fantasy-hockey`).
 - Bash config with the existing ubuntu-server prompt, `user@host` in yellow.
-- Docker, swap file, Alloy via the existing `ansible/roles/grafana-cloud` role.
+- Docker, swap file, Alloy via the existing `configs-homelab/ansible/roles/grafana-cloud` role.
 - Alloy labels `environment` and `stage`, also added to the homelab `config.alloy.j2` (`environment=homelab`).
 - ansible-lint covers the new folder.
 
 ## E3 App deployment
 
-- `deploy-services.yml` and the fantasy-hockey compose role moved from `ansible/roles/raspi/fantasy-hockey` into `cloud-configs/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
+- `deploy-services.yml` and the fantasy-hockey compose role moved from `configs-homelab/ansible/roles/raspi/fantasy-hockey` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
 - nginx on port 80, data on the volume at `/mnt/<volume-name>/fantasy-hockey`, default-seed rule for `fantasy-hockey.yml`.
 - Dependabot bumps of compose images; the Dependabot entry moves with the role.
 - Cleanup of the old Pi deployment: remove the role from `raspi.yml` (the pi4-0002 play is replaced by a cleanup play), move the `vault:fantasy-hockey` taskfile entry into the cloud taskfile, remove `/opt/fantasy-hockey` and stop and remove the containers on the Pi.
@@ -47,7 +47,7 @@ CAP-7 (docs) applies to every epic.
 
 ## E5 GitHub Actions
 
-- `cloud-deployment.yml` triggered by changes in `cloud-configs/digital-ocean`: static checks, OpenTofu, provisioning, deployment.
+- `cloud-deployment.yml` triggered by changes in `configs-cloud/digital-ocean`: static checks, OpenTofu, provisioning, deployment.
 - Org-level secrets (DO token, vault password, CI SSH key), fresh CI SSH keypair registered on DO.
 - Shared remote state with locking between localhost and Actions.
 

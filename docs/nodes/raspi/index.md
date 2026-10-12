@@ -60,7 +60,7 @@ Ubuntu Server (or Raspberry Pi OS) is used on RasPi Nodes, since there is curren
 
 ### Follow-Up Todos
 
-* [ ] Add the new RasPi Node to `ansible/roles/common/taskfile-dev/files/taskfile.yml` for easy SSH connections.
+* [ ] Add the new RasPi Node to `configs-homelab/ansible/roles/common/taskfile-dev/files/taskfile.yml` for easy SSH connections.
 * [ ] Setup password-less ssh connections from `picon` and `kobol` to the RasPi node
-    * [ ] Add the pairs (e.g. `{ src: kobol.fritz.box, dest: <NODE_NAME>.fritz.box }`) to `ansible/vars/ssh-trust.yml`
+    * [ ] Add the pairs (e.g. `{ src: kobol.fritz.box, dest: <NODE_NAME>.fritz.box }`) to `configs-homelab/ansible/vars/ssh-trust.yml`
     * [ ] Run the [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task ansible:ssh:trust`)

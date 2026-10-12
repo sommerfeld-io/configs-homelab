@@ -4,9 +4,9 @@
     Install doctl and OpenTofu in the devcontainer, and deliver DIGITALOCEAN_TOKEN as a local env var through vault.yml and bash-secrets.yml (CAP-6, constraint on secrets).
     Update the docs for the manual token setup.
 - id: "2"
-  title: cloud-configs scaffold with taskfile and linters
+  title: configs-cloud scaffold with taskfile and linters
   description: >-
-    Create cloud-configs/digital-ocean/{opentofu,ansible}, cloud-configs/taskfile.yml included in the main taskfile with prefix cloud, and make folderslint, ls-lint, ansible-lint and a new OpenTofu linter cover the folder (CAP-6).
+    Create configs-cloud/digital-ocean/{opentofu,ansible}, configs-cloud/taskfile.yml included in the main taskfile with prefix cloud, and make folderslint, ls-lint, ansible-lint and a new OpenTofu linter cover the folder (CAP-6).
     Docs updated in the same change.
 - id: "3"
   title: Docs skeleton for Cloud - Digital Ocean
@@ -31,7 +31,7 @@
 - id: "6"
   title: Dynamic inventory and base provision.yml
   description: >-
-    Add the DigitalOcean dynamic inventory selecting by tag with groups ubuntu and fantasy-hockey, and a provision.yml that applies the bash config with the yellow user@host prompt and Docker, reusing roles from ansible/roles through relative paths (CAP-2).
+    Add the DigitalOcean dynamic inventory selecting by tag with groups ubuntu and fantasy-hockey, and a provision.yml that applies the bash config with the yellow user@host prompt and Docker, reusing roles from configs-homelab/ansible/roles through relative paths (CAP-2).
     Explain the inventory in the docs.
   spec_checkpoint: true
   invoke_dev_with: >-
@@ -45,23 +45,23 @@
 - id: "8"
   title: environment=homelab label in the homelab Alloy config
   description: >-
-    Add the environment=homelab label to ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 so homelab and DigitalOcean series can be told apart (CAP-4).
+    Add the environment=homelab label to configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 so homelab and DigitalOcean series can be told apart (CAP-4).
     Existing labels, including source, stay untouched.
 - id: "9"
   title: Move fantasy-hockey role and deploy-services.yml with nginx
   description: >-
-    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from ansible/roles/raspi into cloud-configs/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from configs-homelab/ansible/roles/raspi into configs-cloud/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/<volume-name>/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
     Also clean up the old Pi deployment: remove the role from raspi.yml, move the vault:fantasy-hockey taskfile entry into the cloud taskfile, repoint Dependabot, and add a cleanup that removes /opt/fantasy-hockey and stops and removes the containers on the Pi. Use git mv for the move and update the docs.
   done_checkpoint: true
   invoke_dev_with: >-
     The data file fantasy-hockey.yml is seeded from the default template only when absent; when present it is never overwritten from the template.
     Check that the fantasy_hockey_ rename passes ansible-lint.
-    The pi4-0002 play in raspi.yml only runs this role, so replace it with the cleanup play and leave no reference to ansible/roles/raspi/fantasy-hockey in raspi.yml, ansible/taskfile.yml or .github/dependabot.yml.
+    The pi4-0002 play in raspi.yml only runs this role, so replace it with the cleanup play and leave no reference to configs-homelab/ansible/roles/raspi/fantasy-hockey in raspi.yml, configs-homelab/ansible/taskfile.yml or .github/dependabot.yml.
     Run the Pi cleanup only after the app is verified reachable on the droplet. Scope the container removal to pi4-0002 and check first that no other service runs in containers there.
 - id: "10"
-  title: Dependabot compose bumps for cloud-configs
+  title: Dependabot compose bumps for configs-cloud
   description: >-
-    Configure Dependabot to bump the docker images in the cloud-configs compose file so a bump is a change under cloud-configs/digital-ocean (CAP-3).
+    Configure Dependabot to bump the docker images in the configs-cloud compose file so a bump is a change under configs-cloud/digital-ocean (CAP-3).
     The redeploy itself is wired in story 16.
 - id: "11"
   title: Droplet replacement drill
@@ -81,7 +81,7 @@
 - id: "14"
   title: CI static checks for OpenTofu and Ansible
   description: >-
-    Run the new linters and static checks for cloud-configs in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
+    Run the new linters and static checks for configs-cloud in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
     Docs updated in the same change.
 - id: "15"
   title: Remote state with locking
@@ -95,7 +95,7 @@
 - id: "16"
   title: cloud-deployment.yml with org secrets and CI SSH key
   description: >-
-    Add .github/workflows/cloud-deployment.yml triggered by changes in cloud-configs/digital-ocean that runs static checks, OpenTofu, provisioning and deployment using org-level secrets (DO token, vault password, CI SSH key) (CAP-5).
+    Add .github/workflows/cloud-deployment.yml triggered by changes in configs-cloud/digital-ocean that runs static checks, OpenTofu, provisioning and deployment using org-level secrets (DO token, vault password, CI SSH key) (CAP-5).
     Register the fresh CI SSH public key on DigitalOcean and document the manual setup.
   spec_checkpoint: true
   done_checkpoint: true

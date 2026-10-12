@@ -4,21 +4,21 @@
   gather_facts: true
   become: true
   vars_files:
-    - ../../ansible/vars/main.yml
+    - ../../configs-homelab/ansible/vars/main.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/filesystem
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/filesystem
 
 - name: Clone git repositories 1
   hosts: localhost
   gather_facts: true
   become: false
   vars_files:
-    - ../../ansible/vars/main.yml
+    - ../../configs-homelab/ansible/vars/main.yml
   tasks:
     - name: Git Repositories  ----  Clone
       ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/git-repositories
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/git-repositories
         tasks_from: main
       vars:
         git_repositories_ssh_base: &ssh-base git@github.com
@@ -46,7 +46,7 @@
   gather_facts: true
   become: false
   vars_files:
-    - ../../ansible/vars/main.yml
+    - ../../configs-homelab/ansible/vars/main.yml
   tasks:
     - name: Git Repositories  ----  Remove outdated repositories from host
       ansible.builtin.file:

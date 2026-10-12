@@ -3,7 +3,7 @@
 The DigitalOcean deployment lives in its own folder, separate from the homelab nodes:
 
 ```text
-cloud-configs/
+configs-cloud/
   taskfile.yml       # included in the root taskfile with prefix `cloud`
   digital-ocean/
     opentofu/        # droplet, reserved IP and volume
@@ -12,7 +12,7 @@ cloud-configs/
 
 ## Tasks
 
-All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `cloud-configs/digital-ocean/opentofu`.
+All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
 
 | Task                                      | What it does                                                   |
 |-------------------------------------------|----------------------------------------------------------------|
@@ -26,19 +26,19 @@ Run `init` once before `plan` and `apply`, and again after provider changes. `pl
 
 There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds, so both have `lifecycle { prevent_destroy = true }` and OpenTofu refuses any plan that would destroy them, including `tofu plan -destroy`, with `Resource instance cannot be destroyed`. The droplet itself stays replaceable.
 
-OpenTofu state stays local in `cloud-configs/digital-ocean/opentofu/terraform.tfstate` for now and is not committed: `.terraform/`, `*.tfstate*` and `*.tfvars` are in `.gitignore`. The single local copy is an accepted risk until state moves to a remote backend in a later epic, so do not delete the working copy while resources exist. The OpenTofu version (`required_version`) and the `digitalocean/digitalocean` provider are pinned exactly in `versions.tf`. The provider lock file `.terraform.lock.hcl` is committed with hashes for every platform the provider is released for, as published by the OpenTofu registry. Dependabot (`opentofu` ecosystem) opens weekly pull requests that bump the provider pin and the lock file together.
+OpenTofu state stays local in `configs-cloud/digital-ocean/opentofu/terraform.tfstate` for now and is not committed: `.terraform/`, `*.tfstate*` and `*.tfvars` are in `.gitignore`. The single local copy is an accepted risk until state moves to a remote backend in a later epic, so do not delete the working copy while resources exist. The OpenTofu version (`required_version`) and the `digitalocean/digitalocean` provider are pinned exactly in `versions.tf`. The provider lock file `.terraform.lock.hcl` is committed with hashes for every platform the provider is released for, as published by the OpenTofu registry. Dependabot (`opentofu` ecosystem) opens weekly pull requests that bump the provider pin and the lock file together.
 
 ## Linters
 
-`task lint` and the `lint` job in the CI pipeline cover `cloud-configs` like the rest of the repository:
+`task lint` and the `lint` job in the CI pipeline cover `configs-cloud` like the rest of the repository:
 
 | Linter       | Coverage                                                                                                                                    |
 |--------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| folderslint  | `cloud-configs/*/opentofu` and `cloud-configs/*/ansible/**` are allowed in `.folderslintrc`                                                 |
+| folderslint  | `configs-cloud/*/opentofu` and `configs-cloud/*/ansible/**` are allowed in `.folderslintrc`                                                 |
 | ls-lint      | kebab-case filenames, including `.tf` files                                                                                                 |
-| yamllint     | all YAML files, including `cloud-configs/taskfile.yml`                                                                                      |
-| ansible-lint | `cloud-configs` is linted together with `ansible`                                                                                           |
-| OpenTofu     | `tofu fmt -check -diff -recursive cloud-configs` (service `lint-opentofu`, keep the image version in sync with the devcontainer's OpenTofu) |
+| yamllint     | all YAML files, including `configs-cloud/taskfile.yml`                                                                                      |
+| ansible-lint | `configs-cloud` is linted together with `configs-homelab/ansible`                                                                           |
+| OpenTofu     | `tofu fmt -check -diff -recursive configs-cloud` (service `lint-opentofu`, keep the image version in sync with the devcontainer's OpenTofu) |
 
 Before the linters run, `task lint` formats the OpenTofu code with `task cloud:digital-ocean:opentofu:fmt`. The `lint-repo` pre-commit hook runs `task lint`, so OpenTofu files are formatted on every commit and only formatted code reaches the remote repository, which avoids conflicting whitespace changes. Only the OpenTofu code is formatted; all other files are only linted. Locally, the OpenTofu linter therefore checks freshly formatted files; stage the files the hook reformatted and commit again.
 

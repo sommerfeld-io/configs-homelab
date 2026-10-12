@@ -31,12 +31,12 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
     - **success:** Grafana Cloud shows OS metrics, container metrics, logs and the app's `:8080/metrics` for the droplet, every series labeled `environment=digital-ocean` and `stage=prod`; homelab series carry `environment=homelab`; a dashboard in `grafana-cloud/manifests/git-sync/apps` covers host, app, containers and logs; a synthetic monitoring check probes the public URL from outside.
 
 - **CAP-5**
-    - **intent:** A change under `cloud-configs/digital-ocean` is applied automatically by a GitHub Actions workflow, decoupled from app releases.
-    - **success:** Merging a change (including a Dependabot bump) to `cloud-configs/digital-ocean` runs `cloud-deployment.yml` through static checks, OpenTofu, provisioning and deployment using only org-level secrets and shared locked state; localhost and the workflow can alternate runs without state corruption.
+    - **intent:** A change under `configs-cloud/digital-ocean` is applied automatically by a GitHub Actions workflow, decoupled from app releases.
+    - **success:** Merging a change (including a Dependabot bump) to `configs-cloud/digital-ocean` runs `cloud-deployment.yml` through static checks, OpenTofu, provisioning and deployment using only org-level secrets and shared locked state; localhost and the workflow can alternate runs without state corruption.
 
 - **CAP-6**
     - **intent:** Every step runs locally and in CI through the same go-task entry points, checked by the repo's linters.
-    - **success:** `task cloud:digital-ocean:*` tasks (from `cloud-configs/taskfile.yml` included with prefix `cloud`) run each step; `task lint` covers the new folder (folderslint, ls-lint, ansible-lint, an OpenTofu linter); the devcontainer provides `doctl` and OpenTofu.
+    - **success:** `task cloud:digital-ocean:*` tasks (from `configs-cloud/taskfile.yml` included with prefix `cloud`) run each step; `task lint` covers the new folder (folderslint, ls-lint, ansible-lint, an OpenTofu linter); the devcontainer provides `doctl` and OpenTofu.
 
 - **CAP-7**
     - **intent:** The setup is documented well enough to operate without prior memory.
@@ -62,15 +62,15 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - Epic order is E1 droplet, E2 provisioning, E3 deploy, E4 dashboard, E5 GitHub Actions (a Must, fifth), E6 HTTPS, E7 hardening, E8 backup last. Everything runs locally via go-task before CI is built. Details in `epics.md`.
 - `fantasy-hockey.yml` is seeded from the default template only when absent; when present it may be overwritten only from a backup, never from template contents.
-- `DIGITALOCEAN_TOKEN` is the token env var. Locally it comes from `ansible/vars/vault.yml` via `ansible/tasks/bash-secrets.yml`, not from playbooks that target DigitalOcean. CI needs separate org-level GitHub secrets for the token and the vault password (OpenTofu runs before Ansible); all vaults share one password. The CI SSH keypair is fresh and its private key never leaves CI.
-- Inventory is the DigitalOcean dynamic inventory plugin selecting by tag; no static IPs and no generated or committed inventory (a commit under `cloud-configs/digital-ocean` would retrigger the pipeline).
-- Only the fantasy-hockey compose role moves out of `ansible/` (into `cloud-configs/digital-ocean/ansible/roles`); all other roles are reused through relative paths, not `roles_path`.
+- `DIGITALOCEAN_TOKEN` is the token env var. Locally it comes from `configs-homelab/ansible/vars/vault.yml` via `configs-homelab/ansible/tasks/bash-secrets.yml`, not from playbooks that target DigitalOcean. CI needs separate org-level GitHub secrets for the token and the vault password (OpenTofu runs before Ansible); all vaults share one password. The CI SSH keypair is fresh and its private key never leaves CI.
+- Inventory is the DigitalOcean dynamic inventory plugin selecting by tag; no static IPs and no generated or committed inventory (a commit under `configs-cloud/digital-ocean` would retrigger the pipeline).
+- Only the fantasy-hockey compose role moves out of `configs-homelab/ansible/` (into `configs-cloud/digital-ocean/ansible/roles`); all other roles are reused through relative paths, not `roles_path`.
 - The volume is formatted and mounted declaratively by OpenTofu (`initial_filesystem_type` ext4, attached at creation); no DO user-data scripts, no DO firewall, no managed DB, one droplet.
 - `stage` is defined once and reused in the droplet tag, droplet name, inventory group and the Alloy label. `source` is already taken as a label, so the new label is `environment`.
 - Budget is about $6 per month for the droplet plus about $0.20 for the volume; resize CPU and RAM only, never disk.
 - Pin OpenTofu and provider versions. Containers use `restart: unless-stopped`, Alloy runs as a systemd service, cron handles regular jobs.
-- `cloud-deployment.yml` is the single CI apply path: it runs only on `main`, serialized by a concurrency group, and applies only `cloud-configs/` content. OpenTofu is the sole owner of SSH key injection into the droplet (adding the CI key in the GitHub Actions epic replaces the droplet once, which is accepted). A Dependabot bump may replace the droplet; this risk is accepted.
-- Architecture rule AD-10 in the adopted `ARCHITECTURE-SPINE.md` governs this work: cloud deployments are a bounded context under `cloud-configs/` with carve-outs from AD-1, AD-4, AD-6, AD-8 and AD-9. The fleet rules stay unchanged outside it.
+- `cloud-deployment.yml` is the single CI apply path: it runs only on `main`, serialized by a concurrency group, and applies only `configs-cloud/` content. OpenTofu is the sole owner of SSH key injection into the droplet (adding the CI key in the GitHub Actions epic replaces the droplet once, which is accepted). A Dependabot bump may replace the droplet; this risk is accepted.
+- Architecture rule AD-10 in the adopted `ARCHITECTURE-SPINE.md` governs this work: cloud deployments are a bounded context under `configs-cloud/` with carve-outs from AD-1, AD-4, AD-6, AD-8 and AD-9. The fleet rules stay unchanged outside it.
 - All other platform decisions (droplet spec, naming, monitoring wiring) are in `platform-decisions.md`.
 
 ## Non-goals
@@ -83,7 +83,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 ## Success signal
 
-The app is reachable from the internet at a static address while nothing is exposed on the home network. A change merged under `cloud-configs/digital-ocean` reaches the droplet through the pipeline without manual steps, and the same flow runs from localhost. The droplet runs for months unattended, and a replacement droplet comes up from the repo alone.
+The app is reachable from the internet at a static address while nothing is exposed on the home network. A change merged under `configs-cloud/digital-ocean` reaches the droplet through the pipeline without manual steps, and the same flow runs from localhost. The droplet runs for months unattended, and a replacement droplet comes up from the repo alone.
 
 ## Assumptions
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install basic tools and apply basic configs to allow further setup using Ansible.
-# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/install-basics.sh | bash -
+# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/configs-homelab/bootstrap/install-basics.sh | bash -
 
 set -o errexit
 set -o pipefail

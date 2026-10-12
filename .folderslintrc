@@ -1,7 +1,11 @@
 {
 	"rules": [
-        ".ansible",
-        ".claude",
+		"_bmad/**",
+		"_bmad-output/**",
+
+		".ansible",
+		".assets",
+		".claude",
 		".devcontainer",
 
 		".github/prompts",
@@ -9,51 +13,49 @@
 		".github/workflows",
 		".github/workflows/assets",
 
-        ".assets",
-        ".task/**",
+		".task/**",
 		".vscode",
 
-		"bootstrap",
+		"configs-cloud/*/ansible/**",
+		"configs-cloud/*/opentofu",
 
-		"cloud-configs/*/ansible/**",
-		"cloud-configs/*/opentofu",
+		"configs-homelab/ansible/host_vars/*",
+		"configs-homelab/ansible/playbooks",
+		"configs-homelab/ansible/roles/*/*/defaults",
+		"configs-homelab/ansible/roles/*/*/files/**",
+		"configs-homelab/ansible/roles/*/*/handlers",
+		"configs-homelab/ansible/roles/*/*/meta",
+		"configs-homelab/ansible/roles/*/*/tasks/**",
+		"configs-homelab/ansible/roles/*/*/templates",
+		"configs-homelab/ansible/roles/*/*/vars",
+		"configs-homelab/ansible/roles/ansible-roles-collection/tests/**",
+		"configs-homelab/ansible/tasks",
+		"configs-homelab/ansible/templates",
+		"configs-homelab/ansible/vars",
 
-		"_bmad/**",
-		"_bmad-output/**",
+		"configs-homelab/bootstrap",
 
-		"ansible/host_vars/*",
-		"ansible/playbooks",
-		"ansible/roles/*/*/defaults",
-        "ansible/roles/*/*/files/**",
-        "ansible/roles/*/*/handlers",
-        "ansible/roles/*/*/meta",
-        "ansible/roles/*/*/tasks/**",
-        "ansible/roles/*/*/templates",
-        "ansible/roles/*/*/vars",
-        "ansible/roles/ansible-roles-collection/tests/**",
-        "ansible/tasks",
-		"ansible/templates",
-		"ansible/vars",
+		"configs-homelab/tests/inspec/*/controls",
+		"configs-homelab/tests/inspec/*/vendor/**",
+		"configs-homelab/tests/molecule/**",
 
-        "docs/ai-implementation-plans",
-        "docs/ansible/**",
-        "docs/cloud/**",
-        "docs/incidents/reports",
-        "docs/incidents/runbooks",
+		"docs/ai-implementation-plans",
+		"docs/ansible/**",
+		"docs/cloud/**",
+		"docs/incidents/reports",
+		"docs/incidents/runbooks",
 		"docs/nodes/**",
 
-        "grafana-cloud/manifests/git-sync/**",
-        "grafana-cloud/manifests/unsycned/**",
-        "nodes/*/*",
-
-        "tests/inspec/*/controls",
-        "tests/inspec/*/vendor/**",
-        "tests/molecule/**",
-        "virtual-machines",
-        "virtual-machines/**",
+		"grafana-cloud/manifests/git-sync/**",
+		"grafana-cloud/manifests/unsycned/**",
 
 		"node_modules/**",
+
 		"public/**",
-		"target/**"
+
+		"target/**",
+
+		"virtual-machines",
+		"virtual-machines/**"
 	]
 }

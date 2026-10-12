@@ -110,7 +110,7 @@ jobs:
       # Run every scenario to the end, so one failing role group doesn't hide failures in another.
       fail-fast: false
       matrix:
-        # One entry per test:<scenario> task in tests/molecule/taskfile.yml - keep in sync.
+        # One entry per test:<scenario> task in configs-homelab/tests/molecule/taskfile.yml - keep in sync.
         scenario: ['common', 'omarchy']
     steps:
       - name: Checkout code

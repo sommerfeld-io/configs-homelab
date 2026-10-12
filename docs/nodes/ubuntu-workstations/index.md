@@ -22,8 +22,8 @@ The setup wizard takes care of the hostname, network settings, etc.
 
 - [ ] When prompted for a user and password, use the username `sebastian` and the default password.
 - [ ] Do not install any other software packages. Installations take place later when Ansible provisions the system.
-- [ ] When running Ansible from the freshly provisioned machine: Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/install-basics.sh | bash -` (skip of another host is the Ansible controller)
-- [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/ssh-server.sh | bash -` if needed
+- [ ] When running Ansible from the freshly provisioned machine: Run basic setup tasks using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/configs-homelab/bootstrap/install-basics.sh | bash -` (skip of another host is the Ansible controller)
+- [ ] Setup openssh-server using `curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/configs-homelab/bootstrap/ssh-server.sh | bash -` if needed
 - [ ] Test connecting to my other Linux machines (with `sebastian` being the user created while installing the OS).
     - [ ] `ssh sebastian@caprica.fritz.box`
     - [ ] `ssh sebastian@kobol.fritz.box`
@@ -37,7 +37,7 @@ The setup wizard takes care of the hostname, network settings, etc.
     - [ ] `ssh-copy-id sebastian@pi4-0002.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi4-dradis.fritz.box`
     - [ ] `ssh-copy-id sebastian@pi5-0004.fritz.box`
-- [ ] Once the machine is provisioned, run the [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task ansible:ssh:trust`) for password-less SSH between the nodes themselves (e.g. from `caprica` to `picon`). The connections are configured in `ansible/vars/ssh-trust.yml`.
+- [ ] Once the machine is provisioned, run the [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task ansible:ssh:trust`) for password-less SSH between the nodes themselves (e.g. from `caprica` to `picon`). The connections are configured in `configs-homelab/ansible/vars/ssh-trust.yml`.
 
 ## Configuration and package installation
 

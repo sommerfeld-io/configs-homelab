@@ -1,5 +1,5 @@
 [submodule "ansible/roles/ansible-roles-collection"]
-	path = ansible/roles/ansible-roles-collection
+	path = configs-homelab/ansible/roles/ansible-roles-collection
 	url = git@github.com:sommerfeld-io/ansible-roles-collection.git
 [submodule ".vscode"]
 	path = .vscode

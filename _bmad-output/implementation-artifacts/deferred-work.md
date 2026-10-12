@@ -6,12 +6,12 @@
   summary: The `ansible-roles-collection` submodule pointer is left in a dirty/uncommitted state (`ea3ab018f00e270720de6ae3ec03ba0cb1644de0-dirty`), unrelated to this docs change.
   evidence: Pre-existing since before this session started (present at the very first `git status` check) — flagged by blind-hunter review during Story 1.1. Would break `git submodule update` for anyone else if committed as-is.
 
-- source_spec: `_bmad-output/implementation-artifacts/spec-2-2-cloud-configs-scaffold-with-taskfile-and-linters.md`
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-2-configs-cloud-scaffold-with-taskfile-and-linters.md`
   summary: The OpenTofu pin exists twice (devcontainer feature `version` and the `lint-opentofu` image in `docker-compose.yml`) and only the compose one is bumped by Dependabot; add a `devcontainers` Dependabot ecosystem or another way to keep them in sync.
   evidence: `.github/dependabot.yml` has `docker-compose` for `/` but no `devcontainers` entry, so a compose bump leaves the devcontainer behind.
 
-- source_spec: `_bmad-output/implementation-artifacts/spec-2-2-cloud-configs-scaffold-with-taskfile-and-linters.md`
-  summary: Update `.github/copilot-instructions.md` (symlinked as `CLAUDE.md`) to mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks and the `opentofu` linter in the `task lint` list.
+- source_spec: `_bmad-output/implementation-artifacts/spec-2-2-configs-cloud-scaffold-with-taskfile-and-linters.md`
+  summary: Update `.github/copilot-instructions.md` (symlinked as `CLAUDE.md`) to mention `configs-cloud/`, the `task cloud:digital-ocean:*` tasks and the `opentofu` linter in the `task lint` list.
   evidence: The Key Commands comment still lists the linters without `opentofu`; agent-instruction edits are out of scope for a build review fix.
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-3-docs-skeleton-for-cloud-digital-ocean.md`
   summary: Map the devcontainer `DIGITALOCEAN_ACCESS_TOKEN` from host `${localEnv:DIGITALOCEAN_ACCESS_TOKEN}` (and drop the stale `export DIGITALOCEAN_TOKEN` line from existing `.bashrc` files via `bash-secrets.yml`).
@@ -20,13 +20,13 @@
   summary: Update `epics-fantasy-hockey-digitalocean.md` (Story 2.4 AC and related text) to the `DIGITALOCEAN_ACCESS_TOKEN` shell variable name.
   evidence: Story 2.4 AC still says "Given `DIGITALOCEAN_TOKEN` is set"; the implementer of 2.4 would read the stale name. Editing planning artifacts also invalidates the cached epic-2 context.
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
-  summary: Add a token-free `tofu init -backend=false && tofu validate` check for `cloud-configs/digital-ocean/opentofu` to `task lint` and the CI lint matrix (Story 6.1).
+  summary: Add a token-free `tofu init -backend=false && tofu validate` check for `configs-cloud/digital-ocean/opentofu` to `task lint` and the CI lint matrix (Story 6.1).
   evidence: `lint-opentofu` (`docker-compose.yml:76`) runs only `fmt -check`; a wrong attribute reference or a breaking Dependabot provider bump passes CI and fails only at a manual `plan`.
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
-  summary: Keep the three exact OpenTofu pins in sync: devcontainer feature, `lint-opentofu` image and `required_version` in `cloud-configs/digital-ocean/opentofu/versions.tf`.
+  summary: Keep the three exact OpenTofu pins in sync: devcontainer feature, `lint-opentofu` image and `required_version` in `configs-cloud/digital-ocean/opentofu/versions.tf`.
   evidence: Story 2.4 added `required_version = "1.12.7"`; a devcontainer bump to another version without editing `versions.tf` makes local `init`/`plan` fail on the version constraint, and no check catches it first.
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
-  summary: Agent instructions (`.github/copilot-instructions.md` / `CLAUDE.md`) should mention `cloud-configs/`, the `task cloud:digital-ocean:*` tasks, the `opentofu` linter and that `task lint` now runs `opentofu:fmt` first.
+  summary: Agent instructions (`.github/copilot-instructions.md` / `CLAUDE.md`) should mention `configs-cloud/`, the `task cloud:digital-ocean:*` tasks, the `opentofu` linter and that `task lint` now runs `opentofu:fmt` first.
   evidence: Agent-context file edits are out of scope for a build review fix; the Key Commands list is still unchanged.
 
 ## Deferred from: code review of spec-2-4-opentofu-droplet-ssh-keys-tag-and-project (2026-10-12)

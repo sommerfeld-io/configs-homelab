@@ -8,18 +8,18 @@ vars:
 
 includes:
   ansible:
-    taskfile: ansible/taskfile.yml
-    dir: ansible
+    taskfile: configs-homelab/ansible/taskfile.yml
+    dir: configs-homelab/ansible
   bmad: .task/bmad/taskfile.yml
   cleanup: .task/cleanup/taskfile.yml
   cloud:
-    taskfile: cloud-configs/taskfile.yml
-    dir: cloud-configs
+    taskfile: configs-cloud/taskfile.yml
+    dir: configs-cloud
   common: .task/common/taskfile.yml
-  inspec: tests/inspec/taskfile.yml
+  inspec: configs-homelab/tests/inspec/taskfile.yml
   molecule:
-    taskfile: tests/molecule/taskfile.yml
-    dir: tests/molecule
+    taskfile: configs-homelab/tests/molecule/taskfile.yml
+    dir: configs-homelab/tests/molecule
   vm:
     taskfile: virtual-machines/taskfile.yml
     dir: virtual-machines
@@ -55,7 +55,7 @@ tasks:
     desc: 'Generate Markdown files for documentation'
     vars:
       ROLES_DOCS: docs/ansible/roles
-      ROLES_SRC: ansible/roles
+      ROLES_SRC: configs-homelab/ansible/roles
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy

@@ -1,6 +1,6 @@
 # Cloud - Digital Ocean
 
-This section covers the production deployment on DigitalOcean that hosts the fantasy hockey app. It is separate from the homelab nodes: the configuration lives in `cloud-configs/digital-ocean/`, not in `ansible/`, and the droplet is not part of the static inventory or the InSpec baseline.
+This section covers the production deployment on DigitalOcean that hosts the fantasy hockey app. It is separate from the homelab nodes: the configuration lives in `configs-cloud/digital-ocean/`, not in `configs-homelab/ansible/`, and the droplet is not part of the static inventory or the InSpec baseline.
 
 All cloud resources are declared with OpenTofu and managed from this repository through go-task. `doctl` is used for read-only checks.
 

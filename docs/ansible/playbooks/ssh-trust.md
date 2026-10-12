@@ -6,7 +6,7 @@ Run it with `task ansible:ssh:trust`. It needs neither `sudo` nor the Ansible va
 
 ## What it does
 
-The connections are configured as `src`/`dest` pairs in `ansible/vars/ssh-trust.yml`. Each pair lets `sebastian` on `src` connect to `dest` without a password:
+The connections are configured as `src`/`dest` pairs in `configs-homelab/ansible/vars/ssh-trust.yml`. Each pair lets `sebastian` on `src` connect to `dest` without a password:
 
 ```yaml
 ssh_trust_pairs:

@@ -17,7 +17,7 @@ FR1: Operator can create the production droplet, reserved IP and 2 GB volume wit
 FR2: Operator can provision the droplet's base software with Ansible against a tag-discovered dynamic inventory, reusing existing roles. (SPEC CAP-2)
 FR3: Operator can deploy the app as docker compose and reach it at a static public address. (SPEC CAP-3)
 FR4: Operator can see the droplet, app and containers in Grafana Cloud, distinguished from the homelab. (SPEC CAP-4)
-FR5: A change under `cloud-configs/digital-ocean` is applied by a GitHub Actions workflow. (SPEC CAP-5)
+FR5: A change under `configs-cloud/digital-ocean` is applied by a GitHub Actions workflow. (SPEC CAP-5)
 FR6: Every step runs locally and in CI through the same go-task entry points, checked by the repo's linters. (SPEC CAP-6)
 FR7: The setup is documented under `docs/cloud/digital-ocean` with diagrams. (SPEC CAP-7)
 FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-8)
@@ -27,7 +27,7 @@ FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-
 NFR1: `fantasy-hockey.yml` is seeded from the default template only when absent, and overwritten only from a backup. (SPEC constraint)
 NFR2: `DIGITALOCEAN_ACCESS_TOKEN` comes locally from `vault.yml` (vault key `DIGITALOCEAN_TOKEN`) through `bash-secrets.yml`; CI uses org-level GitHub secrets for the token and the vault password. (SPEC constraint, AD-10)
 NFR3: Inventory is the DigitalOcean dynamic inventory by tag, with no static or committed inventory. (SPEC constraint)
-NFR4: Only the fantasy-hockey role moves out of `ansible/`; other roles are reused through relative paths. (SPEC constraint)
+NFR4: Only the fantasy-hockey role moves out of `configs-homelab/ansible/`; other roles are reused through relative paths. (SPEC constraint)
 NFR5: No DO firewall, user-data scripts or managed DB; one droplet; budget about $6 plus $0.20 per month. (SPEC constraint)
 
 ### FR Coverage Map
@@ -60,7 +60,7 @@ The droplet and app are observable in Grafana Cloud from the inside and the outs
 **FRs covered:** FR4
 
 ### Epic 6: GitHub Actions
-Changes under `cloud-configs/digital-ocean` are applied by a workflow with shared state.
+Changes under `configs-cloud/digital-ocean` are applied by a workflow with shared state.
 **FRs covered:** FR5, FR6
 
 ## Epic 2: Droplet via OpenTofu
@@ -79,24 +79,24 @@ So that I can run every DigitalOcean step locally.
 **When** I run `doctl version` and `tofu version`
 **Then** both tools are installed
 
-**Given** the token var in `ansible/vars/vault.yml` and the `bash-secrets.yml` loop in `desktop.yml`
+**Given** the token var in `configs-homelab/ansible/vars/vault.yml` and the `bash-secrets.yml` loop in `desktop.yml`
 **When** I provision my machine and open a new shell
 **Then** `DIGITALOCEAN_ACCESS_TOKEN` is exported
 **And** the docs describe the token scopes and the manual steps
 
-### Story 2.2: cloud-configs scaffold with taskfile and linters
+### Story 2.2: configs-cloud scaffold with taskfile and linters
 
 As an operator,
-I want the `cloud-configs` folder wired into the taskfile and the linters,
+I want the `configs-cloud` folder wired into the taskfile and the linters,
 So that the new setup is checked like everything else.
 
 **Acceptance Criteria:**
 
-**Given** `cloud-configs/taskfile.yml` included in the main taskfile with prefix `cloud`
+**Given** `configs-cloud/taskfile.yml` included in the main taskfile with prefix `cloud`
 **When** I list tasks
 **Then** `cloud:digital-ocean:*` tasks are available
 
-**Given** the new folders `cloud-configs/digital-ocean/{opentofu,ansible}`
+**Given** the new folders `configs-cloud/digital-ocean/{opentofu,ansible}`
 **When** I run `task lint`
 **Then** folderslint, ls-lint, ansible-lint and an OpenTofu linter cover them and pass
 
@@ -160,7 +160,7 @@ So that provisioning works on a freshly created droplet without editing an inven
 
 **Given** the dynamic inventory selecting by tag with groups `ubuntu` and `fantasy-hockey`
 **When** I run the provision task against a new droplet
-**Then** Docker and the bash config with the yellow `user@host` prompt are installed using roles from `ansible/roles` via relative paths
+**Then** Docker and the bash config with the yellow `user@host` prompt are installed using roles from `configs-homelab/ansible/roles` via relative paths
 
 **Given** a second run
 **When** provisioning finishes
@@ -191,7 +191,7 @@ So that I can tell homelab from DigitalOcean in Grafana Cloud.
 
 **Acceptance Criteria:**
 
-**Given** `ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2`
+**Given** `configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2`
 **When** the homelab Alloy config is rendered
 **Then** it carries `environment=homelab` and the existing `source` label is unchanged
 
@@ -207,7 +207,7 @@ So that it is reachable from the internet at a static address.
 
 **Acceptance Criteria:**
 
-**Given** the role moved with `git mv` into `cloud-configs/digital-ocean/ansible/roles` with `fantasy_hockey_` vars
+**Given** the role moved with `git mv` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars
 **When** I run the deploy task
 **Then** the app runs as docker compose with nginx on port 80 and data under `/mnt/<volume-name>/fantasy-hockey`
 **And** `http://<reserved-ip>` serves the app from outside the home network
@@ -216,9 +216,9 @@ So that it is reachable from the internet at a static address.
 **When** the deploy runs again
 **Then** the file is not overwritten from the default template
 
-**Given** the role, its files, README and vault-encrypted defaults now live under `cloud-configs/digital-ocean/ansible/roles`
-**When** I search `raspi.yml`, `ansible/taskfile.yml` and `.github/dependabot.yml`
-**Then** none references `ansible/roles/raspi/fantasy-hockey`
+**Given** the role, its files, README and vault-encrypted defaults now live under `configs-cloud/digital-ocean/ansible/roles`
+**When** I search `raspi.yml`, `configs-homelab/ansible/taskfile.yml` and `.github/dependabot.yml`
+**Then** none references `configs-homelab/ansible/roles/raspi/fantasy-hockey`
 **And** the `vault:fantasy-hockey` entry lives in the cloud taskfile as `cloud:digital-ocean:vault:fantasy-hockey`
 **And** the Dependabot entry points at the moved `files` folder
 
@@ -227,17 +227,17 @@ So that it is reachable from the internet at a static address.
 **Then** `/opt/fantasy-hockey` is removed
 **And** the containers on that Pi are stopped and removed, after checking that no other service runs in containers there
 
-### Story 4.2: Dependabot compose bumps for cloud-configs
+### Story 4.2: Dependabot compose bumps for configs-cloud
 
 As an operator,
 I want Dependabot to bump the compose images (the entry itself is moved in Story 4.1),
-So that updates arrive as changes under `cloud-configs/digital-ocean`.
+So that updates arrive as changes under `configs-cloud/digital-ocean`.
 
 **Acceptance Criteria:**
 
 **Given** the Dependabot config
 **When** a new image version is released
-**Then** a PR changing the cloud-configs compose file is opened
+**Then** a PR changing the configs-cloud compose file is opened
 
 ### Story 4.3: Droplet replacement drill
 
@@ -282,7 +282,7 @@ So that outages on the path to the droplet become visible.
 
 ## Epic 6: GitHub Actions
 
-Changes under `cloud-configs/digital-ocean` are applied by a workflow with shared state.
+Changes under `configs-cloud/digital-ocean` are applied by a workflow with shared state.
 
 ### Story 6.1: CI static checks for OpenTofu and Ansible
 
@@ -292,7 +292,7 @@ So that broken cloud configs fail before merge.
 
 **Acceptance Criteria:**
 
-**Given** a change under `cloud-configs`
+**Given** a change under `configs-cloud`
 **When** CI runs in `pipeline.yml` or a dedicated workflow
 **Then** the OpenTofu and Ansible checks run the same way as locally
 
@@ -316,12 +316,12 @@ So that localhost and GitHub Actions can alternate runs without corrupting state
 ### Story 6.3: cloud-deployment.yml with org secrets and CI SSH key
 
 As an operator,
-I want a workflow that applies changes under `cloud-configs/digital-ocean`,
+I want a workflow that applies changes under `configs-cloud/digital-ocean`,
 So that deployment is decoupled from app releases.
 
 **Acceptance Criteria:**
 
-**Given** a merged change under `cloud-configs/digital-ocean`
+**Given** a merged change under `configs-cloud/digital-ocean`
 **When** `cloud-deployment.yml` runs
 **Then** it runs static checks, OpenTofu, provisioning and deployment using org-level secrets (DO token, vault password, CI SSH key)
 

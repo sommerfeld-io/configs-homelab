@@ -2,7 +2,7 @@
 
 <!--
   This file is generated automatically by the "ping" Ansible playbook
-  (ansible/playbooks/ping.yml). Manual edits will be overwritten the
+  (configs-homelab/ansible/playbooks/ping.yml). Manual edits will be overwritten the
   next time the playbook runs.
 -->
 
