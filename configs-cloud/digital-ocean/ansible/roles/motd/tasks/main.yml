@@ -21,6 +21,10 @@
     group: root
     mode: u=rw,g=r,o=r
 
+# No .sh extension on purpose: pam_motd runs the folder with
+# "run-parts --lsbsysinit", which only runs file names made of letters, digits,
+# "_" and "-". A name with a dot (00-banner.sh) is silently skipped. Ubuntu's own
+# scripts (00-header, 98-reboot-required) are named the same way.
 - name: MOTD  ----  Install the MOTD scripts
   ansible.builtin.copy:
     src: "{{ item }}"
