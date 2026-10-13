@@ -160,10 +160,10 @@ Changing the region, changing a droplet's `stage` or renaming a map key is diffe
 
 Run the steps from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 
-1. `task cloud:digital-ocean:init`: download the pinned provider, verified against the committed lock file.
-2. `task cloud:digital-ocean:plan`: review what is added, changed and destroyed. Each new droplet adds the droplet itself, plus a volume, a reserved IP and its assignment if the options ask for them. The project assignment is updated as well.
-3. `task cloud:digital-ocean:apply`: review the plan again and confirm with `yes`. The output prints each droplet's own public IPv4 address, the reserved IPs and the volume mount paths.
-4. `task cloud:digital-ocean:plan`: a second plan must print `No changes.`
+1. `task cloud:digital-ocean:opentofu:init`: download the pinned provider, verified against the committed lock file.
+2. `task cloud:digital-ocean:opentofu:plan`: review what is added, changed and destroyed. Each new droplet adds the droplet itself, plus a volume, a reserved IP and its assignment if the options ask for them. The project assignment is updated as well.
+3. `task cloud:digital-ocean:opentofu:apply`: review the plan again and confirm with `yes`. The output prints each droplet's own public IPv4 address, the reserved IPs and the volume mount paths.
+4. `task cloud:digital-ocean:opentofu:plan`: a second plan must print `No changes.`
 
 A droplet only gets its volume mounted automatically when the volume is attached at droplet creation. Adding `volume_size_gb` to an existing droplet therefore needs a one-time replacement of that droplet. Force it with `-replace`; there is no task for this step:
 

@@ -35,7 +35,7 @@ cloud "DigitalOcean" as digitalocean {
 
 task --> tofu : opentofu:init, fmt,\nplan, apply
 task --> doctl : info
-task --> ansible : digital-ocean:inventory,\nprovision
+task --> ansible : ansible:inventory,\nansible:provision
 ansible --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
 ansible --> droplet : SSH as root
 tofu --> state : plan, apply:\nreads and writes

@@ -203,7 +203,7 @@ opt planned with Story 6.3, does not exist today
   GH -> Deploy : push event on main,\nchanges under configs-cloud/digital-ocean
   Deploy -> DO : static checks, OpenTofu apply,\nprovision, deploy
 end
-Operator -> DO : today: task cloud:digital-ocean:apply\nfrom the devcontainer
+Operator -> DO : today: task cloud:digital-ocean:opentofu:apply\nfrom the devcontainer
 @enduml
 ```
 

@@ -31,11 +31,12 @@ The playbook is idempotent: a second run reports `changed=0`.
 ## Tasks
 
 ```bash
-task cloud:digital-ocean:inventory   # droplets and their groups
-task cloud:digital-ocean:provision   # run provision.yml
+task cloud:digital-ocean:ansible:inventory   # droplets and their groups
+task cloud:digital-ocean:ansible:provision   # run provision.yml
+task cloud:digital-ocean:provision           # full pipeline: opentofu:apply, then ansible:provision
 ```
 
-Both stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set.
+All three stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set.
 
 ## Replaced Droplet and Host Key
 

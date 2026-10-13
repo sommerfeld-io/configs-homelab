@@ -10,17 +10,17 @@ vars:
 
 tasks:
 
-  digital-ocean:init:
+  digital-ocean:opentofu:init:
     desc: Initialize the OpenTofu working directory for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} init"
 
-  digital-ocean:fmt:
+  digital-ocean:opentofu:fmt:
     desc: Format the OpenTofu files for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} fmt -recursive"
 
-  digital-ocean:plan:
+  digital-ocean:opentofu:plan:
     desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: &do-token
       - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
@@ -28,28 +28,35 @@ tasks:
     cmds:
       - "{{ .DO_TOFU }} plan"
 
-  digital-ocean:apply:
+  digital-ocean:opentofu:apply:
     desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - "{{ .DO_TOFU }} apply"
 
-  digital-ocean:inventory:
+  digital-ocean:ansible:inventory:
     desc: List the droplets found by the dynamic inventory with their groups (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
       - ansible-inventory -i {{ .DO_ANSIBLE }}/inventory --graph
 
-  digital-ocean:provision:
+  digital-ocean:ansible:provision:
     desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
       - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory {{ .DO_ANSIBLE }}/playbooks/provision.yml
 
+  digital-ocean:provision:
+    desc: Run the full pipeline, OpenTofu apply then Ansible provision (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - task: digital-ocean:opentofu:apply
+      - task: digital-ocean:ansible:provision
+
   info:
-    desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_ACCESS_TOKEN)
+    desc: Print information for all cloud environments
     preconditions: *do-token
     cmds:
       - doctl account get
