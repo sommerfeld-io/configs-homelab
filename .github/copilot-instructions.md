@@ -6,18 +6,18 @@ Always use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/
 
 **Format:** `<type>(optional scope): <description>`
 
-| Type | Effect | When to use |
-| ------ | -------- | ------------- |
-| `fix` | PATCH release | Patches a bug |
-| `feat` | MINOR release | Introduces a new feature |
-| `BREAKING CHANGE` footer | MAJOR release | Introduces a breaking API change |
-| `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test` | No release | All other changes |
+| Type                                                                | Effect        | When to use                      |
+|---------------------------------------------------------------------|---------------|----------------------------------|
+| `fix`                                                               | PATCH release | Patches a bug                    |
+| `feat`                                                              | MINOR release | Introduces a new feature         |
+| `BREAKING CHANGE` footer                                            | MAJOR release | Introduces a breaking API change |
+| `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test` | No release    | All other changes                |
 
 **Rules:**
 
-- A scope may be added in parentheses for extra context: `feat(parser): add ability to parse arrays`. A scope may **NOT** contain a slash (`/`).
+- A scope may be added in parentheses for extra context: `feat(parser): add ability to parse arrays`. A scope may not be with a slash (`/`).
 - Breaking changes must include `BREAKING CHANGE:` in the footer: `feat: drop support for Node 6`
-- Commit message titles must also match the project pattern: `^(fix|feat|build|chore|ci|docs|style|refactor|perf|test)/[a-z0-9._-]+$`
+- Commit message titles must also match the project pattern: `^(fix|feat|build|chore|ci|docs|style|refactor|perf|test)(\([a-z0-9._-]+\))?: .+$`. Titles using a slash instead of a colon (e.g. `chore/bump-deps`) are forbidden — always use `chore(bump-deps): ...` or `chore: ...`.
 
 Write commit messages using the Conventional Commits format, ensuring the header (`type(scope): summary`) is clear and descriptive, as it will be displayed on GitHub release pages and used for changelogs. Focus the header on user-visible, meaningful change descriptions and avoid vague wording. Always document breaking changes explicitly in the footer using `BREAKING CHANGE:` (do not use the `!` notation).
 
@@ -71,3 +71,5 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
     - Run a single role group with `task molecule:test:<role-group>` (e.g. `task molecule:test:common`), or all of them with `task molecule:test`.
     - Runs automatically in CI (`.github/workflows/pipeline.yml`, `molecule` job) after linting and InSpec checks, and gates the release stage.
     - To test a new role group, add `configs-homelab/tests/molecule/{role-group}/molecule/default/{converge,verify}.yml`, a `molecule.yml` following the `common` example, and a corresponding `test:{role-group}` task in `configs-homelab/tests/molecule/taskfile.yml`.
+
+@AGENTS.md
