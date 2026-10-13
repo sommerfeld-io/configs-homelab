@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-12-2026 22:13
+last_updated: 10-13-2026 12:00
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -121,5 +121,5 @@ action_items:
       commands first, reconcile planning docs with decisions, copy epic resource constraints
       into story specs, grep all consumers on cross-tool renames)"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
