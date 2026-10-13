@@ -16,7 +16,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 
 ## Requirements & Constraints
 
-- Provisioning is idempotent: a second run changes nothing except four Alloy tasks, which report changed on every run: `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler. The fleet template differs because the previous run replaced `config.alloy` with the cloud config, and the fleet restart uses `state: restarted`. The exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`).
+- Provisioning is idempotent: a second run changes nothing except four Alloy tasks, which report changed on every run: `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler. The fleet template differs because the previous run replaced `config.alloy` with the cloud config, and the fleet restart uses `state: restarted`. The exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`). Item 8 folded the cloud config into the fleet role (`alloy_config_template`, `alloy_fleet_extras: false`, restart through a handler) and deleted the cloud stage-and-copy role; the exception is dropped once a second provision run after that change shows `changed=0`.
 - Every story updates the docs under `docs/cloud/digital-ocean` in the same change; docs are organized by topic.
 - Every step runs through go-task entry points (`cloud:digital-ocean:*`) and passes the repo linters (ansible-lint, yamllint, ls-lint, folderslint).
 - Every cloud role has a Molecule scenario under `configs-cloud/digital-ocean/tests/molecule`, run locally through `task molecule-cloud:*` and in CI by the `molecule-cloud` job.
@@ -41,6 +41,6 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 
 - Story 3.1 provides the inventory and `provision.yml` that Stories 3.2 and 3.4 extend.
 - Story 3.2 needs the `stage` tag and `environment` label scheme; Story 3.3 applies the matching `environment` label on the homelab side and is independent of the droplet.
-- Story 3.5 tests the roles from Stories 3.2 (`swap`, `alloy-config`) and 3.4 (`motd`) and sets the rule that every later role, starting with Story 4.1, comes with a scenario.
+- Story 3.5 tests the roles from Stories 3.2 (`swap`, and the fleet Alloy role with `alloy_fleet_extras: false` and the cloud template) and 3.4 (`motd`) and sets the rule that every later role, starting with Story 4.1, comes with a scenario.
 - Depends on Epic 2: the droplet, its tag, SSH key and `DIGITALOCEAN_ACCESS_TOKEN` delivery.
 - Downstream: Epic 4 deploys the app onto the provisioned droplet (Docker from Story 3.1); Epic 5 builds the dashboard on the labels from Stories 3.2 and 3.3; Epic 6 runs these playbooks from CI.

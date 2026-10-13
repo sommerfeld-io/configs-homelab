@@ -88,3 +88,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-12-reconcile-idempotence-statement.md`
   summary: Add `changed_when: false` to the read-only `docker version` and `docker compose version` tasks in `ansible-roles-collection/docker/tasks/ubuntu/40-info.yml`, then drop the Docker exception from `epic-3-context.md`, the Story 3.1 criterion, `SPEC.md` CAP-2 and `docs/cloud/digital-ocean/provisioning.md`.
   evidence: The second provision run on 2026-10-13 (epic-3 retro item 13) ended `changed=6`: the four expected Alloy tasks plus `Docker  ----  Setup  ----  Verify Docker installation` and `Verify Docker Compose installation`, both plain `command` tasks without `changed_when`. The fix belongs to the submodule repo (AD-8).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-8-alloy-config-template-and-fleet-extras.md`
+  summary: Add a Molecule scenario for the fleet `grafana-cloud/alloy` role with its apartment defaults (token file, capabilities and override capability lines present, one restart on a config change, none on a second converge).
+  evidence: No test runs this role (`configs-homelab/tests/molecule` has only `common` and `omarchy`); Story 3.5 covers only the `alloy_fleet_extras: false` branch with the cloud template. A dropped `notify` or a mis-rendered `{% if %}` in the override would reach every apartment node unnoticed. Needs a systemd container and Grafana APT access.

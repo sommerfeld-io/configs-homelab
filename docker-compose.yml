@@ -85,7 +85,7 @@ services:
       - -c
       - |
         set -e
-        for f in configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 configs-cloud/digital-ocean/ansible/roles/alloy-config/templates/config.alloy.j2; do
+        for f in configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2; do
           alloy validate "$$f"
         done
     tty: *tty

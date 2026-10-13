@@ -38,10 +38,32 @@
         state: present
 
     - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Ensure Alloy binary has necessary eBPF capabilities
+      when: alloy_fleet_extras | bool
       community.general.capabilities:
         path: "{{ alloy_binary_path }}"
         capability: cap_sys_admin,cap_sys_ptrace,cap_net_raw=ep
         state: present
+      notify: Restart Alloy
+
+    # community.general.capabilities with state absent cannot drop the last
+    # capability (it runs setcap with an empty clause, which libcap rejects),
+    # so the capabilities are removed with setcap -r when getcap shows any.
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Read Alloy binary capabilities
+      when: not (alloy_fleet_extras | bool)
+      ansible.builtin.command:
+        argv: [getcap, "{{ alloy_binary_path }}"]
+      register: alloy_binary_capabilities
+      changed_when: false
+      check_mode: false
+
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Remove eBPF capabilities from Alloy binary
+      when:
+        - not (alloy_fleet_extras | bool)
+        - alloy_binary_capabilities.stdout | length > 0
+      ansible.builtin.command:
+        argv: [setcap, -r, "{{ alloy_binary_path }}"]
+      changed_when: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Create systemd override directory
       ansible.builtin.file:
@@ -54,13 +76,16 @@
         content: |
           [Service]
           EnvironmentFile={{ alloy_env_file }}
+          {% if alloy_fleet_extras | bool %}
           AmbientCapabilities=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
           CapabilityBoundingSet=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+          {% endif %}
         dest: "/etc/systemd/system/{{ alloy_service_name }}.service.d/override.conf"
         owner: root
         group: root
         mode: u=rw,g=r,o=r
         force: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Enable Alloy service
       ansible.builtin.systemd:
@@ -94,10 +119,32 @@
         force: true
 
     - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Ensure Alloy binary has necessary eBPF capabilities
+      when: alloy_fleet_extras | bool
       community.general.capabilities:
         path: "{{ alloy_binary_path }}"
         capability: cap_sys_admin,cap_sys_ptrace,cap_net_raw=ep
         state: present
+      notify: Restart Alloy
+
+    # community.general.capabilities with state absent cannot drop the last
+    # capability (it runs setcap with an empty clause, which libcap rejects),
+    # so the capabilities are removed with setcap -r when getcap shows any.
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Read Alloy binary capabilities
+      when: not (alloy_fleet_extras | bool)
+      ansible.builtin.command:
+        argv: [getcap, "{{ alloy_binary_path }}"]
+      register: alloy_binary_capabilities
+      changed_when: false
+      check_mode: false
+
+    - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Remove eBPF capabilities from Alloy binary
+      when:
+        - not (alloy_fleet_extras | bool)
+        - alloy_binary_capabilities.stdout | length > 0
+      ansible.builtin.command:
+        argv: [setcap, -r, "{{ alloy_binary_path }}"]
+      changed_when: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Create systemd override directory
       ansible.builtin.file:
@@ -110,13 +157,16 @@
         content: |
           [Service]
           EnvironmentFile={{ alloy_env_file }}
+          {% if alloy_fleet_extras | bool %}
           AmbientCapabilities=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
           CapabilityBoundingSet=CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_NET_RAW
+          {% endif %}
         dest: "/etc/systemd/system/{{ alloy_service_name }}.service.d/override.conf"
         owner: root
         group: root
         mode: u=rw,g=r,o=r
         force: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Arch  ----  Enable Alloy service
       ansible.builtin.systemd:
@@ -142,22 +192,33 @@
         - "{{ alloy_config_dir }}"
 
     - name: Grafana Cloud  ----  Alloy  ----  Create the GitHub token file
-      copy:
+      when: alloy_fleet_extras | bool
+      ansible.builtin.copy:
         content: "{{ GITHUB_TOKEN }}"
         dest: "{{ alloy_config_dir }}/github.token"
         owner: "{{ alloy_user }}"
         group: "{{ alloy_group }}"
         mode: u=rw,g=,o= # Crucial: Only the alloy user can read the file
       become: true
+      notify: Restart Alloy
+
+    - name: Grafana Cloud  ----  Alloy  ----  Remove the GitHub token file
+      when: not (alloy_fleet_extras | bool)
+      ansible.builtin.file:
+        path: "{{ alloy_config_dir }}/github.token"
+        state: absent
+      become: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Template config file
       ansible.builtin.template:
-        src: templates/config.alloy.j2
+        src: "{{ alloy_config_template }}"
         dest: "{{ alloy_config_dir }}/config.alloy"
         owner: root
         group: "{{ alloy_group }}"
         mode: u=rw,g=r,o=r
         force: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Create environment file
       ansible.builtin.copy:
@@ -175,21 +236,18 @@
         group: root
         mode: u=rw,g=r,o=
         force: true
+      notify: Restart Alloy
 
     - name: Grafana Cloud  ----  Alloy  ----  Add alloy user to docker group
       ansible.builtin.user:
         name: "{{ alloy_user }}"
         groups: docker
         append: true
+      notify: Restart Alloy
 
-    - name: Grafana Cloud  ----  Alloy  ----  Reload systemd daemon
-      ansible.builtin.systemd:
-        daemon_reload: true
-
-    - name: Grafana Cloud  ----  Alloy  ----  Restart
-      ansible.builtin.systemd:
-        name: "{{ alloy_service_name }}"
-        state: restarted
+    # Restart now, so a failure later in the play cannot leave Alloy on a stale config.
+    - name: Grafana Cloud  ----  Alloy  ----  Apply pending restart
+      ansible.builtin.meta: flush_handlers
 
 - name: Grafana Cloud  ----  Alloy  ----  Cron
   block:

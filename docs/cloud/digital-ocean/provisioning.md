@@ -38,19 +38,23 @@ On a droplet that is already up, the play passes at once and reports no change. 
 - `bash` (only `11-bash-config-root`): aliases and the root prompt `ps1_root` in `/root/.bashrc`. The prompt is the root prompt of the local ubuntu machines, defined in `ansible/vars/main.yml`.
 - `docker`: Docker from the Docker apt repository.
 - `swap` (cloud role in `ansible/roles/swap`): a 1 GiB swap file `/swapfile` (`swap_file_size_mb` in the role defaults), mode `0600`, enabled with `swapon` and kept in `/etc/fstab`. A 1 GB droplet has no swap by default, so memory pressure would kill processes silently.
-- `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`.
-- `alloy-config` (cloud role in `ansible/roles/alloy-config`): the fleet role writes the fleet config, so this role then replaces `/etc/alloy/config.alloy` with the cloud config and restarts Alloy.
+- `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`. `ansible/vars/main.yml` sets `alloy_config_template` to the cloud config and `alloy_fleet_extras: false`, see [Alloy and Labels](#alloy-and-labels).
 - `motd` (cloud role in `ansible/roles/motd`): the login banner, see [Login Banner (MOTD)](#login-banner-motd).
 
-The playbook asks for the vault password (`--ask-vault-pass`). The swap, motd and cloud config template tasks report no change on a second run. The fleet `alloy` role reports changes on every run: its template differs because the previous run replaced `config.alloy` with the cloud config, and its restart uses `state: restarted`. Because it rewrites the fleet config, the copy of the cloud config over `config.alloy` and the Alloy restart report changed too. A second run therefore ends with `changed=4`.
+The playbook asks for the vault password (`--ask-vault-pass`). The swap and motd tasks report no change on a second run. Before Epic 3 retro item 8, a second run ended with `changed=4`: the fleet `alloy` role wrote the fleet config and restarted with `state: restarted`, then a cloud role copied the cloud config back and restarted again. Now the fleet role writes the cloud config directly and restarts Alloy only through its `Restart Alloy` handler when something changed, so a second run is expected to end with `changed=0`. That exception stays recorded here until a second provision run after the change shows `changed=0`.
 
 ## Alloy and Labels
 
-The cloud config (`alloy-config/templates/config.alloy.j2`) has no GitHub, Ollama, FRITZ!Box, Beyla or fleet-management blocks. It ships OS metrics (node exporter), Alloy health, journal logs, Docker logs and cAdvisor metrics, and scrapes the app at `localhost:8080/metrics` (job `fantasy-hockey`). Until the app is deployed (Epic 4), that target reports `up=0` and Alloy logs no error. The same applies to cAdvisor while no cAdvisor container runs.
+The droplet runs the same fleet Alloy role as the homelab, with two variables from `ansible/vars/main.yml` (play vars, which outrank the role defaults):
+
+- `alloy_config_template: "{{ playbook_dir }}/../templates/alloy/config.alloy.j2"` writes the cloud config (`ansible/templates/alloy/config.alloy.j2`) to `/etc/alloy/config.alloy` instead of the fleet config. The fleet config with `remotecfg` never runs on the droplet.
+- `alloy_fleet_extras: false` leaves out the GitHub token file, the eBPF capabilities on the Alloy binary and the capability lines in the systemd override. On a droplet provisioned before this, the first run deletes `/etc/alloy/github.token`, clears the binary capabilities with `setcap -r` and rewrites the override, then restarts Alloy once.
+
+The cloud config has no GitHub, Ollama, FRITZ!Box, Beyla or fleet-management blocks. It ships OS metrics (node exporter), Alloy health, journal logs, Docker logs and cAdvisor metrics, and scrapes the app at `localhost:8080/metrics` (job `fantasy-hockey`). Until the app is deployed (Epic 4), that target reports `up=0` and Alloy logs no error. The same applies to cAdvisor while no cAdvisor container runs.
 
 `environment=digital-ocean` and `stage=prod` are `external_labels` of the Prometheus remote write and the Loki write, so every series and log line carries them. The template is validated by `lint-alloy-config` together with the fleet template.
 
-Homelab nodes carry `environment=homelab` and no `stage` label, set by the fleet Alloy role from its variable `alloy_environment`. The DigitalOcean inventory sets that variable to `digital-ocean`, so even during the few seconds the fleet config runs on the droplet on each provision, its series are never labeled `homelab`. Filter with `environment="homelab"` or `environment="digital-ocean"`, and use `stage` only for cloud series.
+Homelab nodes carry `environment=homelab` and no `stage` label, set by the fleet Alloy role from its variable `alloy_environment`. The DigitalOcean inventory sets that variable to `digital-ocean`. Filter with `environment="homelab"` or `environment="digital-ocean"`, and use `stage` only for cloud series.
 
 Verify in Grafana Cloud (Explore):
 
@@ -60,7 +64,7 @@ node_memory_SwapTotal_bytes{environment="digital-ocean", stage="prod"}
 {environment="digital-ocean", stage="prod"}
 ```
 
-On the droplet: `swapon --show` lists `/swapfile` once, `systemctl is-active alloy` prints `active`.
+On the droplet: `swapon --show` lists `/swapfile` once, `systemctl is-active alloy` prints `active`, `getcap $(command -v alloy)` prints nothing, `ls /etc/alloy` shows no `github.token`, and `grep -c remotecfg /etc/alloy/config.alloy` prints `0`.
 
 ## Login Banner (MOTD)
 

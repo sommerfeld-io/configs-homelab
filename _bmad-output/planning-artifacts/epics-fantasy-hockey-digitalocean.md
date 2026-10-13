@@ -165,7 +165,7 @@ So that provisioning works on a freshly created droplet without editing an inven
 **Given** a second run
 **When** provisioning finishes
 **Then** nothing changes except four Alloy tasks, which report changed on every run (accepted in Story 3.2): `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler
-**And** that exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`)
+**And** that exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`). Item 8 folded the cloud config into the fleet role (`alloy_config_template`, `alloy_fleet_extras: false`, restart through a handler) and deleted the cloud stage-and-copy role; the exception is dropped once a second provision run after that change shows `changed=0`
 **And** the docs explain the dynamic inventory
 
 ### Story 3.2: Swap and Alloy on the droplet with environment and stage labels
@@ -236,7 +236,7 @@ So that a broken role fails in CI instead of on the droplet.
 
 **Acceptance Criteria:**
 
-**Given** the cloud roles `swap`, `alloy-config` and `motd`
+**Given** the cloud roles `swap` and `motd`, and the fleet Alloy role as the droplet runs it (`alloy_fleet_extras: false`, the cloud template)
 **When** I run `task molecule-cloud:test`
 **Then** one Molecule scenario per role under `configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/` runs converge, idempotence and verify on Ubuntu 26.04 (the droplet image), using a shared `base.yml` and `prepare.yml` in `configs-cloud/digital-ocean/tests/molecule/`
 **And** `task molecule-cloud:test:<role>` runs a single scenario from `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, which the root taskfile includes as `molecule-cloud`
@@ -246,10 +246,10 @@ So that a broken role fails in CI instead of on the droplet.
 **Then** `prepare` replaces `swapon` with a stub that records the activated file, so the role runs unchanged
 **And** verify asserts the file size, mode `0600`, the `mkswap` signature and the `/etc/fstab` line, and idempotence proves the second run changes nothing
 
-**Given** `alloy-config` restarts Alloy through systemd and reads facts the fleet Alloy role sets
-**When** the `alloy-config` scenario runs
-**Then** it runs in a container with systemd and a dummy `alloy.service`, and converge sets `alloy_config_dir`, `alloy_group`, `alloy_service_name`, `alloy_environment` and `alloy_stage`
-**And** verify asserts that `config.alloy` carries `environment = "digital-ocean"` and `stage = "prod"` in both `external_labels` blocks and has no `github` or `remotecfg` block
+**Given** the fleet Alloy role installs Alloy and restarts it through systemd
+**When** the `alloy` scenario runs the fleet role with `alloy_fleet_extras: false` and `alloy_config_template` set to the cloud template `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`
+**Then** it runs in a container with systemd, and converge sets `alloy_environment` and `alloy_stage` and test values for the Grafana Cloud secrets
+**And** verify asserts that there is no `github.token` and no capabilities on the Alloy binary, and that `config.alloy` carries `environment = "digital-ocean"` and `stage = "prod"` in both `external_labels` blocks and has no `github` or `remotecfg` block
 
 **Given** the `motd` scenario
 **When** verify runs the scripts in `/etc/update-motd.d`

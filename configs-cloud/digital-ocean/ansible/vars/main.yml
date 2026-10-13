@@ -3,3 +3,9 @@ default_user: root
 
 # Root prompt of the local ubuntu machines, see configs-homelab/ansible/hosts.yml
 ps1_root: '${debian_chroot:+($debian_chroot)}\[\033[1;38;5;213m\]\u@\h:\[\033[1;34m\]\w\[\033[00m\] $ '
+
+# One Alloy installer for both environments (fleet role grafana-cloud/alloy).
+# The droplet gets the cloud config and none of the fleet-only extras (GitHub
+# token file, eBPF capabilities, capability lines in the systemd override).
+alloy_config_template: "{{ playbook_dir }}/../templates/alloy/config.alloy.j2"
+alloy_fleet_extras: false

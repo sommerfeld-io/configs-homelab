@@ -61,12 +61,12 @@
 - id: "8b"
   title: Molecule tests for the cloud Ansible roles
   description: >-
-    Add one Molecule scenario per cloud role (swap, alloy-config, motd) under configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/ with a shared base.yml (Ubuntu 26.04) and prepare.yml, run by configs-cloud/digital-ocean/tests/molecule/taskfile.yml, included in the root taskfile as molecule-cloud (CAP-6).
+    Add one Molecule scenario per cloud role (swap, motd), plus one for the fleet Alloy role as the droplet runs it (alloy_fleet_extras false, cloud template), under configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/ with a shared base.yml (Ubuntu 26.04) and prepare.yml, run by configs-cloud/digital-ocean/tests/molecule/taskfile.yml, included in the root taskfile as molecule-cloud (CAP-6).
     Add a molecule-cloud matrix job to pipeline.yml that gates docs and release like the molecule job, and state in CLAUDE.md that a new Ansible role in this repo needs a Molecule scenario (submodule roles are tested in the submodule).
     Docs updated in the same change.
   invoke_dev_with: >-
-    The roles stay unchanged for the tests. A container cannot enable swap and must not touch the runner's swap, so prepare stubs swapon for the swap scenario. alloy-config needs a systemd container with a dummy alloy.service and the facts the fleet Alloy role sets (alloy_config_dir, alloy_group, alloy_service_name) plus alloy_environment and alloy_stage.
-    Verify the rendered labels in config.alloy, the absence of github and remotecfg blocks, and the 20-updates output against stamp fixtures (zero, one, several updates).
+    The roles stay unchanged for the tests. A container cannot enable swap and must not touch the runner's swap, so prepare stubs swapon for the swap scenario. The Alloy scenario runs the fleet grafana-cloud/alloy role with alloy_fleet_extras false and alloy_config_template pointing at configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2, in a systemd container, with alloy_environment, alloy_stage and test values for the Grafana Cloud secrets.
+    Verify the rendered labels in config.alloy, the absence of github and remotecfg blocks, of github.token and of capabilities on the Alloy binary, and the 20-updates output against stamp fixtures (zero, one, several updates).
     Allow the new folders in .folderslintrc and keep the pipeline matrix in sync with the taskfile. The provision.yml syntax check is not part of this story (Story 6.1).
 - id: "9"
   title: Move fantasy-hockey role and deploy-fantasy-hockey.yml with nginx

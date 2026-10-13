@@ -10,7 +10,20 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 ## Labels
 
-Every series and log line leaving a node carries the label `environment`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2` from the variable `alloy_environment` (default `homelab`). The DigitalOcean inventory sets it to `digital-ocean`, so the droplet is never labeled `homelab` during the few seconds this fleet config runs there on each provision, before the cloud config replaces it. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (under `configs-cloud/digital-ocean`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
+Every series and log line leaving a node carries the label `environment`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2` from the variable `alloy_environment` (default `homelab`). The DigitalOcean inventory sets it to `digital-ocean`. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (`configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`, selected with `alloy_config_template`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
+
+## Restarts
+
+Alloy restarts through the `Restart Alloy` handler (with a systemd daemon reload), only when the config, the environment file, the systemd override, the GitHub token file, the binary capabilities or the docker group membership changed. A second run with nothing changed restarts nothing.
+
+## Environments
+
+There is one Alloy installer for the apartment (every fleet node, one shared config) and the DigitalOcean droplets. Two variables tell them apart:
+
+- `alloy_config_template` selects the config. The default is this role's `templates/config.alloy.j2`. The DigitalOcean playbook sets it to `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`.
+- `alloy_fleet_extras` (default `true`) gates the GitHub token file (`github.token`), the eBPF capabilities on the Alloy binary and the `AmbientCapabilities`/`CapabilityBoundingSet` lines in the systemd override. With `false`, a host that already has them loses them: the token file is deleted, `setcap -r` clears the binary capabilities, and the override is rewritten without the capability lines. Only use `false` together with a template that needs neither: the default fleet template reads `github.token` and runs `beyla.ebpf`, so Alloy breaks with `false` and the fleet template.
+
+A relative `alloy_config_template` resolves against this role's `templates/` folder; callers outside the role pass an absolute path (the DigitalOcean playbook uses `{{ playbook_dir }}/../templates/alloy/config.alloy.j2`).
 
 ## Required Variables
 
@@ -18,8 +31,10 @@ Every series and log line leaving a node carries the label `environment`, set as
 |---------------------------------|-------------------------------------------------------------------------------------------------|
 | `default_user`                  | The user to install and configure for (typically the logged-in user)                            |
 | `alloy_environment`             | Optional. Value of the `environment` label, default `homelab`                                   |
+| `alloy_config_template`         | Optional. Template written to `config.alloy`, default `config.alloy.j2` (the fleet template)    |
+| `alloy_fleet_extras`            | Optional. Fleet-only extras, default `true`; `false` removes them (see Environments)            |
 
-The following sensitive variables are be defined in `components/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
+The following sensitive variables are defined in `configs-homelab/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
 
 | Variable                        | Description                                                                                     |
 |---------------------------------|-------------------------------------------------------------------------------------------------|

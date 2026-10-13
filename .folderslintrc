@@ -25,6 +25,7 @@
 		"configs-cloud/*/ansible/roles/*/handlers",
 		"configs-cloud/*/ansible/roles/*/tasks",
 		"configs-cloud/*/ansible/roles/*/templates",
+		"configs-cloud/*/ansible/templates/*",
 		"configs-cloud/*/ansible/vars",
 		"configs-cloud/*/opentofu",
 
