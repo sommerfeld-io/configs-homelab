@@ -36,12 +36,13 @@ A droplet that fails here is left out of the second play; other droplets are sti
 On a droplet that is already up, the play passes at once and reports no change. The second play runs these roles in this order. Fleet roles come from `configs-homelab/ansible/roles` through relative paths, cloud roles from `ansible/roles`:
 
 - `bash` (only `11-bash-config-root`): aliases and the root prompt `ps1_root` in `/root/.bashrc`. The prompt is the root prompt of the local ubuntu machines, defined in `ansible/vars/main.yml`.
+- `packages` (only `basics`): the basic command line tools of the fleet, such as `curl`, `htop`, `jq`, `ncdu`, `nmap`, `tree` and `vim`, plus `pre-commit`, `python3-pip` and `auditd` (list in `packages/tasks/main/10-basics.yml`).
 - `docker`: Docker from the Docker apt repository.
 - `swap` (cloud role in `ansible/roles/swap`): a 1 GiB swap file `/swapfile` (`swap_file_size_mb` in the role defaults), mode `0600`, enabled with `swapon` and kept in `/etc/fstab`. A 1 GB droplet has no swap by default, so memory pressure would kill processes silently.
 - `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`. `ansible/vars/main.yml` sets `alloy_config_template` to the cloud config and `alloy_fleet_extras: false`, see [Alloy and Labels](#alloy-and-labels).
 - `motd` (cloud role in `ansible/roles/motd`): the login banner, see [Login Banner (MOTD)](#login-banner-motd).
 
-The playbook asks for the vault password (`--ask-vault-pass`). A second run ends with `changed=0`: the fleet `alloy` role writes the cloud config directly and restarts Alloy only through its `Restart Alloy` handler when something it reads changed.
+The playbook asks for the vault password (`--ask-vault-pass`). A second run ends with `changed=0`, unless a new version of one of the basic command line tools was released since the last run: `packages` installs them with `state: latest`, so it upgrades them and reports a change. The fleet `alloy` role writes the cloud config directly and restarts Alloy only through its `Restart Alloy` handler when something it reads changed.
 
 ## Alloy and Labels
 

@@ -15,18 +15,18 @@ configs-cloud/
 
 All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
 
-| Task                                         | What it does                                                                                                         |
-|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| `task cloud:digital-ocean:opentofu:init`     | Initialize the OpenTofu working directory (providers, modules)                                                       |
-| `task cloud:digital-ocean:opentofu:fmt`      | Format the OpenTofu files                                                                                            |
-| `task cloud:digital-ocean:opentofu:plan`     | Show the changes OpenTofu would make                                                                                 |
-| `task cloud:digital-ocean:opentofu:apply`    | Apply the OpenTofu configuration                                                                                     |
-| `task cloud:digital-ocean:ansible:inventory` | List the droplets found by the dynamic inventory with their groups                                                   |
-| `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (prompt, Docker, swap, Alloy, MOTD), after waiting for SSH and cloud-init |
-| `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`                                                            |
-| `task cloud:info`                            | Print the account and all droplets with `doctl`                                                                      |
-| `task cloud:molecule:test`                   | Run every Molecule scenario for the roles the droplet runs ([Tests](tests.md))                                       |
-| `task cloud:molecule:test:<role>`            | Run one Molecule scenario: `motd` or `alloy`                                                                         |
+| Task                                         | What it does                                                                                                                      |
+|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `task cloud:digital-ocean:opentofu:init`     | Initialize the OpenTofu working directory (providers, modules)                                                                    |
+| `task cloud:digital-ocean:opentofu:fmt`      | Format the OpenTofu files                                                                                                         |
+| `task cloud:digital-ocean:opentofu:plan`     | Show the changes OpenTofu would make                                                                                              |
+| `task cloud:digital-ocean:opentofu:apply`    | Apply the OpenTofu configuration                                                                                                  |
+| `task cloud:digital-ocean:ansible:inventory` | List the droplets found by the dynamic inventory with their groups                                                                |
+| `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (prompt, basic tools, Docker, swap, Alloy, MOTD), after waiting for SSH and cloud-init |
+| `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`                                                                         |
+| `task cloud:info`                            | Print the account and all droplets with `doctl`                                                                                   |
+| `task cloud:molecule:test`                   | Run every Molecule scenario for the roles the droplet runs ([Tests](tests.md))                                                    |
+| `task cloud:molecule:test:<role>`            | Run one Molecule scenario: `motd` or `alloy`                                                                                      |
 
 Run `init` once before `plan` and `apply`, and again after provider changes. The OpenTofu and Ansible tasks that need the token and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 

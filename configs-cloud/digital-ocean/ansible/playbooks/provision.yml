@@ -46,6 +46,11 @@
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/bash
         tasks_from: 11-bash-config-root
 
+    - name: Install the basic command line tools
+      ansible.builtin.include_role:
+        name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/packages
+        tasks_from: basics
+
     - name: Install Docker
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/docker
