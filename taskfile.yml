@@ -45,7 +45,7 @@ tasks:
       - task: cleanup:filesystem
       - task: symlinks
       - task: docs:generate
-      - task: cloud:digital-ocean:opentofu:fmt
+      - task: cloud:digital-ocean:fmt
       - for: ['yaml', 'filenames', 'folders', 'ansible', 'opentofu', 'alloy-config', 'workflows', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 

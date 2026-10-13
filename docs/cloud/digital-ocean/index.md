@@ -13,7 +13,7 @@ skinparam defaultTextAlignment center
 
 node "Operator workstation" as workstation {
   node "Devcontainer" as devcontainer {
-    component "go-task\ncloud:digital-ocean:*" as task
+    component "go-task\ncloud:*" as task
     component "OpenTofu\n(tofu)" as tofu
     component "doctl" as doctl
   }
@@ -45,7 +45,7 @@ volume ..> droplet : attached to
 @enduml
 ```
 
-- **Operator workstation and devcontainer:** every step starts as a `task cloud:digital-ocean:*` command from the repository root. The devcontainer provides `tofu` and `doctl` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
+- **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu` and `doctl` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
 - **OpenTofu:** declares the resources and records them in a local state file. The state file sits in the repo clone on the workstation (bind-mounted into the devcontainer) and is gitignored, so it survives a container rebuild but not the loss of the clone. It moves to a remote backend later.
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.

@@ -1,6 +1,6 @@
 # One reserved IP per droplet: the stable public address.
 resource "digitalocean_reserved_ip" "this" {
-  for_each = local.droplets
+  for_each = local.droplets_with_reserved_ip
 
   region = local.region
 
@@ -13,7 +13,7 @@ resource "digitalocean_reserved_ip" "this" {
 # A separate assignment, so a replaced droplet gets the same address again
 # without touching the reserved IP itself.
 resource "digitalocean_reserved_ip_assignment" "this" {
-  for_each = local.droplets
+  for_each = local.droplets_with_reserved_ip
 
   ip_address = digitalocean_reserved_ip.this[each.key].ip_address
   droplet_id = digitalocean_droplet.this[each.key].id

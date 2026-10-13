@@ -14,13 +14,13 @@ configs-cloud/
 
 All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
 
-| Task                                      | What it does                                                   |
-|-------------------------------------------|----------------------------------------------------------------|
-| `task cloud:digital-ocean:opentofu:init`  | Initialize the OpenTofu working directory (providers, modules) |
-| `task cloud:digital-ocean:opentofu:fmt`   | Format the OpenTofu files                                      |
-| `task cloud:digital-ocean:opentofu:plan`  | Show the changes OpenTofu would make                           |
-| `task cloud:digital-ocean:opentofu:apply` | Apply the OpenTofu configuration                               |
-| `task cloud:digital-ocean:info`           | Print the account and all droplets with `doctl`                |
+| Task                             | What it does                                                   |
+|----------------------------------|----------------------------------------------------------------|
+| `task cloud:digital-ocean:init`  | Initialize the OpenTofu working directory (providers, modules) |
+| `task cloud:digital-ocean:fmt`   | Format the OpenTofu files                                      |
+| `task cloud:digital-ocean:plan`  | Show the changes OpenTofu would make                           |
+| `task cloud:digital-ocean:apply` | Apply the OpenTofu configuration                               |
+| `task cloud:info`                | Print the account and all droplets with `doctl`                |
 
 Run `init` once before `plan` and `apply`, and again after provider changes. `plan`, `apply` and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 
@@ -40,6 +40,6 @@ OpenTofu state stays local in `configs-cloud/digital-ocean/opentofu/terraform.tf
 | ansible-lint | `configs-cloud` is linted together with `configs-homelab/ansible`                                                                           |
 | OpenTofu     | `tofu fmt -check -diff -recursive configs-cloud` (service `lint-opentofu`, keep the image version in sync with the devcontainer's OpenTofu) |
 
-Before the linters run, `task lint` formats the OpenTofu code with `task cloud:digital-ocean:opentofu:fmt`. The `lint-repo` pre-commit hook runs `task lint`, so OpenTofu files are formatted on every commit and only formatted code reaches the remote repository, which avoids conflicting whitespace changes. Only the OpenTofu code is formatted; all other files are only linted. Locally, the OpenTofu linter therefore checks freshly formatted files; stage the files the hook reformatted and commit again.
+Before the linters run, `task lint` formats the OpenTofu code with `task cloud:digital-ocean:fmt`. The `lint-repo` pre-commit hook runs `task lint`, so OpenTofu files are formatted on every commit and only formatted code reaches the remote repository, which avoids conflicting whitespace changes. Only the OpenTofu code is formatted; all other files are only linted. Locally, the OpenTofu linter therefore checks freshly formatted files; stage the files the hook reformatted and commit again.
 
-Run a single linter with `docker compose up lint-opentofu --exit-code-from lint-opentofu`. CI runs the linters without formatting first, so if the OpenTofu linter fails there, run `task cloud:digital-ocean:opentofu:fmt` and commit the result.
+Run a single linter with `docker compose up lint-opentofu --exit-code-from lint-opentofu`. CI runs the linters without formatting first, so if the OpenTofu linter fails there, run `task cloud:digital-ocean:fmt` and commit the result.

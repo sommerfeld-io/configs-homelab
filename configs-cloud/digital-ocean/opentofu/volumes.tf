@@ -2,9 +2,9 @@
 # volume_ids, so DigitalOcean mounts it under /mnt/<volume-name> (hyphens
 # become underscores). initial_filesystem_type formats it at volume creation.
 resource "digitalocean_volume" "this" {
-  for_each = local.droplets
+  for_each = local.droplets_with_volume
 
-  name                    = "${local.stage}-${each.key}-data"
+  name                    = "${each.value.stage}-${each.key}-data"
   region                  = local.region
   size                    = each.value.volume_size_gb
   initial_filesystem_type = "ext4"

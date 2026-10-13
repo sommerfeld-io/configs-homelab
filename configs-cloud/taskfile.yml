@@ -9,17 +9,17 @@ vars:
 
 tasks:
 
-  digital-ocean:opentofu:init:
+  digital-ocean:init:
     desc: Initialize the OpenTofu working directory for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} init"
 
-  digital-ocean:opentofu:fmt:
+  digital-ocean:fmt:
     desc: Format the OpenTofu files for DigitalOcean
     cmds:
       - "{{ .DO_TOFU }} fmt -recursive"
 
-  digital-ocean:opentofu:plan:
+  digital-ocean:plan:
     desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: &do-token
       - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
@@ -27,13 +27,13 @@ tasks:
     cmds:
       - "{{ .DO_TOFU }} plan"
 
-  digital-ocean:opentofu:apply:
+  digital-ocean:apply:
     desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - "{{ .DO_TOFU }} apply"
 
-  digital-ocean:info:
+  info:
     desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
