@@ -37,3 +37,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-1-dynamic-inventory-and-base-provision-yml.md`
   summary: Add an automated check for the dynamic inventory groups, the droplet `tags` merge and the `changed=0` second run.
   evidence: Only static linters reach `configs-cloud`; a wrong `do_tags` key silently leaves the `ubuntu` or `fantasy-hockey` group empty. Needs a token or fixture, fits Story 6.1.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-labels.md`
+  summary: Add an automated check that renders the cloud Alloy template and the inventory stage/environment values, and asserts swap and the active config on the droplet.
+  evidence: Only static validation covers the new roles; dropping `external_labels` or the `copy` task would keep every check green. Needs a Molecule or InSpec scenario for cloud nodes or a real droplet.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-labels.md`
+  summary: Bring `provision.yml` back under ansible-lint once vault-encrypted vars no longer block it.
+  evidence: The playbook is in `exclude_paths` of `.ansible-lint.yml` because lint cannot decrypt `grafana-vault.yml`; same cause as the fleet playbooks tracked in issue #172.

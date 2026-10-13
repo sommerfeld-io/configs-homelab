@@ -1,0 +1,39 @@
+---
+# 1 GB droplets have no swap by default. A 1 GiB swap file doubles the memory
+# headroom without eating too much of the disk. Every task reports no change on
+# a second run.
+- name: Swap  ----  Check whether the swap file is already active
+  ansible.builtin.command: swapon --noheadings --show=NAME
+  register: swap_active
+  changed_when: false
+  check_mode: false
+
+- name: Swap  ----  Create the swap file
+  ansible.builtin.command: "fallocate -l {{ swap_file_size_mb }}M {{ swap_file_path }}"
+  args:
+    creates: "{{ swap_file_path }}"
+
+- name: Swap  ----  Restrict permissions of the swap file
+  ansible.builtin.file:
+    path: "{{ swap_file_path }}"
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
+
+- name: Swap  ----  Format and enable the swap file
+  when: swap_file_path not in swap_active.stdout_lines
+  block:
+    - name: Swap  ----  Format the swap file
+      ansible.builtin.command: "mkswap {{ swap_file_path }}"
+      changed_when: true
+
+    - name: Swap  ----  Enable the swap file
+      ansible.builtin.command: "swapon {{ swap_file_path }}"
+      changed_when: true
+
+- name: Swap  ----  Make the swap file permanent
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: '^{{ swap_file_path | regex_escape }}\s'
+    line: "{{ swap_file_path }} none swap sw 0 0"
+    mode: u=rw,g=r,o=r

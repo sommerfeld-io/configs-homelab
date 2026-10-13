@@ -1,0 +1,262 @@
+// Cloud-owned Alloy config for DigitalOcean droplets.
+// environment and stage are set as external labels, so every metric and log
+// line leaving this host carries them.
+
+prometheus.remote_write "metrics_service" {
+  external_labels = {
+    environment = "{{ alloy_environment }}",
+    stage       = "{{ alloy_stage }}",
+  }
+
+  endpoint {
+    url = "https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push"
+
+    basic_auth {
+      username = sys.env("GCLOUD_PROMETHEUS_USER")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+loki.write "grafana_cloud_loki" {
+  external_labels = {
+    environment = "{{ alloy_environment }}",
+    stage       = "{{ alloy_stage }}",
+  }
+
+  endpoint {
+    url = "https://logs-prod-012.grafana.net/loki/api/v1/push"
+
+    basic_auth {
+      username = sys.env("GCLOUD_LOKI_USER")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+/*
+ * OS metrics
+ */
+discovery.relabel "integrations_node_exporter" {
+  targets = prometheus.exporter.unix.integrations_node_exporter.targets
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/node_exporter"
+  }
+}
+
+prometheus.exporter.unix "integrations_node_exporter" {
+  disable_collectors = ["ipvs", "btrfs", "infiniband", "xfs", "zfs"]
+
+  filesystem {
+    fs_types_exclude     = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|tmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$"
+    mount_points_exclude = "^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+)($|/)"
+    mount_timeout        = "5s"
+  }
+
+  netclass {
+    ignored_devices = "^(veth.*|cali.*|[a-f0-9]{15})$"
+  }
+
+  netdev {
+    device_exclude = "^(veth.*|cali.*|[a-f0-9]{15})$"
+  }
+}
+
+prometheus.scrape "integrations_node_exporter" {
+  targets    = discovery.relabel.integrations_node_exporter.output
+  forward_to = [prometheus.relabel.integrations_node_exporter.receiver]
+}
+
+prometheus.relabel "integrations_node_exporter" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "node_scrape_collector_.+"
+    action        = "drop"
+  }
+}
+
+/*
+ * Journal logs
+ */
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal__boot_id"]
+    target_label  = "boot_id"
+  }
+
+  rule {
+    source_labels = ["__journal__transport"]
+    target_label  = "transport"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+}
+
+loki.source.journal "journal" {
+  max_age       = "12h0m0s"
+  forward_to    = [loki.relabel.node_exporter_logs.receiver]
+  relabel_rules = loki.relabel.journal.rules
+}
+
+loki.relabel "node_exporter_logs" {
+  forward_to = [loki.write.grafana_cloud_loki.receiver]
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/node_exporter"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+
+/*
+ * Alloy health
+ */
+prometheus.exporter.self "integrations_alloy_health" { }
+
+discovery.relabel "integrations_alloy_health" {
+  targets = prometheus.exporter.self.integrations_alloy_health.targets
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/alloy"
+  }
+}
+
+prometheus.scrape "integrations_alloy_health" {
+  targets    = discovery.relabel.integrations_alloy_health.output
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+  job_name   = "integrations/alloy"
+}
+
+/*
+ * Docker container logs
+ */
+discovery.docker "docker_containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "docker_containers" {
+  targets = discovery.docker.docker_containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/docker"
+  }
+}
+
+loki.source.docker "docker_containers" {
+  host          = "unix:///var/run/docker.sock"
+  targets       = discovery.docker.docker_containers.targets
+  forward_to    = [loki.write.grafana_cloud_loki.receiver]
+  relabel_rules = discovery.relabel.docker_containers.rules
+}
+
+/*
+ * cAdvisor metrics. The target shows up=0 while no cAdvisor runs; no Alloy error.
+ */
+discovery.relabel "integrations_cadvisor" {
+  targets = [{
+    __address__      = "localhost:9110",
+    __metrics_path__ = "/metrics",
+    __scheme__       = "http",
+  }]
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/cadvisor"
+  }
+}
+
+prometheus.scrape "integrations_cadvisor" {
+  targets    = discovery.relabel.integrations_cadvisor.output
+  forward_to = [prometheus.relabel.integrations_cadvisor.receiver]
+  job_name   = "integrations/cadvisor"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+}
+
+prometheus.relabel "integrations_cadvisor" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "container_cpu_usage_seconds_total|container_fs_reads_bytes_total|container_fs_reads_total|container_fs_writes_bytes_total|container_fs_writes_total|container_memory_cache|container_memory_rss|container_memory_usage_bytes|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_receive_packets_dropped_total|container_network_receive_packets_total|container_network_transmit_bytes_total|container_network_transmit_packets_dropped_total|container_network_transmit_packets_total|container_spec_cpu_quota|container_spec_cpu_shares|container_spec_memory_limit_bytes|container_start_time_seconds|machine_cpu_cores|machine_memory_bytes|up"
+    action        = "keep"
+  }
+}
+
+/*
+ * App metrics. The app is deployed in Epic 4; until then the target shows
+ * up=0 and Alloy logs no error.
+ */
+discovery.relabel "fantasy_hockey" {
+  targets = [{
+    __address__      = "localhost:8080",
+    __metrics_path__ = "/metrics",
+    __scheme__       = "http",
+  }]
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "fantasy-hockey"
+  }
+}
+
+prometheus.scrape "fantasy_hockey" {
+  targets    = discovery.relabel.fantasy_hockey.output
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+  job_name   = "fantasy-hockey"
+
+  scrape_interval = "30s"
+  scrape_timeout  = "10s"
+}

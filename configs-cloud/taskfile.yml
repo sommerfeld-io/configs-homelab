@@ -42,11 +42,11 @@ tasks:
       - ansible-inventory -i {{ .DO_ANSIBLE }}/inventory --graph
 
   digital-ocean:ansible:provision:
-    desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN)
+    desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for the vault password)
     preconditions: *do-token
     cmds:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
-      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory {{ .DO_ANSIBLE }}/playbooks/provision.yml
+      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/provision.yml
 
   digital-ocean:deploy:
     desc: Run the full pipeline, OpenTofu apply then Ansible provision (needs DIGITALOCEAN_ACCESS_TOKEN)

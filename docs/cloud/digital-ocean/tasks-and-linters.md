@@ -14,18 +14,18 @@ configs-cloud/
 
 All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
 
-| Task                                         | What it does                                                       |
-|----------------------------------------------|--------------------------------------------------------------------|
-| `task cloud:digital-ocean:opentofu:init`     | Initialize the OpenTofu working directory (providers, modules)     |
-| `task cloud:digital-ocean:opentofu:fmt`      | Format the OpenTofu files                                          |
-| `task cloud:digital-ocean:opentofu:plan`     | Show the changes OpenTofu would make                               |
-| `task cloud:digital-ocean:opentofu:apply`    | Apply the OpenTofu configuration                                   |
-| `task cloud:digital-ocean:ansible:inventory` | List the droplets found by the dynamic inventory with their groups |
-| `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (Docker, root prompt)   |
-| `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`          |
-| `task cloud:info`                            | Print the account and all droplets with `doctl`                    |
+| Task                                         | What it does                                                             |
+|----------------------------------------------|--------------------------------------------------------------------------|
+| `task cloud:digital-ocean:opentofu:init`     | Initialize the OpenTofu working directory (providers, modules)           |
+| `task cloud:digital-ocean:opentofu:fmt`      | Format the OpenTofu files                                                |
+| `task cloud:digital-ocean:opentofu:plan`     | Show the changes OpenTofu would make                                     |
+| `task cloud:digital-ocean:opentofu:apply`    | Apply the OpenTofu configuration                                         |
+| `task cloud:digital-ocean:ansible:inventory` | List the droplets found by the dynamic inventory with their groups       |
+| `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (Docker, prompt, swap, Alloy) |
+| `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`                |
+| `task cloud:info`                            | Print the account and all droplets with `doctl`                          |
 
-Run `init` once before `plan` and `apply`, and again after provider changes. the OpenTofu and Ansible tasks and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
+Run `init` once before `plan` and `apply`, and again after provider changes. The OpenTofu and Ansible tasks that need the token and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 
 There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds, so both have `lifecycle { prevent_destroy = true }` and OpenTofu refuses any plan that would destroy them, including `tofu plan -destroy`, with `Resource instance cannot be destroyed`. The droplet itself stays replaceable.
 

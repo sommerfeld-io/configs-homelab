@@ -1,0 +1,24 @@
+---
+# Runs right after the fleet alloy role. That role installs and starts Alloy but
+# also writes the fleet config, so the cloud config is kept in a staging file
+# (unchanged on a second run) and copied over config.alloy afterwards.
+- name: Alloy cloud config  ----  Template the cloud config
+  ansible.builtin.template:
+    src: config.alloy.j2
+    dest: "{{ alloy_config_dir }}/config.cloud.alloy"
+    owner: root
+    group: "{{ alloy_group }}"
+    mode: u=rw,g=r,o=r
+
+- name: Alloy cloud config  ----  Replace the fleet config
+  ansible.builtin.copy:
+    src: "{{ alloy_config_dir }}/config.cloud.alloy"
+    dest: "{{ alloy_config_dir }}/config.alloy"
+    remote_src: true
+    owner: root
+    group: "{{ alloy_group }}"
+    mode: u=rw,g=r,o=r
+  notify: Restart Alloy
+
+- name: Alloy cloud config  ----  Apply the config now
+  ansible.builtin.meta: flush_handlers

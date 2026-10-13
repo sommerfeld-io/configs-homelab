@@ -80,7 +80,14 @@ services:
     image: grafana/alloy:v1.20.1
     volumes: *volumes
     working_dir: *default-workdir
-    command: validate configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        for f in configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 configs-cloud/digital-ocean/ansible/roles/alloy-config/templates/config.alloy.j2; do
+          alloy validate "$$f"
+        done
     tty: *tty
 
   inspec:

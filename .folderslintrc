@@ -19,6 +19,11 @@
 		"configs-cloud/*/ansible",
 		"configs-cloud/*/ansible/inventory",
 		"configs-cloud/*/ansible/playbooks",
+		"configs-cloud/*/ansible/roles",
+		"configs-cloud/*/ansible/roles/*/defaults",
+		"configs-cloud/*/ansible/roles/*/handlers",
+		"configs-cloud/*/ansible/roles/*/tasks",
+		"configs-cloud/*/ansible/roles/*/templates",
 		"configs-cloud/*/ansible/vars",
 		"configs-cloud/*/opentofu",
 

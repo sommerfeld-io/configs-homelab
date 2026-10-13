@@ -5,6 +5,7 @@
   become: true
   vars_files:
     - ../vars/main.yml
+    - ../../../../configs-homelab/ansible/vars/grafana-vault.yml
   tasks:
     - name: Configure the root bash prompt
       ansible.builtin.include_role:
@@ -14,3 +15,13 @@
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/docker
         tasks_from: main
+    - name: Add a swap file
+      ansible.builtin.include_role:
+        name: ../roles/swap
+    - name: Install Alloy
+      ansible.builtin.include_role:
+        name: ../../../../configs-homelab/ansible/roles/grafana-cloud/alloy
+        tasks_from: main
+    - name: Replace the fleet Alloy config with the cloud config
+      ansible.builtin.include_role:
+        name: ../roles/alloy-config

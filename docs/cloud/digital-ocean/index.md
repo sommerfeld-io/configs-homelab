@@ -23,12 +23,15 @@ node "Operator workstation" as workstation {
   }
 }
 
+cloud "Grafana Cloud" as grafana
+
 cloud "DigitalOcean" as digitalocean {
   component "DigitalOcean API" as api
 
   frame "Project sommerfeld.io" as project {
     node "Droplet prod-fantasy-hockey\ns-1vcpu-1gb, fra1, tag prod\n(declared)" as droplet
     component "Reserved IP\n(declared)" as reservedip
+    component "Grafana Alloy\n(swap file)" as alloy
     storage "Volume 2 GB ext4\n/mnt/prod_fantasy_hockey_data\n(declared)" as volume
   }
 }
@@ -41,17 +44,19 @@ ansible --> droplet : SSH as root
 tofu --> state : plan, apply:\nreads and writes
 tofu --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
 doctl --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
+alloy --> grafana : metrics, logs\nenvironment, stage labels
 api --> droplet : manages
 api --> reservedip : manages
 api --> volume : manages
 reservedip ..> droplet : assigned to
 volume ..> droplet : attached to
+alloy ..> droplet : runs on
 @enduml
 ```
 
 - **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu`, `doctl` and `ansible` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
 - **OpenTofu:** declares the resources and records them in a local state file. The state file sits in the repo clone on the workstation (bind-mounted into the devcontainer) and is gitignored, so it survives a container rebuild but not the loss of the clone. It moves to a remote backend later.
-- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH. See [Provisioning](provisioning.md).
+- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (Docker, swap, Alloy). See [Provisioning](provisioning.md).
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.
 
