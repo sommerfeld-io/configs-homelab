@@ -34,7 +34,8 @@
 ## Inventory and playbooks
 
 - Dynamic inventory with the `community.digitalocean` plugin, selected by tag, authenticated with `DIGITALOCEAN_ACCESS_TOKEN` passed explicitly as the plugin's `oauth_token` from an env lookup, instead of relying on the plugin's default env vars (add `tags` to its `attributes`); groups `ubuntu` and `fantasy-hockey` are composed from tags.
-- `provision.yml` targets `ubuntu`; `deploy-services.yml` targets `fantasy-hockey`.
+- `provision.yml` targets `ubuntu`; `deploy-fantasy-hockey.yml` targets `fantasy-hockey`.
+- `deploy-fantasy-hockey.yml` creates the user `fantasy-hockey` (bash config from Ansible, member of the `docker` group) and runs the app as that user, not as root. `provision.yml` stays root-only and does not create it.
 - Root bash prompt is the root prompt (`ps1_root`) of the local ubuntu machines in `configs-homelab/ansible/hosts.yml`.
 
 ## Observability

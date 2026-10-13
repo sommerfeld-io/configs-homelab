@@ -231,7 +231,7 @@ So that I see at a glance which host and OS I am on and whether updates are pend
 
 The app runs as docker compose on the droplet and is reachable at the reserved IP.
 
-### Story 4.1: Move fantasy-hockey role and deploy-services.yml with nginx
+### Story 4.1: Move fantasy-hockey role and deploy-fantasy-hockey.yml with nginx
 
 As an operator,
 I want to deploy the app to the droplet with Ansible,
@@ -243,6 +243,17 @@ So that it is reachable from the internet at a static address.
 **When** I run the deploy task
 **Then** the app runs as docker compose with nginx on port 80 and data under `/mnt/prod_fantasy_hockey_data/fantasy-hockey`
 **And** `http://<reserved-ip>` serves the app from outside the home network
+
+**Given** `deploy-fantasy-hockey.yml` runs against the `fantasy-hockey` group and `provision.yml` is unchanged
+**When** the deploy finishes
+**Then** a user `fantasy-hockey` exists and is a member of the `docker` group
+**And** the user has a bash config from Ansible
+**And** `provision.yml` does not create the user
+
+**Given** the app is deployed
+**When** I inspect how it runs
+**Then** docker compose is run by the user `fantasy-hockey`, not by `root`
+**And** a second deploy run changes nothing
 
 **Given** `fantasy-hockey.yml` already exists on the volume
 **When** the deploy runs again

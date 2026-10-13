@@ -59,12 +59,14 @@
     Check what the MOTD shows with zero pending updates and with a pending reboot, and keep the layout intact in both cases.
     Decide with the user how SSH verification is done (allow-rule for SSH to the reserved IP, or a user-run check) before verifying.
 - id: "9"
-  title: Move fantasy-hockey role and deploy-services.yml with nginx
+  title: Move fantasy-hockey role and deploy-fantasy-hockey.yml with nginx
   description: >-
-    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from configs-homelab/ansible/roles/raspi into configs-cloud/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-services.yml running it with nginx on port 80, data on the volume at /mnt/prod_fantasy_hockey_data/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    Move the fantasy-hockey compose role (all its files, README and vault-encrypted defaults) from configs-homelab/ansible/roles/raspi into configs-cloud/digital-ocean/ansible/roles with fantasy_hockey_ vars, and add deploy-fantasy-hockey.yml (targets the fantasy-hockey group) running it with nginx on port 80, data on the volume at /mnt/prod_fantasy_hockey_data/fantasy-hockey and the app reachable at http://<reserved-ip> (CAP-3).
+    deploy-fantasy-hockey.yml also creates the user fantasy-hockey (bash config from Ansible, member of the docker group) and runs the app with it, not with root; provision.yml does not create this user.
     Also clean up the old Pi deployment: remove the role from raspi.yml, move the vault:fantasy-hockey taskfile entry into the cloud taskfile, repoint Dependabot, and add a cleanup that removes /opt/fantasy-hockey and stops and removes the containers on the Pi. Use git mv for the move and update the docs.
   done_checkpoint: true
   invoke_dev_with: >-
+    The deploy play sets default_user to fantasy-hockey (provision.yml keeps root) so the reused docker and bash roles work on the new user; define a non-root ps1. Run docker compose as that user and keep the data file rule unchanged.
     The data file fantasy-hockey.yml is seeded from the default template only when absent; when present it is never overwritten from the template.
     Check that the fantasy_hockey_ rename passes ansible-lint.
     The pi4-0002 play in raspi.yml only runs this role, so replace it with the cleanup play and leave no reference to configs-homelab/ansible/roles/raspi/fantasy-hockey in raspi.yml, configs-homelab/ansible/taskfile.yml or .github/dependabot.yml.

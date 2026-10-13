@@ -34,8 +34,9 @@ CAP-7 (docs) applies to every epic.
 
 ## E3 App deployment
 
-- `deploy-services.yml` and the fantasy-hockey compose role moved from `configs-homelab/ansible/roles/raspi/fantasy-hockey` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
+- `deploy-fantasy-hockey.yml` and the fantasy-hockey compose role moved from `configs-homelab/ansible/roles/raspi/fantasy-hockey` into `configs-cloud/digital-ocean/ansible/roles` with `fantasy_hockey_` vars.
 - nginx on port 80, data on the volume at `/mnt/prod_fantasy_hockey_data/fantasy-hockey`, default-seed rule for `fantasy-hockey.yml`.
+- `deploy-fantasy-hockey.yml` targets the `fantasy-hockey` group and provisions a user `fantasy-hockey` (bash config from Ansible, member of the `docker` group), and runs the app with that user, not with root. This is not part of `provision.yml`.
 - Dependabot bumps of compose images; the Dependabot entry moves with the role.
 - Cleanup of the old Pi deployment: remove the role from `raspi.yml` (the pi4-0002 play is replaced by a cleanup play), move the `vault:fantasy-hockey` taskfile entry into the cloud taskfile, remove `/opt/fantasy-hockey` and stop and remove the containers on the Pi.
 - Droplet replacement keeps IP and data (CAP-8).

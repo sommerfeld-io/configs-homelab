@@ -159,7 +159,7 @@ configs-cloud/
   taskfile.yml         # included in the root taskfile with prefix `cloud`
   digital-ocean/
     opentofu/          # droplet, reserved IP, volume (AD-10)
-    configs-homelab/ansible/           # dynamic inventory, provision.yml, deploy-services.yml, cloud-specific roles
+    configs-homelab/ansible/           # dynamic inventory, provision.yml, deploy-fantasy-hockey.yml, cloud-specific roles
 docs/
   configs-homelab/ansible/playbooks/   # 1:1 mirror of configs-homelab/ansible/playbooks/ (AD-9)
   nodes/               # mirrors inventory groups, not an configs-homelab/ansible/ directory

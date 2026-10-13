@@ -24,7 +24,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-3**
     - **intent:** Operator can deploy the fantasy hockey app as docker compose on the droplet and reach it on a static public address.
-    - **success:** After the deploy task, `http://<reserved-ip>` (port 80, nginx in front of the app on 8080) serves the app from outside the home network; a Dependabot compose-image bump followed by a redeploy updates the running containers; the old Pi deployment is removed (role out of `raspi.yml`, `/opt/fantasy-hockey` and its containers gone, taskfile and Dependabot entries moved).
+    - **success:** After the deploy task, `http://<reserved-ip>` (port 80, nginx in front of the app on 8080) serves the app from outside the home network; a Dependabot compose-image bump followed by a redeploy updates the running containers; the old Pi deployment is removed (role out of `raspi.yml`, `/opt/fantasy-hockey` and its containers gone, taskfile and Dependabot entries moved); the app runs as the dedicated user `fantasy-hockey` (bash config from Ansible, member of the `docker` group), not as root.
 
 - **CAP-4**
     - **intent:** Operator can see the droplet, the app and its containers in Grafana Cloud, distinguished from the homelab.

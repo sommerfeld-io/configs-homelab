@@ -56,7 +56,7 @@ development_status:
   epic-3-retrospective: optional
 
   epic-4: backlog
-  4-1-move-fantasy-hockey-role-and-deploy-services-yml-with-nginx: backlog
+  4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx: backlog
   4-2-dependabot-compose-bumps-for-cloud-configs: backlog
   4-3-droplet-replacement-drill: backlog
   epic-4-retrospective: optional

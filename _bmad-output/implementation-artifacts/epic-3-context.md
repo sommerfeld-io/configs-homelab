@@ -29,7 +29,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 - Cloud Ansible lives under `configs-cloud/digital-ocean/ansible` (own playbooks, roles, inventory config). Cloud-specific roles go in `configs-cloud/digital-ocean/ansible/roles`.
 - Roles in `configs-homelab/ansible/roles` (including the `ansible-roles-collection` submodule) are reused through relative paths, not `roles_path`, and are not moved. When a local role layers on a submodule role of the same name, the submodule role is included first.
 - Dynamic inventory uses the `community.digitalocean` plugin selected by tag. `DIGITALOCEAN_ACCESS_TOKEN` is passed explicitly as the plugin's `oauth_token` from an env lookup, and `tags` is added to the plugin's `attributes`. The Ansible collection is a third-party dependency and is pinned.
-- `provision.yml` targets `ubuntu`; `deploy-services.yml` (Epic 4) targets `fantasy-hockey`.
+- `provision.yml` targets `ubuntu`; `deploy-fantasy-hockey.yml` (Epic 4) targets `fantasy-hockey`.
 - `stage` is defined once in OpenTofu as the droplet tag and name, and reaches Ansible only through the tag.
 - Secrets used by cloud playbooks stay vault-encrypted and share the one vault password.
 - The homelab Alloy template (`config.alloy.j2`) is owned by the fleet; its only change in this epic is the added `environment=homelab` label.
