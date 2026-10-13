@@ -1,0 +1,25 @@
+---
+# Dynamic inventory: droplets are discovered through the DigitalOcean API, so no
+# host is ever listed here. The plugin addresses a droplet by its own public IPv4
+# (not the reserved IP).
+plugin: community.digitalocean.digitalocean
+oauth_token: "{{ lookup('env', 'DIGITALOCEAN_ACCESS_TOKEN') }}"
+attributes:
+  - id
+  - name
+  - networks
+  - region
+  - image
+  - tags
+# Select droplets by the stage tag.
+filters:
+  - "'prod' in do_tags"
+# Compose generic groups.
+groups:
+  ubuntu: do_image.distribution == 'Ubuntu'
+  fantasy-hockey: "'fantasy-hockey' in do_tags"
+# Droplets only have root, and a new droplet's host key is unknown on the first
+# connection, so accept it instead of prompting.
+compose:
+  ansible_user: "'root'"
+  ansible_ssh_common_args: "'-o StrictHostKeyChecking=accept-new'"

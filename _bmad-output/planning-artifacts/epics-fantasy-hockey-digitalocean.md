@@ -160,7 +160,7 @@ So that provisioning works on a freshly created droplet without editing an inven
 
 **Given** the dynamic inventory selecting by tag with groups `ubuntu` and `fantasy-hockey`
 **When** I run the provision task against a new droplet
-**Then** Docker and the bash config with the yellow `user@host` prompt are installed using roles from `configs-homelab/ansible/roles` via relative paths
+**Then** Docker and the bash config with the root prompt of the local ubuntu machines are installed using roles from `configs-homelab/ansible/roles` via relative paths
 
 **Given** a second run
 **When** provisioning finishes

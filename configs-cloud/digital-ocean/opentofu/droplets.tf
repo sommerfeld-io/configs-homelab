@@ -20,6 +20,11 @@ locals {
   #   volume_size_gb Number (GB) or null.
   #                  A number creates and attaches a data volume of that size.
   #                  null means no block volume.
+  #
+  # Options (optional):
+  #   tags           List of extra droplet tags, e.g. ["fantasy-hockey"].
+  #                  Merged with the stage tag. Ansible composes inventory
+  #                  groups from these tags. Defaults to no extra tags.
   droplets = {
     fantasy-hockey = {
       stage          = "prod"
@@ -28,6 +33,7 @@ locals {
       resize_disk    = false
       reserved_ip    = true
       volume_size_gb = 2
+      tags           = ["fantasy-hockey"]
     }
     # dummy = {
     #   stage          = "test"
@@ -63,7 +69,7 @@ resource "digitalocean_droplet" "this" {
   image       = each.value.image
   monitoring  = true
   resize_disk = each.value.resize_disk
-  tags        = [each.value.stage]
+  tags        = concat([each.value.stage], try(each.value.tags, []))
   ssh_keys    = [for key in data.digitalocean_ssh_key.this : key.id]
   # Attach the data volume at creation so DigitalOcean mounts it automatically
   # (the volume itself is formatted at volume creation).

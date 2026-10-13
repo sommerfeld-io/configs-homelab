@@ -6,6 +6,7 @@ version: '3.42.1'
 
 vars:
   DO_TOFU: tofu -chdir=digital-ocean/opentofu
+  DO_ANSIBLE: digital-ocean/ansible
 
 tasks:
 
@@ -32,6 +33,20 @@ tasks:
     preconditions: *do-token
     cmds:
       - "{{ .DO_TOFU }} apply"
+
+  digital-ocean:inventory:
+    desc: List the droplets found by the dynamic inventory with their groups (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
+      - ansible-inventory -i {{ .DO_ANSIBLE }}/inventory --graph
+
+  digital-ocean:provision:
+    desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
+      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory {{ .DO_ANSIBLE }}/playbooks/provision.yml
 
   info:
     desc: Print the DigitalOcean account and all droplets with doctl (needs DIGITALOCEAN_ACCESS_TOKEN)

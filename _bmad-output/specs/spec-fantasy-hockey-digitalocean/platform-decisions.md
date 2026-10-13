@@ -35,7 +35,7 @@
 
 - Dynamic inventory with the `community.digitalocean` plugin, selected by tag, authenticated with `DIGITALOCEAN_ACCESS_TOKEN` passed explicitly as the plugin's `oauth_token` from an env lookup, instead of relying on the plugin's default env vars (add `tags` to its `attributes`); groups `ubuntu` and `fantasy-hockey` are composed from tags.
 - `provision.yml` targets `ubuntu`; `deploy-services.yml` targets `fantasy-hockey`.
-- Bash prompt is the same as for the ubuntu server in `configs-homelab/ansible/hosts.yml`, with `user@host` in yellow.
+- Root bash prompt is the root prompt (`ps1_root`) of the local ubuntu machines in `configs-homelab/ansible/hosts.yml`.
 
 ## Observability
 

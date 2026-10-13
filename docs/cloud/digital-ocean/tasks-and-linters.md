@@ -7,22 +7,24 @@ configs-cloud/
   taskfile.yml       # included in the root taskfile with prefix `cloud`
   digital-ocean/
     opentofu/        # droplet, reserved IP and volume
-    ansible/         # dynamic inventory, playbooks and roles for the droplet (from Epic 3)
+    ansible/         # dynamic inventory, playbooks and vars for the droplet
 ```
 
 ## Tasks
 
 All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
 
-| Task                             | What it does                                                   |
-|----------------------------------|----------------------------------------------------------------|
-| `task cloud:digital-ocean:init`  | Initialize the OpenTofu working directory (providers, modules) |
-| `task cloud:digital-ocean:fmt`   | Format the OpenTofu files                                      |
-| `task cloud:digital-ocean:plan`  | Show the changes OpenTofu would make                           |
-| `task cloud:digital-ocean:apply` | Apply the OpenTofu configuration                               |
-| `task cloud:info`                | Print the account and all droplets with `doctl`                |
+| Task                                 | What it does                                                       |
+|--------------------------------------|--------------------------------------------------------------------|
+| `task cloud:digital-ocean:init`      | Initialize the OpenTofu working directory (providers, modules)     |
+| `task cloud:digital-ocean:fmt`       | Format the OpenTofu files                                          |
+| `task cloud:digital-ocean:plan`      | Show the changes OpenTofu would make                               |
+| `task cloud:digital-ocean:apply`     | Apply the OpenTofu configuration                                   |
+| `task cloud:digital-ocean:inventory` | List the droplets found by the dynamic inventory with their groups |
+| `task cloud:digital-ocean:provision` | Provision all Ubuntu droplets with Ansible (Docker, root prompt)   |
+| `task cloud:info`                    | Print the account and all droplets with `doctl`                    |
 
-Run `init` once before `plan` and `apply`, and again after provider changes. `plan`, `apply` and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
+Run `init` once before `plan` and `apply`, and again after provider changes. `plan`, `apply`, `inventory`, `provision` and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 
 There is no destroy task on purpose. The volume and reserved IP must survive droplet rebuilds, so both have `lifecycle { prevent_destroy = true }` and OpenTofu refuses any plan that would destroy them, including `tofu plan -destroy`, with `Resource instance cannot be destroyed`. The droplet itself stays replaceable.
 

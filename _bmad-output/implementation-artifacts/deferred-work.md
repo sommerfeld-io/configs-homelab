@@ -29,3 +29,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-2-retro-item-4-bashrc-token-cleanup.md`
   summary: Add a Molecule scenario that seeds an old `.bashrc` export and asserts a rotated secret leaves one line and `DIGITALOCEAN_TOKEN` is gone.
   evidence: The behavior was verified only by a manual scratch run; no automated test covers `bash-secrets.yml`.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-dynamic-inventory-and-base-provision-yml.md`
+  summary: Confirm the Docker apt repository supports the Ubuntu 26.04 codename when `provision` first runs on the droplet.
+  evidence: The `docker` role uses `distribution_release` for the repo suite; unverified (maybe-false, medium). The first real provision run settles it.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-dynamic-inventory-and-base-provision-yml.md`
+  summary: Add an automated check for the dynamic inventory groups, the droplet `tags` merge and the `changed=0` second run.
+  evidence: Only static linters reach `configs-cloud`; a wrong `do_tags` key silently leaves the `ubuntu` or `fantasy-hockey` group empty. Needs a token or fixture, fits Story 6.1.

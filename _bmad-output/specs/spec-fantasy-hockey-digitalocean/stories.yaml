@@ -31,7 +31,7 @@
 - id: "6"
   title: Dynamic inventory and base provision.yml
   description: >-
-    Add the DigitalOcean dynamic inventory selecting by tag with groups ubuntu and fantasy-hockey, and a provision.yml that applies the bash config with the yellow user@host prompt and Docker, reusing roles from configs-homelab/ansible/roles through relative paths (CAP-2).
+    Add the DigitalOcean dynamic inventory selecting by tag with groups ubuntu and fantasy-hockey, and a provision.yml that applies the bash config with the root prompt of the local ubuntu machines and Docker, reusing roles from configs-homelab/ansible/roles through relative paths (CAP-2).
     Explain the inventory in the docs.
   spec_checkpoint: true
   invoke_dev_with: >-

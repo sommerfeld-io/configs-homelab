@@ -16,6 +16,7 @@ node "Operator workstation" as workstation {
     component "go-task\ncloud:*" as task
     component "OpenTofu\n(tofu)" as tofu
     component "doctl" as doctl
+    component "Ansible\n(dynamic inventory)" as ansible
   }
   folder "Repo clone (bind-mounted)" as repo {
     database "Local state\nterraform.tfstate" as state
@@ -34,6 +35,9 @@ cloud "DigitalOcean" as digitalocean {
 
 task --> tofu : opentofu:init, fmt,\nplan, apply
 task --> doctl : info
+task --> ansible : digital-ocean:inventory,\nprovision
+ansible --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
+ansible --> droplet : SSH as root
 tofu --> state : plan, apply:\nreads and writes
 tofu --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
 doctl --> api : HTTPS\nDIGITALOCEAN_ACCESS_TOKEN
@@ -45,8 +49,9 @@ volume ..> droplet : attached to
 @enduml
 ```
 
-- **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu` and `doctl` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
+- **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu`, `doctl` and `ansible` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
 - **OpenTofu:** declares the resources and records them in a local state file. The state file sits in the repo clone on the workstation (bind-mounted into the devcontainer) and is gitignored, so it survives a container rebuild but not the loss of the clone. It moves to a remote backend later.
+- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH. See [Provisioning](provisioning.md).
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.
 
@@ -60,7 +65,7 @@ All resources belong to the project `sommerfeld.io`.
 | Reserved IP | [Stable public address](droplet.md#reserved-ip-and-volume), survives droplet rebuilds, `prevent_destroy`                                                                               | declared |
 | Volume      | [`prod-fantasy-hockey-data`](droplet.md#reserved-ip-and-volume), 2 GB, ext4, attached at creation and mounted at `/mnt/prod_fantasy_hockey_data`, survives rebuilds, `prevent_destroy` | declared |
 
-The droplet is configured with Ansible later. Ansible will find it through a dynamic inventory by its tag.
+The droplet is configured with Ansible. Ansible finds it through a [dynamic inventory](provisioning.md) by its tag.
 
 ## Pages
 
@@ -68,4 +73,5 @@ The droplet is configured with Ansible later. Ansible will find it through a dyn
 |-------------------------------------------|--------------------------------------------------------------------------------|
 | [API Token](api-token.md)                 | Token scopes, how the token reaches the shell, manual steps and checks         |
 | [Tasks and Linters](tasks-and-linters.md) | Folder layout, go-task entry points, OpenTofu state and linter coverage        |
+| [Provisioning](provisioning.md)           | Dynamic inventory, groups, provision task and host key after a replacement     |
 | [Droplet](droplet.md)                     | Droplet attributes, reserved IP and volume, droplet map, SSH keys, apply steps |

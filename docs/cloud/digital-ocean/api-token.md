@@ -10,7 +10,7 @@ Create the token as a custom-scoped personal access token in the DigitalOcean co
 |---------------|------------------------------|---------------------------------------------------------------------------|
 | droplet       | create, read, update, delete | create, read, update and delete the droplet                               |
 | ssh_key       | read                         | look up the existing SSH key (data source, nothing is created or changed) |
-| tag           | create, read                 | tag the droplet at creation (`tags = [each.value.stage]`)                      |
+| tag           | create, read                 | tag the droplet at creation (`tags = [...]`, stage plus extra tags)       |
 | block_storage | create, read, update, delete | create and attach the 2 GB data volume                                    |
 | reserved_ip   | create, read, update, delete | create and assign the reserved IP                                         |
 | project       | create, read, update, delete | assign resources to the project                                           |

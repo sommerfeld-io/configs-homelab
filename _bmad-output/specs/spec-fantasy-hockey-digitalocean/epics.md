@@ -26,7 +26,7 @@ CAP-7 (docs) applies to every epic.
 ## E2 Provisioning via Ansible
 
 - `provision.yml` against the dynamic inventory (groups `ubuntu` and `fantasy-hockey`).
-- Bash config with the existing ubuntu-server prompt, `user@host` in yellow.
+- Bash config with the root prompt of the local ubuntu machines.
 - Docker, swap file, Alloy via the existing `configs-homelab/ansible/roles/grafana-cloud` role.
 - Alloy labels `environment` and `stage`, also added to the homelab `config.alloy.j2` (`environment=homelab`).
 - ansible-lint covers the new folder.

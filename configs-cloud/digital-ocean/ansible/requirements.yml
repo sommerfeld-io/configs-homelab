@@ -1,0 +1,6 @@
+---
+# Third-party collections for the DigitalOcean playbooks (pinned, AD-7).
+# Installed by the go-task entry points before Ansible runs.
+collections:
+  - name: community.digitalocean
+    version: 1.27.0

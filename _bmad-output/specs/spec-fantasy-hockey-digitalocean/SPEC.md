@@ -20,7 +20,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-2**
     - **intent:** Operator can provision the droplet's base software with Ansible against a tag-discovered dynamic inventory, reusing existing roles.
-    - **success:** Running the provision task against a freshly created droplet, with no inventory edit, results in Docker, swap, Alloy and the yellow `user@host` bash prompt in place; a second run changes nothing.
+    - **success:** Running the provision task against a freshly created droplet, with no inventory edit, results in Docker, swap, Alloy and the root bash prompt of the local ubuntu machines in place; a second run changes nothing.
 
 - **CAP-3**
     - **intent:** Operator can deploy the fantasy hockey app as docker compose on the droplet and reach it on a static public address.

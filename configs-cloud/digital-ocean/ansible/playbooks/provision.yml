@@ -1,0 +1,16 @@
+---
+- name: Provision DigitalOcean droplets
+  hosts: ubuntu
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+  tasks:
+    - name: Install Docker
+      ansible.builtin.include_role:
+        name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/docker
+        tasks_from: main
+    - name: Configure the root bash prompt
+      ansible.builtin.include_role:
+        name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/bash
+        tasks_from: 11-bash-config-root
