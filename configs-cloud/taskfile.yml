@@ -48,7 +48,7 @@ tasks:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
       - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory {{ .DO_ANSIBLE }}/playbooks/provision.yml
 
-  digital-ocean:provision:
+  digital-ocean:deploy:
     desc: Run the full pipeline, OpenTofu apply then Ansible provision (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:

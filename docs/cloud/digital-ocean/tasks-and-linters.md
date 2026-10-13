@@ -22,7 +22,7 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` an
 | `task cloud:digital-ocean:opentofu:apply`    | Apply the OpenTofu configuration                                   |
 | `task cloud:digital-ocean:ansible:inventory` | List the droplets found by the dynamic inventory with their groups |
 | `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (Docker, root prompt)   |
-| `task cloud:digital-ocean:provision`         | Full pipeline: `opentofu:apply`, then `ansible:provision`          |
+| `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`          |
 | `task cloud:info`                            | Print the account and all droplets with `doctl`                    |
 
 Run `init` once before `plan` and `apply`, and again after provider changes. the OpenTofu and Ansible tasks and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
