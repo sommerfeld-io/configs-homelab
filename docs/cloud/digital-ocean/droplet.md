@@ -30,15 +30,15 @@ The provider reads the API token from `DIGITALOCEAN_ACCESS_TOKEN`. The token is 
 
 Each entry of the `droplets` map describes one droplet. The `stage` and the map key build the droplet name `<stage>-<key>`, so the stage `prod` and the key `example-app` create the droplet `prod-example-app`. Do not repeat the stage in the key. All options are required except `tags`.
 
-| Option           | Allowed values                   | Effect                                                                                                                                                                         |
-|------------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `stage`          | Any label, e.g. `prod` or `test` | Name prefix and tag of the droplet. The volume name uses it as well                                                                                                            |
-| `size`           | DigitalOcean size slug           | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                 |
-| `image`          | DigitalOcean image slug          | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`                                                                                                          |
-| `resize_disk`    | `true` or `false`                | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                         |
-| `reserved_ip`    | `true` or `false`                | `true` gives the droplet a stable public address. `false` means no reserved IP                                                                                                 |
-| `volume_size_gb` | Number of GB, or `null`          | A number creates and attaches a data volume of that size. `null` means no block volume                                                                                         |
-| `tags`           | Optional list of labels          | Extra droplet tags next to the stage tag, e.g. `["fantasy-hockey"]`. Ansible [composes inventory groups](provisioning.md) from them. Adding a tag updates the droplet in place |
+| Option           | Allowed values          | Effect                                                                                                                                                                         |
+|------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `stage`          | `dev`, `test` or `prod` | Name prefix and tag of the droplet. The volume name uses it as well                                                                                                            |
+| `size`           | DigitalOcean size slug  | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                 |
+| `image`          | DigitalOcean image slug | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`                                                                                                          |
+| `resize_disk`    | `true` or `false`       | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                         |
+| `reserved_ip`    | `true` or `false`       | `true` gives the droplet a stable public address. `false` means no reserved IP                                                                                                 |
+| `volume_size_gb` | Number of GB, or `null` | A number creates and attaches a data volume of that size. `null` means no block volume                                                                                         |
+| `tags`           | Optional list of labels | Extra droplet tags next to the stage tag, e.g. `["fantasy-hockey"]`. Ansible [composes inventory groups](provisioning.md) from them. Adding a tag updates the droplet in place |
 
 An annotated example with two different droplets:
 
@@ -73,7 +73,7 @@ The `digitalocean_droplet.this` resource iterates over `local.droplets` with `fo
 
 ### stage
 
-The stage labels the environment of a droplet. It becomes the name prefix and the tag, so `stage = "test"` with the key `example-scratch` creates `test-example-scratch` tagged `test`. The volume of that droplet is called `test-example-scratch-data`. Different droplets can have different stages.
+The stage labels the environment of a droplet. It becomes the name prefix and the tag, so `stage = "test"` with the key `example-scratch` creates `test-example-scratch` tagged `test`. The volume of that droplet is called `test-example-scratch-data`. Different droplets can have different stages. The stages are `dev`, `test` and `prod`; Ansible makes one inventory group per stage, see [Provisioning](provisioning.md).
 
 ### size and image
 

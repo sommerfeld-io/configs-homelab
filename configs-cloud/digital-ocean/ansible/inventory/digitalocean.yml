@@ -12,13 +12,17 @@ attributes:
   - region
   - image
   - tags
-# Select droplets by the stage tag.
-filters:
-  - "'prod' in do_tags"
-# Compose generic groups.
+# Every droplet in the account is part of the inventory, nothing is filtered.
+# Group by distribution.
 groups:
   ubuntu: do_image.distribution == 'Ubuntu'
-  fantasy-hockey: "'fantasy-hockey' in do_tags"
+# One group per droplet tag, named exactly like the tag: the stage tag from
+# OpenTofu (dev, test or prod) and extra tags such as fantasy-hockey.
+keyed_groups:
+  - key: do_tags
+    prefix: ''
+    separator: ''
+    leading_separator: false
 # Droplets only have root, and a new droplet's host key is unknown on the first
 # connection, so accept it instead of prompting.
 compose:

@@ -4,7 +4,7 @@ locals {
   # One entry per droplet. The droplet name is "<stage>-<key>".
   #
   # Options (all required):
-  #   stage          Label of the droplet, e.g. "prod" or "test".
+  #   stage          Label of the droplet: "dev", "test" or "prod".
   #                  Builds the name prefix and the tag. Do not repeat it in
   #                  the key.
   #   size           DigitalOcean droplet size slug, e.g. "s-1vcpu-1gb".

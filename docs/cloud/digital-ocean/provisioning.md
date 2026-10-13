@@ -7,15 +7,23 @@ Droplets are configured with Ansible from `configs-cloud/digital-ocean/ansible`.
 `inventory/digitalocean.yml` configures the `community.digitalocean.digitalocean` inventory plugin:
 
 - The token is passed explicitly as `oauth_token` from `lookup('env', 'DIGITALOCEAN_ACCESS_TOKEN')`. See [API Token](api-token.md).
-- A filter keeps only droplets tagged `prod` (the stage tag from OpenTofu).
-- `tags` is part of the plugin `attributes`, so groups can be composed from them.
+- Nothing is filtered: every droplet in the account is part of the inventory.
+- `tags` is part of the plugin `attributes`. `keyed_groups` makes one group per droplet tag, named exactly like the tag. So every stage tag from OpenTofu (`dev`, `test`, `prod`) and every extra tag (`fantasy-hockey`) becomes a group, without listing them in the inventory.
 - Each droplet is named after itself, which does not resolve in DNS, so `compose` sets `ansible_host` to the droplet's own public IPv4 (not the reserved IP).
 - `compose` sets `ansible_user` to `root` (the only user on a droplet) and `StrictHostKeyChecking=accept-new`, so the first connection to a new droplet does not prompt for its host key. A changed host key is still refused, see below.
 
-| Group            | Members                                                  |
-|------------------|----------------------------------------------------------|
-| `ubuntu`         | All selected droplets whose image distribution is Ubuntu |
-| `fantasy-hockey` | All selected droplets with the tag `fantasy-hockey`      |
+| Group            | Members                                         |
+|------------------|-------------------------------------------------|
+| `ubuntu`         | All droplets whose image distribution is Ubuntu |
+| `dev`            | All droplets with the stage tag `dev`           |
+| `test`           | All droplets with the stage tag `test`          |
+| `prod`           | All droplets with the stage tag `prod`          |
+| `fantasy-hockey` | All droplets with the tag `fantasy-hockey`      |
+| any other tag    | All droplets with that tag                      |
+
+A tag group exists only while at least one droplet carries the tag. Today the groups are `ubuntu`, `prod` and `fantasy-hockey`.
+
+`provision.yml` targets `ubuntu`, so it provisions every Ubuntu droplet in the account, of every stage. To provision one stage only, pass `--limit dev`, `--limit test` or `--limit prod` to `ansible-playbook`.
 
 `compose` also sets `alloy_stage` (the droplet name prefix, `prod` for `prod-fantasy-hockey`, so the stage comes from OpenTofu only) and `alloy_environment` (`digital-ocean`). Check them with `ansible-inventory -i configs-cloud/digital-ocean/ansible/inventory --host prod-fantasy-hockey`.
 

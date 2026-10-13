@@ -20,7 +20,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 - Every story updates the docs under `docs/cloud/digital-ocean` in the same change; docs are organized by topic.
 - Every step runs through go-task entry points (`cloud:digital-ocean:*`) and passes the repo linters (ansible-lint, yamllint, ls-lint, folderslint).
 - Every cloud role has a Molecule scenario under `configs-cloud/digital-ocean/tests/molecule`, run locally through `task cloud:molecule:*` and in CI by the `molecule-cloud` job. Test containers are unprivileged, without host mounts and without systemd, so tests never break the host; `swap` is the exception without a scenario (`swapon` needs a privileged container).
-- No static or committed inventory. Hosts are discovered by tag, with groups `ubuntu` and `fantasy-hockey` composed from tags.
+- No static or committed inventory. Every droplet in the account is discovered (no filter); groups are `ubuntu` plus one group per droplet tag, so the stages `dev`, `test`, `prod` and the app tag `fantasy-hockey`.
 - Every Alloy series carries `environment` (`homelab` or `digital-ocean`). Only cloud series also carry `stage` (first value `prod`); the homelab has no `stage` label. The existing homelab `source` label stays unchanged.
 - Alloy on the droplet ships OS metrics and logs and scrapes the app at `:8080/metrics`, with secrets from `configs-homelab/ansible/vars/grafana-vault.yml`.
 - The droplet root bash prompt is the root prompt of the local ubuntu machines (`ps1_root`).
