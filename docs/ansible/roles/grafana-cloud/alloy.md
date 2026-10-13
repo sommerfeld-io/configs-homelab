@@ -8,6 +8,10 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 > NOTE: `{{ default_user }}` will need `sudo` rights to run`systemctl start` without a password (a sudoers entry for that command). Otherwise the Cron Job to check and start Alloy if needed will no work.
 
+## Labels
+
+Every series and log line leaving a node carries the label `environment=homelab`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2`. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (under `configs-cloud/digital-ocean`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
+
 ## Required Variables
 
 | Variable                        | Description                                                                                     |

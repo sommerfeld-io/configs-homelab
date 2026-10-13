@@ -11,6 +11,10 @@ remotecfg {
 }
 
 prometheus.remote_write "metrics_service" {
+  external_labels = {
+    environment = "homelab",
+  }
+
   endpoint {
     url = "https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push"
 
@@ -22,6 +26,10 @@ prometheus.remote_write "metrics_service" {
 }
 
 loki.write "grafana_cloud_loki" {
+  external_labels = {
+    environment = "homelab",
+  }
+
   endpoint {
     url = "https://logs-prod-012.grafana.net/loki/api/v1/push"
 
