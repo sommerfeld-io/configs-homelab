@@ -20,9 +20,6 @@ includes:
   molecule:
     taskfile: configs-homelab/tests/molecule/taskfile.yml
     dir: configs-homelab/tests/molecule
-  molecule-cloud:
-    taskfile: configs-cloud/digital-ocean/tests/molecule/taskfile.yml
-    dir: configs-cloud/digital-ocean/tests/molecule
   vm:
     taskfile: virtual-machines/taskfile.yml
     dir: virtual-machines

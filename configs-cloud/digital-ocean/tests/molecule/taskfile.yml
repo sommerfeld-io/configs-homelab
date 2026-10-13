@@ -1,8 +1,9 @@
 ---
 version: '3.42.1'
 
-# Included in the root taskfile with prefix `molecule-cloud` and
-# `dir: configs-cloud/digital-ocean/tests/molecule`.
+# Included in configs-cloud/taskfile.yml with prefix `molecule` and
+# `dir: digital-ocean/tests/molecule`, so the tasks are called as
+# `task cloud:molecule:<name>`.
 
 env:
   # Molecule/Ansible only colorize output when they detect a TTY. GitHub Actions runners

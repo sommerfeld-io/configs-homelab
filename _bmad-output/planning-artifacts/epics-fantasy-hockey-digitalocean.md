@@ -236,9 +236,9 @@ So that a broken role fails in CI instead of on the droplet.
 **Acceptance Criteria:**
 
 **Given** the cloud role `motd` and the fleet Alloy role as the droplet runs it (`alloy_fleet_extras: false`, the cloud template)
-**When** I run `task molecule-cloud:test`
+**When** I run `task cloud:molecule:test`
 **Then** one Molecule scenario per role under `configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/` runs converge, idempotence and verify on Ubuntu 26.04 (the droplet image), using a shared `base.yml` and `prepare.yml` in `configs-cloud/digital-ocean/tests/molecule/`
-**And** `task molecule-cloud:test:<role>` runs a single scenario from `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, which the root taskfile includes as `molecule-cloud`
+**And** `task cloud:molecule:test:<role>` runs a single scenario from `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, which `configs-cloud/taskfile.yml` includes as `molecule` (tasks `cloud:molecule:*`)
 
 **Given** tests must never break the host
 **When** any scenario runs
@@ -300,7 +300,7 @@ So that it is reachable from the internet at a static address.
 **And** the Dependabot entry points at the moved `files` folder
 
 **Given** the moved role and the rule from Story 3.5
-**When** I run `task molecule-cloud:test:fantasy-hockey`
+**When** I run `task cloud:molecule:test:fantasy-hockey`
 **Then** a Molecule scenario for the role runs converge, idempotence and verify without the vault password
 **And** the `molecule-cloud` matrix in `pipeline.yml` and the taskfile include it
 

@@ -25,8 +25,8 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` an
 | `task cloud:digital-ocean:ansible:provision` | Provision all Ubuntu droplets with Ansible (prompt, Docker, swap, Alloy, MOTD), after waiting for SSH and cloud-init |
 | `task cloud:digital-ocean:deploy`            | Full pipeline: `opentofu:apply`, then `ansible:provision`                                                            |
 | `task cloud:info`                            | Print the account and all droplets with `doctl`                                                                      |
-| `task molecule-cloud:test`                   | Run every Molecule scenario for the roles the droplet runs ([Tests](tests.md))                                       |
-| `task molecule-cloud:test:<role>`            | Run one Molecule scenario: `motd` or `alloy`                                                                         |
+| `task cloud:molecule:test`                   | Run every Molecule scenario for the roles the droplet runs ([Tests](tests.md))                                       |
+| `task cloud:molecule:test:<role>`            | Run one Molecule scenario: `motd` or `alloy`                                                                         |
 
 Run `init` once before `plan` and `apply`, and again after provider changes. The OpenTofu and Ansible tasks that need the token and `info` stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. See [API Token](api-token.md).
 

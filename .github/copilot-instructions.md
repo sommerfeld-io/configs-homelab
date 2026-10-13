@@ -74,7 +74,7 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
     - To test a new role group, add `configs-homelab/tests/molecule/{role-group}/molecule/default/{converge,verify}.yml`, a `molecule.yml` following the `common` example, and a corresponding `test:{role-group}` task in `configs-homelab/tests/molecule/taskfile.yml`.
 - **Molecule (cloud):** tests the roles the DigitalOcean droplet runs, one scenario per role under `configs-cloud/digital-ocean/tests/molecule/{role}/molecule/default/` (`motd`, and `alloy` for the fleet Alloy role with the cloud template). `swap` has no scenario: `swapon` needs a privileged container.
     - Shared config: `base.yml` (one plain `ubuntu:26.04` platform, unprivileged, no systemd) and `prepare.yml` (packages the droplet image ships, the `docker` group, a `systemctl` stub). Never make a test container privileged, run systemd as PID 1 or mount host paths: the host rebooted during every run of a privileged systemd container.
-    - Run one scenario with `task molecule-cloud:test:<role>`, or all with `task molecule-cloud:test`. CI runs them in the `molecule-cloud` job, which gates the docs and release stages like `molecule`.
+    - Run one scenario with `task cloud:molecule:test:<role>`, or all with `task cloud:molecule:test`. CI runs them in the `molecule-cloud` job, which gates the docs and release stages like `molecule`.
     - To test a new cloud role, add `{role}/molecule/default/{molecule,converge,verify}.yml` following the `motd` example, a `test:{role}` task in `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, and the role to the `molecule-cloud` matrix in `pipeline.yml`.
 
 @AGENTS.md

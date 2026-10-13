@@ -4,6 +4,12 @@ version: '3.42.1'
 # Included in the root taskfile with prefix `cloud` and `dir: configs-cloud`,
 # so every task here is called as `task cloud:<name>`.
 
+includes:
+  # Molecule scenarios for the roles the droplet runs: `task cloud:molecule:test`.
+  molecule:
+    taskfile: digital-ocean/tests/molecule/taskfile.yml
+    dir: digital-ocean/tests/molecule
+
 vars:
   DO_TOFU: tofu -chdir=digital-ocean/opentofu
   DO_ANSIBLE: digital-ocean/ansible

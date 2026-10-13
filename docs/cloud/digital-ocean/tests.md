@@ -6,7 +6,7 @@ The scenarios live in `configs-cloud/digital-ocean/tests/molecule/`, one per rol
 
 ```text
 configs-cloud/digital-ocean/tests/molecule/
-  taskfile.yml       # included in the root taskfile with prefix `molecule-cloud`
+  taskfile.yml       # included in configs-cloud/taskfile.yml: `task cloud:molecule:*`
   base.yml           # shared Molecule config: platform, driver, test sequence
   prepare.yml        # shared container setup before the role runs
   motd/molecule/default/{molecule,converge,verify}.yml
@@ -17,8 +17,8 @@ configs-cloud/digital-ocean/tests/molecule/
 
 | Task                              | What it does                                           |
 |-----------------------------------|--------------------------------------------------------|
-| `task molecule-cloud:test`        | Run every scenario: `motd`, `alloy`                    |
-| `task molecule-cloud:test:<role>` | Run one scenario, e.g. `task molecule-cloud:test:motd` |
+| `task cloud:molecule:test`        | Run every scenario: `motd`, `alloy`                    |
+| `task cloud:molecule:test:<role>` | Run one scenario, e.g. `task cloud:molecule:test:motd` |
 
 Each scenario runs dependency, destroy, create, prepare, converge, idempotence, verify and destroy. Molecule runs through `uvx`, so it needs Docker and `uv` but no local Molecule install. The collections come from the pinned `configs-cloud/digital-ocean/ansible/requirements.yml`, the same file provisioning uses.
 
