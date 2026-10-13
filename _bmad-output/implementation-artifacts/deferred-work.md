@@ -84,3 +84,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-12-reconcile-idempotence-statement.md`
   summary: When epic-3 retro item 8 (stop fleet-only side effects) is built, remove the four-Alloy-task exception from `epic-3-context.md`, the Story 3.1 criterion in the epics file and `SPEC.md` CAP-2, and the matching sentence in `docs/cloud/digital-ocean/provisioning.md`.
   evidence: All four now say the exception lasts "until" item 8 lands, but item 8's action text in `sprint-status.yaml` does not mention restoring the plain "a second run changes nothing" statement, so it would go stale.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-12-reconcile-idempotence-statement.md`
+  summary: Add `changed_when: false` to the read-only `docker version` and `docker compose version` tasks in `ansible-roles-collection/docker/tasks/ubuntu/40-info.yml`, then drop the Docker exception from `epic-3-context.md`, the Story 3.1 criterion, `SPEC.md` CAP-2 and `docs/cloud/digital-ocean/provisioning.md`.
+  evidence: The second provision run on 2026-10-13 (epic-3 retro item 13) ended `changed=6`: the four expected Alloy tasks plus `Docker  ----  Setup  ----  Verify Docker installation` and `Verify Docker Compose installation`, both plain `command` tasks without `changed_when`. The fix belongs to the submodule repo (AD-8).

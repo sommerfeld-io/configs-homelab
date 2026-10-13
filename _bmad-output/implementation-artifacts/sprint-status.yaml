@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-13-2026 18:47
+last_updated: 10-13-2026 18:53
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -164,7 +164,7 @@ action_items:
     action: "Run provision a second time (swap and motd no change) and roll out grafana-agents.yml
       for environment=homelab"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
   - id: "epic-3-retro-item-14-record-epic-3-process-lessons-as-project"
     epic: 3

@@ -25,6 +25,7 @@ context: []
 - Not changed: the finished `spec-3-1-…` (frozen intent and its `changed=0` acceptance criterion) stays the historical record of what was approved. `docs/cloud/digital-ocean/provisioning.md` already describes the per-run changes.
 - After review: the exception names the four tasks and splits the cause into its own sentence, the item reference cites retro action 1 and the sprint-status id `epic-3-retro-item-8-…` (the retro document numbers its actions differently), and the same wrong cause ("forced template") is fixed in `docs/cloud/digital-ocean/provisioning.md`. Story 3.4's second-run criterion is narrowed to the MOTD tasks on purpose; `sprint-change-proposal-2026-10-13.md` keeps the old wording as history. `task lint` exit 0.
 - Approval: the user owns item 12 and asked for it in this build (`/bmad-build items 12 and 13`).
+- Item 13 evidence (user-run, 2026-10-13): the second provision run ended `ok=61 changed=6 failed=0`. The wait play, swap, MOTD and bash tasks were `ok`. The four Alloy tasks changed as expected, plus the two read-only Docker verify tasks of the submodule docker role (no `changed_when: false`). The planning docs and `provisioning.md` were corrected to name them; the submodule fix is deferred. The user confirmed `up{environment="homelab"}` returns data after the `grafana-agents.yml` rollout.
 - Retro item 13 (second provision run, `grafana-agents.yml` rollout) is not part of this spec: both need the vault password, the fleet rollout also needs the become password, and the task is host-only. The user runs it.
 
 
