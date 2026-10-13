@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-13-2026 18:53
+last_updated: 10-13-2026 19:08
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -172,7 +172,7 @@ action_items:
       defaults before rejecting findings, timestamps from date, re-test environment
       limits, check option descriptions)"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
   - id: "epic-3-retro-item-15-plan-a-cloud-test-harness-story-provisio"
     epic: 3

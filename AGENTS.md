@@ -1,5 +1,5 @@
 <!-- bmad:context -->
-<!-- Verified 2026-10-13 against aeef444. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
+<!-- Verified 2026-10-13 against a4109cb. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
 
 ## Known pitfalls
 
@@ -7,5 +7,9 @@
 - When a decision changes a planning fact, update every planning doc in the same change: `SPEC.md`, `platform-decisions.md`, `stories.yaml`, the epics files, `epic-N-context.md` and the architecture. Updating only the epics file left three docs naming the wrong token variable, SSH keys and mount path.
 - When a story creates a resource, copy every epic-level constraint on that resource into the story spec's boundaries. "Resize CPU/RAM only, never disk" was missing from `spec-2-4`, so the droplet shipped with the provider default `resize_disk = true`.
 - When renaming a variable that crosses tools (vault, playbook, `.bashrc`, devcontainer `containerEnv`), grep every consumer and fix them all in one commit. The `DIGITALOCEAN_TOKEN` to `DIGITALOCEAN_ACCESS_TOKEN` rename broke the devcontainer chain until `6f8671f`.
+- Before rejecting a review finding about a third-party default, read that component's source or docs. The 3.1 finding "no `ansible_host`" was rejected on the untested assumption that the DigitalOcean inventory plugin sets it; the first deploy failed with "Could not resolve hostname" until `f3cb231`.
+- Never write a timestamp by hand (`last_updated` in `sprint-status.yaml`, dates in specs): take it from `date '+%m-%d-%Y %H:%M'` or let `.claude/skills/bmad-retrospective/scripts/sprint_status.py` stamp it. Agents wrote six `last_updated` values ahead of the real time in Epic 3 (`21a9b1e` to `94c60bc`).
+- Re-test an environment limit at the start of each epic instead of copying it from an earlier spec or retro. "Agent SSH to the droplet is blocked" was carried into the 3.1 and 3.2 specs and pushed checks onto the user, while read-only `ssh root@<droplet-ip>` from the devcontainer works. Only runs that need the vault password are user-run.
+- Before writing what code does into an option, spec or doc (a cause, a side effect, a change count), check it in the code or a real run. Agents described a 3.2 option wrong before approval, gave "forced template" as the cause of the per-run Alloy change, and documented four changing tasks where the second provision run showed six.
 
 <!-- /bmad:context -->
