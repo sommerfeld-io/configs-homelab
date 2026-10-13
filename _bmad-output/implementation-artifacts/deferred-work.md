@@ -72,3 +72,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-10-pin-provisioning-collections.md`
   summary: Add a check that `provision.yml` resolves only against the collections installed from `requirements.yml`, so a new role using an unpinned collection (e.g. `community.docker`, `community.crypto`) fails loudly.
   evidence: The pin list was built by hand from a grep; the devcontainer already has `community.docker` and `ansible.posix` installed, so an unpinned use would silently work. Fits the cloud test-harness story (epic-3 retro item 15).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-items-9-11-16-deploy-wait-docs-drift-link-retries.md`
+  summary: Wait for the first-boot apt lock (apt-daily, unattended-upgrades) before the Docker role's apt tasks on a new droplet.
+  evidence: maybe-false, medium if true. The wait play covers cloud-init only, and the apt module waits 60 s (default `lock_timeout`). Settled by the Story 4.3 replacement drill: watch for "Could not get lock" on a fresh droplet.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-items-9-11-16-deploy-wait-docs-drift-link-retries.md`
+  summary: Move the wait play into a vault-free playbook (imported by `provision.yml`) so ansible-lint and `--syntax-check` can cover it in CI.
+  evidence: `provision.yml` is in `exclude_paths` and its syntax check needs the vault password, so the new play (including the `hostvars` assert) was only checked by hand. Fits the cloud test-harness story (epic-3 retro item 15).

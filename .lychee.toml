@@ -14,4 +14,11 @@ exclude = [
 
 format = 'detailed' # compact, detailed, json, markdown, raw
 
+# GitHub and docs.ansible.com sometimes answer with 502 or 503, which failed
+# commits in the pre-commit hook. Lychee retries 5xx responses and timeouts; wait
+# longer between retries (exponential backoff from 3 s, about 45 s per failing
+# link) instead of accepting 5xx, so a link that stays broken still fails.
+# 429 (rate limit) is accepted.
+max_retries = 4
+retry_wait_time = 3
 accept = ['200', '429']

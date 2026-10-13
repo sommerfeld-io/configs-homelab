@@ -23,11 +23,20 @@ The tag `fantasy-hockey` is set through the optional `tags` list of the droplet 
 
 ## provision.yml
 
-`playbooks/provision.yml` targets the generic group `ubuntu` and connects as `root`. It reuses roles from `configs-homelab/ansible/roles` through relative paths:
+`playbooks/provision.yml` targets the generic group `ubuntu` and connects as `root`. It has two plays.
 
-- `docker`: Docker from the Docker apt repository.
+The first play, `Wait for new droplets`, gathers no facts, so it does not connect before it is ready. A droplet that `deploy` just created may not accept SSH yet, and cloud-init may still hold the apt lock:
+
+- It fails with a clear message when the inventory found no public IPv4 and so could not set `ansible_host` (inside a task, `ansible_host` would otherwise fall back to the droplet name, which does not resolve).
+- `wait_for_connection` waits up to 5 minutes for SSH.
+- `cloud-init status --wait` waits up to 10 minutes for cloud-init to finish. Exit code 2 (done with recoverable errors) is accepted; exit code 1 (critical error) or the timeout stops the run for that droplet. See the cause with `cloud-init status --long` on the droplet.
+
+A droplet that fails here is left out of the second play; other droplets are still provisioned. The play does not wait for the apt lock that apt-daily or unattended-upgrades may take after cloud-init; the apt tasks wait up to 60 seconds for it (`lock_timeout`).
+
+On a droplet that is already up, the play passes at once and reports no change. The second play runs these roles in this order. Fleet roles come from `configs-homelab/ansible/roles` through relative paths, cloud roles from `ansible/roles`:
+
 - `bash` (only `11-bash-config-root`): aliases and the root prompt `ps1_root` in `/root/.bashrc`. The prompt is the root prompt of the local ubuntu machines, defined in `ansible/vars/main.yml`.
-
+- `docker`: Docker from the Docker apt repository.
 - `swap` (cloud role in `ansible/roles/swap`): a 1 GiB swap file `/swapfile` (`swap_file_size_mb` in the role defaults), mode `0600`, enabled with `swapon` and kept in `/etc/fstab`. A 1 GB droplet has no swap by default, so memory pressure would kill processes silently.
 - `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`.
 - `alloy-config` (cloud role in `ansible/roles/alloy-config`): the fleet role writes the fleet config, so this role then replaces `/etc/alloy/config.alloy` with the cloud config and restarts Alloy.

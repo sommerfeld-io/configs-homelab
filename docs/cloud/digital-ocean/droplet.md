@@ -95,14 +95,14 @@ A number creates a data volume named `<droplet-name>-data` and attaches it at cr
 
 These settings are not options of their own. They are fixed or derived from the options above for every entry in the map.
 
-| Attribute  | Value                             |
-|------------|-----------------------------------|
-| Name       | `<stage>-<key>`                   |
-| Region     | `local.region`                    |
-| Monitoring | DigitalOcean monitoring agent on  |
-| Tags       | The droplet's `stage`             |
-| SSH keys   | All keys in `local.ssh_key_names` |
-| Project    | `sommerfeld.io`                   |
+| Attribute  | Value                                                |
+|------------|------------------------------------------------------|
+| Name       | `<stage>-<key>`                                      |
+| Region     | `local.region`                                       |
+| Monitoring | DigitalOcean monitoring agent on                     |
+| Tags       | The droplet's `stage`, plus its optional `tags` list |
+| SSH keys   | All keys in `local.ssh_key_names`                    |
+| Project    | `sommerfeld.io`                                      |
 
 There is no firewall, user-data script or backup yet.
 
