@@ -154,9 +154,11 @@ jobs:
         # One entry per test:<scenario> task in configs-cloud/digital-ocean/tests/molecule/taskfile.yml - keep in sync.
         scenario: ['motd', 'alloy']
     steps:
-      # No submodules: the scenarios test no ansible-roles-collection role.
+      # Submodules are needed: the root taskfile includes taskfiles from the .task submodule.
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          submodules: true
       - name: Install Task
         uses: arduino/setup-task@v3.0.0
         with:
