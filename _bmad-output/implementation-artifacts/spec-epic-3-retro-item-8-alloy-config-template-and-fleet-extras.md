@@ -126,6 +126,7 @@ context: []
 - The exception text stays in the epics file, `epic-3-context.md`, `SPEC.md` and `provisioning.md`, each with a note that it is dropped once a user-run second provision shows `changed=0`.
 - The droplet's old staging file `/etc/alloy/config.cloud.alloy` (from the deleted `alloy-config` role) is not removed. Alloy does not read it.
 - Review patches (by the implementation subagent): `meta: flush_handlers` at the end of the Update Config block; `alloy_fleet_extras | bool` in every conditional and both override `{% if %}`; a `provision.yml` task that removes `/etc/alloy/config.cloud.alloy`; README notes on `false` needing a template without the extras, on how `alloy_config_template` resolves, and the vault path fix. `task lint` exit 0.
+- Evidence (user-run, 2026-10-13): the first provision run ended `ok=58 changed=5 failed=0` (capabilities removed, override rewritten, token file removed, one `Restart Alloy`, staging file removed; `Template config file` was already `ok`). The second ended `ok=56 changed=0 failed=0`. Read-only SSH on the droplet: `getcap` on the Alloy binary prints nothing, `/etc/alloy` holds only `config.alloy` and the package sample `config.yaml` (owned by the `alloy` package), `remotecfg` and `github` count 0 in `config.alloy`, the override has only `EnvironmentFile`, `alloy` is `active`, labels `environment = "digital-ocean"` and `stage = "prod"`. The four-Alloy-task exception was then removed from `epic-3-context.md`, the Story 3.1 criterion, `SPEC.md` CAP-2 and `provisioning.md`.
 
 ## Review Triage Log
 

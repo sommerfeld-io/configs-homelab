@@ -41,7 +41,7 @@ On a droplet that is already up, the play passes at once and reports no change. 
 - `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`. `ansible/vars/main.yml` sets `alloy_config_template` to the cloud config and `alloy_fleet_extras: false`, see [Alloy and Labels](#alloy-and-labels).
 - `motd` (cloud role in `ansible/roles/motd`): the login banner, see [Login Banner (MOTD)](#login-banner-motd).
 
-The playbook asks for the vault password (`--ask-vault-pass`). The swap and motd tasks report no change on a second run. Before Epic 3 retro item 8, a second run ended with `changed=4`: the fleet `alloy` role wrote the fleet config and restarted with `state: restarted`, then a cloud role copied the cloud config back and restarted again. Now the fleet role writes the cloud config directly and restarts Alloy only through its `Restart Alloy` handler when something changed, so a second run is expected to end with `changed=0`. That exception stays recorded here until a second provision run after the change shows `changed=0`.
+The playbook asks for the vault password (`--ask-vault-pass`). A second run ends with `changed=0`: the fleet `alloy` role writes the cloud config directly and restarts Alloy only through its `Restart Alloy` handler when something it reads changed.
 
 ## Alloy and Labels
 

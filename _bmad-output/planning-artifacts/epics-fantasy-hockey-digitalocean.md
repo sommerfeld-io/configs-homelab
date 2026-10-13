@@ -164,8 +164,7 @@ So that provisioning works on a freshly created droplet without editing an inven
 
 **Given** a second run
 **When** provisioning finishes
-**Then** nothing changes except four Alloy tasks, which report changed on every run (accepted in Story 3.2): `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler
-**And** that exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`). Item 8 folded the cloud config into the fleet role (`alloy_config_template`, `alloy_fleet_extras: false`, restart through a handler) and deleted the cloud stage-and-copy role; the exception is dropped once a second provision run after that change shows `changed=0`
+**Then** nothing changes (`changed=0`)
 **And** the docs explain the dynamic inventory
 
 ### Story 3.2: Swap and Alloy on the droplet with environment and stage labels
