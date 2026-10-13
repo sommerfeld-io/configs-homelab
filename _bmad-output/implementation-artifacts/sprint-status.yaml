@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-13-2026 18:20
+last_updated: 10-13-2026 18:39
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -53,6 +53,7 @@ development_status:
   3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-lab: done
   3-3-environment-homelab-label-in-the-homelab-alloy-config: done
   3-4-droplet-motd-with-banner-live-os-line-and-update-info: done
+  3-5-molecule-tests-for-the-cloud-ansible-roles: backlog
   epic-3-retrospective: done
 
   epic-4: backlog
@@ -178,7 +179,7 @@ action_items:
     action: "Plan a cloud test-harness story: provision.yml syntax check in CI, rendered
       label assertions, 20-updates fixtures, Molecule/InSpec for cloud roles"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
   - id: "epic-3-retro-item-16-add-a-lychee-retry-or-accept-rule-for-42"
     epic: 3

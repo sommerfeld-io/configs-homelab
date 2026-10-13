@@ -58,6 +58,16 @@
     Run first on the droplet, before writing the role: list /etc/update-motd.d/ on Ubuntu 26.04 to see which default scripts exist, and run the update-notifier apt_check helper with --human-readable to confirm it prints exactly the two update lines.
     Check what the MOTD shows with zero pending updates and with a pending reboot, and keep the layout intact in both cases.
     Decide with the user how SSH verification is done (allow-rule for SSH to the reserved IP, or a user-run check) before verifying.
+- id: "8b"
+  title: Molecule tests for the cloud Ansible roles
+  description: >-
+    Add one Molecule scenario per cloud role (swap, alloy-config, motd) under configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/ with a shared base.yml (Ubuntu 26.04) and prepare.yml, run by configs-cloud/digital-ocean/tests/molecule/taskfile.yml, included in the root taskfile as molecule-cloud (CAP-6).
+    Add a molecule-cloud matrix job to pipeline.yml that gates docs and release like the molecule job, and state in CLAUDE.md that a new Ansible role in this repo needs a Molecule scenario (submodule roles are tested in the submodule).
+    Docs updated in the same change.
+  invoke_dev_with: >-
+    The roles stay unchanged for the tests. A container cannot enable swap and must not touch the runner's swap, so prepare stubs swapon for the swap scenario. alloy-config needs a systemd container with a dummy alloy.service and the facts the fleet Alloy role sets (alloy_config_dir, alloy_group, alloy_service_name) plus alloy_environment and alloy_stage.
+    Verify the rendered labels in config.alloy, the absence of github and remotecfg blocks, and the 20-updates output against stamp fixtures (zero, one, several updates).
+    Allow the new folders in .folderslintrc and keep the pipeline matrix in sync with the taskfile. The provision.yml syntax check is not part of this story (Story 6.1).
 - id: "9"
   title: Move fantasy-hockey role and deploy-fantasy-hockey.yml with nginx
   description: >-
@@ -71,6 +81,7 @@
     Check that the fantasy_hockey_ rename passes ansible-lint.
     The pi4-0002 play in raspi.yml only runs this role, so replace it with the cleanup play and leave no reference to configs-homelab/ansible/roles/raspi/fantasy-hockey in raspi.yml, configs-homelab/ansible/taskfile.yml or .github/dependabot.yml.
     Run the Pi cleanup only after the app is verified reachable on the droplet. Scope the container removal to pi4-0002 and check first that no other service runs in containers there.
+    Add a Molecule scenario for the moved role (rule from 8b). Its defaults/main.yml is fully vault-encrypted, which a scenario cannot load without the vault password, so move the secrets out of the role defaults into a vault file the deploy playbook loads, keep plain defaults in the role, and give the scenario test values. Do not add the vault password to the pull-request CI. The container cannot run Docker itself, so the scenario verifies the user, files, templates and the seed-only-when-absent rule; starting the containers is verified on the droplet.
 - id: "10"
   title: Dependabot compose bumps for configs-cloud
   description: >-
@@ -95,6 +106,7 @@
   title: CI static checks for OpenTofu and Ansible
   description: >-
     Run the new linters and static checks for configs-cloud in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
+    Also covers the parts of epic-3 retro item 15 that are not Molecule tests: a vault-free syntax check of the cloud playbooks and a check that every collection they use is pinned in requirements.yml (see deferred-work.md).
     Docs updated in the same change.
 - id: "15"
   title: Remote state with locking

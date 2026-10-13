@@ -227,6 +227,40 @@ So that I see at a glance which host and OS I am on and whether updates are pend
 **Then** nothing changes
 **And** the docs describe the MOTD and how it is built
 
+### Story 3.5: Molecule tests for the cloud Ansible roles
+
+As an operator,
+I want every cloud role tested in a container,
+So that a broken role fails in CI instead of on the droplet.
+
+**Acceptance Criteria:**
+
+**Given** the cloud roles `swap`, `alloy-config` and `motd`
+**When** I run `task molecule-cloud:test`
+**Then** one Molecule scenario per role under `configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/` runs converge, idempotence and verify on Ubuntu 26.04 (the droplet image), using a shared `base.yml` and `prepare.yml` in `configs-cloud/digital-ocean/tests/molecule/`
+**And** `task molecule-cloud:test:<role>` runs a single scenario from `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, which the root taskfile includes as `molecule-cloud`
+
+**Given** a container cannot enable swap and must not touch the CI runner's swap
+**When** the `swap` scenario runs
+**Then** `prepare` replaces `swapon` with a stub that records the activated file, so the role runs unchanged
+**And** verify asserts the file size, mode `0600`, the `mkswap` signature and the `/etc/fstab` line, and idempotence proves the second run changes nothing
+
+**Given** `alloy-config` restarts Alloy through systemd and reads facts the fleet Alloy role sets
+**When** the `alloy-config` scenario runs
+**Then** it runs in a container with systemd and a dummy `alloy.service`, and converge sets `alloy_config_dir`, `alloy_group`, `alloy_service_name`, `alloy_environment` and `alloy_stage`
+**And** verify asserts that `config.alloy` carries `environment = "digital-ocean"` and `stage = "prod"` in both `external_labels` blocks and has no `github` or `remotecfg` block
+
+**Given** the `motd` scenario
+**When** verify runs the scripts in `/etc/update-motd.d`
+**Then** fixtures for the update stamp cover zero, one and several pending updates and check the exact `20-updates` output
+**And** only `00-banner`, `10-os-line`, `20-updates` and `98-reboot-required` are executable
+
+**Given** a pull request
+**When** `pipeline.yml` runs
+**Then** a `molecule-cloud` job runs every cloud scenario as a matrix, after linting, and gates the docs and release stages like the `molecule` job
+**And** `CLAUDE.md` says a new Ansible role in this repo (local homelab roles and `configs-cloud/*/ansible/roles`) is not done without a Molecule scenario, while submodule roles are tested in the submodule
+**And** the docs under `docs/cloud/digital-ocean` describe the scenarios and the tasks
+
 ## Epic 4: App deployment
 
 The app runs as docker compose on the droplet and is reachable at the reserved IP.
@@ -264,6 +298,11 @@ So that it is reachable from the internet at a static address.
 **Then** none references `configs-homelab/ansible/roles/raspi/fantasy-hockey`
 **And** the `vault:fantasy-hockey` entry lives in the cloud taskfile as `cloud:digital-ocean:vault:fantasy-hockey`
 **And** the Dependabot entry points at the moved `files` folder
+
+**Given** the moved role and the rule from Story 3.5
+**When** I run `task molecule-cloud:test:fantasy-hockey`
+**Then** a Molecule scenario for the role runs converge, idempotence and verify without the vault password
+**And** the `molecule-cloud` matrix in `pipeline.yml` and the taskfile include it
 
 **Given** the app is verified reachable on the droplet
 **When** I run the cleanup in `raspi.yml` against pi4-0002
@@ -338,6 +377,11 @@ So that broken cloud configs fail before merge.
 **Given** a change under `configs-cloud`
 **When** CI runs in `pipeline.yml` or a dedicated workflow
 **Then** the OpenTofu and Ansible checks run the same way as locally
+
+**Given** `provision.yml` and every cloud playbook
+**When** CI runs
+**Then** each playbook passes `ansible-playbook --syntax-check` without the vault password (for example by moving the vault-free parts into imported playbooks, or giving the check a dummy vault file)
+**And** a check fails when a cloud playbook uses a collection that is not pinned in `configs-cloud/digital-ocean/ansible/requirements.yml`
 
 ### Story 6.2: Remote state with locking
 
