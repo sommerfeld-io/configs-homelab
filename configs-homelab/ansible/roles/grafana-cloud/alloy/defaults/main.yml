@@ -5,3 +5,8 @@
 alloy_env_file: /etc/default/alloy
 alloy_user: alloy
 alloy_group: alloy
+
+# Value of the environment label on every series and log line. The DigitalOcean
+# inventory sets digital-ocean, so the droplet is never labeled homelab while
+# this fleet config briefly runs there before the cloud config replaces it.
+alloy_environment: homelab

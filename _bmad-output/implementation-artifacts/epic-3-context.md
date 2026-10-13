@@ -32,7 +32,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 - `provision.yml` targets `ubuntu`; `deploy-fantasy-hockey.yml` (Epic 4) targets `fantasy-hockey`.
 - `stage` is defined once in OpenTofu as the droplet tag and name, and reaches Ansible only through the tag.
 - Secrets used by cloud playbooks stay vault-encrypted and share the one vault password.
-- The homelab Alloy template (`config.alloy.j2`) is owned by the fleet; its only change in this epic is the added `environment=homelab` label.
+- The homelab Alloy template (`config.alloy.j2`) is owned by the fleet; its only change in this epic is the `environment` label from the role variable `alloy_environment` (default `homelab`; the DigitalOcean inventory sets `digital-ocean`).
 - Droplet facts from Epic 2: Ubuntu 26.04 LTS, 1 vCPU / 1 GB RAM (hence swap), user and SSH key injected by OpenTofu, data volume mounted at `/mnt/prod_fantasy_hockey_data`.
 
 ## Cross-Story Dependencies

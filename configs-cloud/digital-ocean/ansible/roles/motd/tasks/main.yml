@@ -7,7 +7,7 @@
 # removed. Every task reports no change on a second run.
 - name: MOTD  ----  Create the banner folder
   ansible.builtin.file:
-    path: "{{ motd_share_dir }}"
+    path: /usr/local/share/motd
     state: directory
     owner: root
     group: root
@@ -16,7 +16,7 @@
 - name: MOTD  ----  Install the banner art
   ansible.builtin.copy:
     src: banner.txt
-    dest: "{{ motd_share_dir }}/banner.txt"
+    dest: /usr/local/share/motd/banner.txt
     owner: root
     group: root
     mode: u=rw,g=r,o=r

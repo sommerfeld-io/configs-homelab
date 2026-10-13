@@ -33,3 +33,8 @@ Added `environment = "homelab"` to `external_labels` of `prometheus.remote_write
 - low (rejected): new `environment` label may split existing series for label-selecting dashboards or alerts (blind). Queries without the label keep matching; the story asks for the label.
 - low (rejected): README wording, link instead of inline path, why the homelab has no `stage` (blind). Cosmetic.
 - low (rejected): no rendered-config assertion (blind). Same gap as the one already deferred from Story 3.2.
+
+## Review Findings
+
+- [x] [Review][Decision] Droplet series are briefly labeled `environment=homelab` on every provision run — resolved by the user: fix now. The label comes from the role variable `alloy_environment` (default `homelab`); the DigitalOcean inventory already sets `digital-ocean`; AD-10 and `epic-3-context.md` updated. The fleet `alloy` role writes the fleet `config.alloy.j2` (now with `environment="homelab"`) and restarts Alloy on the droplet before the cloud `alloy-config` role replaces it (Story 3.2 design). Before 3.3 that window shipped unlabeled series; now it ships droplet series as `environment=homelab` for a few seconds per run, which leaks into homelab-filtered dashboards (edge-case).
+- [x] [Review][Patch] `docs/cloud/digital-ocean` not updated for the homelab label [docs/cloud/digital-ocean/provisioning.md:42] — the epic rule says every story updates these docs; "Alloy and Labels" should say homelab series carry `environment=homelab` and no `stage`, and how to filter one from the other (acceptance-auditor).

@@ -99,3 +99,21 @@ Why scripts and not `/etc/motd`: `pam_motd` prints `/run/motd.dynamic` (built fr
 
 **Manual checks (if no CLI):**
 - User logs in over SSH and compares with the layout; runs `task cloud:digital-ocean:ansible:provision` twice: the motd role reports no change the second time.
+
+### Review Findings
+
+- [x] [Review][Patch] `00-banner` hardcodes `/usr/local/share/motd/banner.txt` while the tasks install the art to `{{ motd_share_dir }}` [configs-cloud/digital-ocean/ansible/roles/motd/files/00-banner:4] — overriding the variable silently drops the banner; make the path fixed (drop `motd_share_dir`, use the literal path in tasks and README) so there is one source of truth.
+- [x] [Review][Defer] No automated check runs the MOTD scripts against stamp fixtures or asserts exec bits and idempotence [configs-cloud/digital-ocean/ansible/roles/motd/] — deferred: already recorded in deferred-work.md from the build review; needs a cloud-role Molecule/InSpec harness.
+- [x] [Review][Defer] Layout and second-run idempotence not yet observed on the droplet [configs-cloud/digital-ocean/ansible/roles/motd/tasks/main.yml] — deferred (maybe-false, medium if broken): settled by one `task cloud:digital-ocean:ansible:provision` run twice, then `ssh root@<ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'`.
+
+#### Rejected
+
+- false: debconf task re-reports changed because `landscape-common` is not installed (edge-case). It is installed on the droplet (its postinst exists) and the question `landscape-common/sysinfo` is registered.
+- false: `20-updates` goes stale because the login-time refresh is gone (blind, edge-case). `90-updates-available` never refreshed the stamp, it only printed a notice when it was older than 7 days; the apt `Update::Post-Invoke-Success` and `DPkg::Post-Invoke` hooks (also run by `apt-daily` and unattended-upgrades) and the weekly `update-notifier-motd.timer` refresh it.
+- false: `.folderslintrc` deviates from the Code Map (acceptance-auditor). The generic `roles/*/files` rule was a deliberate patch in the build review and satisfies the constraint.
+- false: the diff mixes the MOTD with the Alloy label change (blind). Both stories were reviewed together on request.
+- low (rejected): kept scripts are never re-enabled with `a+x` (blind, edge-case, acceptance-auditor). `98-reboot-required` is executable on the droplet and nothing in the role removes it; a guard task protects a state not shown to occur.
+- low (rejected): `motd-news.timer` still fetches from motd.ubuntu.com in the background (blind). Output is hidden; switching off the timer is outside the story.
+- low (rejected): `find` with `file_type: file` would miss future symlinked default scripts (blind, edge-case). Only `50-landscape-sysinfo` exists and is handled; adds branches for a case not seen.
+- low (rejected): no fallback for a missing `/etc/os-release` or `banner.txt`, English-only stamp parsing, variables overridden as strings (blind, edge-case). Ubuntu-only droplet with both files present and a C/UTF-8 root locale; fixes add guards.
+- low (rejected): root-only verification command, no `run-parts --test` in the docs, README overlaps `provisioning.md` (blind). The README was asked for; cosmetic.

@@ -12,7 +12,7 @@ remotecfg {
 
 prometheus.remote_write "metrics_service" {
   external_labels = {
-    environment = "homelab",
+    environment = "{{ alloy_environment }}",
   }
 
   endpoint {
@@ -27,7 +27,7 @@ prometheus.remote_write "metrics_service" {
 
 loki.write "grafana_cloud_loki" {
   external_labels = {
-    environment = "homelab",
+    environment = "{{ alloy_environment }}",
   }
 
   endpoint {

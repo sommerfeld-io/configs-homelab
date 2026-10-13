@@ -41,6 +41,8 @@ The cloud config (`alloy-config/templates/config.alloy.j2`) has no GitHub, Ollam
 
 `environment=digital-ocean` and `stage=prod` are `external_labels` of the Prometheus remote write and the Loki write, so every series and log line carries them. The template is validated by `lint-alloy-config` together with the fleet template.
 
+Homelab nodes carry `environment=homelab` and no `stage` label, set by the fleet Alloy role from its variable `alloy_environment`. The DigitalOcean inventory sets that variable to `digital-ocean`, so even during the few seconds the fleet config runs on the droplet on each provision, its series are never labeled `homelab`. Filter with `environment="homelab"` or `environment="digital-ocean"`, and use `stage` only for cloud series.
+
 Verify in Grafana Cloud (Explore):
 
 ```text

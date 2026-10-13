@@ -19,9 +19,10 @@ The files in `files/` are named exactly like their targets, because the role cop
 
 ## Variables
 
+The banner art is always installed to the fixed path `/usr/local/share/motd/banner.txt`, which `00-banner` reads.
+
 | Variable            | Default                                    | Description                                                           |
 |---------------------|--------------------------------------------|-----------------------------------------------------------------------|
 | `motd_dir`          | `/etc/update-motd.d`                       | Folder `pam_motd` runs at login                                       |
-| `motd_share_dir`    | `/usr/local/share/motd`                    | Folder of `banner.txt` (`00-banner` reads this path, keep them equal) |
 | `motd_keep_scripts` | `98-reboot-required`                       | Default scripts that stay executable                                  |
 | `motd_scripts`      | `00-banner`, `10-os-line`, `20-updates`    | The role's own scripts in `files/`                                    |

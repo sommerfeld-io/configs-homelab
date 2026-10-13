@@ -1,6 +1,5 @@
 ---
 motd_dir: /etc/update-motd.d
-motd_share_dir: /usr/local/share/motd
 # Ubuntu's own restart notice stays.
 motd_keep_scripts:
   - 98-reboot-required

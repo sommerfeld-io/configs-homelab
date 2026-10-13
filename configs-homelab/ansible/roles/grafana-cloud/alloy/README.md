@@ -10,13 +10,14 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 ## Labels
 
-Every series and log line leaving a node carries the label `environment=homelab`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2`. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (under `configs-cloud/digital-ocean`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
+Every series and log line leaving a node carries the label `environment`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2` from the variable `alloy_environment` (default `homelab`). The DigitalOcean inventory sets it to `digital-ocean`, so the droplet is never labeled `homelab` during the few seconds this fleet config runs there on each provision, before the cloud config replaces it. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (under `configs-cloud/digital-ocean`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
 
 ## Required Variables
 
 | Variable                        | Description                                                                                     |
 |---------------------------------|-------------------------------------------------------------------------------------------------|
 | `default_user`                  | The user to install and configure for (typically the logged-in user)                            |
+| `alloy_environment`             | Optional. Value of the `environment` label, default `homelab`                                   |
 
 The following sensitive variables are be defined in `components/ansible/vars/grafana-vault.yml` (encrypted with Ansible Vault):
 

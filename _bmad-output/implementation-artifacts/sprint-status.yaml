@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-13-2026 23:00
+last_updated: 10-14-2026 00:30
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -51,8 +51,8 @@ development_status:
   epic-3: in-progress
   3-1-dynamic-inventory-and-base-provision-yml: done
   3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-lab: done
-  3-3-environment-homelab-label-in-the-homelab-alloy-config: review
-  3-4-droplet-motd-with-banner-live-os-line-and-update-info: review
+  3-3-environment-homelab-label-in-the-homelab-alloy-config: done
+  3-4-droplet-motd-with-banner-live-os-line-and-update-info: done
   epic-3-retrospective: optional
 
   epic-4: backlog

@@ -49,3 +49,8 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-4-droplet-motd-with-banner-live-os-line-and-update-info.md`
   summary: Add an automated check that runs the MOTD scripts against stamp fixtures (0, 1, N updates) and asserts only the role's scripts and 98-reboot-required stay executable, idempotently.
   evidence: Nothing in the repo runs the motd role or its scripts; a changed grep pattern or a dropped exclude would keep every check green. Cloud roles have no Molecule/InSpec harness yet.
+
+## Deferred from: code review of spec-3-3 and spec-3-4 (2026-10-13)
+
+- No automated check runs the MOTD scripts against stamp fixtures or asserts exec bits and idempotence (same as the build-review entry above; needs a cloud-role Molecule/InSpec harness).
+- MOTD layout and second-run idempotence not yet observed on the droplet (maybe-false, medium if broken): settled by running `task cloud:digital-ocean:ansible:provision` twice and `ssh root@<ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'`.
