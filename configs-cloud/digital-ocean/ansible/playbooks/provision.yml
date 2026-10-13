@@ -6,6 +6,7 @@
   hosts: ubuntu
   gather_facts: false
   tasks:
+
     # Read hostvars: inside a task ansible_host falls back to the host name, which
     # does not resolve, so `ansible_host is defined` is always true.
     - name: Stop when the inventory found no public IPv4
@@ -18,9 +19,11 @@
           the inventory could not set ansible_host. Check the droplet with
           `task cloud:info` and run provision again once it has an address.
         quiet: true
+
     - name: Wait until the droplet accepts SSH
       ansible.builtin.wait_for_connection:
         timeout: 300
+
     - name: Wait for cloud-init to finish
       ansible.builtin.command: timeout 600 cloud-init status --wait
       register: cloud_init_status
@@ -37,26 +40,32 @@
     - ../vars/main.yml
     - ../../../../configs-homelab/ansible/vars/grafana-vault.yml
   tasks:
+
     - name: Configure the root bash prompt
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/bash
         tasks_from: 11-bash-config-root
+
     - name: Install Docker
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/docker
         tasks_from: main
+
     - name: Add a swap file
       ansible.builtin.include_role:
         name: ../roles/swap
+
     - name: Install Alloy
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/grafana-cloud/alloy
         tasks_from: main
+
     # Removes the staging copy left by the deleted cloud Alloy config role.
     - name: Remove the old cloud Alloy config staging file
       ansible.builtin.file:
         path: /etc/alloy/config.cloud.alloy
         state: absent
+
     - name: Configure the login banner
       ansible.builtin.include_role:
         name: ../roles/motd
