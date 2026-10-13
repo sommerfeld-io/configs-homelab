@@ -92,3 +92,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-8-alloy-config-template-and-fleet-extras.md`
   summary: Add a Molecule scenario for the fleet `grafana-cloud/alloy` role with its apartment defaults (token file, capabilities and override capability lines present, one restart on a config change, none on a second converge).
   evidence: No test runs this role (`configs-homelab/tests/molecule` has only `common` and `omarchy`); Story 3.5 covers only the `alloy_fleet_extras: false` branch with the cloud template. A dropped `notify` or a mis-rendered `{% if %}` in the override would reach every apartment node unnoticed. Needs a systemd container and Grafana APT access.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-5-molecule-tests-for-the-cloud-ansible-roles.md`
+  summary: The cloud `swap` role has no automated test; only a second provision run on the droplet checks it.
+  evidence: Story 3.5 dropped the `swap` scenario by human decision on 2026-10-13. `swapon` needs a privileged container, and the host rebooted during every run of a privileged systemd test container. A test would need a safe way to run `mkswap`/`swapon` (e.g. a disposable VM) without touching the host.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-5-molecule-tests-for-the-cloud-ansible-roles.md`
+  summary: The Story 3.5 criterion in `epics-fantasy-hockey-digitalocean.md` still says "Given a pull request / When `pipeline.yml` runs", but `pipeline.yml` has no `pull_request` trigger; reword it to a push.
+  evidence: `docs/pipelines.md` states `pipeline.yml` has no `pull_request` trigger and only runs on `push` (branches except `dependabot/**`) and the Tuesday schedule. The wording predates Story 3.5 (blind review finding).

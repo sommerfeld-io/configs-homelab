@@ -28,6 +28,7 @@
 		"configs-cloud/*/ansible/templates/*",
 		"configs-cloud/*/ansible/vars",
 		"configs-cloud/*/opentofu",
+		"configs-cloud/*/tests/molecule/**",
 
 		"configs-homelab/ansible/host_vars/*",
 		"configs-homelab/ansible/playbooks",

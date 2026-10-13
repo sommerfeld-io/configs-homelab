@@ -235,19 +235,19 @@ So that a broken role fails in CI instead of on the droplet.
 
 **Acceptance Criteria:**
 
-**Given** the cloud roles `swap` and `motd`, and the fleet Alloy role as the droplet runs it (`alloy_fleet_extras: false`, the cloud template)
+**Given** the cloud role `motd` and the fleet Alloy role as the droplet runs it (`alloy_fleet_extras: false`, the cloud template)
 **When** I run `task molecule-cloud:test`
 **Then** one Molecule scenario per role under `configs-cloud/digital-ocean/tests/molecule/<role>/molecule/default/` runs converge, idempotence and verify on Ubuntu 26.04 (the droplet image), using a shared `base.yml` and `prepare.yml` in `configs-cloud/digital-ocean/tests/molecule/`
 **And** `task molecule-cloud:test:<role>` runs a single scenario from `configs-cloud/digital-ocean/tests/molecule/taskfile.yml`, which the root taskfile includes as `molecule-cloud`
 
-**Given** a container cannot enable swap and must not touch the CI runner's swap
-**When** the `swap` scenario runs
-**Then** `prepare` replaces `swapon` with a stub that records the activated file, so the role runs unchanged
-**And** verify asserts the file size, mode `0600`, the `mkswap` signature and the `/etc/fstab` line, and idempotence proves the second run changes nothing
+**Given** tests must never break the host
+**When** any scenario runs
+**Then** its container is unprivileged, has no host mounts and runs no systemd (a privileged systemd container rebooted the host during every run)
+**And** the `swap` role has no scenario, because `swapon` needs a privileged container; a second provision run on the droplet checks it
 
-**Given** the fleet Alloy role installs Alloy and restarts it through systemd
+**Given** the fleet Alloy role manages its service through systemd
 **When** the `alloy` scenario runs the fleet role with `alloy_fleet_extras: false` and `alloy_config_template` set to the cloud template `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`
-**Then** it runs in a container with systemd, and converge sets `alloy_environment` and `alloy_stage` and test values for the Grafana Cloud secrets
+**Then** `prepare` stubs `systemctl`, so the role runs unchanged, and converge sets `alloy_environment` and `alloy_stage` and test values for the Grafana Cloud secrets
 **And** verify asserts that there is no `github.token` and no capabilities on the Alloy binary, and that `config.alloy` carries `environment = "digital-ocean"` and `stage = "prod"` in both `external_labels` blocks and has no `github` or `remotecfg` block
 
 **Given** the `motd` scenario

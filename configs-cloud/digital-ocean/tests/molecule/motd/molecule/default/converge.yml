@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    # Relative to this playbook (5 levels below configs-cloud/digital-ocean), like
+    # provision.yml, so ansible-lint finds the role too.
+    - role: ../../../../../ansible/roles/motd

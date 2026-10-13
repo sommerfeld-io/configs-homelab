@@ -19,7 +19,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 - Provisioning is idempotent: a second run changes nothing (`changed=0`).
 - Every story updates the docs under `docs/cloud/digital-ocean` in the same change; docs are organized by topic.
 - Every step runs through go-task entry points (`cloud:digital-ocean:*`) and passes the repo linters (ansible-lint, yamllint, ls-lint, folderslint).
-- Every cloud role has a Molecule scenario under `configs-cloud/digital-ocean/tests/molecule`, run locally through `task molecule-cloud:*` and in CI by the `molecule-cloud` job.
+- Every cloud role has a Molecule scenario under `configs-cloud/digital-ocean/tests/molecule`, run locally through `task molecule-cloud:*` and in CI by the `molecule-cloud` job. Test containers are unprivileged, without host mounts and without systemd, so tests never break the host; `swap` is the exception without a scenario (`swapon` needs a privileged container).
 - No static or committed inventory. Hosts are discovered by tag, with groups `ubuntu` and `fantasy-hockey` composed from tags.
 - Every Alloy series carries `environment` (`homelab` or `digital-ocean`). Only cloud series also carry `stage` (first value `prod`); the homelab has no `stage` label. The existing homelab `source` label stays unchanged.
 - Alloy on the droplet ships OS metrics and logs and scrapes the app at `:8080/metrics`, with secrets from `configs-homelab/ansible/vars/grafana-vault.yml`.
@@ -41,6 +41,6 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 
 - Story 3.1 provides the inventory and `provision.yml` that Stories 3.2 and 3.4 extend.
 - Story 3.2 needs the `stage` tag and `environment` label scheme; Story 3.3 applies the matching `environment` label on the homelab side and is independent of the droplet.
-- Story 3.5 tests the roles from Stories 3.2 (`swap`, and the fleet Alloy role with `alloy_fleet_extras: false` and the cloud template) and 3.4 (`motd`) and sets the rule that every later role, starting with Story 4.1, comes with a scenario.
+- Story 3.5 tests the roles from Stories 3.2 (the fleet Alloy role with `alloy_fleet_extras: false` and the cloud template; not `swap`) and 3.4 (`motd`) and sets the rule that every later role, starting with Story 4.1, comes with a scenario.
 - Depends on Epic 2: the droplet, its tag, SSH key and `DIGITALOCEAN_ACCESS_TOKEN` delivery.
 - Downstream: Epic 4 deploys the app onto the provisioned droplet (Docker from Story 3.1); Epic 5 builds the dashboard on the labels from Stories 3.2 and 3.3; Epic 6 runs these playbooks from CI.

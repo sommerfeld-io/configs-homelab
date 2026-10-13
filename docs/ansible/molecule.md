@@ -7,3 +7,7 @@ Scenarios are grouped by role group under `configs-homelab/tests/molecule/{role-
 ## Out of scope: `configs-homelab/ansible/roles/ansible-roles-collection`
 
 The roles in `configs-homelab/ansible/roles/ansible-roles-collection/` are a git submodule and are **not** tested here. That collection is its own repository with its own Molecule test suite, so testing it again from this repo would be redundant.
+
+## Cloud roles
+
+The roles the DigitalOcean droplet runs (the cloud roles under `configs-cloud/digital-ocean/ansible/roles/` and the fleet Alloy role with the cloud template) have their own scenarios under `configs-cloud/digital-ocean/tests/molecule/`, run with `task molecule-cloud:test` and the `molecule-cloud` CI job. See [Cloud - Digital Ocean / Tests](../cloud/digital-ocean/tests.md).

@@ -37,9 +37,10 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 `pipeline.yml` runs these jobs in a single workflow run:
 
 1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`) and **`check-inspec-profile`** (matrix `desktop-baseline`, `raspi-baseline`, `ollama`, `server-baseline`) start in parallel.
-2. When all three succeed, **`molecule`** (matrix `common`, `omarchy`) and **`generate-docs`** start in parallel. Both have `if: github.actor != 'dependabot[bot]'`.
+2. When all three succeed, **`molecule`** (matrix `common`, `omarchy`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
+3. When `molecule` and `molecule-cloud` succeed, **`generate-docs`** starts.
     - `generate-docs` runs `task docs:generate`, builds the `docs-build` image and commits changed files as `docs: [Actions Bot] generate docs` to the pushed branch. This happens on every branch, not only on `main`. The docs site itself is not built or published here.
-3. When `generate-docs` and `molecule` succeed, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
+4. When `generate-docs` succeeds, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
 
 ### Semantic Release
 
@@ -118,7 +119,7 @@ There is no `docker-compose` entry under `configs-cloud/` yet. The fantasy-hocke
     - `housekeeping-issues.yml` (`pull_request` `opened`, `assigned`), which adds the PR to the project
 3. **`pipeline.yml` does not run for Dependabot pull requests.** It has no `pull_request` trigger, and its `push` trigger ignores `dependabot/**` branches. Lint, InSpec checks and Molecule run only after the merge.
 4. **No merge restrictions:** `main` has no branch protection and no rulesets (verified through the GitHub API), so no status check is required and Dependabot PRs are merged manually. Auto-merge is not configured.
-5. **The merge creates a push to `main`** by the person who merged. This push starts `pipeline.yml` and `codeql.yml` like any other push. `github.actor` is that person, not `dependabot[bot]`, so `molecule`, `generate-docs` and `release-code` run as well.
+5. **The merge creates a push to `main`** by the person who merged. This push starts `pipeline.yml` and `codeql.yml` like any other push. `github.actor` is that person, not `dependabot[bot]`, so `molecule`, `molecule-cloud`, `generate-docs` and `release-code` run as well.
 6. **Release:** Dependabot commits use the `chore(deps)` / `chore(deps-dev)` prefixes, which give no release on their own. They are released together with the next `feat` or `fix`.
 7. **No deployment:** nothing deploys the updated version. For fleet roles, the change reaches a node with the next playbook run; for `configs-cloud/`, an operator applies it (see [Cloud Deployment Pipeline](#cloud-deployment-pipeline)).
 
@@ -135,7 +136,7 @@ actor Developer
 participant "GitHub" as GH
 box "pipeline.yml run" #F2F7FC
   participant "checks\nshellcheck, lint,\ncheck-inspec-profile" as Checks
-  participant "molecule +\ngenerate-docs" as Build
+  participant "molecule, molecule-cloud\nthen generate-docs" as Build
   participant "release-code\n(lib-release-code.yml)" as Rel
 end box
 box "release.yml run" #F4FBF2
@@ -149,7 +150,7 @@ GH -> Checks ++ : push event\n(branch filter and paths-ignore match)
 Checks --> Build -- : all checks succeeded
 activate Build
 Build -> GH : commit "docs: [Actions Bot] generate docs"\n(if docs changed, GITHUB_TOKEN, no new run)
-Build --> Rel -- : molecule and generate-docs succeeded
+Build --> Rel -- : molecule, molecule-cloud and generate-docs succeeded
 activate Rel
 alt github.ref != refs/heads/main
   Rel -> Rel : job skipped, run ends
@@ -197,7 +198,7 @@ PRChecks --> GH -- : CodeQL result, PR added to project
 note over GH, Pipe : pipeline.yml does not run: no pull_request trigger,\npush trigger ignores dependabot/** branches.\nmain has no required status checks.
 Maintainer -> GH : merge PR into main
 GH -> Pipe ++ : push event on main (actor = Maintainer)
-Pipe -> Pipe : checks, molecule, generate-docs, release-code
+Pipe -> Pipe : checks, molecule, molecule-cloud, generate-docs, release-code
 Pipe --> GH -- : chore(deps) alone gives no release
 opt planned with Story 6.3, does not exist today
   GH -> Deploy : push event on main,\nchanges under configs-cloud/digital-ocean
@@ -264,7 +265,7 @@ end
 - **The scheduled run can release.** The Tuesday `schedule` run of `pipeline.yml` runs on `main`, so it releases any pending `feat` or `fix` commits.
 - **The release hand-over needs the PAT.** If `GH_TOKEN_REPO_AND_PROJECT` is missing or expired, Semantic Release fails. A release created with `GITHUB_TOKEN` instead would not start `release.yml`.
 - **`generate-docs` commits to feature branches too.** After a push to a feature branch, pull before pushing again, or the push is rejected.
-- **A failing `molecule` or `generate-docs` job blocks the release.** `release-code` needs both to succeed.
+- **A failing `molecule`, `molecule-cloud` or `generate-docs` job blocks the release.** `generate-docs` needs both Molecule jobs, and `release-code` needs `generate-docs`.
 - **The release intro can be missing.** If the Copilot CLI produces no text (for example because the budget is exhausted), the release is published without it and the workflow still succeeds.
 - **No concurrency control.** None of the workflows defines a `concurrency` group, so two quick pushes to `main` run two pipelines in parallel.
 - **Cloud changes are not deployed by CI** (see [Cloud Deployment Pipeline](#cloud-deployment-pipeline)).

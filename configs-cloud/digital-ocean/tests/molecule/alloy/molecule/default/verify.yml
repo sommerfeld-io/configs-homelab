@@ -1,0 +1,51 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Read the GitHub token file
+      ansible.builtin.stat:
+        path: /etc/alloy/github.token
+      register: github_token
+
+    - name: Assert there is no GitHub token file
+      ansible.builtin.assert:
+        that: not github_token.stat.exists
+
+    - name: Read the Alloy binary capabilities
+      ansible.builtin.command: getcap /usr/bin/alloy
+      register: alloy_capabilities
+      changed_when: false
+
+    - name: Assert the Alloy binary has no capabilities
+      ansible.builtin.assert:
+        that: alloy_capabilities.stdout == ''
+
+    - name: Read the Alloy config
+      ansible.builtin.slurp:
+        src: /etc/alloy/config.alloy
+      register: alloy_config_file
+
+    - name: Assert the cloud config with environment and stage labels
+      vars:
+        alloy_config: "{{ alloy_config_file.content | b64decode }}"
+      ansible.builtin.assert:
+        that:
+          - alloy_config | regex_findall('environment\s*=\s*"digital-ocean"') | length == 2
+          - alloy_config | regex_findall('stage\s*=\s*"prod"') | length == 2
+          - "'github' not in alloy_config"
+          - "'remotecfg' not in alloy_config"
+
+    # systemctl is a stub that logs its calls (see ../../../prepare.yml). The
+    # handler restarts Alloy once in converge and never in the idempotence run.
+    - name: Read the systemctl stub log
+      ansible.builtin.slurp:
+        src: /var/log/systemctl-stub.log
+      register: systemctl_log
+
+    - name: Assert Alloy was restarted exactly once
+      ansible.builtin.assert:
+        that: >-
+          systemctl_log.content | b64decode | split('\n')
+          | select('search', '^restart .*alloy') | list | length == 1

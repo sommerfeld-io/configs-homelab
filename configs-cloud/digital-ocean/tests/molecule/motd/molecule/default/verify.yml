@@ -1,0 +1,110 @@
+---
+# 20-updates reads Ubuntu's stamp. Each case writes a fixture stamp and compares
+# the exact output; strip_empty_ends keeps the trailing blank line.
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    stamp: /var/lib/update-notifier/updates-available
+  tasks:
+
+    - name: Create the stamp folder
+      ansible.builtin.file:
+        path: "{{ stamp | dirname }}"
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Write a stamp with zero updates
+      ansible.builtin.copy:
+        dest: "{{ stamp }}"
+        mode: u=rw,g=r,o=r
+        content: |
+
+          Expanded Security Maintenance for Applications is not enabled.
+
+          0 updates can be applied immediately.
+
+          Enable ESM Apps to receive additional future security updates.
+          See https://ubuntu.com/esm or run: sudo pro status
+
+    - name: Run 20-updates with zero updates
+      ansible.builtin.command:
+        cmd: /etc/update-motd.d/20-updates
+        strip_empty_ends: false
+      register: updates_zero
+      changed_when: false
+
+    - name: Assert 20-updates prints nothing for zero updates
+      ansible.builtin.assert:
+        that: updates_zero.stdout == ''
+
+    - name: Write a stamp with one update
+      ansible.builtin.copy:
+        dest: "{{ stamp }}"
+        mode: u=rw,g=r,o=r
+        content: |
+
+          1 update can be applied immediately.
+          To see these additional updates run: apt list --upgradable
+
+    - name: Run 20-updates with one update
+      ansible.builtin.command:
+        cmd: /etc/update-motd.d/20-updates
+        strip_empty_ends: false
+      register: updates_one
+      changed_when: false
+
+    - name: Assert 20-updates prints the count, the hint and a blank line
+      ansible.builtin.assert:
+        that: >-
+          updates_one.stdout ==
+          '1 update can be applied immediately.\nTo see these additional updates run: apt list --upgradable\n\n'
+
+    # Copied from /var/lib/update-notifier/updates-available on the droplet.
+    - name: Write the droplet stamp with several updates
+      ansible.builtin.copy:
+        dest: "{{ stamp }}"
+        mode: u=rw,g=r,o=r
+        content: |
+
+          Expanded Security Maintenance for Applications is not enabled.
+
+          12 updates can be applied immediately.
+          To see these additional updates run: apt list --upgradable
+
+          Enable ESM Apps to receive additional future security updates.
+          See https://ubuntu.com/esm or run: sudo pro status
+
+    - name: Run 20-updates with several updates
+      ansible.builtin.command:
+        cmd: /etc/update-motd.d/20-updates
+        strip_empty_ends: false
+      register: updates_several
+      changed_when: false
+
+    - name: Assert 20-updates prints the count, the hint and a blank line, no ESM line
+      ansible.builtin.assert:
+        that: >-
+          updates_several.stdout ==
+          '12 updates can be applied immediately.\nTo see these additional updates run: apt list --upgradable\n\n'
+
+    - name: List the executable MOTD scripts
+      ansible.builtin.command: find /etc/update-motd.d -maxdepth 1 -type f -perm /111 -printf '%f\n'
+      register: motd_executables
+      changed_when: false
+
+    - name: Assert only the role's scripts and 98-reboot-required are executable
+      ansible.builtin.assert:
+        that: >-
+          motd_executables.stdout_lines | sort ==
+          ['00-banner', '10-os-line', '20-updates', '98-reboot-required']
+
+    # find -type f above skips symlinks, and pam_motd follows them.
+    - name: Read the landscape sysinfo symlink
+      ansible.builtin.stat:
+        path: /etc/update-motd.d/50-landscape-sysinfo
+      register: landscape_sysinfo
+
+    - name: Assert the landscape sysinfo symlink is removed
+      ansible.builtin.assert:
+        that: not landscape_sysinfo.stat.exists
