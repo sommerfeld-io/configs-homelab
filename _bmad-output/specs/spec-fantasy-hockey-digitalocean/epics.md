@@ -30,6 +30,7 @@ CAP-7 (docs) applies to every epic.
 - Docker, swap file, Alloy via the existing `configs-homelab/ansible/roles/grafana-cloud` role.
 - Alloy labels `environment` and `stage`, also added to the homelab `config.alloy.j2` (`environment=homelab`).
 - ansible-lint covers the new folder.
+- Login banner (MOTD): blank line, ASCII art "DigitalOcean", blank line, a live OS line, blank line, the live update info, blank line; all other default MOTD sections suppressed.
 
 ## E3 App deployment
 

@@ -48,7 +48,7 @@ The droplet, reserved IP and volume exist and are managed locally with OpenTofu.
 **FRs covered:** FR1, FR6, FR7
 
 ### Epic 3: Provisioning via Ansible
-The droplet is provisioned from a tag-based inventory with Docker, swap and Alloy.
+The droplet is provisioned from a tag-based inventory with Docker, swap, Alloy and a login banner.
 **FRs covered:** FR2, FR4
 
 ### Epic 4: App deployment
@@ -148,7 +148,7 @@ So that the URL and the data file persist.
 
 ## Epic 3: Provisioning via Ansible
 
-The droplet is provisioned from a tag-based inventory with Docker, swap and Alloy.
+The droplet is provisioned from a tag-based inventory with Docker, swap, Alloy and a login banner.
 
 ### Story 3.1: Dynamic inventory and base provision.yml
 
@@ -194,6 +194,38 @@ So that I can tell homelab from DigitalOcean in Grafana Cloud.
 **Given** `configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2`
 **When** the homelab Alloy config is rendered
 **Then** it carries `environment=homelab` and the existing `source` label is unchanged
+
+### Story 3.4: Droplet login banner (MOTD) with live OS and update info
+
+As an operator,
+I want a clean login banner on the droplet,
+So that I see at a glance which host and OS I am on and whether updates are pending.
+
+**Acceptance Criteria:**
+
+**Given** `provision.yml` has run on the droplet
+**When** I log in via SSH
+**Then** the MOTD is exactly: a blank line, the ASCII art below, a blank line, the OS line, a blank line, the update info, a blank line
+**And** none of the other default MOTD sections appear (help and documentation links, system information, ESM notices and so on), except the default `*** System restart required ***` notice, which is shown after the update info when a reboot is pending
+
+```text
+ ___  _      _ _        _  ___
+|   \(_)__ _(_) |_ __ _| |/ _ \ __ ___ __ _ _ _
+| |) | / _` | |  _/ _` | | (_) / _/ -_) _` | ' \
+|___/|_\__, |_|\__\__,_|_|\___/\__\___\__,_|_||_|
+       |___/
+```
+
+**Given** the OS line and the update info
+**When** I log in
+**Then** the OS line has the form `Welcome to <PRETTY_NAME> (GNU/Linux <kernel release> <architecture>)`, for example `Welcome to Ubuntu 26.04.1 LTS (GNU/Linux 7.0.0-31-generic x86_64)`
+**And** the update info has the form `<N> updates can be applied immediately.` followed by `To see these additional updates run: apt list --upgradable`
+**And** both are computed from the running system at login, not written as static text, so a later kernel change or new package updates show up without re-provisioning
+
+**Given** a second `provision.yml` run
+**When** it finishes
+**Then** nothing changes
+**And** the docs describe the MOTD and how it is built
 
 ## Epic 4: App deployment
 

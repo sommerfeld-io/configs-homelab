@@ -47,6 +47,17 @@
   description: >-
     Add the environment=homelab label to configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2 so homelab and DigitalOcean series can be told apart (CAP-4).
     Existing labels, including source, stay untouched.
+- id: "8a"
+  title: Droplet login banner (MOTD) with live OS and update info
+  description: >-
+    Extend provision.yml with a cloud role that sets the droplet MOTD to: a blank line, the pinned figlet "small" ASCII art "DigitalOcean", a blank line, an OS line "Welcome to <PRETTY_NAME> (GNU/Linux <kernel> <arch>)", a blank line, Ubuntu's update info ("<N> updates can be applied immediately." and "To see these additional updates run: apt list --upgradable"), and a blank line (CAP-2).
+    The OS line and update info are computed at login, never static; every other default MOTD section is suppressed, except Ubuntu's own reboot-required notice, which stays.
+    Docs updated in the same change.
+  invoke_dev_with: >-
+    Use scripts in /etc/update-motd.d/ and disable the default scripts that print other sections instead of replacing /etc/motd.
+    Run first on the droplet, before writing the role: list /etc/update-motd.d/ on Ubuntu 26.04 to see which default scripts exist, and run the update-notifier apt_check helper with --human-readable to confirm it prints exactly the two update lines.
+    Check what the MOTD shows with zero pending updates and with a pending reboot, and keep the layout intact in both cases.
+    Decide with the user how SSH verification is done (allow-rule for SSH to the reserved IP, or a user-run check) before verifying.
 - id: "9"
   title: Move fantasy-hockey role and deploy-services.yml with nginx
   description: >-
