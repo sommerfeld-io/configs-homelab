@@ -164,7 +164,8 @@ So that provisioning works on a freshly created droplet without editing an inven
 
 **Given** a second run
 **When** provisioning finishes
-**Then** nothing changes
+**Then** nothing changes except four Alloy tasks, which report changed on every run (accepted in Story 3.2): `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler
+**And** that exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`)
 **And** the docs explain the dynamic inventory
 
 ### Story 3.2: Swap and Alloy on the droplet with environment and stage labels
@@ -224,7 +225,7 @@ So that I see at a glance which host and OS I am on and whether updates are pend
 
 **Given** a second `provision.yml` run
 **When** it finishes
-**Then** nothing changes
+**Then** the MOTD tasks report no change
 **And** the docs describe the MOTD and how it is built
 
 ### Story 3.5: Molecule tests for the cloud Ansible roles

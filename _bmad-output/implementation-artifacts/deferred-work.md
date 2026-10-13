@@ -80,3 +80,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-items-9-11-16-deploy-wait-docs-drift-link-retries.md`
   summary: Move the wait play into a vault-free playbook (imported by `provision.yml`) so ansible-lint and `--syntax-check` can cover it in CI.
   evidence: `provision.yml` is in `exclude_paths` and its syntax check needs the vault password, so the new play (including the `hostvars` assert) was only checked by hand. Fits the cloud test-harness story (epic-3 retro item 15).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-12-reconcile-idempotence-statement.md`
+  summary: When epic-3 retro item 8 (stop fleet-only side effects) is built, remove the four-Alloy-task exception from `epic-3-context.md`, the Story 3.1 criterion in the epics file and `SPEC.md` CAP-2, and the matching sentence in `docs/cloud/digital-ocean/provisioning.md`.
+  evidence: All four now say the exception lasts "until" item 8 lands, but item 8's action text in `sprint-status.yaml` does not mention restoring the plain "a second run changes nothing" statement, so it would go stale.

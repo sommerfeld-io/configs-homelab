@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-13-2026 18:39
+last_updated: 10-13-2026 18:47
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -157,7 +157,7 @@ action_items:
     action: "Reconcile the idempotence statement in epic-3-context.md and the 3.1
       AC with the per-run Alloy restart"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
   - id: "epic-3-retro-item-13-run-provision-a-second-time-swap-and-mot"
     epic: 3

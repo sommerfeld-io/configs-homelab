@@ -16,7 +16,7 @@ Provision the DigitalOcean droplet created in Epic 2 from a tag-based dynamic in
 
 ## Requirements & Constraints
 
-- Provisioning is idempotent: a second run changes nothing.
+- Provisioning is idempotent: a second run changes nothing except four Alloy tasks, which report changed on every run: `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler. The fleet template differs because the previous run replaced `config.alloy` with the cloud config, and the fleet restart uses `state: restarted`. The exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`).
 - Every story updates the docs under `docs/cloud/digital-ocean` in the same change; docs are organized by topic.
 - Every step runs through go-task entry points (`cloud:digital-ocean:*`) and passes the repo linters (ansible-lint, yamllint, ls-lint, folderslint).
 - Every cloud role has a Molecule scenario under `configs-cloud/digital-ocean/tests/molecule`, run locally through `task molecule-cloud:*` and in CI by the `molecule-cloud` job.
