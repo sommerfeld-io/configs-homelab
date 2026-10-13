@@ -19,7 +19,7 @@ Droplets are configured with Ansible from `configs-cloud/digital-ocean/ansible`.
 
 `compose` also sets `alloy_stage` (the droplet name prefix, `prod` for `prod-fantasy-hockey`, so the stage comes from OpenTofu only) and `alloy_environment` (`digital-ocean`). Check them with `ansible-inventory -i configs-cloud/digital-ocean/ansible/inventory --host prod-fantasy-hockey`.
 
-The tag `fantasy-hockey` is set through the optional `tags` list of the droplet map, see [Droplet](droplet.md). The collection `community.digitalocean` is a pinned third-party dependency in `ansible/requirements.yml`; the tasks install it before Ansible runs.
+The tag `fantasy-hockey` is set through the optional `tags` list of the droplet map, see [Droplet](droplet.md). The collections `community.digitalocean` (inventory plugin) and `community.general` (the fleet Alloy role uses its `capabilities` module) are pinned third-party dependencies in `ansible/requirements.yml`; the tasks install them before Ansible runs.
 
 ## provision.yml
 

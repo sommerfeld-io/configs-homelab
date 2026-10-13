@@ -54,3 +54,21 @@
 
 - No automated check runs the MOTD scripts against stamp fixtures or asserts exec bits and idempotence (same as the build-review entry above; needs a cloud-role Molecule/InSpec harness).
 - MOTD layout and second-run idempotence not yet observed on the droplet (maybe-false, medium if broken): settled by running `task cloud:digital-ocean:ansible:provision` twice and `ssh root@<ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'`.
+
+## Deferred from: build split of epic-3 retro items 9, 10 and 16 (2026-10-13)
+
+- source_spec: none
+  summary: Fix the Epic 3 docs drift in tasks-and-linters.md, droplet.md and provisioning.md (epic-3 retro item 9).
+  evidence: The concrete drift is listed in finding 4 of `epic-3-retro-2026-10-13.md` (tree without roles/, provision row without MOTD, folderslint row, ansible-lint exclusion, droplet.md Tags row, provisioning.md role order and stray blank line); the collections sentence in provisioning.md was already updated by item 10. Split from a combined build of retro items 9, 10 and 16; independently shippable, scheduled right after item 10.
+
+- source_spec: none
+  summary: Add a lychee retry or accept rule for 429 and 5xx in the markdown link check (epic-3 retro item 16).
+  evidence: Finding 17 of `epic-3-retro-2026-10-13.md`: the pre-commit link check failed on transient GitHub 502/503 and a docs.ansible.com 429, forcing commit retries. Split from a combined build of retro items 9, 10 and 16; independently shippable, scheduled after item 9.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-10-pin-provisioning-collections.md`
+  summary: Decide who bumps the Ansible Galaxy pins in `configs-cloud/digital-ocean/ansible/requirements.yml` and how (Renovate `ansible-galaxy` manager or a manual check per epic).
+  evidence: Dependabot has no Galaxy ecosystem and the repo has no Renovate config, so `community.digitalocean 1.27.0` and `community.general 13.5.0` never get update PRs.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-3-retro-item-10-pin-provisioning-collections.md`
+  summary: Add a check that `provision.yml` resolves only against the collections installed from `requirements.yml`, so a new role using an unpinned collection (e.g. `community.docker`, `community.crypto`) fails loudly.
+  evidence: The pin list was built by hand from a grep; the devcontainer already has `community.docker` and `ansible.posix` installed, so an unpinned use would silently work. Fits the cloud test-harness story (epic-3 retro item 15).

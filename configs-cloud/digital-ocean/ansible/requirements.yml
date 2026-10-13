@@ -4,3 +4,7 @@
 collections:
   - name: community.digitalocean
     version: 1.27.0
+  # The fleet Alloy role run from provision.yml uses
+  # community.general.capabilities.
+  - name: community.general
+    version: 13.5.0
