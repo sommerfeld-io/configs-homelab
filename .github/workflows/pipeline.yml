@@ -141,9 +141,7 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest
     needs: [
-      'lint',
-      'shellcheck',
-      'check-inspec-profile',
+      'molecule',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
@@ -178,7 +176,6 @@ jobs:
     uses: sommerfeld-io/.github/.github/workflows/lib-release-code.yml@main
     needs: [
       'generate-docs',
-      'molecule',
     ]
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     secrets:
