@@ -166,7 +166,6 @@ So that provisioning works on a freshly created droplet without editing an inven
 **When** provisioning finishes
 **Then** nothing changes except four Alloy tasks, which report changed on every run (accepted in Story 3.2): `Grafana Cloud  ----  Alloy  ----  Template config file`, `Grafana Cloud  ----  Alloy  ----  Restart`, `Alloy cloud config  ----  Replace the fleet config` and the `Restart Alloy` handler
 **And** that exception ends when the fleet-only side effects are removed (Epic 3 retro action 1, sprint-status `epic-3-retro-item-8-…`)
-**And** the two read-only Docker verify tasks of the submodule docker role (`Verify Docker installation`, `Verify Docker Compose installation`) also report changed until the submodule sets `changed_when: false`
 **And** the docs explain the dynamic inventory
 
 ### Story 3.2: Swap and Alloy on the droplet with environment and stage labels

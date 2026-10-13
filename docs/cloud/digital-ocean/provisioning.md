@@ -42,7 +42,7 @@ On a droplet that is already up, the play passes at once and reports no change. 
 - `alloy-config` (cloud role in `ansible/roles/alloy-config`): the fleet role writes the fleet config, so this role then replaces `/etc/alloy/config.alloy` with the cloud config and restarts Alloy.
 - `motd` (cloud role in `ansible/roles/motd`): the login banner, see [Login Banner (MOTD)](#login-banner-motd).
 
-The playbook asks for the vault password (`--ask-vault-pass`). The swap, motd and cloud config template tasks report no change on a second run. The fleet `alloy` role reports changes on every run: its template differs because the previous run replaced `config.alloy` with the cloud config, and its restart uses `state: restarted`. Because it rewrites the fleet config, the copy of the cloud config over `config.alloy` and the Alloy restart report changed too. The docker role from the `ansible-roles-collection` submodule reports changed for its two read-only checks `Verify Docker installation` and `Verify Docker Compose installation` (they lack `changed_when: false`), so a second run shows `changed=6`.
+The playbook asks for the vault password (`--ask-vault-pass`). The swap, motd and cloud config template tasks report no change on a second run. The fleet `alloy` role reports changes on every run: its template differs because the previous run replaced `config.alloy` with the cloud config, and its restart uses `state: restarted`. Because it rewrites the fleet config, the copy of the cloud config over `config.alloy` and the Alloy restart report changed too. A second run therefore ends with `changed=4`.
 
 ## Alloy and Labels
 
