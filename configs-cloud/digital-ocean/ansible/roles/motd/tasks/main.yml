@@ -1,0 +1,58 @@
+---
+# The MOTD is built by pam_motd, which runs every executable script in
+# /etc/update-motd.d at login. Default scripts are disabled by removing the exec
+# bit. dpkg judges conffile changes by content, so a package upgrade that ships
+# a changed or new script re-enables it until the next provision run. The
+# landscape sysinfo symlink is switched off through its debconf setting and
+# removed. Every task reports no change on a second run.
+- name: MOTD  ----  Create the banner folder
+  ansible.builtin.file:
+    path: "{{ motd_share_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: MOTD  ----  Install the banner art
+  ansible.builtin.copy:
+    src: banner.txt
+    dest: "{{ motd_share_dir }}/banner.txt"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+
+- name: MOTD  ----  Install the MOTD scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ motd_dir }}/{{ item }}"
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+  loop: "{{ motd_scripts }}"
+
+- name: MOTD  ----  Find the default scripts
+  ansible.builtin.find:
+    paths: "{{ motd_dir }}"
+    file_type: file
+    excludes: "{{ motd_keep_scripts + motd_scripts }}"
+  register: motd_default_files
+
+- name: MOTD  ----  Remove the exec bit of the default scripts
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: a-x
+  loop: "{{ motd_default_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: MOTD  ----  Do not display landscape sysinfo on login
+  ansible.builtin.debconf:
+    name: landscape-common
+    question: landscape-common/sysinfo
+    vtype: select
+    value: Do not display sysinfo on login
+
+- name: MOTD  ----  Remove the landscape sysinfo symlink
+  ansible.builtin.file:
+    path: "{{ motd_dir }}/50-landscape-sysinfo"
+    state: absent

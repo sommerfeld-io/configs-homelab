@@ -45,3 +45,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-labels.md`
   summary: Bring `provision.yml` back under ansible-lint once vault-encrypted vars no longer block it.
   evidence: The playbook is in `exclude_paths` of `.ansible-lint.yml` because lint cannot decrypt `grafana-vault.yml`; same cause as the fleet playbooks tracked in issue #172.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-4-droplet-motd-with-banner-live-os-line-and-update-info.md`
+  summary: Add an automated check that runs the MOTD scripts against stamp fixtures (0, 1, N updates) and asserts only the role's scripts and 98-reboot-required stay executable, idempotently.
+  evidence: Nothing in the repo runs the motd role or its scripts; a changed grep pattern or a dropped exclude would keep every check green. Cloud roles have no Molecule/InSpec harness yet.

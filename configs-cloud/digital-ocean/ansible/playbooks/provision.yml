@@ -25,3 +25,6 @@
     - name: Replace the fleet Alloy config with the cloud config
       ansible.builtin.include_role:
         name: ../roles/alloy-config
+    - name: Configure the login banner
+      ansible.builtin.include_role:
+        name: ../roles/motd

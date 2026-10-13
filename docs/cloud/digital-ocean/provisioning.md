@@ -31,8 +31,9 @@ The tag `fantasy-hockey` is set through the optional `tags` list of the droplet 
 - `swap` (cloud role in `ansible/roles/swap`): a 1 GiB swap file `/swapfile` (`swap_file_size_mb` in the role defaults), mode `0600`, enabled with `swapon` and kept in `/etc/fstab`. A 1 GB droplet has no swap by default, so memory pressure would kill processes silently.
 - `grafana-cloud/alloy` (fleet role): installs Grafana Alloy from the Grafana APT repo and runs it as the systemd service `alloy`, with the secrets from `configs-homelab/ansible/vars/grafana-vault.yml`.
 - `alloy-config` (cloud role in `ansible/roles/alloy-config`): the fleet role writes the fleet config, so this role then replaces `/etc/alloy/config.alloy` with the cloud config and restarts Alloy.
+- `motd` (cloud role in `ansible/roles/motd`): the login banner, see [Login Banner (MOTD)](#login-banner-motd).
 
-The playbook asks for the vault password (`--ask-vault-pass`). The swap and cloud config template tasks report no change on a second run. The fleet `alloy` role always reports changes (forced template, `state: restarted`), and because it rewrites the fleet config each run, the copy of the cloud config over `config.alloy` and the Alloy restart report changed too.
+The playbook asks for the vault password (`--ask-vault-pass`). The swap, motd and cloud config template tasks report no change on a second run. The fleet `alloy` role always reports changes (forced template, `state: restarted`), and because it rewrites the fleet config each run, the copy of the cloud config over `config.alloy` and the Alloy restart report changed too.
 
 ## Alloy and Labels
 
@@ -49,6 +50,29 @@ node_memory_SwapTotal_bytes{environment="digital-ocean", stage="prod"}
 ```
 
 On the droplet: `swapon --show` lists `/swapfile` once, `systemctl is-active alloy` prints `active`.
+
+## Login Banner (MOTD)
+
+The MOTD is built at login by `pam_motd`, which runs every executable script in `/etc/update-motd.d/` (`sshd` has `PrintMotd no` and there is no static `/etc/motd`). The `motd` role adds three scripts:
+
+| Script       | Prints                                                                                                                                                                         |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `00-banner`  | A blank line, the ASCII art from `/usr/local/share/motd/banner.txt` (stored once as `files/banner.txt` in the role), a blank line                                              |
+| `10-os-line` | `Welcome to <PRETTY_NAME> (GNU/Linux <kernel release> <architecture>)` and a blank line, computed from `/etc/os-release` and `uname` (same format as Ubuntu's `00-header`)     |
+| `20-updates` | `<N> update(s) can be applied immediately.`, `To see these additional updates run: apt list --upgradable` and a blank line, without the ESM lines; nothing when the count is 0 |
+
+The OS line and the update info are read at login, so they follow a new kernel or new updates without provisioning again. The update info comes from Ubuntu's cached stamp `/var/lib/update-notifier/updates-available`, which Ubuntu's apt and dpkg hooks refresh. `apt-check` is not run at login because it costs about 2.8 s of CPU on this droplet.
+
+All other default scripts are disabled, except `98-reboot-required`, which prints `*** System restart required ***` after the update info when a reboot is pending:
+
+- Regular files lose their exec bit (`pam_motd` skips non-executable scripts). dpkg judges conffile changes by content, so a package upgrade that ships a changed or new script re-enables it until the next provision run.
+- `50-landscape-sysinfo` is a symlink that `landscape-common` recreates on upgrade. The role sets the debconf question `landscape-common/sysinfo` to `Do not display sysinfo on login` and removes the symlink (never its target).
+
+See the MOTD without logging in:
+
+```bash
+ssh root@<droplet-ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'
+```
 
 ## Tasks
 

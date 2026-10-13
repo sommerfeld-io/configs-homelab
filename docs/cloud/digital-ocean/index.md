@@ -56,7 +56,7 @@ alloy ..> droplet : runs on
 
 - **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu`, `doctl` and `ansible` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
 - **OpenTofu:** declares the resources and records them in a local state file. The state file sits in the repo clone on the workstation (bind-mounted into the devcontainer) and is gitignored, so it survives a container rebuild but not the loss of the clone. It moves to a remote backend later.
-- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (Docker, swap, Alloy). See [Provisioning](provisioning.md).
+- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (Docker, swap, Alloy, login banner). See [Provisioning](provisioning.md).
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.
 

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Same format as Ubuntu's 00-header, computed at login so a new kernel shows up
+# without provisioning again.
+. /etc/os-release
+printf 'Welcome to %s (GNU/Linux %s %s)\n\n' "$PRETTY_NAME" "$(uname -r)" "$(uname -m)"
