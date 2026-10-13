@@ -24,7 +24,7 @@ Each scenario runs dependency, destroy, create, prepare, converge, idempotence, 
 
 ## Test Container
 
-The droplet runs Ubuntu only, so `base.yml` has a single platform: the plain `ubuntu:26.04` image (the droplet's release). The container is not privileged, has no host mounts and runs no systemd, so a test can never change the host. A privileged container with systemd as PID 1 was tried first, and the host rebooted during each of its runs.
+The droplet runs Ubuntu only, so `base.yml` has a single platform: the plain `ubuntu:26.04` image (the droplet's release). The container is not privileged, has no host mounts and runs no systemd, so a test can never change the host. A privileged container with systemd as PID 1 was tried first. A privileged container sees the host's `/dev`, and each time its systemd booted, the host's graphical session on `/dev/tty1` got SIGHUP and the screens stayed black until the host was rebooted.
 
 `prepare.yml` adds what the droplet image ships and the Docker image lacks, so the roles run unchanged:
 

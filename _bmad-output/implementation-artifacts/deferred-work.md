@@ -95,7 +95,7 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-5-molecule-tests-for-the-cloud-ansible-roles.md`
   summary: The cloud `swap` role has no automated test; only a second provision run on the droplet checks it.
-  evidence: Story 3.5 dropped the `swap` scenario by human decision on 2026-10-13. `swapon` needs a privileged container, and the host rebooted during every run of a privileged systemd test container. A test would need a safe way to run `mkswap`/`swapon` (e.g. a disposable VM) without touching the host.
+  evidence: Story 3.5 dropped the `swap` scenario by human decision on 2026-10-13. `swapon` needs a privileged container, and every run of a privileged systemd test container hung up the host's desktop session on `/dev/tty1` (root cause from Grafana Cloud logs, see the addendum in `epic-3-retro-2026-10-13.md`). A test would need a safe way to run `mkswap`/`swapon` (e.g. a disposable VM) without touching the host.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-5-molecule-tests-for-the-cloud-ansible-roles.md`
   summary: The Story 3.5 criterion in `epics-fantasy-hockey-digitalocean.md` still says "Given a pull request / When `pipeline.yml` runs", but `pipeline.yml` has no `pull_request` trigger; reword it to a push.

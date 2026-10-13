@@ -242,7 +242,7 @@ So that a broken role fails in CI instead of on the droplet.
 
 **Given** tests must never break the host
 **When** any scenario runs
-**Then** its container is unprivileged, has no host mounts and runs no systemd (a privileged systemd container rebooted the host during every run)
+**Then** its container is unprivileged, has no host mounts and runs no systemd (a privileged systemd container reached the host's `/dev/tty1` and hung up the host's desktop session during every run)
 **And** the `swap` role has no scenario, because `swapon` needs a privileged container; a second provision run on the droplet checks it
 
 **Given** the fleet Alloy role manages its service through systemd
