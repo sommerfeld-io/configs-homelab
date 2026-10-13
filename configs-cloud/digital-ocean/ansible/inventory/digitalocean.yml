@@ -1,7 +1,8 @@
 ---
 # Dynamic inventory: droplets are discovered through the DigitalOcean API, so no
-# host is ever listed here. The plugin addresses a droplet by its own public IPv4
-# (not the reserved IP).
+# host is ever listed here. The plugin names a host after its droplet and does not
+# set ansible_host, so compose sets it to the droplet's own public IPv4 (not the
+# reserved IP).
 plugin: community.digitalocean.digitalocean
 oauth_token: "{{ lookup('env', 'DIGITALOCEAN_ACCESS_TOKEN') }}"
 attributes:
@@ -21,5 +22,6 @@ groups:
 # Droplets only have root, and a new droplet's host key is unknown on the first
 # connection, so accept it instead of prompting.
 compose:
+  ansible_host: do_networks.v4 | selectattr('type', 'eq', 'public') | map(attribute='ip_address') | first
   ansible_user: "'root'"
   ansible_ssh_common_args: "'-o StrictHostKeyChecking=accept-new'"

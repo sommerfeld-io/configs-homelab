@@ -9,7 +9,7 @@ Droplets are configured with Ansible from `configs-cloud/digital-ocean/ansible`.
 - The token is passed explicitly as `oauth_token` from `lookup('env', 'DIGITALOCEAN_ACCESS_TOKEN')`. See [API Token](api-token.md).
 - A filter keeps only droplets tagged `prod` (the stage tag from OpenTofu).
 - `tags` is part of the plugin `attributes`, so groups can be composed from them.
-- Each droplet is addressed by its own public IPv4, not by the reserved IP.
+- Each droplet is named after itself, which does not resolve in DNS, so `compose` sets `ansible_host` to the droplet's own public IPv4 (not the reserved IP).
 - `compose` sets `ansible_user` to `root` (the only user on a droplet) and `StrictHostKeyChecking=accept-new`, so the first connection to a new droplet does not prompt for its host key. A changed host key is still refused, see below.
 
 | Group            | Members                                                  |

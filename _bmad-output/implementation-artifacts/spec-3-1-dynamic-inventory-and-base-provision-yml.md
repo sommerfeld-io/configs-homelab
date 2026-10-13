@@ -89,7 +89,8 @@ context:
 - low (rejected): hyphenated group name warning (blind). Name is fixed by the epic and spec; Ansible only warns.
 - low (rejected): `prod` filter hardcoded, so a future `test` stage is skipped (blind). Intended: spec selects by stage tag; more stages mean editing the filter then.
 - low (rejected): missing null guards on `do_image`, `do_tags`, empty token, empty group, `wait_for_connection`, `distinct` tags, `try` swallowing typos (edge-case, blind). Unlikely paths; fixes add guards or branches.
-- low (rejected): `ps1_root` copy may drift from `hosts.yml`, `root` added to `docker` group is a no-op, collection reinstalled on each call, no `--limit` passthrough, no explicit `ansible_host` (blind, verification-gap). Cosmetic or harmless.
+- low (rejected): `ps1_root` copy may drift from `hosts.yml`, `root` added to `docker` group is a no-op, collection reinstalled on each call, no `--limit` passthrough (blind, verification-gap). Cosmetic or harmless.
+- medium (patch, found late): no explicit `ansible_host` (edge-case, blind), wrongly rejected as low. The plugin does not set it, so SSH tried to resolve `prod-fantasy-hockey` and the first real run failed. Fixed: `compose` sets `ansible_host` to the droplet's public IPv4.
 
 ## Verification
 
