@@ -52,6 +52,8 @@ tasks:
     vars:
       ROLES_DOCS: docs/homelab/ansible/roles
       ROLES_SRC: configs-homelab/ansible/roles
+      CLOUD_ROLES_DOCS: docs/cloud/ansible/roles
+      CLOUD_ROLES_SRC: configs-cloud/digital-ocean/ansible/roles
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
@@ -85,6 +87,10 @@ tasks:
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/exporters/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/exporters.md" }
       - task: common:copy
         vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/homelab/nodes/omarchy-workstations/vm.md" }
+      - mkdir -p {{ .CLOUD_ROLES_DOCS }}
+      - for: ['fantasy-hockey', 'motd', 'swap']
+        task: common:copy
+        vars: { SRC: "{{ .CLOUD_ROLES_SRC }}/{{ .ITEM }}/README.md", DEST: "{{ .CLOUD_ROLES_DOCS }}/{{ .ITEM }}.md" }
 
   docs:run:
     desc: Run the documentation server

@@ -61,7 +61,7 @@ Use the [`lint-and-fix`](.github/skills/lint-and-fix/SKILL.md) skill to run lint
 - Folder structure enforced by folderslint (`.folderslintrc`)
 - YAML style enforced by yamllint (`.yamllint.yml`) - do **not** quote top-level `on:` keys in GitHub Actions workflows
 - Markdown link validity enforced by lychee (`.lychee.toml`)
-- Docs in `docs/` mirror the `configs-homelab/ansible/` structure; update docs when adding playbooks or roles
+- Docs are split by environment: `docs/homelab/ansible/` mirrors `configs-homelab/ansible/` and `docs/cloud/ansible/` mirrors `configs-cloud/digital-ocean/ansible/` (`docs/homelab/nodes/` and `docs/cloud/digital-ocean/` hold the node and droplet pages). Update the docs and the `mkdocs.yml` nav (`Homelab` or `Cloud`) when adding playbooks or roles. Role pages are copied from each role's `README.md` by `task docs:generate`, so edit the README, not the copy, and keep relative links out of copied READMEs
 
 ## Testing
 

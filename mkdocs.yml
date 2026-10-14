@@ -108,6 +108,14 @@ nav:
           - Deployment: cloud/digital-ocean/deployment.md
           - Replacement: cloud/digital-ocean/replacement.md
           - Tests: cloud/digital-ocean/tests.md
+      - Ansible - Playbooks:
+          - All (provision and deploy all droplets): cloud/ansible/playbooks/all.md
+          - Provision: cloud/ansible/playbooks/provision.md
+          - Deploy Fantasy Hockey: cloud/ansible/playbooks/deploy-fantasy-hockey.md
+      - Ansible - Roles:
+          - Fantasy Hockey: cloud/ansible/roles/fantasy-hockey.md
+          - MOTD: cloud/ansible/roles/motd.md
+          - Swap: cloud/ansible/roles/swap.md
   - Pipelines: pipelines.md
   - Incidents:
       - Runbooks:

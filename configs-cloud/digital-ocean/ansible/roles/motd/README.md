@@ -1,6 +1,6 @@
 # Role: MOTD
 
-This role replaces the default Ubuntu login banner (MOTD) on the droplet with a DigitalOcean ASCII art banner, an OS line and the pending update count. It is applied by `provision.yml`. See [Provisioning](../../../../../docs/cloud/digital-ocean/provisioning.md) for the layout and how the banner is built.
+This role replaces the default Ubuntu login banner (MOTD) on the droplet with a DigitalOcean ASCII art banner, an OS line and the pending update count. It is applied by `provision.yml`. See the Provisioning page (`docs/cloud/digital-ocean/provisioning.md`) for the layout and how the banner is built.
 
 ## Files
 
