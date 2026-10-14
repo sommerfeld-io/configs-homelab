@@ -124,3 +124,19 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
   summary: Set `diff: false` (or `no_log`) on the fantasy-hockey `.env` and data-file template tasks so `--diff` runs do not print secrets and player emails.
   evidence: The template tasks in `roles/fantasy-hockey/tasks/files.yml` print the full rendered content with `--diff`; carried over unchanged from the Pi role.
+
+- source_spec: `_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md`
+  summary: Add a files-only Molecule check for the fleet role `grafana-cloud/exporters` (the `.env` with `CADVISOR_BIND_ADDRESS` for the default and the cloud override, and the port spec in the compose file).
+  evidence: Epic 4 retro D7. The role gained a `.env` and a bind assert, runs on every homelab node and the droplet, and no test runs it.
+
+- source_spec: `_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md`
+  summary: Test the volume tasks of `deploy-fantasy-hockey.yml` (derived device and mount path, fact refresh) and drop the second source of the mount path (role default versus play var).
+  evidence: Epic 4 retro D8. The mount, fact refresh and derived path feed the role's mount guard, were only proven by the Story 4.3 drill, and the role default `/mnt/prod_fantasy_hockey_data` duplicates the play-derived path.
+
+- source_spec: `_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md`
+  summary: Let cAdvisor see mounts made after it started (`/:/rootfs:ro,rslave`), or restart it after the deploy mounts the volume.
+  evidence: Epic 4 retro D9. On a replacement droplet provision starts cAdvisor before the deploy mounts the volume, so the volume's file system metrics are missing until cAdvisor restarts.
+
+- source_spec: `_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md`
+  summary: Set or check the UID of the `fantasy-hockey` deploy user so it stays 1000, the image user that owns the data folder.
+  evidence: Epic 4 retro D12. It matches only because it is the first user on the droplet; the Molecule image has `ubuntu` as UID 1000, so the test checks a different relation.

@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-14-2026 19:13
+last_updated: 10-14-2026 19:39
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -60,7 +60,7 @@ development_status:
   4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx: done
   4-2-dependabot-compose-bumps-for-cloud-configs: done
   4-3-droplet-replacement-drill: done
-  epic-4-retrospective: optional
+  epic-4-retrospective: done
 
   epic-5: backlog
   5-1-grafana-dashboard-for-the-droplet-and-the-app: backlog
@@ -188,3 +188,56 @@ action_items:
     owner: "dev loop"
     status: done
     ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-4-retro-item-17-merge-pr-366-so-main-has-the-configs-clo"
+    epic: 4
+    action: "Merge PR #366 so main has the configs-cloud Dependabot entry, then check
+      that the Dependabot view lists configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-18-order-docker-after-the-volume-mount-on-t"
+    epic: 4
+    action: "Order Docker after the volume mount on the fantasy hockey droplet (x-systemd.before=docker.service
+      or a docker.service drop-in with RequiresMountsFor) and check it with a droplet
+      reboot"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-19-fix-replacement-md-a-targeted-destroy-of"
+    epic: 4
+    action: "Fix replacement.md: a targeted destroy of the droplet also destroys digitalocean_project_resources.this,
+      which the next apply recreates"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-20-assert-in-provision-yml-that-the-droplet"
+    epic: 4
+    action: "Assert in provision.yml that the droplet resolves exporters_cadvisor_bind_address
+      to 127.0.0.1 before the exporters role runs"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-21-fix-doc-drift-droplet-md-no-data-file-co"
+    epic: 4
+    action: "Fix doc drift: droplet.md (no data file copy), tests.md (four guard cases,
+      provision no-change except Docker or package releases), and document that provision
+      can restart the app when Docker is upgraded"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-22-document-in-pipelines-md-that-bumps-to-t"
+    epic: 4
+    action: "Document in pipelines.md that bumps to the fleet roles the droplet runs
+      (grafana-cloud/exporters, grafana-cloud/alloy) land under configs-homelab and
+      need task cloud:digital-ocean:ansible:provision"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-23-record-epic-4-process-lessons-as-project"
+    epic: 4
+    action: "Record Epic 4 process lessons as project pitfalls: run a drill before
+      writing its procedure, check against the reserved IP not the droplet IP, DigitalOcean
+      mounts a volume automatically only when it is created with the droplet"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
