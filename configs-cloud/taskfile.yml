@@ -54,12 +54,25 @@ tasks:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
       - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/provision.yml
 
+  digital-ocean:ansible:deploy-fantasy-hockey:
+    desc: Deploy the fantasy hockey app to the fantasy-hockey droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for the vault password)
+    preconditions: *do-token
+    cmds:
+      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
+      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/deploy-fantasy-hockey.yml
+
+  digital-ocean:vault:fantasy-hockey:
+    desc: Show and edit the fantasy hockey secrets in the Ansible Vault file vars/fantasy-hockey-vault.yml
+    cmds:
+      - ansible-vault edit {{ .DO_ANSIBLE }}/vars/fantasy-hockey-vault.yml
+
   digital-ocean:deploy:
-    desc: Run the full pipeline, OpenTofu apply then Ansible provision (needs DIGITALOCEAN_ACCESS_TOKEN)
+    desc: Run the full pipeline, OpenTofu apply, Ansible provision, then the fantasy hockey deploy (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
     cmds:
       - task: digital-ocean:opentofu:apply
       - task: digital-ocean:ansible:provision
+      - task: digital-ocean:ansible:deploy-fantasy-hockey
 
   info:
     desc: Print information for all cloud environments

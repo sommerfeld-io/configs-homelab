@@ -11,6 +11,7 @@ ignore: |
   configs-homelab/ansible/vars/vault.yml
   configs-homelab/ansible/vars/grafana-vault.yml
   configs-homelab/ansible/host_vars/*/*-vault.yml
+  configs-cloud/*/ansible/vars/*-vault.yml
 
 rules:
   line-length:

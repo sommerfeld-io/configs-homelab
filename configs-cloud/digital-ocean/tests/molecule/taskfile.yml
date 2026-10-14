@@ -20,6 +20,7 @@ tasks:
     cmds:
       - task: test:motd
       - task: test:alloy
+      - task: test:fantasy-hockey
 
   test:motd:
     desc: &molecule-desc Run the {{ .DIR }} role scenario end-to-end
@@ -33,5 +34,12 @@ tasks:
     desc: *molecule-desc
     vars:
       DIR: alloy
+    dir: *molecule-dir
+    cmds: *molecule-cmds
+
+  test:fantasy-hockey:
+    desc: *molecule-desc
+    vars:
+      DIR: fantasy-hockey
     dir: *molecule-dir
     cmds: *molecule-cmds

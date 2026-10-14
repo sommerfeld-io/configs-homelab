@@ -65,6 +65,13 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
+  # Run only after the app is verified on the droplet.
+  raspi:fantasy-hockey-cleanup:
+    desc: HOST ONLY | Remove the old fantasy hockey deployment from pi4-0002 (raspi.yml, tag fantasy-hockey-cleanup)
+    cmds:
+      - git submodule update --remote
+      - ansible-playbook "playbooks/raspi.yml" --inventory hosts.yml --ask-become-pass --ask-vault-pass --tags fantasy-hockey-cleanup
+
   repositories:
     vars:
       PLAYBOOK: repositories.yml
@@ -99,12 +106,6 @@ tasks:
   vault:host_vars:pi4-dradis:fritz-box:
     vars:
       VAULT_FILE: host_vars/pi4-dradis/fritz-box-vault.yml
-    desc: *ansible-vault-desc
-    cmds: *ansible-vault-cmd
-
-  vault:fantasy-hockey:
-    vars:
-      VAULT_FILE: roles/raspi/fantasy-hockey/defaults/main.yml
     desc: *ansible-vault-desc
     cmds: *ansible-vault-cmd
 

@@ -1,7 +1,7 @@
 ---
-season: "{{ raspi_fantasy_hockey_season }}"
+season: "{{ fantasy_hockey_season }}"
 players:
-{% for player in raspi_fantasy_hockey_players %}
+{% for player in fantasy_hockey_players %}
   - id: {{ player.id }}
     name: {{ player.name }}
     email: {{ player.email }}
@@ -11,25 +11,25 @@ prediction_sets:
   - id: cup
     title: Cup champion
     subtitle: Your Stanley Cup winner
-    deadline_utc: "{{ raspi_fantasy_hockey_regular_season_deadline_utc }}"
+    deadline_utc: "{{ fantasy_hockey_regular_season_deadline_utc }}"
     phase: before_season
     upcoming: false
   - id: presidents
     title: Presidents' Trophy
     subtitle: Best regular-season record
-    deadline_utc: "{{ raspi_fantasy_hockey_regular_season_deadline_utc }}"
+    deadline_utc: "{{ fantasy_hockey_regular_season_deadline_utc }}"
     phase: before_season
     upcoming: false
   - id: divisions
     title: Division picks
     subtitle: Playoff teams & division winners
-    deadline_utc: "{{ raspi_fantasy_hockey_regular_season_deadline_utc }}"
+    deadline_utc: "{{ fantasy_hockey_regular_season_deadline_utc }}"
     phase: before_season
     upcoming: false
   - id: awards
     title: Player awards
     subtitle: Hart, Norris, Vezina, Art Ross, Rocket
-    deadline_utc: "{{ raspi_fantasy_hockey_regular_season_deadline_utc }}"
+    deadline_utc: "{{ fantasy_hockey_regular_season_deadline_utc }}"
     phase: before_season
     upcoming: false
   - id: playoffcup

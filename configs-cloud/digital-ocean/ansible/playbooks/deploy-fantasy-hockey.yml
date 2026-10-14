@@ -1,0 +1,30 @@
+---
+# Runs the fantasy hockey app (app + nginx, docker compose) on the droplets with
+# the tag fantasy-hockey. Needs a provisioned droplet: provision.yml installs
+# Docker, so the docker group exists before the role adds the user to it.
+- name: Deploy Fantasy Hockey
+  hosts: fantasy-hockey
+  gather_facts: true
+  become: true
+  # No vars_files. vars/main.yml sets default_user: root for provision, and
+  # vars_files outrank play vars, so loading it here would win over the
+  # default_user below. The vault is loaded by an include_vars task, so
+  # ansible-lint can check this playbook without the vault password.
+  vars:
+    # The tasks become the non-root user fantasy-hockey. Without pipelining,
+    # Ansible would need ACLs to hand its temporary module files to that user.
+    ansible_pipelining: true
+    # The user that owns the deploy files and runs docker compose. It has no SSH
+    # key: log in as root and use `sudo -iu fantasy-hockey`.
+    default_user: fantasy-hockey
+  tasks:
+
+    - name: Load the fantasy hockey secrets
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/../vars/fantasy-hockey-vault.yml"
+
+    # The role checks the volume mount first, then creates the user, writes the
+    # files and runs the stack.
+    - name: Deploy the app
+      ansible.builtin.include_role:
+        name: ../roles/fantasy-hockey

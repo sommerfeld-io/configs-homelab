@@ -32,17 +32,17 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: configs-homelab/ansible/roles/raspi/fantasy-hockey/files
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: docker-compose
     directory: configs-homelab/ansible/roles/raspi/fritz-box-exporter/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
     directory: configs-homelab/ansible/roles/raspi/pihole/files
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker-compose
+    directory: configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files
     schedule:
       interval: weekly
 

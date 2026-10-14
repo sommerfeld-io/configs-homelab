@@ -59,7 +59,7 @@ The droplet runs the same fleet Alloy role as the homelab, with two variables fr
 - `alloy_config_template: "{{ playbook_dir }}/../templates/alloy/config.alloy.j2"` writes the cloud config (`ansible/templates/alloy/config.alloy.j2`) to `/etc/alloy/config.alloy` instead of the fleet config. The fleet config with `remotecfg` never runs on the droplet.
 - `alloy_fleet_extras: false` leaves out the GitHub token file, the eBPF capabilities on the Alloy binary and the capability lines in the systemd override. On a droplet provisioned before this, the first run deletes `/etc/alloy/github.token`, clears the binary capabilities with `setcap -r` and rewrites the override, then restarts Alloy once.
 
-The cloud config has no GitHub, Ollama, FRITZ!Box, Beyla or fleet-management blocks. It ships OS metrics (node exporter), Alloy health, journal logs, Docker logs and cAdvisor metrics, and scrapes the app at `localhost:8080/metrics` (job `fantasy-hockey`). Until the app is deployed (Epic 4), that target reports `up=0` and Alloy logs no error. The same applies to cAdvisor while no cAdvisor container runs.
+The cloud config has no GitHub, Ollama, FRITZ!Box, Beyla or fleet-management blocks. It ships OS metrics (node exporter), Alloy health, journal logs, Docker logs and cAdvisor metrics, and scrapes the app at `localhost:8080/metrics` (job `fantasy-hockey`). Until the app is [deployed](deployment.md), that target reports `up=0` and Alloy logs no error. The same applies to cAdvisor while no cAdvisor container runs.
 
 `environment=digital-ocean` and `stage=prod` are `external_labels` of the Prometheus remote write and the Loki write, so every series and log line carries them. The template is validated by `lint-alloy-config` together with the fleet template.
 

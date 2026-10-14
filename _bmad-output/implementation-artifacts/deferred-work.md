@@ -100,3 +100,27 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-5-molecule-tests-for-the-cloud-ansible-roles.md`
   summary: The Story 3.5 criterion in `epics-fantasy-hockey-digitalocean.md` still says "Given a pull request / When `pipeline.yml` runs", but `pipeline.yml` has no `pull_request` trigger; reword it to a push.
   evidence: `docs/pipelines.md` states `pipeline.yml` has no `pull_request` trigger and only runs on `push` (branches except `dependabot/**`) and the Tuesday schedule. The wording predates Story 3.5 (blind review finding).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Add a test, or at least a `--check` dry run, for the pi4-0002 fantasy hockey cleanup play and its container guard.
+  evidence: `raspi.yml` is excluded from ansible-lint and no test touches the play; Docker cannot run in the unprivileged Molecule containers. The play deletes data without a backup and runs for the first time on the real Pi.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Automate the check of the fantasy-hockey role's compose part (start, restart on a config change, running asserts).
+  evidence: The Molecule scenario runs only the file tasks because unprivileged containers cannot run Docker; a broken register name or restart condition is only found on the droplet.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Tighten the modes of the fantasy hockey data folder and data file (0750/0640) so player emails are not readable by other local users.
+  evidence: The data folder is 0755 and the seeded file 0644, carried over from the Pi role; the file lists every player's email. The app rewrites the file by atomic rename, so the file mode also depends on the app's umask.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Verify that `deploy-fantasy-hockey.yml` resolves `default_user` to `fantasy-hockey` (not `root` from `vars/main.yml`), for example with a vault-free play variant or an inventory fixture.
+  evidence: The Molecule scenario sets `default_user` in `test-vars.yml` and never runs the playbook; adding `vars_files: [../vars/main.yml]` would make the stack run as root with CI green.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Confirm `python3-requests` is on the droplet (needed by `community.docker.docker_container_info`), or install it in `provision.yml`.
+  evidence: Unverified (maybe-false, medium if missing). Settle with `dpkg -s python3-requests` on the droplet; cloud-init usually depends on it.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx.md`
+  summary: Set `diff: false` (or `no_log`) on the fantasy-hockey `.env` and data-file template tasks so `--diff` runs do not print secrets and player emails.
+  evidence: The template tasks in `roles/fantasy-hockey/tasks/files.yml` print the full rendered content with `--diff`; carried over unchanged from the Pi role.

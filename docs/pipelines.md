@@ -37,7 +37,7 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 `pipeline.yml` runs these jobs in a single workflow run:
 
 1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`) and **`check-inspec-profile`** (matrix `desktop-baseline`, `raspi-baseline`, `ollama`, `server-baseline`) start in parallel.
-2. When all three succeed, **`molecule`** (matrix `common`, `omarchy`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
+2. When all three succeed, **`molecule`** (matrix `common`, `omarchy`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, `fantasy-hockey`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
 3. When `molecule` and `molecule-cloud` succeed, **`generate-docs`** starts.
     - `generate-docs` runs `task docs:generate`, builds the `docs-build` image and commits changed files as `docs: [Actions Bot] generate docs` to the pushed branch. This happens on every branch, not only on `main`. The docs site itself is not built or published here.
 4. When `generate-docs` succeeds, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
@@ -96,20 +96,20 @@ Until Story 6.3 is done, a merged change under `configs-cloud/` reaches DigitalO
 
 `.github/dependabot.yml` defines weekly updates for:
 
-| Ecosystem        | Directory                                                                         |
-|------------------|-----------------------------------------------------------------------------------|
-| `github-actions` | `/`                                                                               |
-| `docker`         | `.devcontainer`                                                                   |
-| `docker-compose` | `/` (the linters in `docker-compose.yml`)                                         |
-| `docker-compose` | `configs-homelab/ansible/roles/common/taskfile-dev/files/docker-stacks/portainer` |
-| `docker-compose` | `configs-homelab/ansible/roles/grafana-cloud/exporters/files`                     |
-| `docker-compose` | `configs-homelab/ansible/roles/media/jellyfin/files`                              |
-| `docker-compose` | `configs-homelab/ansible/roles/raspi/fantasy-hockey/files`                        |
-| `docker-compose` | `configs-homelab/ansible/roles/raspi/fritz-box-exporter/files`                    |
-| `docker-compose` | `configs-homelab/ansible/roles/raspi/pihole/files`                                |
-| `opentofu`       | `/configs-cloud/digital-ocean/opentofu` (the `digitalocean` provider)             |
+| Ecosystem        | Directory                                                                                                          |
+|------------------|--------------------------------------------------------------------------------------------------------------------|
+| `github-actions` | `/`                                                                                                                |
+| `docker`         | `.devcontainer`                                                                                                    |
+| `docker-compose` | `/` (the linters in `docker-compose.yml`)                                                                          |
+| `docker-compose` | `configs-homelab/ansible/roles/common/taskfile-dev/files/docker-stacks/portainer`                                  |
+| `docker-compose` | `configs-homelab/ansible/roles/grafana-cloud/exporters/files`                                                      |
+| `docker-compose` | `configs-homelab/ansible/roles/media/jellyfin/files`                                                               |
+| `docker-compose` | `configs-homelab/ansible/roles/raspi/fritz-box-exporter/files`                                                     |
+| `docker-compose` | `configs-homelab/ansible/roles/raspi/pihole/files`                                                                 |
+| `docker-compose` | `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files` (the fantasy hockey app and nginx on the droplet) |
+| `opentofu`       | `/configs-cloud/digital-ocean/opentofu` (the `digitalocean` provider)                                              |
 
-There is no `docker-compose` entry under `configs-cloud/` yet. The fantasy-hockey compose file still lives in the RasPi role; Story 4.1 moves it to `configs-cloud/digital-ocean/ansible/roles` and Story 4.2 points Dependabot at it.
+The fantasy-hockey compose file moved from the RasPi role to `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey`, and its Dependabot entry moved with it, so a compose bump is a change under `configs-cloud/digital-ocean`. Nothing redeploys the droplet after a merged bump yet: run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` by hand (see [Deployment](cloud/digital-ocean/deployment.md)).
 
 ### From Dependabot Pull Request to `main`
 

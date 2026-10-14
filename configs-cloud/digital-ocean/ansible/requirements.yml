@@ -8,3 +8,7 @@ collections:
   # community.general.capabilities.
   - name: community.general
     version: 13.5.0
+  # The role fantasy-hockey runs the app with docker_compose_v2 and checks the
+  # containers with docker_container_info.
+  - name: community.docker
+    version: 5.4.0

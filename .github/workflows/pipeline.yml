@@ -152,7 +152,7 @@ jobs:
       fail-fast: false
       matrix:
         # One entry per test:<scenario> task in configs-cloud/digital-ocean/tests/molecule/taskfile.yml - keep in sync.
-        scenario: ['motd', 'alloy']
+        scenario: ['motd', 'alloy', 'fantasy-hockey']
     steps:
       # Submodules are needed: the root taskfile includes taskfiles from the .task submodule.
       - name: Checkout code

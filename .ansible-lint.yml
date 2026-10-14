@@ -13,6 +13,7 @@ exclude_paths:
   ## TODO https://github.com/sommerfeld-io/configs-homelab/issues/172
   - configs-homelab/ansible/vars/grafana-vault.yml
   - configs-homelab/ansible/vars/vault.yml
+  - configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml
   - configs-homelab/ansible/playbooks/all.yml
   - configs-homelab/ansible/playbooks/desktop.yml
   - configs-homelab/ansible/playbooks/grafana-agents.yml

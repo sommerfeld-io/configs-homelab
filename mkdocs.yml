@@ -103,6 +103,7 @@ nav:
       - Tasks and Linters: cloud/digital-ocean/tasks-and-linters.md
       - Droplet: cloud/digital-ocean/droplet.md
       - Provisioning: cloud/digital-ocean/provisioning.md
+      - Deployment: cloud/digital-ocean/deployment.md
       - Tests: cloud/digital-ocean/tests.md
   - Pipelines: pipelines.md
   - Incidents:
