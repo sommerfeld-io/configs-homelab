@@ -107,6 +107,7 @@ context:
     - The first deploy stopped at the path guard: the vault still had `fantasy_hockey_path: /opt/fantasy-hockey`, so nothing was written. With the path, season and deadline keys removed from the vault, the first run reported `changed=12`, the second `changed=0`.
     - `http://164.90.238.181/` serves the app, and Grafana Cloud has data for `up{job="fantasy-hockey", environment="digital-ocean", stage="prod"}`.
     - The cleanup found no `/opt/fantasy-hockey`, because the user had already removed the Pi deployment, and reported `changed=0`. The run still exited 4, because the other plays in `raspi.yml` gather facts on every Pi and three were unreachable. `raspi:fantasy-hockey-cleanup` now passes `--limit pi4-0002.fritz.box`.
+    - Confirmed by the user: `up` is `1` and `http://164.90.238.181/metrics` returns 404. Story marked done.
 
 ## Spec Change Log
 
