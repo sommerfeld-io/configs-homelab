@@ -90,7 +90,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROFILE: ${{ matrix.profile }}
-        run: task "inspec:check:$PROFILE"
+        run: task "homelab:inspec:check:$PROFILE"
         shell: bash
 
   # ----- Molecule stage --------------------------------------------------------------------------
@@ -125,7 +125,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
       - name: Run Molecule tests (${{ matrix.scenario }})
-        run: task molecule:test:${{ matrix.scenario }}
+        run: task homelab:molecule:test:${{ matrix.scenario }}
         shell: bash
         env:
           # Molecule wraps each step (converge, verify, ...) in a collapsed ::group:: when it

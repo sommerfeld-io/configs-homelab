@@ -1,7 +1,7 @@
 ---
 # Lists all snapper snapshots (of all snapper configs, e.g. root and home) of Omarchy
 # workstations. Read-only, so it never changes anything. Imported at the end of
-# omarchy-snapshot-create.yml, and runnable on its own via `task ansible:omarchy:snapshot:list`.
+# omarchy-snapshot-create.yml, and runnable on its own via `task homelab:ansible:omarchy:snapshot:list`.
 - name: List snapshots of Omarchy workstations
   hosts: omarchy
   gather_facts: true # needed for os_family

@@ -28,5 +28,5 @@ Metrics and logs can also be inspected without SSH access, via Grafana Cloud:
 Instead of manually restarting the container on the node, re-apply the [`raspi` playbook](../../ansible/playbooks/raspi.md) from this repo, which re-deploys the compose file and (re-)starts the stack:
 
 ```bash
-task ansible:raspi
+task homelab:ansible:raspi
 ```

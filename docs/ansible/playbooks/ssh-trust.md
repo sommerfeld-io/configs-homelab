@@ -2,7 +2,7 @@
 
 This Ansible playbook sets up password-less SSH connections between the nodes of the home lab. It does the same as running `ssh-copy-id` on every source node for every destination node, but without any password prompts, and only for connections that aren't configured yet.
 
-Run it with `task ansible:ssh:trust`. It needs neither `sudo` nor the Ansible vault, so it doesn't prompt for their passwords.
+Run it with `task homelab:ansible:ssh:trust`. It needs neither `sudo` nor the Ansible vault, so it doesn't prompt for their passwords.
 
 ## What it does
 

@@ -1,6 +1,6 @@
 # Ansible Playbook - Omarchy Snapshot List
 
-This Ansible playbook lists all existing btrfs snapshots (via snapper) of the [Omarchy](../../nodes/omarchy-workstations/index.md) workstations. Run it with `task ansible:omarchy:snapshot:list`, e.g. to find the snapshot to roll back to.
+This Ansible playbook lists all existing btrfs snapshots (via snapper) of the [Omarchy](../../nodes/omarchy-workstations/index.md) workstations. Run it with `task homelab:ansible:omarchy:snapshot:list`, e.g. to find the snapshot to roll back to.
 
 It is imported at the end of the [Omarchy Snapshot Create playbook](./omarchy-snapshot-create.md), so every snapshot run (and therefore every [desktop playbook](./desktop.md) run) also prints the snapshot list.
 

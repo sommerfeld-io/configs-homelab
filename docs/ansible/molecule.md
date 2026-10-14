@@ -2,7 +2,7 @@
 
 [Molecule](https://docs.ansible.com/projects/molecule) tests the Ansible roles defined directly in this repository under `configs-homelab/ansible/roles/`, applying them to disposable Docker containers (Ubuntu and Arch Linux) and asserting the expected result.
 
-Scenarios are grouped by role group under `configs-homelab/tests/molecule/{role-group}/molecule/default/`. Run them with `task molecule:test:<role-group>` (e.g. `task molecule:test:common`), or all of them at once with `task molecule:test`. The `molecule` job in the CI pipeline runs these tests automatically and gates the release stage.
+Scenarios are grouped by role group under `configs-homelab/tests/molecule/{role-group}/molecule/default/`. Run them with `task homelab:molecule:test:<role-group>` (e.g. `task homelab:molecule:test:common`), or all of them at once with `task homelab:molecule:test`. The `molecule` job in the CI pipeline runs these tests automatically and gates the release stage.
 
 ## Out of scope: `configs-homelab/ansible/roles/ansible-roles-collection`
 

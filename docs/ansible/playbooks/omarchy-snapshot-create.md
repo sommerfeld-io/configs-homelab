@@ -2,7 +2,7 @@
 
 This Ansible playbook creates a btrfs snapshot (via snapper) of the [Omarchy](../../nodes/omarchy-workstations/index.md) workstations, so a workstation can be rolled back if a later playbook run breaks the system.
 
-It is imported at the very top of the [desktop playbook](./desktop.md), so every desktop run takes the snapshot before anything is changed. Run it on its own with `task ansible:omarchy:snapshot:create`, e.g. before trying something risky by hand.
+It is imported at the very top of the [desktop playbook](./desktop.md), so every desktop run takes the snapshot before anything is changed. Run it on its own with `task homelab:ansible:omarchy:snapshot:create`, e.g. before trying something risky by hand.
 
 ## What it does
 

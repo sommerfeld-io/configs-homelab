@@ -99,8 +99,8 @@
 # (configs-cloud/digital-ocean/ansible/playbooks/deploy-fantasy-hockey.yml).
 # This play removes the old deployment from pi4-0002. Run it only after the app
 # is verified on the droplet. The Pi's data is deleted without a backup.
-# Tagged never: `task ansible:raspi` and `task ansible:all` (all.yml imports this
-# playbook) skip it. Only `task ansible:raspi:fantasy-hockey-cleanup` runs it.
+# Tagged never: `task homelab:ansible:raspi` and `task homelab:ansible:all` (all.yml imports this
+# playbook) skip it. Only `task homelab:ansible:raspi:fantasy-hockey-cleanup` runs it.
 - name: Remove the old fantasy hockey deployment from pi4-0002
   hosts: pi4-0002.fritz.box
   gather_facts: false

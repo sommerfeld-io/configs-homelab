@@ -7,19 +7,15 @@ vars:
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
 includes:
-  ansible:
-    taskfile: configs-homelab/ansible/taskfile.yml
-    dir: configs-homelab/ansible
   bmad: .task/bmad/taskfile.yml
   cleanup: .task/cleanup/taskfile.yml
   cloud:
     taskfile: configs-cloud/taskfile.yml
     dir: configs-cloud
   common: .task/common/taskfile.yml
-  inspec: configs-homelab/tests/inspec/taskfile.yml
-  molecule:
-    taskfile: configs-homelab/tests/molecule/taskfile.yml
-    dir: configs-homelab/tests/molecule
+  homelab:
+    taskfile: configs-homelab/taskfile.yml
+    dir: configs-homelab
   vm:
     taskfile: virtual-machines/taskfile.yml
     dir: virtual-machines
@@ -41,7 +37,7 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - task: inspec:cleanup
+      - task: homelab:inspec:cleanup
       - task: cleanup:filesystem
       - task: symlinks
       - task: docs:generate

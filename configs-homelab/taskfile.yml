@@ -1,0 +1,21 @@
+---
+version: '3.42.1'
+
+# Included in the root taskfile with prefix `homelab` and `dir: configs-homelab`,
+# so every task here is called as `task homelab:<name>`, the same way the cloud
+# tasks are called as `task cloud:<name>`.
+
+includes:
+  # Ansible playbooks and vault files for the homelab nodes: `task homelab:ansible:<name>`.
+  ansible:
+    taskfile: ansible/taskfile.yml
+    dir: ansible
+  # InSpec compliance profiles: `task homelab:inspec:<name>`. Runs from the repository
+  # root, because its docker compose services use repository-relative paths.
+  inspec:
+    taskfile: tests/inspec/taskfile.yml
+    dir: ..
+  # Molecule scenarios for the homelab roles: `task homelab:molecule:<name>`.
+  molecule:
+    taskfile: tests/molecule/taskfile.yml
+    dir: tests/molecule
