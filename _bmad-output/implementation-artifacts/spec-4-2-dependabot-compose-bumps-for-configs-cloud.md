@@ -2,7 +2,7 @@
 title: 'Dependabot compose bumps for configs-cloud'
 type: 'chore'
 created: '2026-10-14'
-status: 'in-progress'
+status: 'done'
 route: 'oneshot'
 baseline_commit: 'f5e90c5f886e97f425a13c755b0b081412e1a599'
 review_loop_iteration: 0
@@ -31,3 +31,4 @@ context:
 - Done when:
     - `digital-ocean` is merged to `main`.
     - GitHub's Dependabot view (Insights → Dependency graph → Dependabot) lists `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files` and its last check succeeded, with no error for the old path.
+- Marked done by the user on 2026-10-14, before PR #366 was merged. At that time `main`'s `.github/dependabot.yml` still had the old entry `ansible/roles/raspi/fantasy-hockey/files`. The configs-cloud entry takes effect when `digital-ocean` is merged.
