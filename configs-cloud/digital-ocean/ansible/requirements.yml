@@ -12,3 +12,6 @@ collections:
   # run from provision.yml) use docker_compose_v2 and docker_container_info.
   - name: community.docker
     version: 5.4.0
+  # deploy-fantasy-hockey.yml mounts the data volume with ansible.posix.mount.
+  - name: ansible.posix
+    version: 2.2.2

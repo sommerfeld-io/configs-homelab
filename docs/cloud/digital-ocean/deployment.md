@@ -6,9 +6,15 @@ The fantasy hockey app runs as docker compose on the droplets with the tag `fant
 
 `configs-cloud/digital-ocean/ansible/playbooks/deploy-fantasy-hockey.yml` targets the inventory group `fantasy-hockey` (one group per droplet tag, see [Provisioning](provisioning.md)). Ansible warns that the hyphen in the group name is not a valid character; this is accepted. The play connects as `root` and needs a provisioned droplet: `provision.yml` installs Docker, so the `docker` group exists before the deploy adds a user to it.
 
-The play loads the secrets from the vault file with an `include_vars` task, then runs the cloud role `ansible/roles/fantasy-hockey`. The role runs these steps in this order:
+The play first mounts the droplet's data volume. DigitalOcean mounts a volume automatically only when the volume and the droplet are created together, so a replacement droplet gets the existing volume attached but not mounted:
 
-1. **Volume check (`tasks/main.yml`):** it fails, before anything is written, when `fantasy_hockey_volume_mount` (`/mnt/prod_fantasy_hockey_data`) is not a mount point, naming the missing mount. A second check fails when `fantasy_hockey_path` is not below that mount, for example because the vault overrides it. It compares the normalized path, so a path that leaves the mount through `..` fails too. The app data must live on the volume, not on the droplet's disk.
+- The device is `/dev/disk/by-id/scsi-0DO_Volume_<droplet-name>-data` (`fantasy_hockey_volume_device`) and the mount point `/mnt/<droplet_name>_data` (`fantasy_hockey_volume_mount`), both derived from the droplet name, so `prod-fantasy-hockey` gets `/mnt/prod_fantasy_hockey_data`.
+- The play fails when the device does not exist (the volume is not attached). Otherwise `ansible.posix.mount` mounts the existing ext4 file system with `defaults,nofail,discard,noatime` and writes the `fstab` entry; it never formats the volume. After a new mount it refreshes the mount facts for the role's check.
+- These tasks are tagged `volume`: `task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume` mounts the volume without starting the app, see [Replacement](replacement.md#provision-and-deploy).
+
+Then the play loads the secrets from the vault file with an `include_vars` task and runs the cloud role `ansible/roles/fantasy-hockey`. The role runs these steps in this order:
+
+1. **Volume check (`tasks/main.yml`):** it fails, before anything is written, when `fantasy_hockey_volume_mount` (`/mnt/prod_fantasy_hockey_data` as role default; the play sets it from the droplet name) is not a mount point, naming the missing mount. A second check fails when `fantasy_hockey_path` is not below that mount, for example because the vault overrides it. It compares the normalized path, so a path that leaves the mount through `..` fails too. The app data must live on the volume, not on the droplet's disk.
 2. **User (`tasks/user.yml`):** the `docker` role of the roles collection (only `50-user`) creates the user `fantasy-hockey` with `/bin/bash` and a home folder from `/etc/skel`, and adds it to the `docker` group.
 3. **Prompt (`tasks/user.yml`):** the `bash` role (only `10-bash-config`) writes the exports, aliases and the prompt to `/home/fantasy-hockey/.bashrc`. The prompt is the role default `fantasy_hockey_ps1`, the orange `ubuntu_server` prompt of the homelab without the git branch.
 4. **Files (`tasks/files.yml`):** the deploy directory, the compose file, the nginx config, `.env` and the seeded data file.

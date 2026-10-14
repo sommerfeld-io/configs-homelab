@@ -70,14 +70,20 @@ task cloud:digital-ocean:ansible:provision
 
 Provisioning waits until the new droplet accepts SSH and cloud-init is done. Ansible connects to the new droplet's own public IPv4 and accepts an unknown host key (`StrictHostKeyChecking=accept-new`). If it reports a changed host key for the new IP, that address was in `known_hosts` already: remove it with `ssh-keygen -R <new-droplet-ip>` and run provisioning again.
 
-Remove the old host keys (see [Host Keys](#host-keys)), then check the volume and the data file while the app is not started yet:
+DigitalOcean attaches the existing volume to the new droplet but does not mount it. Remove the old host keys (see [Host Keys](#host-keys)), then mount the volume without starting the app; only the tasks tagged `volume` of the deploy playbook run:
+
+```bash
+task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume
+```
+
+Then check the volume and the data file while the app is not started yet:
 
 ```bash
 ssh root@<reserved-ip> 'findmnt /mnt/prod_fantasy_hockey_data'
 ssh root@<reserved-ip> 'sha256sum /mnt/prod_fantasy_hockey_data/fantasy-hockey/data/fantasy-hockey.yml'
 ```
 
-The mount must exist and the checksum must equal the one recorded before the replacement. If the volume is not mounted, see [Volume Not Mounted](#volume-not-mounted). If the file is missing or its checksum differs, see [Restore the Data File](#restore-the-data-file). Then deploy the app:
+The mount must exist and the checksum must equal the one recorded before the replacement. If the volume is not attached, see [Volume Not Attached](#volume-not-attached). If the file is missing or its checksum differs, see [Restore the Data File](#restore-the-data-file). Then deploy the app:
 
 ```bash
 task cloud:digital-ocean:ansible:deploy-fantasy-hockey
@@ -113,9 +119,9 @@ After the deploy:
 
 The checksum is not compared after the deploy: the app rewrites `fantasy-hockey.yml` at runtime, so a difference then is not data loss.
 
-## Volume Not Mounted
+## Volume Not Attached
 
-When the volume is not mounted, the app deploy stops before it writes anything, with the message that `/mnt/prod_fantasy_hockey_data` is not a mount point. Check the volume and mount it by hand:
+The deploy playbook mounts the volume, but only when DigitalOcean attached it: it stops with "does not exist ... so the volume is not attached" otherwise. Check the attachment:
 
 ```bash
 doctl compute droplet list --tag-name fantasy-hockey --format ID,Name,PublicIPv4
@@ -123,17 +129,7 @@ doctl compute volume list --format ID,Name,Size,Region,DropletIDs
 ssh root@<reserved-ip> 'ls -l /dev/disk/by-id/ | grep DO_Volume'
 ```
 
-`DropletIDs` of the volume must show the new droplet's `ID` from the first command. If it is empty, the volume is not attached; attach it with `doctl compute volume-action attach <volume-id> <droplet-id>`. Once the device link `scsi-0DO_Volume_prod-fantasy-hockey-data` exists, mount it and make the mount permanent. Never format the volume (`mkfs`), that deletes the data.
-
-```bash
-ssh root@<reserved-ip>
-mkdir -p /mnt/prod_fantasy_hockey_data
-mount -o defaults,nofail,discard,noatime /dev/disk/by-id/scsi-0DO_Volume_prod-fantasy-hockey-data /mnt/prod_fantasy_hockey_data
-grep -q prod_fantasy_hockey_data /etc/fstab || echo '/dev/disk/by-id/scsi-0DO_Volume_prod-fantasy-hockey-data /mnt/prod_fantasy_hockey_data ext4 defaults,nofail,discard,noatime 0 2' >> /etc/fstab
-findmnt /mnt/prod_fantasy_hockey_data
-```
-
-Then repeat the checksum check from [Provision and Deploy](#provision-and-deploy) and run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey`.
+`DropletIDs` of the volume must show the new droplet's `ID` from the first command. If it is empty, attach the volume with `doctl compute volume-action attach <volume-id> <droplet-id>`, then run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume` again. Never format the volume (`mkfs`), that deletes the data.
 
 ## Restore the Data File
 

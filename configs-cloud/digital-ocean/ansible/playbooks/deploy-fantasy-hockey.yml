@@ -17,7 +17,56 @@
     # The user that owns the deploy files and runs docker compose. It has no SSH
     # key: log in as root and use `sudo -iu fantasy-hockey`.
     default_user: fantasy-hockey
+    # The data volume of this droplet. OpenTofu names it "<droplet-name>-data", and
+    # DigitalOcean links it as /dev/disk/by-id/scsi-0DO_Volume_<volume-name>. The
+    # mount point follows DigitalOcean's convention (hyphens become underscores).
+    # Overrides the role default, which only covers the prod droplet.
+    fantasy_hockey_volume_device: "/dev/disk/by-id/scsi-0DO_Volume_{{ inventory_hostname }}-data"
+    fantasy_hockey_volume_mount: "/mnt/{{ inventory_hostname | replace('-', '_') }}_data"
   tasks:
+
+    # DigitalOcean mounts a volume automatically only when the volume and the
+    # droplet are created together. A replacement droplet gets the existing volume
+    # attached but not mounted, so the deploy mounts it. Only tasks tagged volume
+    # run with `-- --tags volume`, which mounts the volume without starting the app
+    # (see docs/cloud/digital-ocean/replacement.md).
+    - name: Read the volume device
+      ansible.builtin.stat:
+        path: "{{ fantasy_hockey_volume_device }}"
+      register: fantasy_hockey_volume_device_stat
+      tags: [volume]
+
+    - name: Stop when the volume is not attached
+      ansible.builtin.assert:
+        that:
+          - fantasy_hockey_volume_device_stat.stat.exists
+        fail_msg: >-
+          {{ fantasy_hockey_volume_device }} does not exist on {{ inventory_hostname }},
+          so the volume is not attached. Check it with `doctl compute volume list
+          --format ID,Name,DropletIDs`.
+        quiet: true
+      tags: [volume]
+
+    # Mounts the existing ext4 file system and writes the fstab entry. It never
+    # formats the volume.
+    - name: Mount the volume
+      ansible.posix.mount:
+        path: "{{ fantasy_hockey_volume_mount }}"
+        src: "{{ fantasy_hockey_volume_device }}"
+        fstype: ext4
+        opts: defaults,nofail,discard,noatime
+        state: mounted
+      register: fantasy_hockey_volume_mounted
+      tags: [volume]
+
+    # The role checks the mount in ansible_facts, which were gathered before the
+    # mount.
+    - name: Refresh the mount facts
+      ansible.builtin.setup:
+        gather_subset: ['!all', '!min', 'hardware']
+        filter: ['ansible_mounts']
+      when: fantasy_hockey_volume_mounted.changed
+      tags: [volume]
 
     - name: Load the fantasy hockey secrets
       ansible.builtin.include_vars:

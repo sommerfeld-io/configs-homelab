@@ -115,7 +115,7 @@ A droplet gets a reserved IP when its `reserved_ip` is `true` and a data volume 
 | Reserved IP | Assigned by DigitalOcean, output `reserved_ip_addresses` | Stable public IPv4 address, assigned to the droplet with a separate `digitalocean_reserved_ip_assignment` |
 | Volume      | `<droplet-name>-data`, e.g. `prod-example-app-data`      | `volume_size_gb` GB ext4, attached at creation through the droplet's `volume_ids`                         |
 
-`initial_filesystem_type` formats the volume with ext4 when the volume is created. Because the droplet attaches it at creation, DigitalOcean also mounts it automatically under `/mnt/<volume-name>`, with the hyphens in the name turned into underscores: `/mnt/prod_example_app_data`. The output `volume_mount_paths` prints this path. Check the real mount on the droplet with `ssh root@<reserved-ip> 'df -hT | grep /mnt'`. Ansible manages the mount from Epic 3 on.
+`initial_filesystem_type` formats the volume with ext4 when the volume is created. When the volume and the droplet are created together, DigitalOcean also mounts it automatically under `/mnt/<volume-name>`, with the hyphens in the name turned into underscores: `/mnt/prod_example_app_data`. A replacement droplet gets the existing volume attached but not mounted; for the fantasy hockey droplet `deploy-fantasy-hockey.yml` mounts it, see [Deployment](deployment.md#deploy-fantasy-hockeyyml). The output `volume_mount_paths` prints this path. Check the real mount on the droplet with `ssh root@<reserved-ip> 'df -hT | grep /mnt'`.
 
 Both the volume and the reserved IP have `lifecycle { prevent_destroy = true }`. OpenTofu refuses every plan that would destroy them, including `tofu plan -destroy`, with the error `Resource instance cannot be destroyed`. The droplet and the IP assignment have no `prevent_destroy`, so the droplet stays replaceable.
 
@@ -165,7 +165,7 @@ Run the steps from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 3. `task cloud:digital-ocean:opentofu:apply`: review the plan again and confirm with `yes`. The output prints each droplet's own public IPv4 address, the reserved IPs and the volume mount paths.
 4. `task cloud:digital-ocean:opentofu:plan`: a second plan must print `No changes.`
 
-A droplet only gets its volume mounted automatically when the volume is attached at droplet creation. Adding `volume_size_gb` to an existing droplet therefore needs a one-time replacement of that droplet. Force it with `-replace`; there is no task for this step (see [Replacement](replacement.md) for the procedure around it):
+A droplet only gets a volume attached by OpenTofu when the volume is attached at droplet creation (`volume_ids`). Adding `volume_size_gb` to an existing droplet therefore needs a one-time replacement of that droplet. Force it with `-replace`; there is no task for this step (see [Replacement](replacement.md) for the procedure around it):
 
 ```bash
 tofu -chdir=configs-cloud/digital-ocean/opentofu apply -replace='digitalocean_droplet.this["<key>"]'

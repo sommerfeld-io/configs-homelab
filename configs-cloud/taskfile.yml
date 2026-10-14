@@ -59,7 +59,8 @@ tasks:
     preconditions: *do-token
     cmds:
       - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
-      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/deploy-fantasy-hockey.yml
+      # Extra arguments after --, e.g. `-- --tags volume` (mount the volume only).
+      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/deploy-fantasy-hockey.yml {{ .CLI_ARGS }}
 
   digital-ocean:vault:fantasy-hockey:
     desc: Show and edit the fantasy hockey secrets in the Ansible Vault file vars/fantasy-hockey-vault.yml
