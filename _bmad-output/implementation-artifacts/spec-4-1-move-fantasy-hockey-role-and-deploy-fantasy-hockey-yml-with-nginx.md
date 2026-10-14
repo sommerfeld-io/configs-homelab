@@ -103,6 +103,10 @@ context:
 - Molecule test values live in `fantasy-hockey/molecule/default/vars/test-vars.yml`, loaded by converge and verify. Not in `molecule.yml` (Molecule expands `${...}` in the prompt), and under `vars/` so ansible-lint treats the file as vars, not as a playbook.
 - ansible-lint's syntax check cannot decrypt a vault loaded through `vars_files`. `deploy-fantasy-hockey.yml` loads `fantasy-hockey-vault.yml` with an `include_vars` task, which the syntax check does not run, so the playbook is not in `exclude_paths` and is linted.
 - `include_role` resolves a relative role name against the playbook folder, not the including role. `tasks/user.yml` therefore builds the paths from `role_path`, so they resolve the same from `deploy-fantasy-hockey.yml` and from the Molecule converge.
+- Droplet verification (2026-10-14, by the user):
+    - The first deploy stopped at the path guard: the vault still had `fantasy_hockey_path: /opt/fantasy-hockey`, so nothing was written. With the path, season and deadline keys removed from the vault, the first run reported `changed=12`, the second `changed=0`.
+    - `http://164.90.238.181/` serves the app, and Grafana Cloud has data for `up{job="fantasy-hockey", environment="digital-ocean", stage="prod"}`.
+    - The cleanup found no `/opt/fantasy-hockey`, because the user had already removed the Pi deployment, and reported `changed=0`. The run still exited 4, because the other plays in `raspi.yml` gather facts on every Pi and three were unreachable. `raspi:fantasy-hockey-cleanup` now passes `--limit pi4-0002.fritz.box`.
 
 ## Spec Change Log
 

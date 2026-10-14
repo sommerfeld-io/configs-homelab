@@ -13,7 +13,7 @@ The playbook targets all Raspberry Pi nodes for base configuration.
 
 ## Fantasy Hockey Cleanup
 
-The fantasy hockey app moved from `pi4-0002` to the DigitalOcean droplet (see [Deployment](../../cloud/digital-ocean/deployment.md)). The last play of `raspi.yml` removes the old deployment from `pi4-0002`: it fails when containers run there that belong neither to the `fantasy-hockey` project nor to the fleet (`cadvisor`, play variable `fantasy_hockey_pi_fleet_containers`), then stops the stack and deletes `/opt/fantasy-hockey` without a backup. The play is tagged `never`, so `task ansible:raspi` and `task ansible:all` skip it. Run it once, after the app is verified on the droplet:
+The fantasy hockey app moved from `pi4-0002` to the DigitalOcean droplet (see [Deployment](../../cloud/digital-ocean/deployment.md)). The last play of `raspi.yml` removes the old deployment from `pi4-0002`: it fails when containers run there that belong neither to the `fantasy-hockey` project nor to the fleet (`cadvisor`, play variable `fantasy_hockey_pi_fleet_containers`), then stops the stack and deletes `/opt/fantasy-hockey` without a backup. The play is tagged `never`, so `task ansible:raspi` and `task ansible:all` skip it. Run it once, after the app is verified on the droplet. The task limits the run to `pi4-0002`:
 
 ```bash
 task ansible:raspi:fantasy-hockey-cleanup

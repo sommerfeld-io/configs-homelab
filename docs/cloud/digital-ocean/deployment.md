@@ -84,7 +84,7 @@ After a deploy:
 
 The app ran on `pi4-0002` behind a port forward of the home router until the droplet took over. The role moved from `configs-homelab/ansible/roles` to `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey`, and the pi4-0002 play in `configs-homelab/ansible/playbooks/raspi.yml` became a cleanup play. Run it only after the app is verified on the droplet, then remove the port forward in the router.
 
-The cleanup play is tagged `never` and `fantasy-hockey-cleanup`, so `task ansible:raspi` and `task ansible:all` (`all.yml` imports `raspi.yml`) skip it. Only its own task runs it:
+The cleanup play is tagged `never` and `fantasy-hockey-cleanup`, so `task ansible:raspi` and `task ansible:all` (`all.yml` imports `raspi.yml`) skip it. Only its own task runs it, limited to `pi4-0002`, so the other Pis are not contacted (their plays would still gather facts, and an unreachable Pi would fail the run):
 
 ```bash
 task ansible:raspi:fantasy-hockey-cleanup

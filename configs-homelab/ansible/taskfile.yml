@@ -70,7 +70,10 @@ tasks:
     desc: HOST ONLY | Remove the old fantasy hockey deployment from pi4-0002 (raspi.yml, tag fantasy-hockey-cleanup)
     cmds:
       - git submodule update --remote
-      - ansible-playbook "playbooks/raspi.yml" --inventory hosts.yml --ask-become-pass --ask-vault-pass --tags fantasy-hockey-cleanup
+      # --limit: the other plays in raspi.yml still gather facts, so an unreachable Pi would fail the run.
+      - >-
+        ansible-playbook "playbooks/raspi.yml" --inventory hosts.yml --ask-become-pass --ask-vault-pass
+        --tags fantasy-hockey-cleanup --limit pi4-0002.fritz.box
 
   repositories:
     vars:
