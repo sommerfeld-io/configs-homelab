@@ -59,7 +59,7 @@ context:
 - [x] `configs-cloud/digital-ocean/ansible/playbooks/provision.yml` -- include `../../../../configs-homelab/ansible/roles/grafana-cloud/exporters` between Docker and Alloy, named like the other tasks.
 - [x] `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2` -- update the cAdvisor comment: provisioning runs cAdvisor.
 - [x] Docs: `provisioning.md` (role order, the cAdvisor sentence), `tests.md` (exporters checked on the droplet, needs Docker), `index.md` (what provisioning installs). Check these pages for drift.
-- [ ] HUMAN: run `task cloud:digital-ocean:ansible:provision` twice (second run without changes in the exporters tasks); check `docker ps` lists `cadvisor` with `127.0.0.1:9110->8080/tcp`, `curl -s -o /dev/null -w '%{http_code}' http://<reserved-ip>:9110/` from outside fails to connect, and Grafana Cloud has `up{job="integrations/cadvisor", environment="digital-ocean", stage="prod"} == 1`.
+- [x] HUMAN: run `task cloud:digital-ocean:ansible:provision` twice (second run without changes in the exporters tasks); check `docker ps` lists `cadvisor` with `127.0.0.1:9110->8080/tcp`, `curl -s -o /dev/null -w '%{http_code}' http://<reserved-ip>:9110/` from outside fails to connect, and Grafana Cloud has `up{job="integrations/cadvisor", environment="digital-ocean", stage="prod"} == 1`.
 
 **Acceptance Criteria:**
 
@@ -72,6 +72,11 @@ context:
 - `.env` is written with `ansible.builtin.copy` and `content:` instead of a separate template file; same result, no new file in the role.
 - The explicit `0.0.0.0` publishes cAdvisor on IPv4 only; the old short form `9110:8080` also published on `[::]:9110`. Alloy scrapes `localhost:9110`, which falls back to `127.0.0.1` (the droplet's `127.0.0.1:8080` app scrape reports `up=1` the same way).
 - `task lint` and `task cloud:molecule:test` passed (implementation agent).
+- Droplet verification (2026-10-14, by the user):
+    - First provision: the exporters tasks wrote the directory, compose file and `.env`, started cAdvisor and restarted it once (the compose file was new). The Alloy config changed (comments) and Alloy restarted once. The second run reported `changed=0`.
+    - `docker ps` shows `cadvisor` with `127.0.0.1:9110->8080/tcp`, and the role's binding assert reports 127.0.0.1.
+    - `curl -m 5 http://164.90.238.181:9110` from the home network: "Could not connect to server".
+    - Grafana Cloud: `up{environment="digital-ocean", instance="prod-fantasy-hockey", job="integrations/cadvisor", stage="prod"}` is 1.
 
 ## Spec Change Log
 
