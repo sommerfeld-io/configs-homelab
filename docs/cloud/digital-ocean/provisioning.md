@@ -105,10 +105,11 @@ ssh root@<droplet-ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'
 ```bash
 task cloud:digital-ocean:ansible:inventory   # droplets and their groups
 task cloud:digital-ocean:ansible:provision   # run provision.yml
-task cloud:digital-ocean:deploy              # full pipeline: opentofu:apply, ansible:provision, ansible:deploy-fantasy-hockey
+task cloud:digital-ocean:ansible:all         # run all.yml: provision.yml, then deploy-fantasy-hockey.yml
+task cloud:deploy:all                        # full pipeline: opentofu:apply, then ansible:all
 ```
 
-`ansible:provision` (and with it `deploy`) asks for the vault password. All three stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set.
+`ansible:provision`, `ansible:all` and `deploy:all` ask for the vault password. All four stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set.
 
 ## Replaced Droplet and Host Key
 

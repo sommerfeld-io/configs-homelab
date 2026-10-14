@@ -5,83 +5,31 @@ version: '3.42.1'
 # so every task here is called as `task cloud:<name>`.
 
 includes:
+  # OpenTofu for the DigitalOcean infrastructure: `task cloud:digital-ocean:opentofu:<name>`.
+  digital-ocean:opentofu:
+    taskfile: digital-ocean/opentofu/taskfile.yml
+    dir: digital-ocean/opentofu
+
+  # Ansible for the DigitalOcean droplets: `task cloud:digital-ocean:ansible:<name>`.
+  digital-ocean:ansible:
+    taskfile: digital-ocean/ansible/taskfile.yml
+    dir: digital-ocean/ansible
+
   # Molecule scenarios for the roles the droplet runs: `task cloud:molecule:test`.
   molecule:
     taskfile: digital-ocean/tests/molecule/taskfile.yml
     dir: digital-ocean/tests/molecule
 
-vars:
-  DO_TOFU: tofu -chdir=digital-ocean/opentofu
-  DO_ANSIBLE: digital-ocean/ansible
-
 tasks:
 
-  digital-ocean:opentofu:init:
-    desc: Initialize the OpenTofu working directory for DigitalOcean
-    cmds:
-      - "{{ .DO_TOFU }} init"
-
-  digital-ocean:opentofu:fmt:
-    desc: Format the OpenTofu files for DigitalOcean
-    cmds:
-      - "{{ .DO_TOFU }} fmt -recursive"
-
-  digital-ocean:opentofu:plan:
-    desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
+  deploy:all:
+    desc: Run full cloud deployment pipeline, (OpenTofu, all playbooks, needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: &do-token
       - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
         msg: DIGITALOCEAN_ACCESS_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
     cmds:
-      - "{{ .DO_TOFU }} plan"
-
-  digital-ocean:opentofu:apply:
-    desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
-    preconditions: *do-token
-    cmds:
-      - "{{ .DO_TOFU }} apply"
-
-  # Applies without the "yes" prompt, so read `opentofu:plan` first. prevent_destroy
-  # still refuses any plan that would destroy the volume or the reserved IP.
-  digital-ocean:opentofu:apply:yes:
-    desc: Apply the OpenTofu configuration to DigitalOcean without asking for confirmation (needs DIGITALOCEAN_ACCESS_TOKEN)
-    preconditions: *do-token
-    cmds:
-      - "{{ .DO_TOFU }} apply -auto-approve"
-
-  digital-ocean:ansible:inventory:
-    desc: List the droplets found by the dynamic inventory with their groups (needs DIGITALOCEAN_ACCESS_TOKEN)
-    preconditions: *do-token
-    cmds:
-      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
-      - ansible-inventory -i {{ .DO_ANSIBLE }}/inventory --graph
-
-  digital-ocean:ansible:provision:
-    desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for the vault password)
-    preconditions: *do-token
-    cmds:
-      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
-      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/provision.yml
-
-  digital-ocean:ansible:deploy-fantasy-hockey:
-    desc: Deploy the fantasy hockey app to the fantasy-hockey droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for the vault password)
-    preconditions: *do-token
-    cmds:
-      - ansible-galaxy collection install -r {{ .DO_ANSIBLE }}/requirements.yml
-      # Extra arguments after --, e.g. `-- --tags volume` (mount the volume only).
-      - ansible-playbook -i {{ .DO_ANSIBLE }}/inventory --ask-vault-pass {{ .DO_ANSIBLE }}/playbooks/deploy-fantasy-hockey.yml {{ .CLI_ARGS }}
-
-  digital-ocean:vault:fantasy-hockey:
-    desc: Show and edit the fantasy hockey secrets in the Ansible Vault file vars/fantasy-hockey-vault.yml
-    cmds:
-      - ansible-vault edit {{ .DO_ANSIBLE }}/vars/fantasy-hockey-vault.yml
-
-  digital-ocean:deploy:
-    desc: Run the full pipeline, OpenTofu apply, Ansible provision, then the fantasy hockey deploy (needs DIGITALOCEAN_ACCESS_TOKEN)
-    preconditions: *do-token
-    cmds:
       - task: digital-ocean:opentofu:apply
-      - task: digital-ocean:ansible:provision
-      - task: digital-ocean:ansible:deploy-fantasy-hockey
+      - task: digital-ocean:ansible:all
 
   info:
     desc: Print information for all cloud environments

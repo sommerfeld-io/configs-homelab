@@ -23,10 +23,10 @@ Changing the `image` slug in `droplets.tf` (for example for a new Ubuntu LTS) re
 
 ```bash
 ssh-keygen -R <reserved-ip>
-task cloud:digital-ocean:deploy
+task cloud:deploy:all
 ```
 
-`deploy` runs `opentofu:apply`, `ansible:provision` and `ansible:deploy-fantasy-hockey` and asks for the vault password twice. The apply creates the droplet and the reserved IP assignment and updates the project resources; the volume and the reserved IP stay as they are.
+`deploy:all` runs `opentofu:apply` and then `ansible:all` (provisioning and the app deploy) and asks for the vault password once. The apply creates the droplet and the reserved IP assignment and updates the project resources; the volume and the reserved IP stay as they are.
 
 DigitalOcean attaches the existing volume to the new droplet but does not mount it. The app deploy mounts it (see [Deployment](deployment.md#deploy-fantasy-hockeyyml)), finds `fantasy-hockey.yml` and does not seed it again.
 

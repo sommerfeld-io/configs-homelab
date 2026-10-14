@@ -20,6 +20,7 @@ exclude_paths:
   - configs-homelab/ansible/playbooks/ollama.yml
   - configs-homelab/ansible/playbooks/raspi.yml
   - configs-homelab/ansible/playbooks/server.yml
+  - configs-cloud/digital-ocean/ansible/playbooks/all.yml
   - configs-cloud/digital-ocean/ansible/playbooks/provision.yml
 
 enable_list:

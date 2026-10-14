@@ -7,13 +7,15 @@ configs-cloud/
   taskfile.yml       # included in the root taskfile with prefix `cloud`
   digital-ocean/
     opentofu/        # droplet, reserved IP and volume
+      taskfile.yml   # included with prefix `digital-ocean:opentofu`
     ansible/         # dynamic inventory, playbooks, cloud roles and vars for the droplet
+      taskfile.yml   # included with prefix `digital-ocean:ansible`
     tests/molecule/  # one Molecule scenario per role the droplet runs, see Tests
 ```
 
 ## Tasks
 
-All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks work on `configs-cloud/digital-ocean/opentofu`.
+All steps run through go-task from the repository root. The tasks wrap `tofu` and `doctl` from the devcontainer; the OpenTofu tasks are defined in and run from `configs-cloud/digital-ocean/opentofu/taskfile.yml`, the Ansible tasks from `configs-cloud/digital-ocean/ansible/taskfile.yml`.
 
 | Task                                                     | What it does                                                                                                                                         |
 |----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -25,8 +27,9 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` an
 | `task cloud:digital-ocean:ansible:inventory`             | List the droplets found by the dynamic inventory with their groups                                                                                   |
 | `task cloud:digital-ocean:ansible:provision`             | Provision all Ubuntu droplets (time zone, prompt, tools, Docker, swap, cAdvisor, Alloy, MOTD) after waiting for SSH and cloud-init                   |
 | `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` | Deploy the fantasy hockey app to the droplets with the tag `fantasy-hockey` ([Deployment](deployment.md))                                            |
-| `task cloud:digital-ocean:vault:fantasy-hockey`          | Edit the fantasy hockey secrets in `ansible/vars/fantasy-hockey-vault.yml`                                                                           |
-| `task cloud:digital-ocean:deploy`                        | Full pipeline: `opentofu:apply`, `ansible:provision`, then `ansible:deploy-fantasy-hockey`                                                           |
+| `task cloud:digital-ocean:ansible:all`                   | Run `playbooks/all.yml`: `provision.yml`, then `deploy-fantasy-hockey.yml`, in one Ansible run with one vault password prompt                        |
+| `task cloud:digital-ocean:ansible:vault:fantasy-hockey`  | Edit the fantasy hockey secrets in `ansible/vars/fantasy-hockey-vault.yml`                                                                           |
+| `task cloud:deploy:all`                                  | Full pipeline: `opentofu:apply`, then `ansible:all`, with one vault password prompt                                                                  |
 | `task cloud:info`                                        | Print the account, all droplets, reserved IPs and volumes with `doctl`                                                                               |
 | `task cloud:molecule:test`                               | Run every Molecule scenario for the roles the droplet runs ([Tests](tests.md))                                                                       |
 | `task cloud:molecule:test:<role>`                        | Run one Molecule scenario: `motd`, `alloy` or `fantasy-hockey`                                                                                       |

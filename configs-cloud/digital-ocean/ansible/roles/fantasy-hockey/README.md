@@ -28,7 +28,7 @@ The initial `fantasy-hockey.yml` data file is seeded once from a template (playe
 
 ## Required Variables
 
-The secrets are not role defaults. `deploy-fantasy-hockey.yml` loads them from the Ansible Vault file `configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml` (edit it with `task cloud:digital-ocean:vault:fantasy-hockey`). The Molecule scenario sets test values.
+The secrets are not role defaults. `deploy-fantasy-hockey.yml` loads them from the Ansible Vault file `configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml` (edit it with `task cloud:digital-ocean:ansible:vault:fantasy-hockey`). The Molecule scenario sets test values.
 
 | Variable                        | Description                                                                         |
 |---------------------------------|-------------------------------------------------------------------------------------|

@@ -62,7 +62,7 @@ Alloy (installed by `provision.yml`) scrapes the app at `localhost:8080/metrics`
 The secrets are in the Ansible Vault file `configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml`: `fantasy_hockey_session_secret`, `fantasy_hockey_smtp_host`, `fantasy_hockey_smtp_port`, `fantasy_hockey_smtp_username`, `fantasy_hockey_smtp_password` and `fantasy_hockey_players`. Edit them with:
 
 ```bash
-task cloud:digital-ocean:vault:fantasy-hockey
+task cloud:digital-ocean:ansible:vault:fantasy-hockey
 ```
 
 The plain variables (`fantasy_hockey_volume_mount`, `fantasy_hockey_path`, `fantasy_hockey_season`, `fantasy_hockey_regular_season_deadline_utc`, `fantasy_hockey_ps1`) are role defaults in `ansible/roles/fantasy-hockey/defaults/main.yml`.
@@ -71,11 +71,11 @@ The plain variables (`fantasy_hockey_volume_mount`, `fantasy_hockey_path`, `fant
 
 ```bash
 task cloud:digital-ocean:ansible:deploy-fantasy-hockey   # run deploy-fantasy-hockey.yml
-task cloud:digital-ocean:vault:fantasy-hockey            # edit the fantasy hockey secrets
-task cloud:digital-ocean:deploy                          # opentofu:apply, ansible:provision, then ansible:deploy-fantasy-hockey
+task cloud:digital-ocean:ansible:vault:fantasy-hockey    # edit the fantasy hockey secrets
+task cloud:deploy:all                                    # opentofu:apply, then ansible:all (provision and app deploy)
 ```
 
-The deploy asks for the vault password and stops early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. `deploy` asks for the vault password twice, once for provisioning and once for the app.
+The deploy asks for the vault password and stops early when `DIGITALOCEAN_ACCESS_TOKEN` is not set. `deploy:all` asks for the vault password only once, because provisioning and the app deploy run in one Ansible run (`playbooks/all.yml`).
 
 ## Checks
 
