@@ -40,6 +40,14 @@ tasks:
     cmds:
       - "{{ .DO_TOFU }} apply"
 
+  # Applies without the "yes" prompt, so read `opentofu:plan` first. prevent_destroy
+  # still refuses any plan that would destroy the volume or the reserved IP.
+  digital-ocean:opentofu:apply:yes:
+    desc: Apply the OpenTofu configuration to DigitalOcean without asking for confirmation (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - "{{ .DO_TOFU }} apply -auto-approve"
+
   digital-ocean:ansible:inventory:
     desc: List the droplets found by the dynamic inventory with their groups (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: *do-token
@@ -81,3 +89,5 @@ tasks:
     cmds:
       - doctl account get
       - doctl compute droplet list
+      - doctl compute reserved-ip list
+      - doctl compute volume list
