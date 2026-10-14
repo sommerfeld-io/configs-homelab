@@ -5,7 +5,8 @@ collections:
   - name: community.digitalocean
     version: 1.27.0
   # The fleet Alloy role run from provision.yml uses
-  # community.general.capabilities.
+  # community.general.capabilities; provision.yml itself uses
+  # community.general.timezone.
   - name: community.general
     version: 13.5.0
   # The role fantasy-hockey and the fleet role grafana-cloud/exporters (cAdvisor,

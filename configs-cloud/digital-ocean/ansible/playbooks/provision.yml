@@ -41,6 +41,13 @@
     - ../../../../configs-homelab/ansible/vars/grafana-vault.yml
   tasks:
 
+    # Sets /etc/localtime through timedatectl. The roles collection's filesystem
+    # role only writes /etc/timezone, which Ubuntu does not read for the system
+    # time zone.
+    - name: Set the time zone to Europe/Berlin
+      community.general.timezone:
+        name: Europe/Berlin
+
     - name: Configure the root bash prompt
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/ansible-roles-collection/bash

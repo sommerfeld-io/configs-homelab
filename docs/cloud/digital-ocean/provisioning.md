@@ -41,7 +41,7 @@ The first play, `Wait for new droplets`, gathers no facts, so it does not connec
 
 A droplet that fails here is left out of the second play; other droplets are still provisioned. The play does not wait for the apt lock that apt-daily or unattended-upgrades may take after cloud-init; the apt tasks wait up to 60 seconds for it (`lock_timeout`).
 
-On a droplet that is already up, the play passes at once and reports no change. The second play runs these roles in this order. Fleet roles come from `configs-homelab/ansible/roles` through relative paths, cloud roles from `ansible/roles`:
+On a droplet that is already up, the play passes at once and reports no change. The second play first sets the time zone to `Europe/Berlin` with `community.general.timezone` (`timedatectl`, so `/etc/localtime` changes; the fleet `filesystem` role only writes `/etc/timezone`, which Ubuntu does not read). Then it runs these roles in this order. Fleet roles come from `configs-homelab/ansible/roles` through relative paths, cloud roles from `ansible/roles`:
 
 - `bash` (only `11-bash-config-root`): aliases and the root prompt `ps1_root` in `/root/.bashrc`. The prompt is the root prompt of the local ubuntu machines, defined in `ansible/vars/main.yml`.
 - `packages` (only `basics`): the basic command line tools of the fleet, such as `curl`, `htop`, `jq`, `ncdu`, `nmap`, `tree` and `vim`, plus `pre-commit`, `python3-pip` and `auditd` (list in `packages/tasks/main/10-basics.yml`).
