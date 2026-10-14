@@ -10,4 +10,4 @@ The roles in `configs-homelab/ansible/roles/ansible-roles-collection/` are a git
 
 ## Cloud roles
 
-The roles the DigitalOcean droplet runs (the cloud roles under `configs-cloud/digital-ocean/ansible/roles/` and the fleet Alloy role with the cloud template) have their own scenarios under `configs-cloud/digital-ocean/tests/molecule/`, run with `task cloud:molecule:test` and the `molecule-cloud` CI job. See [Cloud - Digital Ocean / Tests](../cloud/digital-ocean/tests.md).
+The roles the DigitalOcean droplet runs (the cloud roles under `configs-cloud/digital-ocean/ansible/roles/` and the fleet Alloy role with the cloud template) have their own scenarios under `configs-cloud/digital-ocean/tests/molecule/`, run with `task cloud:molecule:test` and the `molecule-cloud` CI job. See [Cloud - Digital Ocean / Tests](../../cloud/digital-ocean/tests.md).

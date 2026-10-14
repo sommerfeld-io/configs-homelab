@@ -51,11 +51,10 @@
 		"configs-homelab/tests/molecule/**",
 
 		"docs/ai-implementation-plans",
-		"docs/ansible/**",
 		"docs/cloud/**",
+		"docs/homelab/**",
 		"docs/incidents/reports",
 		"docs/incidents/runbooks",
-		"docs/nodes/**",
 
 		"grafana-cloud/manifests/git-sync/**",
 		"grafana-cloud/manifests/unsycned/**",

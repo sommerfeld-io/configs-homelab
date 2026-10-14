@@ -50,7 +50,7 @@ tasks:
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     vars:
-      ROLES_DOCS: docs/ansible/roles
+      ROLES_DOCS: docs/homelab/ansible/roles
       ROLES_SRC: configs-homelab/ansible/roles
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
@@ -84,7 +84,7 @@ tasks:
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/exporters/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/exporters.md" }
       - task: common:copy
-        vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/nodes/omarchy-workstations/vm.md" }
+        vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/homelab/nodes/omarchy-workstations/vm.md" }
 
   docs:run:
     desc: Run the documentation server
