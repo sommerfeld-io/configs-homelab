@@ -105,15 +105,20 @@ ssh root@<droplet-ip> 'run-parts --lsbsysinit /etc/update-motd.d | cat -A'
 ```bash
 task cloud:digital-ocean:ansible:inventory   # droplets and their groups
 task cloud:digital-ocean:ansible:provision   # run provision.yml
-task cloud:digital-ocean:deploy              # full pipeline: opentofu:apply, then ansible:provision
+task cloud:digital-ocean:deploy              # full pipeline: opentofu:apply, ansible:provision, ansible:deploy-fantasy-hockey
 ```
 
 `ansible:provision` (and with it `deploy`) asks for the vault password. All three stop early when `DIGITALOCEAN_ACCESS_TOKEN` is not set.
 
 ## Replaced Droplet and Host Key
 
-A replaced droplet has the same tags but a new public IP and a new SSH host key. The inventory finds it again. If SSH reports a changed host key, remove the old entry first:
+A replaced droplet has the same tags but a new public IP and a new SSH host key. The inventory finds it again. Remove the old keys of the reserved IP and of the old droplet's public IP:
 
 ```bash
+ssh-keygen -R <reserved-ip>
 ssh-keygen -R <old-droplet-ip>
 ```
+
+If provisioning reports a changed host key for the new droplet's own IP, that address was in `known_hosts` already: remove it with `ssh-keygen -R <new-droplet-ip>` and run provisioning again.
+
+The full procedure is on [Replacement](replacement.md).

@@ -33,7 +33,7 @@ docker compose ps
 
 ## Paths and Files
 
-The deploy directory is `fantasy_hockey_path`, `/mnt/prod_fantasy_hockey_data/fantasy-hockey` on the volume, so the data file survives a droplet replacement.
+The deploy directory is `fantasy_hockey_path`, `/mnt/prod_fantasy_hockey_data/fantasy-hockey` on the volume, so the data file survives a droplet replacement, see [Replacement](replacement.md).
 
 | Path                      | Owner, mode                    | Content                                                                                                                                         |
 |---------------------------|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|

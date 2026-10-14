@@ -34,7 +34,7 @@ Each entry of the `droplets` map describes one droplet. The `stage` and the map 
 |------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `stage`          | `dev`, `test` or `prod` | Name prefix and tag of the droplet. The volume name uses it as well                                                                                                            |
 | `size`           | DigitalOcean size slug  | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                 |
-| `image`          | DigitalOcean image slug | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`                                                                                                          |
+| `image`          | DigitalOcean image slug | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`. Changing it [replaces](replacement.md) the droplet                                                      |
 | `resize_disk`    | `true` or `false`       | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                         |
 | `reserved_ip`    | `true` or `false`       | `true` gives the droplet a stable public address. `false` means no reserved IP                                                                                                 |
 | `volume_size_gb` | Number of GB, or `null` | A number creates and attaches a data volume of that size. `null` means no block volume                                                                                         |
@@ -77,7 +77,7 @@ The stage labels the environment of a droplet. It becomes the name prefix and th
 
 ### size and image
 
-`size` and `image` are passed to DigitalOcean unchanged. Look up valid slugs with `doctl compute size list` and `doctl compute image list-distribution`. Changing `image` replaces the droplet. Changing `size` resizes it in place.
+`size` and `image` are passed to DigitalOcean unchanged. Look up valid slugs with `doctl compute size list` and `doctl compute image list-distribution`. Changing `image` replaces the droplet, see [Replacement](replacement.md) for the procedure. Changing `size` resizes it in place.
 
 ### resize_disk
 
@@ -119,7 +119,7 @@ A droplet gets a reserved IP when its `reserved_ip` is `true` and a data volume 
 
 Both the volume and the reserved IP have `lifecycle { prevent_destroy = true }`. OpenTofu refuses every plan that would destroy them, including `tofu plan -destroy`, with the error `Resource instance cannot be destroyed`. The droplet and the IP assignment have no `prevent_destroy`, so the droplet stays replaceable.
 
-When a droplet that has them is replaced, OpenTofu destroys only the old droplet. The new droplet gets the same volume through `volume_ids`, and the assignment is recreated so the reserved IP points to the new droplet. The data on the volume and the public address survive; only the droplet's own public IPv4 changes. Always connect through the reserved IP. The new droplet answers on the reserved IP with a new SSH host key, so remove the old one with `ssh-keygen -R <reserved-ip>` before connecting.
+When a droplet that has them is replaced, OpenTofu destroys only the old droplet. The new droplet gets the same volume through `volume_ids`, and the assignment is recreated so the reserved IP points to the new droplet. The data on the volume and the public address survive; only the droplet's own public IPv4 changes. Always connect through the reserved IP. The new droplet answers on the reserved IP with a new SSH host key, so remove the old one with `ssh-keygen -R <reserved-ip>` before connecting. [Replacement](replacement.md) is the step-by-step procedure, including the data file copy and the checks.
 
 There is no resizing logic for the volume. Raising `volume_size_gb` grows the block device in place, but the ext4 filesystem only uses the new space after `resize2fs` runs on the droplet. Lowering `volume_size_gb` fails, because a volume can never shrink.
 
@@ -165,7 +165,7 @@ Run the steps from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 3. `task cloud:digital-ocean:opentofu:apply`: review the plan again and confirm with `yes`. The output prints each droplet's own public IPv4 address, the reserved IPs and the volume mount paths.
 4. `task cloud:digital-ocean:opentofu:plan`: a second plan must print `No changes.`
 
-A droplet only gets its volume mounted automatically when the volume is attached at droplet creation. Adding `volume_size_gb` to an existing droplet therefore needs a one-time replacement of that droplet. Force it with `-replace`; there is no task for this step:
+A droplet only gets its volume mounted automatically when the volume is attached at droplet creation. Adding `volume_size_gb` to an existing droplet therefore needs a one-time replacement of that droplet. Force it with `-replace`; there is no task for this step (see [Replacement](replacement.md) for the procedure around it):
 
 ```bash
 tofu -chdir=configs-cloud/digital-ocean/opentofu apply -replace='digitalocean_droplet.this["<key>"]'
