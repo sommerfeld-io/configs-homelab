@@ -82,6 +82,11 @@ context:
     - The plan showed "2 to add, 1 to change, 0 to destroy": the old droplet was already gone, so OpenTofu only created the new droplet and the reserved IP assignment and updated the project resources. The volume and the reserved IP were refreshed, not recreated.
     - Provision passed (`changed=39`). The app deploy stopped at the role's mount check: DigitalOcean attached the existing volume to the new droplet (web UI: attached) but did not mount it; `/mnt` was empty. The automatic mount only happens when the volume and the droplet are created together (Story 2.5).
     - Fix (user decision: in the fantasy hockey playbook, because not every droplet has this volume): `deploy-fantasy-hockey.yml` mounts `/dev/disk/by-id/scsi-0DO_Volume_<droplet-name>-data` at `/mnt/<droplet_name>_data` with `ansible.posix.mount` (pinned 2.2.2), fails when the device does not exist, and refreshes the mount facts. The tasks are tagged `volume`, and the deploy task passes extra arguments, so `-- --tags volume` mounts the volume without starting the app. The docs (replacement, deployment, droplet) no longer claim that the volume mounts automatically.
+- Drill run 2 (2026-10-14, by the user): the droplet was destroyed in the web UI, then `task cloud:digital-ocean:deploy` ran.
+    - Apply: "2 add, 1 change, 0 destroy" (new droplet `609117971`, reserved IP assignment, project resources); volume and reserved IP unchanged.
+    - Provision: `changed=39` on the fresh droplet.
+    - App deploy: the volume device existed, "Mount the volume" changed, the role's mount and path checks passed, the deploy files on the volume were unchanged, the seed was skipped (`fantasy-hockey.yml` found), and both containers ran (`changed=6`).
+- Page simplified on the user's request. A droplet is removed manually (web UI, without destroying the volume) or with `tofu apply -destroy -target='digitalocean_droplet.this["fantasy-hockey"]'`, and then set up again with `task cloud:digital-ocean:deploy`. Removing the entry from `droplets.tf` does not work, because the volume and the reserved IP come from the same entry and `prevent_destroy` refuses the plan. The pre-drill copy and the separate checksum step were dropped from the page.
 
 ## Spec Change Log
 

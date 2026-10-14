@@ -10,7 +10,7 @@ The play first mounts the droplet's data volume. DigitalOcean mounts a volume au
 
 - The device is `/dev/disk/by-id/scsi-0DO_Volume_<droplet-name>-data` (`fantasy_hockey_volume_device`) and the mount point `/mnt/<droplet_name>_data` (`fantasy_hockey_volume_mount`), both derived from the droplet name, so `prod-fantasy-hockey` gets `/mnt/prod_fantasy_hockey_data`.
 - The play fails when the device does not exist (the volume is not attached). Otherwise `ansible.posix.mount` mounts the existing ext4 file system with `defaults,nofail,discard,noatime` and writes the `fstab` entry; it never formats the volume. After a new mount it refreshes the mount facts for the role's check.
-- These tasks are tagged `volume`: `task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume` mounts the volume without starting the app, see [Replacement](replacement.md#provision-and-deploy).
+- These tasks are tagged `volume`: `task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume` mounts the volume without starting the app, for example to check the data file before the app starts.
 
 Then the play loads the secrets from the vault file with an `include_vars` task and runs the cloud role `ansible/roles/fantasy-hockey`. The role runs these steps in this order:
 
