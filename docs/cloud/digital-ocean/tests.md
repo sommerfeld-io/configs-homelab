@@ -47,6 +47,8 @@ The `fantasy-hockey` scenario cannot run Docker in the unprivileged container, s
 
 The `swap` role has no scenario. `swapon` cannot run in an unprivileged container, and a privileged one is not allowed (see above). The role is checked on the droplet: a second `task cloud:digital-ocean:ansible:provision` run reports no change.
 
+The fleet role `grafana-cloud/exporters` (cAdvisor) has no scenario either. It runs a docker compose project and asserts that the `cadvisor` container runs, and the unprivileged test container has no Docker. It is checked on the droplet in the same way: a second provision run reports no change for its tasks, and `docker ps` lists `cadvisor` with `127.0.0.1:9110->8080/tcp`.
+
 ## CI
 
 The `molecule-cloud` job in `.github/workflows/pipeline.yml` runs the scenarios as a matrix (`motd`, `alloy`, `fantasy-hockey`) after the linters, ShellCheck and the InSpec checks, next to the `molecule` job for the homelab roles. `generate-docs`, and through it the release, waits for both. See [Pipelines](../../pipelines.md).

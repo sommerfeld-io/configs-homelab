@@ -22,7 +22,7 @@ All steps run through go-task from the repository root. The tasks wrap `tofu` an
 | `task cloud:digital-ocean:opentofu:plan`                 | Show the changes OpenTofu would make                                                                                              |
 | `task cloud:digital-ocean:opentofu:apply`                | Apply the OpenTofu configuration                                                                                                  |
 | `task cloud:digital-ocean:ansible:inventory`             | List the droplets found by the dynamic inventory with their groups                                                                |
-| `task cloud:digital-ocean:ansible:provision`             | Provision all Ubuntu droplets with Ansible (prompt, basic tools, Docker, swap, Alloy, MOTD), after waiting for SSH and cloud-init |
+| `task cloud:digital-ocean:ansible:provision`             | Provision all Ubuntu droplets (prompt, basic tools, Docker, swap, cAdvisor, Alloy, MOTD), after waiting for SSH and cloud-init    |
 | `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` | Deploy the fantasy hockey app to the droplets with the tag `fantasy-hockey` ([Deployment](deployment.md))                         |
 | `task cloud:digital-ocean:vault:fantasy-hockey`          | Edit the fantasy hockey secrets in `ansible/vars/fantasy-hockey-vault.yml`                                                        |
 | `task cloud:digital-ocean:deploy`                        | Full pipeline: `opentofu:apply`, `ansible:provision`, then `ansible:deploy-fantasy-hockey`                                        |

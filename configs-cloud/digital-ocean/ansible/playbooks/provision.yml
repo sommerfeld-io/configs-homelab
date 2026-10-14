@@ -60,6 +60,10 @@
       ansible.builtin.include_role:
         name: ../roles/swap
 
+    - name: Run cAdvisor
+      ansible.builtin.include_role:
+        name: ../../../../configs-homelab/ansible/roles/grafana-cloud/exporters
+
     - name: Install Alloy
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/grafana-cloud/alloy

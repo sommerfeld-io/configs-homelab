@@ -19,6 +19,15 @@
         mode: u=rw,g=r,o=r
       register: compose_file
 
+    - name: Grafana Cloud  ----  Exporters  ----  Write .env with the cAdvisor bind address
+      ansible.builtin.copy:
+        content: |
+          CADVISOR_BIND_ADDRESS={{ exporters_cadvisor_bind_address }}
+        dest: "{{ exporters_path }}/.env"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: u=rw,g=r,o=r
+
     - name: Grafana Cloud  ----  Exporters  ----  Start containers
       community.docker.docker_compose_v2:
         project_src: "{{ exporters_path }}"
@@ -42,3 +51,13 @@
           - cadvisor_info.container.State.Running
         fail_msg: "cAdvisor container is not running"
         success_msg: "cAdvisor container is running"
+
+    - name: Grafana Cloud  ----  Exporters  ----  Assert cAdvisor port 9110 is bound to exporters_cadvisor_bind_address
+      ansible.builtin.assert:
+        that:
+          - cadvisor_info.container.HostConfig.PortBindings['8080/tcp'][0].HostIp == exporters_cadvisor_bind_address
+        fail_msg: >-
+          cAdvisor port 9110 is bound to
+          '{{ cadvisor_info.container.HostConfig.PortBindings['8080/tcp'][0].HostIp }}',
+          but exporters_cadvisor_bind_address is '{{ exporters_cadvisor_bind_address }}'
+        success_msg: "cAdvisor port 9110 is bound to {{ exporters_cadvisor_bind_address }}"

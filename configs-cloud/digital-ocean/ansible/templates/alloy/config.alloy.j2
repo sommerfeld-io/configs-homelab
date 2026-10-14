@@ -191,7 +191,8 @@ loki.source.docker "docker_containers" {
 }
 
 /*
- * cAdvisor metrics. The target shows up=0 while no cAdvisor runs; no Alloy error.
+ * cAdvisor metrics. provision.yml runs cAdvisor (fleet role grafana-cloud/exporters)
+ * on 127.0.0.1:9110. Without it the target shows up=0 and Alloy logs no error.
  */
 discovery.relabel "integrations_cadvisor" {
   targets = [{
@@ -231,8 +232,8 @@ prometheus.relabel "integrations_cadvisor" {
 }
 
 /*
- * App metrics. The app is deployed in Epic 4; until then the target shows
- * up=0 and Alloy logs no error.
+ * App metrics. deploy-fantasy-hockey.yml runs the app; while it is not deployed
+ * the target shows up=0 and Alloy logs no error.
  */
 discovery.relabel "fantasy_hockey" {
   targets = [{

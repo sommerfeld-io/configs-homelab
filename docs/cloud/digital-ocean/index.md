@@ -32,6 +32,7 @@ cloud "DigitalOcean" as digitalocean {
     node "Droplet prod-fantasy-hockey\ns-1vcpu-1gb, fra1\ntags prod, fantasy-hockey\n(declared)" as droplet
     component "Reserved IP\n(declared)" as reservedip
     component "Grafana Alloy\n(swap file)" as alloy
+    component "cAdvisor\n127.0.0.1:9110" as cadvisor
     component "fantasy-hockey stack\nnginx :80, app :8080\n(user fantasy-hockey)" as app
     storage "Volume 2 GB ext4\n/mnt/prod_fantasy_hockey_data\n(declared)" as volume
   }
@@ -52,16 +53,18 @@ api --> volume : manages
 reservedip ..> droplet : assigned to
 volume ..> droplet : attached to
 alloy ..> droplet : runs on
+cadvisor ..> droplet : runs on
 app ..> droplet : runs on
 app --> volume : data file
 alloy --> app : scrapes :8080/metrics
+alloy --> cadvisor : scrapes :9110/metrics
 reservedip --> app : HTTP :80
 @enduml
 ```
 
 - **Operator workstation and devcontainer:** every step starts as a `task cloud:*` command from the repository root. The devcontainer provides `tofu`, `doctl` and `ansible` and receives the API token as `DIGITALOCEAN_ACCESS_TOKEN`.
 - **OpenTofu:** declares the resources and records them in a local state file. The state file sits in the repo clone on the workstation (bind-mounted into the devcontainer) and is gitignored, so it survives a container rebuild but not the loss of the clone. It moves to a remote backend later.
-- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (basic command line tools, Docker, swap, Alloy, login banner). See [Provisioning](provisioning.md).
+- **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (basic command line tools, Docker, swap, cAdvisor, Alloy, login banner). See [Provisioning](provisioning.md).
 - **Deployment:** `deploy-fantasy-hockey.yml` runs the fantasy hockey app (app and nginx, docker compose) as the user `fantasy-hockey`, with its data on the volume, reachable over HTTP at the reserved IP. See [Deployment](deployment.md).
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.
