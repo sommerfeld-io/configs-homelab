@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-14-2026 18:27
+last_updated: 10-14-2026 19:13
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -56,10 +56,10 @@ development_status:
   3-5-molecule-tests-for-the-cloud-ansible-roles: done
   epic-3-retrospective: done
 
-  epic-4: in-progress
+  epic-4: done
   4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx: done
   4-2-dependabot-compose-bumps-for-cloud-configs: done
-  4-3-droplet-replacement-drill: in-progress
+  4-3-droplet-replacement-drill: done
   epic-4-retrospective: optional
 
   epic-5: backlog

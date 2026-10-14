@@ -2,7 +2,7 @@
 title: 'Droplet replacement drill'
 type: 'chore'
 created: '2026-10-14'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'ca7fac369e3af3b4de92d95f29adfb62fa0e718a'
 review_loop_iteration: 0
@@ -68,8 +68,8 @@ context:
     - the expected outage.
 
     Link it from `index.md`, `droplet.md` (image row and replacement paragraphs) and `deployment.md`.
-- [ ] HUMAN: run the drill on the real droplet following the page, and report the outputs (plan summary, deploy recaps, check results, the outage duration).
-- [ ] Fix whatever the drill shows to be broken, and correct the page wherever reality differs from it.
+- [x] HUMAN: run the drill on the real droplet following the page, and report the outputs (plan summary, deploy recaps, check results, the outage duration).
+- [x] Fix whatever the drill shows to be broken, and correct the page wherever reality differs from it.
 
 **Acceptance Criteria:**
 
@@ -87,6 +87,7 @@ context:
     - Provision: `changed=39` on the fresh droplet.
     - App deploy: the volume device existed, "Mount the volume" changed, the role's mount and path checks passed, the deploy files on the volume were unchanged, the seed was skipped (`fantasy-hockey.yml` found), and both containers ran (`changed=6`).
 - Page simplified on the user's request. A droplet is removed manually (web UI, without destroying the volume) or with `tofu apply -destroy -target='digitalocean_droplet.this["fantasy-hockey"]'`, and then set up again with `task cloud:digital-ocean:deploy`. Removing the entry from `droplets.tf` does not work, because the volume and the reserved IP come from the same entry and `prevent_destroy` refuses the plan. The pre-drill copy and the separate checksum step were dropped from the page.
+- Second run after the drill (2026-10-14, by the user): `task cloud:digital-ocean:deploy` reported "No changes" in OpenTofu, `changed=0` in provision and `changed=0` in the app deploy. `http://129.212.195.118` serves the app, `/metrics` returns 404, and both `up` series (`fantasy-hockey`, `integrations/cadvisor`) are 1 after the deploy. Story done.
 
 ## Spec Change Log
 
