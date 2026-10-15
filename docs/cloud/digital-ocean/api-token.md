@@ -20,7 +20,7 @@ Creating a droplet also requires read access to regions, sizes, images, snapshot
 
 If the control panel names a scope differently, pick the one covering that resource. The permissions of the `block_storage`, `reserved_ip` and `project` scopes are the broad set used so far; trimming them was not verified.
 
-Add `firewall` or `domain` only if a later story needs them. DigitalOcean firewalls are not used.
+`firewall` is not needed, because DigitalOcean firewalls are not used. `domain` is not needed, because DNS stays at all-inkl.com (see [Domain](domain.md)).
 
 ## How the Token Reaches the Shell
 

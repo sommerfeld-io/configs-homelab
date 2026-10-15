@@ -105,6 +105,7 @@ nav:
           - API Token: cloud/digital-ocean/api-token.md
           - Tasks and Linters: cloud/digital-ocean/tasks-and-linters.md
           - Droplet: cloud/digital-ocean/droplet.md
+          - Domain: cloud/digital-ocean/domain.md
           - Provisioning: cloud/digital-ocean/provisioning.md
           - Deployment: cloud/digital-ocean/deployment.md
           - Replacement: cloud/digital-ocean/replacement.md
