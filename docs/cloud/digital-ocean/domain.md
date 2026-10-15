@@ -1,6 +1,6 @@
 # Domain
 
-The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. An A record points it at the droplet's reserved IP. Users reach the app by this name instead of by IP.
+The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. An A record points it at the droplet's reserved IP. Users reach the app by this name instead of by IP: Caddy serves it at `https://fantasy-hockey.prod.do.sommerfeld.app` with a Let's Encrypt certificate and answers requests to the reserved IP with 404 (see [Deployment](deployment.md)).
 
 ## Record
 
@@ -22,7 +22,7 @@ There is no AAAA record: the reserved IP is IPv4 only.
 
 `sommerfeld.app` is registered and hosted at the web hosting provider all-inkl.com (nameservers `ns5.kasserver.com` and `ns6.kasserver.com`). DNS stays there, and OpenTofu does not manage it. So the record is created by hand, and the DigitalOcean API token needs no `domain` scope (see [API Token](api-token.md)).
 
-The `.app` TLD is on the browsers' HSTS preload list: browsers open `.app` domains only over HTTPS, never over plain HTTP. A `.app` name opens in a browser only when the droplet serves HTTPS for it.
+The `.app` TLD is on the browsers' HSTS preload list: browsers open `.app` domains only over HTTPS, never over plain HTTP. A `.app` name opens in a browser only when the droplet serves HTTPS for it, which Caddy does.
 
 The zone has no CAA record (checked 2026-10-15 for the name and every parent up to `sommerfeld.app`), so any certificate authority, including Let's Encrypt, may issue certificates for the name. A CAA record added later must allow `letsencrypt.org`.
 
@@ -50,6 +50,8 @@ curl -s -H 'accept: application/dns-json' 'https://cloudflare-dns.com/dns-query?
 ```
 
 Both answers have `"data"` equal to the reserved IP from `tofu output reserved_ip_addresses`. `85.13.131.235` means the record is missing or a resolver still caches the wildcard answer. With `dig` available: `dig +short fantasy-hockey.prod.do.sommerfeld.app` prints the reserved IP.
+
+The deploy checks the record too: before it writes anything, it resolves the name on the droplet and stops when the reserved IP is not among the answers, so Caddy never asks Let's Encrypt for a certificate it cannot get (see [DNS Check](deployment.md#dns-check)). The domain is derived from the droplet name, so a new droplet needs its record before its first deploy.
 
 ## Remove the Record
 

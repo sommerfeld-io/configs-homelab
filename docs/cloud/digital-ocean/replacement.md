@@ -28,11 +28,12 @@ task cloud:deploy:all
 
 `deploy:all` runs `opentofu:apply` and then `ansible:all` (provisioning and the app deploy) and asks for the vault password once. The apply creates the droplet and the reserved IP assignment. After a targeted OpenTofu destroy it also recreates `digitalocean_project_resources.this`; after a destroy in the web UI it only updates it. The volume and the reserved IP stay as they are. The domain points at the reserved IP, so a replacement needs no DNS change (see [Domain](domain.md)).
 
-DigitalOcean attaches the existing volume to the new droplet but does not mount it. The app deploy mounts it (see [Deployment](deployment.md#deploy-fantasy-hockeyyml)), finds `fantasy-hockey.yml` and does not seed it again.
+DigitalOcean attaches the existing volume to the new droplet but does not mount it. The app deploy mounts it (see [Deployment](deployment.md#deploy-fantasy-hockeyyml)), finds `fantasy-hockey.yml` and does not seed it again. Caddy finds its certificate and ACME account in `caddy/data/` on the volume and orders no new certificate.
 
 ## Checks
 
-- `http://<reserved-ip>` serves the app, and `http://<reserved-ip>/metrics` returns 404.
+- `curl -s -o /dev/null -w '%{http_code}\n' https://fantasy-hockey.prod.do.sommerfeld.app/login` prints `200` (curl fails on an invalid certificate; `/` itself answers `302` to `/login`), the same command for `https://fantasy-hockey.prod.do.sommerfeld.app/metrics` prints `404`, and for `http://<reserved-ip>/` prints `404`.
+- The certificate was reused from `caddy/data/` on the volume, not ordered again: `ssh root@<reserved-ip> 'docker logs fantasy-hockey-caddy 2>&1 | grep -c "obtaining certificate" || true'` prints `0`, and the certificate's start date (`curl -sv https://fantasy-hockey.prod.do.sommerfeld.app -o /dev/null 2>&1 | grep 'start date'`) is older than the replacement.
 - `ssh root@<reserved-ip> 'findmnt /mnt/prod_fantasy_hockey_data'` shows the volume.
 - In Grafana Cloud, `up{job="fantasy-hockey", environment="digital-ocean", stage="prod"}` and `up{job="integrations/cadvisor", environment="digital-ocean", stage="prod"}` are `1` after the deploy. The new droplet has the same instance name as the old one, so look at samples after the deploy only.
 - `ssh root@<reserved-ip> 'systemctl show docker.service -p Requires -p After'` lists `mnt-prod_fantasy_hockey_data.mount` in both.

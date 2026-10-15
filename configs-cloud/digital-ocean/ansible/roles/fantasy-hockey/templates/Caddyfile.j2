@@ -1,0 +1,25 @@
+# Managed by Ansible (role fantasy-hockey, templates/Caddyfile.j2)
+
+# The app's domain. Caddy gets the Let's Encrypt certificate for it, stores it in
+# /data (caddy/data on the volume) and redirects http:// on the domain to
+# https:// (308).
+{{ fantasy_hockey_domain }} {
+	log
+
+	# The app serves /metrics anonymously; hide it from outside. Matches /metrics,
+	# //metrics and /metrics/ in any case and answers without forwarding. Alloy
+	# scrapes the app on 127.0.0.1:8080/metrics.
+	@metrics path_regexp (?i)^/+metrics/*$
+	respond @metrics 404
+
+	# The app service on the compose network. Caddy resolves the name per
+	# connection, so a recreated app container is found again.
+	reverse_proxy app:8080
+}
+
+# Every other name on port 80, the reserved IP included, gets a 404 instead of
+# the app. https:// on the IP fails the TLS handshake: Caddy has no certificate
+# for it.
+http:// {
+	respond 404
+}

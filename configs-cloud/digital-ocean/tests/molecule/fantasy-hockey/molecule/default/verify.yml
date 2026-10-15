@@ -48,9 +48,12 @@
         path: "{{ fantasy_hockey_path }}/{{ item }}"
       loop:
         - .
+        - caddy
+        - caddy/data
+        - caddy/config
+        - caddy/Caddyfile
         - nginx
         - docker-compose.yml
-        - nginx/default.conf
         - .env
         - data
         - data/fantasy-hockey.yml
@@ -62,14 +65,31 @@
       ansible.builtin.assert:
         that:
           - files['.'].pw_name == default_user and files['.'].mode == '0755'
-          - files['nginx'].pw_name == default_user and files['nginx'].mode == '0755'
+          - files['caddy'].pw_name == default_user and files['caddy'].mode == '0755'
+          - files['caddy/data'].pw_name == default_user and files['caddy/data'].mode == '0700'
+          - files['caddy/config'].pw_name == default_user and files['caddy/config'].mode == '0700'
+          - files['caddy/Caddyfile'].pw_name == default_user and files['caddy/Caddyfile'].mode == '0644'
+          - not files['nginx'].exists
           - files['docker-compose.yml'].pw_name == default_user and files['docker-compose.yml'].mode == '0644'
-          - files['nginx/default.conf'].pw_name == default_user and files['nginx/default.conf'].mode == '0644'
           - files['.env'].pw_name == default_user and files['.env'].gr_name == default_user
           - files['.env'].mode == '0600'
           - files['data'].uid == 1000 and files['data'].gid == 1000 and files['data'].mode == '0755'
           - files['data/fantasy-hockey.yml'].uid == 1000 and files['data/fantasy-hockey.yml'].gid == 1000
           - files['data/fantasy-hockey.yml'].mode == '0644'
+
+    - name: Read the Caddyfile
+      ansible.builtin.slurp:
+        src: "{{ fantasy_hockey_path }}/caddy/Caddyfile"
+      register: caddyfile
+
+    - name: Assert the Caddyfile serves the test domain
+      ansible.builtin.assert:
+        that:
+          - "(fantasy_hockey_domain ~ ' {') in (caddyfile.content | b64decode).split('\n')"
+          - "'reverse_proxy app:8080' in (caddyfile.content | b64decode)"
+          - "'@metrics path_regexp (?i)^/+metrics/*$' in (caddyfile.content | b64decode)"
+          - "'respond @metrics 404' in (caddyfile.content | b64decode)"
+          - (caddyfile.content | b64decode) is search('(?m)^http:// \\{\\n\\s*respond 404\\n\\}')
 
     - name: Read .env
       ansible.builtin.slurp:
@@ -111,6 +131,19 @@
         group: root
         mode: u=rw,g=,o=
 
+    # A deploy directory from before Story 7.2 still has the nginx config.
+    - name: Create the nginx folder of the old proxy
+      ansible.builtin.file:
+        path: "{{ fantasy_hockey_path }}/nginx"
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Create the nginx config of the old proxy
+      ansible.builtin.copy:
+        dest: "{{ fantasy_hockey_path }}/nginx/default.conf"
+        content: "server {}\n"
+        mode: u=rw,g=r,o=r
+
     - name: Run the role's file tasks again
       ansible.builtin.include_role:
         name: ../../../../../ansible/roles/fantasy-hockey
@@ -133,12 +166,23 @@
           - after_rerun_stat.stat.pw_name == 'root'
           - after_rerun_stat.stat.mode == '0600'
 
+    - name: Read the nginx folder after the second run
+      ansible.builtin.stat:
+        path: "{{ fantasy_hockey_path }}/nginx"
+      register: nginx_after_rerun
+
+    - name: Assert the nginx folder of the old proxy is gone
+      ansible.builtin.assert:
+        that:
+          - not nginx_after_rerun.stat.exists
+
     # The guards of tasks/main.yml: the role stops before it writes anything (the
-    # user included) when the volume is not mounted or the deploy directory is
-    # not on it. Each case runs the role's main entry with its own user and path,
-    # so a guard that does not stop shows up as a user or folder that exists.
-    # The container cannot run Docker, so a missed guard also fails later, at
-    # docker compose; the rescue therefore checks that a guard task failed.
+    # user included) when the volume is not mounted, the deploy directory is
+    # not on it, or the domain does not resolve to the reserved IP. Each case
+    # runs the role's main entry with its own user and path, so a guard that
+    # does not stop shows up as a user or folder that exists. The container
+    # cannot run Docker, so a missed guard also fails later, at docker compose;
+    # the rescue therefore checks that a guard task failed.
     # /etc/hostname stands in for a mounted volume: Docker bind-mounts it into
     # every container.
     - name: Read the mount facts for the guard cases
@@ -203,6 +247,24 @@
           ansible.builtin.set_fact:
             guard_sibling: "{{ ansible_failed_task.name }}"
 
+    # Volume and path pass, but localhost does not resolve to 192.0.2.1, like a
+    # domain that is missing (wildcard answer) or points at another address.
+    - name: Guard case, domain not resolving to the reserved IP
+      vars:
+        default_user: fh-guard-dns
+        fantasy_hockey_volume_mount: /etc/hostname
+        fantasy_hockey_path: /etc/hostname/fantasy-hockey
+        fantasy_hockey_reserved_ip: 192.0.2.1
+      block:
+        - name: Run the role with a domain that does not resolve to the reserved IP
+          ansible.builtin.include_role:
+            name: ../../../../../ansible/roles/fantasy-hockey
+      rescue:
+        - name: Record the guard that stopped the role (domain)
+          ansible.builtin.set_fact:
+            guard_dns: "{{ ansible_failed_task.name }}"
+            guard_dns_msg: "{{ ansible_failed_result.msg }}"
+
     - name: Read the users of the guard cases
       ansible.builtin.getent:
         database: passwd
@@ -229,8 +291,14 @@
           - guard_dotdot is search('Stop when the deploy directory is not on the volume')
           - guard_sibling is defined
           - guard_sibling is search('Stop when the deploy directory is not on the volume')
+          - guard_dns is defined
+          - guard_dns is search('Stop when the domain does not resolve to the reserved IP')
+          - guard_dns_msg is search('localhost resolves to 127.0.0.1')
+          - guard_dns_msg is search('not to the reserved IP 192.0.2.1')
+          - guard_dns_msg is search('docs/cloud/digital-ocean/domain.md')
           - "'fh-guard-unmounted' not in ansible_facts.getent_passwd"
           - "'fh-guard-outside' not in ansible_facts.getent_passwd"
           - "'fh-guard-dotdot' not in ansible_facts.getent_passwd"
           - "'fh-guard-sibling' not in ansible_facts.getent_passwd"
+          - "'fh-guard-dns' not in ansible_facts.getent_passwd"
           - guard_folders.results | selectattr('stat.exists') | list | length == 0

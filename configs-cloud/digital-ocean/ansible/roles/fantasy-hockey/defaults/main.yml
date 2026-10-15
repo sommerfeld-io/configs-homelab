@@ -7,9 +7,17 @@
 # is not a mount point, or when fantasy_hockey_path is not below it.
 fantasy_hockey_volume_mount: /mnt/prod_fantasy_hockey_data
 
-# Deploy directory: compose file, nginx config, .env and the data folder. It
-# lives on the volume, so the data survives a droplet replacement.
+# Deploy directory: compose file, Caddy config and data, .env and the data
+# folder. It lives on the volume, so the app data and the certificates survive a
+# droplet replacement.
 fantasy_hockey_path: "{{ fantasy_hockey_volume_mount }}/fantasy-hockey"
+
+# The only name Caddy serves the app at, with a Let's Encrypt certificate. The
+# pattern is <app>.<stage>.do.sommerfeld.app. deploy-fantasy-hockey.yml derives
+# it from the droplet name (<stage>-<app>); this default only covers the prod
+# droplet. tasks/dns.yml stops the deploy when it does not resolve to the
+# reserved IP (fantasy_hockey_reserved_ip, read by the playbook).
+fantasy_hockey_domain: fantasy-hockey.prod.do.sommerfeld.app
 
 # Written into the seeded data file only (see tasks/files.yml).
 fantasy_hockey_season: "2026-27"

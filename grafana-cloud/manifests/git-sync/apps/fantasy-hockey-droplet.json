@@ -1902,7 +1902,7 @@
               "transformations": []
             }
           },
-          "description": "Server errors (status 5xx) per second per route, without GET /metrics, from the app's own metrics. Empty when there were no 5xx responses. Responses nginx answers itself (502/504 while the app is down or slow) are not counted: check the App stat and the container logs.",
+          "description": "Server errors (status 5xx) per second per route, without GET /metrics, from the app's own metrics. Empty when there were no 5xx responses. Responses Caddy answers itself (502 while the app is down or unreachable) are not counted: check the App stat and the container logs.",
           "id": 17,
           "links": [],
           "title": "5xx Rate",

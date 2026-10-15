@@ -8,6 +8,11 @@ default_user: fantasy-hockey
 # volume, and converge does not run tasks/main.yml (verify tests its guards
 # with values of its own).
 fantasy_hockey_path: /srv/fantasy-hockey
+# The DNS guard (tasks/dns.yml) passes: localhost resolves to 127.0.0.1 in the
+# container. On the droplet the playbook derives the domain and reads the
+# reserved IP from the metadata service.
+fantasy_hockey_domain: localhost
+fantasy_hockey_reserved_ip: 127.0.0.1
 fantasy_hockey_season: "2099-00"
 fantasy_hockey_regular_season_deadline_utc: "2099-10-01T00:00:00Z"
 fantasy_hockey_session_secret: molecule-session-secret

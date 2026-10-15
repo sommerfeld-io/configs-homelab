@@ -162,3 +162,7 @@
 - No lint or CI check reads the git-sync manifests (parse, `environment` filter) — same as the Story 5.1 entry above.
 - The cloud Alloy Molecule verify does not pin the job names and the cAdvisor keep-list the droplet dashboard queries — same as the Story 5.1 entry above.
 - `epic-5-context.md` says the dashboard reaches Grafana Cloud "not via manual UI edits", while Git Sync writes UI edits back into the manifest (documented in `monitoring.md`); reconcile together with the `git-sync/README.md` entry above.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-7-2-caddy-with-automatic-tls-replaces-nginx.md`
+  summary: Automated test for the fantasy-hockey compose orchestration (remove_orphans freeing port 80, restart on Caddyfile change, container asserts) and the playbook's domain derivation and metadata read.
+  evidence: Story 7.2 verification-gap review; Molecule cannot run Docker without a privileged container, so these run only in the operator's droplet deploy.

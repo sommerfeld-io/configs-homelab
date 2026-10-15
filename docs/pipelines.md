@@ -106,7 +106,7 @@ Until Story 6.3 is done, a merged change under `configs-cloud/` reaches DigitalO
 | `docker-compose` | `configs-homelab/ansible/roles/media/jellyfin/files`                                                               |
 | `docker-compose` | `configs-homelab/ansible/roles/raspi/fritz-box-exporter/files`                                                     |
 | `docker-compose` | `configs-homelab/ansible/roles/raspi/pihole/files`                                                                 |
-| `docker-compose` | `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files` (the fantasy hockey app and nginx on the droplet) |
+| `docker-compose` | `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files` (the fantasy hockey app and Caddy on the droplet) |
 | `opentofu`       | `/configs-cloud/digital-ocean/opentofu` (the `digitalocean` provider)                                              |
 
 The fantasy-hockey compose file moved from the RasPi role to `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey`, and its Dependabot entry moved with it, so a compose bump is a change under `configs-cloud/digital-ocean`. Nothing redeploys the droplet after a merged bump yet: run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` by hand (see [Deployment](cloud/digital-ocean/deployment.md)).

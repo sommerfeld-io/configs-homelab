@@ -1,6 +1,7 @@
 ---
-# The app data must live on the volume. Both checks run before anything is
-# written, the user included.
+# The app data must live on the volume, and the domain must point at this
+# droplet before Caddy asks Let's Encrypt for a certificate. All three checks
+# run before anything is written, the user included.
 - name: Fantasy Hockey  ----  Stop when the volume is not mounted
   ansible.builtin.assert:
     that:
@@ -24,6 +25,9 @@
       override of fantasy_hockey_path, for example in the vault file.
     quiet: true
 
+- name: Fantasy Hockey  ----  Check the domain
+  ansible.builtin.include_tasks: dns.yml
+
 - name: Fantasy Hockey  ----  Create the deploy user
   ansible.builtin.include_tasks: user.yml
 
@@ -42,6 +46,9 @@
         project_src: "{{ fantasy_hockey_path }}"
         state: present
         pull: missing
+        # Removes containers of services that left the compose file (the old
+        # fantasy-hockey-nginx) before the new ones bind their ports.
+        remove_orphans: true
 
     - name: Fantasy Hockey  ----  Restart stack on config change
       community.docker.docker_compose_v2:
@@ -49,7 +56,7 @@
         state: restarted
       when: >-
         fantasy_hockey_compose_file.changed or
-        fantasy_hockey_nginx_conf.changed or
+        fantasy_hockey_caddyfile.changed or
         fantasy_hockey_env_file.changed
 
     - name: Fantasy Hockey  ----  Read the app container
@@ -57,10 +64,10 @@
         name: fantasy-hockey-app
       register: fantasy_hockey_app_info
 
-    - name: Fantasy Hockey  ----  Read the nginx container
+    - name: Fantasy Hockey  ----  Read the Caddy container
       community.docker.docker_container_info:
-        name: fantasy-hockey-nginx
-      register: fantasy_hockey_nginx_info
+        name: fantasy-hockey-caddy
+      register: fantasy_hockey_caddy_info
 
     - name: Fantasy Hockey  ----  Assert the app container is running
       ansible.builtin.assert:
@@ -70,10 +77,10 @@
         fail_msg: "Fantasy Hockey app container is not running"
         success_msg: "Fantasy Hockey app container is running"
 
-    - name: Fantasy Hockey  ----  Assert the nginx container is running
+    - name: Fantasy Hockey  ----  Assert the Caddy container is running
       ansible.builtin.assert:
         that:
-          - fantasy_hockey_nginx_info.exists
-          - fantasy_hockey_nginx_info.container.State.Running
-        fail_msg: "Fantasy Hockey nginx container is not running"
-        success_msg: "Fantasy Hockey nginx container is running"
+          - fantasy_hockey_caddy_info.exists
+          - fantasy_hockey_caddy_info.container.State.Running
+        fail_msg: "Fantasy Hockey Caddy container is not running"
+        success_msg: "Fantasy Hockey Caddy container is running"

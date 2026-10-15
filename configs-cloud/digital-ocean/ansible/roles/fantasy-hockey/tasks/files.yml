@@ -1,5 +1,5 @@
 ---
-# Everything that lands on disk: directories, compose file, nginx config, .env
+# Everything that lands on disk: directories, compose file, Caddyfile, .env
 # and the seeded data file. No Docker needed, so the Molecule scenario runs these
 # tasks alone (tasks_from: files).
 
@@ -12,7 +12,28 @@
     mode: u=rwx,g=rx,o=rx
   loop:
     - "{{ fantasy_hockey_path }}"
-    - "{{ fantasy_hockey_path }}/nginx"
+    - "{{ fantasy_hockey_path }}/caddy"
+
+# Caddy's certificates, private keys and ACME account (/data) and its autosaved
+# config (/config). On the volume, so a replacement droplet reuses the
+# certificate instead of ordering a new one. Caddy runs as root in its container.
+- name: Fantasy Hockey  ----  Create Caddy data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{ fantasy_hockey_path }}/caddy/data"
+    - "{{ fantasy_hockey_path }}/caddy/config"
+
+# Left over from the nginx proxy that Caddy replaced (Story 7.2). docker compose
+# removes the old container (remove_orphans in tasks/main.yml).
+- name: Fantasy Hockey  ----  Remove the old nginx config
+  ansible.builtin.file:
+    path: "{{ fantasy_hockey_path }}/nginx"
+    state: absent
 
 # UID 1000 is the image's non-root fantasy-hockey user.
 - name: Fantasy Hockey  ----  Create data directory
@@ -32,14 +53,14 @@
     mode: u=rw,g=r,o=r
   register: fantasy_hockey_compose_file
 
-- name: Fantasy Hockey  ----  Copy nginx config
-  ansible.builtin.copy:
-    src: nginx/default.conf
-    dest: "{{ fantasy_hockey_path }}/nginx/default.conf"
+- name: Fantasy Hockey  ----  Template Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: "{{ fantasy_hockey_path }}/caddy/Caddyfile"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: u=rw,g=r,o=r
-  register: fantasy_hockey_nginx_conf
+  register: fantasy_hockey_caddyfile
 
 - name: Fantasy Hockey  ----  Template .env
   ansible.builtin.template:
