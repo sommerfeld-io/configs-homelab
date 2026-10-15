@@ -360,10 +360,10 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "1 - avg(rate(node_cpu_seconds_total{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mode=\"idle\"}[$__rate_interval]))",
-                        "instant": false,
+                        "instant": true,
                         "legendFormat": "",
-                        "queryType": "range",
-                        "range": true
+                        "queryType": "instant",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -453,10 +453,10 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "max(1 - node_memory_MemAvailable_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} / node_memory_MemTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
-                        "instant": false,
+                        "instant": true,
                         "legendFormat": "",
-                        "queryType": "range",
-                        "range": true
+                        "queryType": "instant",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -546,10 +546,10 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "max(node_memory_SwapTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} - node_memory_SwapFree_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
-                        "instant": false,
+                        "instant": true,
                         "legendFormat": "",
-                        "queryType": "range",
-                        "range": true
+                        "queryType": "instant",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -561,7 +561,7 @@
               "transformations": []
             }
           },
-          "description": "Swap in use (swap file). Steady swap use means the droplet is short of memory.",
+          "description": "Swap in use (swap file). Linux keeps pages in swap after memory pressure ends, so a high value alone is not a shortage; a rising value is.",
           "id": 6,
           "links": [],
           "title": "Swap Used",
@@ -637,10 +637,10 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"})",
-                        "instant": false,
+                        "instant": true,
                         "legendFormat": "",
-                        "queryType": "range",
-                        "range": true
+                        "queryType": "instant",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -730,10 +730,10 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"})",
-                        "instant": false,
+                        "instant": true,
                         "legendFormat": "",
-                        "queryType": "range",
-                        "range": true
+                        "queryType": "instant",
+                        "range": false
                       },
                       "version": "v0"
                     },
@@ -745,7 +745,7 @@
               "transformations": []
             }
           },
-          "description": "Used share of the data volume (/mnt/<droplet_name>_data) that holds the app data.",
+          "description": "Used share of the data volume (/mnt/<droplet_name>_data) that holds the app data. Red \"No data\" when the volume is not mounted, or when Alloy or node exporter sends nothing.",
           "id": 8,
           "links": [],
           "title": "Volume Disk",
@@ -761,7 +761,7 @@
                       "options": {
                         "match": "null",
                         "result": {
-                          "text": "Not mounted",
+                          "text": "No data",
                           "color": "red",
                           "index": 0
                         }
@@ -1902,7 +1902,7 @@
               "transformations": []
             }
           },
-          "description": "Server errors (status 5xx) per second per route, without GET /metrics. Empty when there were no 5xx responses.",
+          "description": "Server errors (status 5xx) per second per route, without GET /metrics, from the app's own metrics. Empty when there were no 5xx responses. Responses nginx answers itself (502/504 while the app is down or slow) are not counted: check the App stat and the container logs.",
           "id": 17,
           "links": [],
           "title": "5xx Rate",

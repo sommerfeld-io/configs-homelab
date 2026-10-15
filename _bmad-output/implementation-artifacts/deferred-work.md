@@ -151,8 +151,14 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-5-1-grafana-dashboard-for-the-droplet-and-the-app.md`
   summary: Assert in the cloud `alloy` Molecule verify that the job names (`integrations/node_exporter`, `integrations/docker`, `integrations/cadvisor`, `fantasy-hockey`) and the cAdvisor keep-list entries the droplet dashboard queries are present.
-  evidence: `alloy/verify.yml` checks only the external labels; renaming a job or trimming `config.alloy.j2:229` would empty dashboard panels with CI green.
+  evidence: `alloy/verify.yml` checks only the external labels; renaming a job or trimming the keep rule of `prometheus.relabel "integrations_cadvisor"` in `config.alloy.j2` would empty dashboard panels with CI green.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-5-1-grafana-dashboard-for-the-droplet-and-the-app.md`
   summary: Reconcile `grafana-cloud/manifests/git-sync/README.md` ("do not manually edit") with the practice of hand-writing new dashboards there that Git Sync then reconciles.
   evidence: `c7aca03`, the FRITZ!Box dashboards and Story 5.1 hand-write manifests in `git-sync/`, while the README calls the folder read-only; the rule is the user's to change.
+
+## Deferred from: code review of spec-5-1-grafana-dashboard-for-the-droplet-and-the-app (2026-10-15)
+
+- No lint or CI check reads the git-sync manifests (parse, `environment` filter) — same as the Story 5.1 entry above.
+- The cloud Alloy Molecule verify does not pin the job names and the cAdvisor keep-list the droplet dashboard queries — same as the Story 5.1 entry above.
+- `epic-5-context.md` says the dashboard reaches Grafana Cloud "not via manual UI edits", while Git Sync writes UI edits back into the manifest (documented in `monitoring.md`); reconcile together with the `git-sync/README.md` entry above.
