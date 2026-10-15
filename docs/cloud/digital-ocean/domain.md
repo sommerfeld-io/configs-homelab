@@ -8,7 +8,7 @@ The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. A
 |-----------------------------------------|------|------------------------------------------|------|---------------------------|
 | `fantasy-hockey.prod.do.sommerfeld.app` | `A`  | The reserved IP of `prod-fantasy-hockey` | 7200 | DNS of all-inkl.com (KAS) |
 
-Hostnames follow the pattern `<app>.<stage>.do.sommerfeld.app`, built from the same parts as the droplet name `<stage>-<app>` (see [Droplet](droplet.md)): `<app>` is the key of the droplet in the `droplets` map of `droplets.tf` (`fantasy-hockey`), `<stage>` is the droplet's `stage` (also its tag and the Alloy label), and `do` stands for DigitalOcean. A later `test` droplet for the same app gets `fantasy-hockey.test.do.sommerfeld.app`.
+Hostnames follow the pattern `<app>.<stage>.do.sommerfeld.app` (see [Domain Naming](../domain-naming.md)), built from the same parts as the droplet name `<stage>-<app>` (see [Droplet](droplet.md)): `<app>` is the key of the droplet in the `droplets` map of `droplets.tf` (`fantasy-hockey`), `<stage>` is the droplet's `stage` (also its tag and the Alloy label), and `do` stands for DigitalOcean. A later `test` droplet for the same app gets `fantasy-hockey.test.do.sommerfeld.app`.
 
 The record points at the reserved IP, not at the droplet's own IPv4. The reserved IP survives a droplet replacement, so a [Replacement](replacement.md) needs no DNS change. A new reserved IP needs one: changing the region, the `stage` or the map key gives the droplet a new reserved IP or a new name (see [Droplet](droplet.md)), and then the record has to be changed or a new one created. Read the reserved IP with:
 
