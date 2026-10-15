@@ -144,3 +144,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-4-retro-items-18-22-docker-mount-order-cadvisor-assert-docs-drift.md`
   summary: Add an automated check that runs the cAdvisor bind-address assert in `provision.yml` for an unset variable, `0.0.0.0` and `127.0.0.1`.
   evidence: The assert was verified only by a one-off local run; no Molecule scenario, lint rule or CI job runs `provision.yml`, so a weakened guard (for example a `default('127.0.0.1')`) would ship unnoticed and a lost override would publish cAdvisor on the droplet's public IP.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-1-grafana-dashboard-for-the-droplet-and-the-app.md`
+  summary: Add a lint check that the Grafana manifests under `grafana-cloud/manifests/git-sync/apps/` parse and that every query carries `environment="digital-ocean"`.
+  evidence: Only ls-lint and folderslint touch `git-sync/`; a Git Sync write-back or edit dropping the label filter would mix homelab series into the droplet dashboard without any check failing.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-1-grafana-dashboard-for-the-droplet-and-the-app.md`
+  summary: Assert in the cloud `alloy` Molecule verify that the job names (`integrations/node_exporter`, `integrations/docker`, `integrations/cadvisor`, `fantasy-hockey`) and the cAdvisor keep-list entries the droplet dashboard queries are present.
+  evidence: `alloy/verify.yml` checks only the external labels; renaming a job or trimming `config.alloy.j2:229` would empty dashboard panels with CI green.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-1-grafana-dashboard-for-the-droplet-and-the-app.md`
+  summary: Reconcile `grafana-cloud/manifests/git-sync/README.md` ("do not manually edit") with the practice of hand-writing new dashboards there that Git Sync then reconciles.
+  evidence: `c7aca03`, the FRITZ!Box dashboards and Story 5.1 hand-write manifests in `git-sync/`, while the README calls the folder read-only; the rule is the user's to change.

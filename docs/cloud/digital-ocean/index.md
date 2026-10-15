@@ -67,6 +67,7 @@ reservedip --> app : HTTP :80
 - **Ansible:** finds droplets by tag through the DigitalOcean API and provisions them over SSH (basic command line tools, Docker, swap, cAdvisor, Alloy, login banner). See [Provisioning](provisioning.md).
 - **Deployment:** `deploy-fantasy-hockey.yml` runs the fantasy hockey app (app and nginx, docker compose) as the user `fantasy-hockey`, with its data on the volume, reachable over HTTP at the reserved IP. See [Deployment](deployment.md).
 - **Replacement:** a droplet is replaced (new image or broken droplet) while its volume and reserved IP stay. See [Replacement](replacement.md).
+- **Grafana Cloud:** Alloy on the droplet ships metrics and logs with the labels `environment` and `stage`. The dashboard `Apps / Fantasy Hockey / Droplet` shows them, see [Monitoring](monitoring.md).
 - **doctl:** prints the account and the droplets for a quick check.
 - **DigitalOcean API:** OpenTofu and `doctl` manage DigitalOcean resources only through this API. No firewall, user-data scripts or managed database are used.
 
@@ -92,4 +93,5 @@ The droplet is configured with Ansible. Ansible finds it through a [dynamic inve
 | [Droplet](droplet.md)                     | Droplet attributes, reserved IP and volume, droplet map, SSH keys, apply steps |
 | [Deployment](deployment.md)               | The fantasy hockey app: deploy playbook, user, paths, seed rule, Pi retirement |
 | [Replacement](replacement.md)             | Replacing the droplet with its volume and reserved IP, checks and outage       |
+| [Monitoring](monitoring.md)               | Grafana Cloud dashboard for the droplet, the app, the containers and the logs  |
 | [Tests](tests.md)                         | Molecule scenarios for the roles the droplet runs                              |

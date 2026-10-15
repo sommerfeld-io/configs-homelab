@@ -108,6 +108,7 @@ nav:
           - Provisioning: cloud/digital-ocean/provisioning.md
           - Deployment: cloud/digital-ocean/deployment.md
           - Replacement: cloud/digital-ocean/replacement.md
+          - Monitoring: cloud/digital-ocean/monitoring.md
           - Tests: cloud/digital-ocean/tests.md
       - Ansible - Playbooks:
           - All (provision and deploy all droplets): cloud/ansible/playbooks/all.md
