@@ -15,6 +15,119 @@ create issue for this
 
 Lock the droplet in a way that only the app (or the proxy or nginx proxy manager) is reachable from the outside. Management UI should not be reachable publicly bt should be reachable for me.
 
+## Monitoring
+
+```markdown
+# Create a BMAD Story: Extend Fantasy Hockey Droplet Monitoring
+
+Add this as a story to epic 5 as story 5.3.
+
+## Objective
+
+Create a BMAD story for extending the monitoring of the Fantasy Hockey application and its DigitalOcean droplet using Grafana Cloud and Grafana Alloy.
+
+The story must cover the collection, shipping, visualization, and monitoring of:
+
+1. Caddy access logs.
+2. Caddy operational logs.
+3. Caddy certificate lifecycle activity.
+4. Let's Encrypt certificate validity and expiration.
+5. The application's `/monitoring` endpoint.
+
+All relevant data must be integrated into the existing Grafana dashboard definition:
+
+`grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json`
+
+The goal is to make the dashboard the central place for monitoring the droplet, reverse proxy, HTTPS certificates, and application health.
+
+**Do not implement the changes yet. Create the BMAD story only.**
+
+## 1. Inspect the existing repository
+
+Before creating the story, inspect the repository and identify the existing implementation and conventions.
+
+At minimum, investigate:
+
+- The current Caddy deployment and configuration, including Docker Compose files, volumes, networks, and logging configuration.
+- The existing Grafana Alloy deployment and configuration.
+- How Alloy collects and forwards logs, metrics, and other telemetry to Grafana Cloud.
+- Existing Grafana Cloud integrations, data sources, credentials handling, and configuration conventions.
+- The existing dashboard at `grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json`.
+- How dashboards are provisioned, version-controlled, and synchronized with Grafana Cloud.
+- The Fantasy Hockey application's `/monitoring` endpoint, including its response format, exposed metrics, and current scraping configuration.
+- Existing certificate monitoring, exporters, Prometheus scrape jobs, alerting rules, and certificate-related dashboard panels.
+- Existing BMAD story templates, naming conventions, workflows, and acceptance-criteria conventions.
+- Existing documentation conventions, including the use of PlantUML diagrams.
+
+Search the repository rather than assuming that the above functionality is missing. Distinguish between functionality that already exists, functionality that needs modification, and genuinely missing functionality.
+
+The story must avoid duplicate collection pipelines, duplicate dashboard panels, and redundant exporters or monitoring components.
+
+## 2. Caddy log collection
+
+The story must specify how to collect and ship the following Caddy logs to Grafana Cloud using the existing Grafana Alloy setup.
+
+### 2.1 Access logs
+
+Collect HTTP access logs from Caddy.
+
+The implementation must preserve useful structured fields wherever available, including:
+
+- Timestamp.
+- Request method.
+- Request URI or path.
+- Hostname.
+- HTTP status code.
+- Request duration.
+- Response size.
+- Client information, subject to privacy considerations.
+- Upstream or reverse-proxy information, where available.
+
+Use structured JSON logging where appropriate.
+
+Access logs must be queryable in Grafana Cloud, preferably through Loki, and usable for dashboard panels and troubleshooting.
+
+Investigate whether access logging is already enabled. If not, the story must specify the necessary configuration changes.
+
+### 2.2 Operational logs
+
+Collect Caddy's operational logs, including relevant information about:
+
+- Startup and shutdown.
+- Configuration loading and reloading.
+- Listener and network errors.
+- Reverse-proxy failures.
+- Runtime errors and warnings.
+- Other useful operational events.
+
+Ensure operational logs can be distinguished from HTTP access logs using appropriate labels or parsed fields.
+
+### 2.3 Certificate lifecycle activity
+
+Collect Caddy log events related to certificate management, including where available:
+
+- Certificate acquisition.
+- Successful certificate issuance.
+- Renewal attempts.
+- Successful renewals.
+- Renewal failures.
+- Certificate loading and storage errors.
+- Other relevant TLS and certificate-management errors.
+
+Investigate how Caddy actually reports these events in the deployed version. Do not assume that every event is emitted at a particular log level or that every lifecycle event is guaranteed to appear in the logs.
+
+Specify any necessary logging configuration changes.
+
+### 2.4 Log pipeline requirements
+
+The story must explain how logs flow from Caddy through Alloy to Grafana Cloud.
+
+Requirements:
+
+- Reuse the existing Alloy deployment and Grafana Cloud integration.
+- Follow existing repository conventions
+```
+
 ## Pipeline
 
 Check with inspec or something if app is up-and-running.
@@ -34,6 +147,7 @@ use dependabot do watch opentofu??
 
 ---
 
+```markdown
 # Create a BMAD Refactoring Story: Manage DigitalOcean DNS with OpenTofu
 
 ## Objective
@@ -346,3 +460,4 @@ After creating the story, summarize:
 - Any unresolved questions or prerequisites that prevent a fully specified implementation.
 
 Do not implement the story, modify production DNS, change nameservers, apply OpenTofu, or delete existing DNS records as part of this task.
+```
