@@ -208,14 +208,14 @@ action_items:
     action: "Fix replacement.md: a targeted destroy of the droplet also destroys digitalocean_project_resources.this,
       which the next apply recreates"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-20-assert-in-provision-yml-that-the-droplet"
     epic: 4
     action: "Assert in provision.yml that the droplet resolves exporters_cadvisor_bind_address
       to 127.0.0.1 before the exporters role runs"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-21-fix-doc-drift-droplet-md-no-data-file-co"
     epic: 4
@@ -223,7 +223,7 @@ action_items:
       provision no-change except Docker or package releases), and document that provision
       can restart the app when Docker is upgraded"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-22-document-in-pipelines-md-that-bumps-to-t"
     epic: 4
@@ -231,7 +231,7 @@ action_items:
       (grafana-cloud/exporters, grafana-cloud/alloy) land under configs-homelab and
       need task cloud:digital-ocean:ansible:provision"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-23-record-epic-4-process-lessons-as-project"
     epic: 4

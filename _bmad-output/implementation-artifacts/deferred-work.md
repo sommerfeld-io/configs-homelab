@@ -140,3 +140,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md`
   summary: Set or check the UID of the `fantasy-hockey` deploy user so it stays 1000, the image user that owns the data folder.
   evidence: Epic 4 retro D12. It matches only because it is the first user on the droplet; the Molecule image has `ubuntu` as UID 1000, so the test checks a different relation.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-4-retro-items-18-22-docker-mount-order-cadvisor-assert-docs-drift.md`
+  summary: Add an automated check that runs the cAdvisor bind-address assert in `provision.yml` for an unset variable, `0.0.0.0` and `127.0.0.1`.
+  evidence: The assert was verified only by a one-off local run; no Molecule scenario, lint rule or CI job runs `provision.yml`, so a weakened guard (for example a `default('127.0.0.1')`) would ship unnoticed and a lost override would publish cAdvisor on the droplet's public IP.

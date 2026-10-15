@@ -59,6 +59,44 @@
       register: fantasy_hockey_volume_mounted
       tags: [volume]
 
+    # nofail lets the droplet boot without the volume, and the stack restarts with
+    # dockerd (restart: unless-stopped). Without an order, a volume that appears
+    # late lets Docker create empty data/ and nginx/default.conf on the root disk
+    # below the mount point. RequiresMountsFor= adds Requires= and After= on the
+    # mount unit: Docker waits for the volume up to systemd's default device timeout
+    # (90 s, no x-systemd.device-timeout= is set). A volume that comes later is
+    # handled like a missing one: Docker does not start (start it with
+    # `systemctl start docker` once the volume is back).
+    - name: Create the docker.service drop-in folder
+      ansible.builtin.file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      tags: [volume]
+
+    - name: Start Docker only after the volume is mounted
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker.service.d/fantasy-hockey-volume.conf
+        content: |
+          # Managed by Ansible (deploy-fantasy-hockey.yml)
+          [Unit]
+          RequiresMountsFor={{ fantasy_hockey_volume_mount }}
+        owner: root
+        group: root
+        mode: '0644'
+      register: fantasy_hockey_docker_dropin
+      tags: [volume]
+
+    # Only reloads the unit files. Docker is not restarted: it already runs after
+    # the mount task above, and the order matters only at the next boot.
+    - name: Reload systemd after the drop-in changed
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+      when: fantasy_hockey_docker_dropin.changed
+      tags: [volume]
+
     # The role checks the mount in ansible_facts, which were gathered before the
     # mount.
     - name: Refresh the mount facts

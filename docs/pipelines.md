@@ -102,7 +102,7 @@ Until Story 6.3 is done, a merged change under `configs-cloud/` reaches DigitalO
 | `docker`         | `.devcontainer`                                                                                                    |
 | `docker-compose` | `/` (the linters in `docker-compose.yml`)                                                                          |
 | `docker-compose` | `configs-homelab/ansible/roles/common/taskfile-dev/files/docker-stacks/portainer`                                  |
-| `docker-compose` | `configs-homelab/ansible/roles/grafana-cloud/exporters/files`                                                      |
+| `docker-compose` | `configs-homelab/ansible/roles/grafana-cloud/exporters/files` (cAdvisor on the homelab nodes and on the droplet)   |
 | `docker-compose` | `configs-homelab/ansible/roles/media/jellyfin/files`                                                               |
 | `docker-compose` | `configs-homelab/ansible/roles/raspi/fritz-box-exporter/files`                                                     |
 | `docker-compose` | `configs-homelab/ansible/roles/raspi/pihole/files`                                                                 |
@@ -110,6 +110,8 @@ Until Story 6.3 is done, a merged change under `configs-cloud/` reaches DigitalO
 | `opentofu`       | `/configs-cloud/digital-ocean/opentofu` (the `digitalocean` provider)                                              |
 
 The fantasy-hockey compose file moved from the RasPi role to `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey`, and its Dependabot entry moved with it, so a compose bump is a change under `configs-cloud/digital-ocean`. Nothing redeploys the droplet after a merged bump yet: run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` by hand (see [Deployment](cloud/digital-ocean/deployment.md)).
+
+The droplet also runs fleet roles from `configs-homelab/`: `grafana-cloud/exporters` (cAdvisor) and `grafana-cloud/alloy`. A Dependabot cAdvisor bump in `configs-homelab/ansible/roles/grafana-cloud/exporters/files`, or an edit to either role, is a change under `configs-homelab/`, not under `configs-cloud/`, and reaches the droplet only when an operator runs `task cloud:digital-ocean:ansible:provision` (see [Provisioning](cloud/digital-ocean/provisioning.md)). Dependabot has no Alloy entry: Alloy itself comes from the Grafana APT repo on the next provision run.
 
 ### From Dependabot Pull Request to `main`
 
@@ -121,7 +123,7 @@ The fantasy-hockey compose file moved from the RasPi role to `configs-cloud/digi
 4. **No merge restrictions:** `main` has no branch protection and no rulesets (verified through the GitHub API), so no status check is required and Dependabot PRs are merged manually. Auto-merge is not configured.
 5. **The merge creates a push to `main`** by the person who merged. This push starts `pipeline.yml` and `codeql.yml` like any other push. `github.actor` is that person, not `dependabot[bot]`, so `molecule`, `molecule-cloud`, `generate-docs` and `release-code` run as well.
 6. **Release:** Dependabot commits use the `chore(deps)` / `chore(deps-dev)` prefixes, which give no release on their own. They are released together with the next `feat` or `fix`.
-7. **No deployment:** nothing deploys the updated version. For fleet roles, the change reaches a node with the next playbook run; for `configs-cloud/`, an operator applies it (see [Cloud Deployment Pipeline](#cloud-deployment-pipeline)).
+7. **No deployment:** nothing deploys the updated version. For fleet roles, the change reaches a node with the next playbook run, and the droplet (a cAdvisor bump in `grafana-cloud/exporters`) with the next `task cloud:digital-ocean:ansible:provision`; for `configs-cloud/`, an operator applies it (see [Cloud Deployment Pipeline](#cloud-deployment-pipeline)).
 
 The `github.actor != 'dependabot[bot]'` conditions in `pipeline.yml` are a safeguard. With the current triggers, Dependabot is never the actor of a `pipeline.yml` run.
 

@@ -10,6 +10,7 @@ The play first mounts the droplet's data volume. DigitalOcean mounts a volume au
 
 - The device is `/dev/disk/by-id/scsi-0DO_Volume_<droplet-name>-data` (`fantasy_hockey_volume_device`) and the mount point `/mnt/<droplet_name>_data` (`fantasy_hockey_volume_mount`), both derived from the droplet name, so `prod-fantasy-hockey` gets `/mnt/prod_fantasy_hockey_data`.
 - The play fails when the device does not exist (the volume is not attached). Otherwise `ansible.posix.mount` mounts the existing ext4 file system with `defaults,nofail,discard,noatime` and writes the `fstab` entry; it never formats the volume. After a new mount it refreshes the mount facts for the role's check.
+- A systemd drop-in `/etc/systemd/system/docker.service.d/fantasy-hockey-volume.conf` sets `RequiresMountsFor=<fantasy_hockey_volume_mount>`, which gives `docker.service` a `Requires=` and an `After=` on the volume's mount unit. The play reloads systemd only when the drop-in changed and does not restart Docker. Without it, `nofail` lets the droplet boot without the volume, and Docker would restart the stack (`restart: unless-stopped`) before a late volume is mounted and create empty `data/` and `nginx/default.conf` on the root disk below the mount point.
 - These tasks are tagged `volume`: `task cloud:digital-ocean:ansible:deploy-fantasy-hockey -- --tags volume` mounts the volume without starting the app, for example to check the data file before the app starts.
 
 Then the play loads the secrets from the vault file with an `include_vars` task and runs the cloud role `ansible/roles/fantasy-hockey`. The role runs these steps in this order:
@@ -25,6 +26,18 @@ The full `docker` role does not run here: it installs Docker with `state: latest
 The play sets `default_user: fantasy-hockey` as a play variable. It has no `vars_files` and does not load `ansible/vars/main.yml`, because `vars_files` outrank play variables and that file sets `default_user: root` for provisioning. Loading the vault with `include_vars` instead of `vars_files` also keeps the playbook in the ansible-lint run, whose syntax check cannot decrypt the vault. It sets `ansible_pipelining: true`: the docker tasks become the non-root user `fantasy-hockey`, and without pipelining Ansible would need ACLs on the droplet to hand its temporary files to that user.
 
 A second run reports `changed=0`.
+
+## Boot Order
+
+At boot, `docker.service` waits for the volume mount:
+
+- **Volume attached:** the mount unit is active before Docker starts, so the app and cAdvisor come back with `data/` on the volume.
+- **Volume late:** Docker waits until the device appears and the volume is mounted, but only up to systemd's default device timeout of 90 seconds (the `fstab` entry sets no `x-systemd.device-timeout=`). A volume that comes later is handled like a missing one.
+- **Volume missing:** the mount fails after the device timeout, and `docker.service` fails its dependency and does not start. Nothing is written to the root disk, but the app and cAdvisor are down (`up` is `0` for both) until the volume is back. Attach it (see [Replacement](replacement.md#volume-not-attached)), then run `systemctl start docker`.
+
+Check the order on the droplet: `systemctl show docker.service -p Requires -p After` lists the mount unit (`mnt-prod_fantasy_hockey_data.mount`) in both.
+
+`Requires=` also works while the droplet runs: stopping or unmounting the volume's mount unit (`umount`, `systemctl stop mnt-prod_fantasy_hockey_data.mount`, a detach of the volume) stops `docker.service` too, and with it the app and cAdvisor. To remove the dependency, delete `/etc/systemd/system/docker.service.d/fantasy-hockey-volume.conf` and run `systemctl daemon-reload`; the next deploy writes it again.
 
 ## User fantasy-hockey
 

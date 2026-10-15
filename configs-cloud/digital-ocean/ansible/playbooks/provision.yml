@@ -67,6 +67,21 @@
       ansible.builtin.include_role:
         name: ../roles/swap
 
+    # The exporters role checks the published port against this same variable, so
+    # a lost override (role default 0.0.0.0) would publish cAdvisor on the public IP
+    # and still pass. The droplet has no firewall.
+    - name: Stop when cAdvisor would not bind to localhost
+      ansible.builtin.assert:
+        that:
+          - exporters_cadvisor_bind_address | default('') == '127.0.0.1'
+        fail_msg: >-
+          exporters_cadvisor_bind_address is
+          '{{ exporters_cadvisor_bind_address | default('unset') }}' on
+          {{ inventory_hostname }}, not 127.0.0.1, so cAdvisor would be published on
+          the public IP. Set exporters_cadvisor_bind_address: 127.0.0.1 in
+          configs-cloud/digital-ocean/ansible/vars/main.yml.
+        quiet: true
+
     - name: Run cAdvisor
       ansible.builtin.include_role:
         name: ../../../../configs-homelab/ansible/roles/grafana-cloud/exporters
