@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-15-2026 19:06
+last_updated: 10-15-2026 19:56
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -71,8 +71,8 @@ development_status:
   # Epic 7 runs before Story 5.2 and Epic 6 (sprint-change-proposal-2026-10-15)
   epic-7: in-progress
   7-1-dns-record-for-the-droplet: done
-  7-2-caddy-with-automatic-tls-replaces-nginx: review
-  epic-7-retrospective: optional
+  7-2-caddy-with-automatic-tls-replaces-nginx: done
+  epic-7-retrospective: done
 
   epic-6: backlog
   6-1-ci-static-checks-for-opentofu-and-ansible: backlog
@@ -248,3 +248,40 @@ action_items:
     owner: "user"
     status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-7-retro-item-24-reconcile-the-epic-7-docs-and-the-dns-gu"
+    epic: 7
+    action: "Reconcile the Epic 7 docs and the DNS guard message with the as-built:
+      exactly the reserved IP, no dig hint, wildcard as CNAME, http vs https on the
+      IP, new-droplet order, renewal-window caveat, KAS TTL, test droplet needs reserved_ip,
+      firewall must allow 80/443/443udp"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-25-enforce-the-dev-test-prod-stage-list-wit"
+    epic: 7
+    action: "Enforce the dev/test/prod stage list with an OpenTofu validation and
+      derive the playbook stage the same way as the inventory alloy_stage"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-26-add-explicit-caa-0-issue-letsencrypt-org"
+    epic: 7
+    action: "Add explicit CAA 0 issue letsencrypt.org records for prod.do.sommerfeld.app
+      in the KAS and document them in domain.md"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-27-decide-whether-dns-moves-into-opentofu-b"
+    epic: 7
+    action: "Decide whether DNS moves into OpenTofu before writing the drafted story;
+      it reverses the Epic 7 decision (run bmad-correct-course if yes)"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-28-at-the-next-droplet-replacement-check-th"
+    epic: 7
+    action: "At the next droplet replacement, check that the metadata read finds the
+      reserved IP on the first run; add a retry to the uri task if not"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
