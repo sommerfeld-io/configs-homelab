@@ -47,6 +47,7 @@ CAP-7 (docs) applies to every epic.
 
 - Comprehensive dashboard in `grafana-cloud/manifests/git-sync/apps`: CPU, memory and more, the app, containers, logs of all containers.
 - Synthetic external check of the public URL (Should).
+- Caddy access, operational and certificate logs and the certificate's validity on the same dashboard (added 2026-10-15, after E6 brought Caddy).
 - No alerts.
 
 ## E5 GitHub Actions

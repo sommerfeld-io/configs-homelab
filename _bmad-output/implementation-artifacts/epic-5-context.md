@@ -10,6 +10,7 @@ Make the DigitalOcean droplet running the fantasy hockey app observable in Grafa
 
 - Story 5.1: Grafana dashboard for the droplet and the app
 - Story 5.2: Synthetic monitoring check for the public URL
+- Story 5.3: Caddy logs and certificate status on the droplet dashboard (added 2026-10-15, after Epic 7 brought Caddy)
 
 ## Requirements & Constraints
 
@@ -35,4 +36,5 @@ Make the DigitalOcean droplet running the fantasy hockey app observable in Grafa
 
 - Both stories depend on Epic 3 (Alloy on the droplet with the `environment` and `stage` labels, and `environment=homelab` on the fleet) and Epic 4 (the app deployed and reachable at the reserved IP behind nginx).
 - Stories 5.1 and 5.2 are independent of each other.
+- Story 5.3 extends the 5.1 dashboard and depends on Epic 7 (Caddy). Its certificate-expiry panel reads Story 5.2's synthetic check, so 5.3 is built after 5.2. Caddy masks client IPs in its access log (IPv4 /24, IPv6 /48) before they reach Grafana Cloud. The app has no `/monitoring` endpoint; its `/metrics` is the monitoring endpoint and is already on the dashboard. Caddy's logs already reach Loki through the Docker log source, so 5.3 adds a `log_type` label in the cloud Alloy template, not a new collector.
 - Epic 6 (GitHub Actions) does not depend on this epic. A later hardening epic adds a post-deploy smoke test of the public URL, which is separate from the synthetic check.

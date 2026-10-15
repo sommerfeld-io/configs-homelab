@@ -369,6 +369,24 @@ So that outages on the path to the droplet become visible.
 **Then** it probes `https://fantasy-hockey.prod.do.sommerfeld.app` from outside, like the existing checks from Frankfurt and Paris
 **And** it fails when the certificate is invalid or expires within 14 days
 
+### Story 5.3: Caddy logs and certificate status on the droplet dashboard
+
+As an operator,
+I want Caddy's access, operational and certificate logs and the certificate's validity on the droplet dashboard,
+So that the dashboard is the one place to watch the droplet, the reverse proxy, HTTPS and the app.
+
+**Acceptance Criteria:**
+
+**Given** Caddy's JSON logs, which already reach Loki through the droplet's Alloy Docker log source
+**When** the cloud Alloy config is provisioned
+**Then** every Caddy line carries a `log_type` label (`access`, `tls` or `operational`), with no second log pipeline and no duplicate lines
+**And** access lines carry client IPs masked to /24 (IPv4) and /48 (IPv6)
+
+**Given** the dashboard `grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json`
+**When** it syncs to Grafana Cloud
+**Then** a Proxy row shows requests by status (Caddy's own 502s included), duration, top paths, the operational log, certificate events and the days until the certificate expires (from the Story 5.2 check), and the dashboard still has no alerts
+**And** `docs/cloud/digital-ocean/monitoring.md` describes the row, the log types and the flow from Caddy to Grafana Cloud in a PlantUML diagram
+
 ## Epic 7: HTTPS on a custom domain
 
 The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.app` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.

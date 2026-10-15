@@ -102,6 +102,15 @@
   description: >-
     Add a Grafana Cloud synthetic monitoring check for the public URL, probed from outside like the existing checks from Frankfurt and Paris (CAP-4).
     Confirm the current limits and how existing checks are provisioned first.
+- id: "13a"
+  title: Caddy logs and certificate status on the droplet dashboard
+  description: >-
+    Label Caddy's JSON logs (already shipped by the droplet's Alloy Docker log source) with log_type access, tls or operational in the cloud Alloy config, and add a Proxy row to grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json with requests by status, duration, top paths, the operational log, certificate events and days to certificate expiry from the Story 5.2 check, and mask client IPs in Caddy's access log (CAP-4).
+    No new collector, no alerts. Docs updated in the same change, with a PlantUML diagram of the log flow.
+  invoke_dev_with: >-
+    Decided 2026-10-15: the app has no /monitoring endpoint, its /metrics (already scraped and charted) is the monitoring endpoint.
+    Caddy exports no certificate metric, so days to expiry come from Story 5.2's synthetic check: build after 5.2.
+    Caddy masks client IPs in the access log (IPv4 /24, IPv6 /48).
 - id: "14"
   title: CI static checks for OpenTofu and Ansible
   description: >-
