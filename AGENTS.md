@@ -1,5 +1,5 @@
 <!-- bmad:context -->
-<!-- Verified 2026-10-13 against a4109cb. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
+<!-- Verified 2026-10-15 against c300f3c. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
 
 ## Known pitfalls
 
@@ -13,5 +13,8 @@
 - Before writing what code does into an option, spec or doc (a cause, a side effect, a change count), check it in the code or a real run. Agents described a 3.2 option wrong before approval, gave "forced template" as the cause of the per-run Alloy change, and documented four changing tasks where the second provision run showed six.
 - Never run a privileged container, a container with systemd as PID 1, or one with host mounts, not for tests and not for a quick probe. This session runs in a devcontainer on the operator's desktop host (picon). In Story 3.5 a privileged systemd Molecule container reached the host's `/dev/tty1`: each time its systemd booted, the desktop session got SIGHUP and the screens stayed black until the user rebooted, three times. Use unprivileged containers and stub what needs privileges (`systemctl` stub in `configs-cloud/digital-ocean/tests/molecule/prepare.yml`), or skip the test.
 - Never write a guessed cause for a host or infrastructure failure into docs, specs or commits. Ask the user for logs first: picon's journal and kernel logs are in Grafana Cloud (Loki). In Story 3.5 the agent documented "the host rebooted" and blamed shared cgroups; the logs showed no crash, but a tty1 hangup followed by the user's recovery reboots.
+- Run a drill before writing its procedure doc, then write the doc from what the run showed. `docs/cloud/digital-ocean/replacement.md` was written and reviewed (18 findings) before the Story 4.3 drill, then rewritten and cut down to a short page in three commits (`678264f`, `6d0ef57`, `651a8e8`).
+- Check what the public sees (HTTP answers, `/metrics` 404, closed ports) at the reserved IP from `tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses`, never at the droplet's own IPv4, which changes with every replacement. Story 4.1 was checked at `164.90.238.181`, so the reserved IP the AC names was first verified in 4.3.
+- Never assume DigitalOcean mounts a volume: it mounts one automatically only when the volume and the droplet are created together. A replacement droplet gets the existing volume attached but not mounted, which is why `deploy-fantasy-hockey.yml` mounts it. `droplet.md` claimed otherwise until drill run 1 stopped at the mount guard (`6d0ef57`).
 
 <!-- /bmad:context -->

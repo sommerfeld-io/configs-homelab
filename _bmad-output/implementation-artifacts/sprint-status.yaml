@@ -239,5 +239,5 @@ action_items:
       writing its procedure, check against the reserved IP not the droplet IP, DigitalOcean
       mounts a volume automatically only when it is created with the droplet"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
