@@ -21,7 +21,7 @@ FR5: A change under `configs-cloud/digital-ocean` is applied by a GitHub Actions
 FR6: Every step runs locally and in CI through the same go-task entry points, checked by the repo's linters. (SPEC CAP-6)
 FR7: The setup is documented under `docs/cloud/digital-ocean` with diagrams. (SPEC CAP-7)
 FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-8)
-FR9: Users reach the app over HTTPS at `fantasy-hockey.prod.do.sommerfeld.io`, and only there, with automatically renewed certificates. (SPEC CAP-9)
+FR9: Users reach the app over HTTPS at `fantasy-hockey.prod.do.sommerfeld.app`, and only there, with automatically renewed certificates. (SPEC CAP-9)
 
 ### NonFunctional Requirements
 
@@ -62,7 +62,7 @@ The droplet and app are observable in Grafana Cloud from the inside and the outs
 **FRs covered:** FR4
 
 ### Epic 7: HTTPS on a custom domain
-The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.io` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
+The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.app` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
 **FRs covered:** FR9, FR7
 
 ### Epic 6: GitHub Actions
@@ -366,12 +366,12 @@ So that outages on the path to the droplet become visible.
 
 **Given** the existing Grafana Cloud synthetic monitoring and the domain from Epic 7
 **When** the check runs
-**Then** it probes `https://fantasy-hockey.prod.do.sommerfeld.io` from outside, like the existing checks from Frankfurt and Paris
+**Then** it probes `https://fantasy-hockey.prod.do.sommerfeld.app` from outside, like the existing checks from Frankfurt and Paris
 **And** it fails when the certificate is invalid or expires within 14 days
 
 ## Epic 7: HTTPS on a custom domain
 
-The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.io` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
+The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.app` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
 
 ### Story 7.1: DNS record for the droplet
 
@@ -382,9 +382,9 @@ So that users reach the app by name instead of by IP.
 **Acceptance Criteria:**
 
 **Given** the reserved IP from `tofu output reserved_ip_addresses`
-**When** the A record `fantasy-hockey.prod.do.sommerfeld.io` is created by hand at all-inkl.com
-**Then** `dig +short fantasy-hockey.prod.do.sommerfeld.io` returns the reserved IP from outside the home network
-**And** a docs page under `docs/cloud/digital-ocean` describes the record, the hostname pattern `<app>.<stage>.do.sommerfeld.io`, the manual steps at all-inkl.com and the check, and says that a droplet replacement needs no DNS change
+**When** the A record `fantasy-hockey.prod.do.sommerfeld.app` is created by hand at all-inkl.com
+**Then** `dig +short fantasy-hockey.prod.do.sommerfeld.app` returns the reserved IP from outside the home network
+**And** a docs page under `docs/cloud/digital-ocean` describes the record, the hostname pattern `<app>.<stage>.do.sommerfeld.app`, the manual steps at all-inkl.com and the check, and says that a droplet replacement needs no DNS change
 
 ### Story 7.2: Caddy with automatic TLS replaces nginx
 
@@ -396,9 +396,9 @@ So that the connection is encrypted and the address does not change.
 
 **Given** the DNS record from Story 7.1
 **When** the deploy runs
-**Then** a Caddy container replaces nginx in the compose project, listens on ports 80 and 443, obtains and renews the certificate for `fantasy-hockey.prod.do.sommerfeld.io` automatically, and proxies to the app on `127.0.0.1:8080`
+**Then** a Caddy container replaces nginx in the compose project, listens on ports 80 and 443, obtains and renews the certificate for `fantasy-hockey.prod.do.sommerfeld.app` automatically, and proxies to the app on `127.0.0.1:8080`
 **And** the domain is derived from the droplet's stage and app name, not hard-coded per host
-**And** `https://fantasy-hockey.prod.do.sommerfeld.io` serves the app, `http://` on the domain redirects to `https://`, `/metrics` returns 404, and `http://<reserved-ip>` no longer serves the app
+**And** `https://fantasy-hockey.prod.do.sommerfeld.app` serves the app, `http://` on the domain redirects to `https://`, `/metrics` returns 404, and `http://<reserved-ip>` no longer serves the app
 
 **Given** the Caddy data folder (certificates and ACME account) on the volume
 **When** the droplet is replaced

@@ -57,7 +57,7 @@ CAP-7 (docs) applies to every epic.
 
 ## E6 HTTPS, domain, Caddy
 
-- Domain `fantasy-hockey.prod.do.sommerfeld.io` (pattern `<app>.<stage>.do.sommerfeld.io`): A record to the reserved IP, created by hand at all-inkl.com and documented.
+- Domain `fantasy-hockey.prod.do.sommerfeld.app` (pattern `<app>.<stage>.do.sommerfeld.app`): A record to the reserved IP, created by hand at all-inkl.com and documented.
 - Caddy with automatic TLS replaces nginx and serves only that domain; the app stays on `127.0.0.1:8080`; certificates on the volume.
 
 ## E7 Operations hardening

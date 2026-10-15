@@ -48,7 +48,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - **CAP-9**
     - **intent:** (E6) Users can reach the app over HTTPS on a custom domain without the operator managing certificates.
-    - **success:** `https://fantasy-hockey.prod.do.sommerfeld.io` (pattern `<app>.<stage>.do.sommerfeld.io`) serves the app with an automatically renewed certificate via Caddy, which replaces nginx; only that domain serves the app, so `http://<reserved-ip>` no longer does; the app is published only on `127.0.0.1:8080`; the certificates live on the volume and survive a droplet replacement.
+    - **success:** `https://fantasy-hockey.prod.do.sommerfeld.app` (pattern `<app>.<stage>.do.sommerfeld.app`) serves the app with an automatically renewed certificate via Caddy, which replaces nginx; only that domain serves the app, so `http://<reserved-ip>` no longer does; the app is published only on `127.0.0.1:8080`; the certificates live on the volume and survive a droplet replacement.
 
 - **CAP-10**
     - **intent:** (E7) The droplet stays healthy without attention.
@@ -61,7 +61,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 ## Constraints
 
 - Epic order is E1 droplet, E2 provisioning, E3 deploy, E4 dashboard (the dashboard first, the synthetic check after E6), E6 HTTPS, E5 GitHub Actions (a Must), E7 hardening, E8 backup last. E6 moved before the synthetic check and E5 on 2026-10-15, so the check probes the domain, not the IP. Everything runs locally via go-task before CI is built. Details in `epics.md`.
-- DNS for `sommerfeld.io` stays with the web hosting provider all-inkl.com. The A record `fantasy-hockey.prod.do.sommerfeld.io` pointing at the reserved IP is created by hand there and documented; OpenTofu does not manage DNS, and the DigitalOcean token needs no `domain` scope.
+- DNS for `sommerfeld.app` stays with the web hosting provider all-inkl.com. The A record `fantasy-hockey.prod.do.sommerfeld.app` pointing at the reserved IP is created by hand there and documented; OpenTofu does not manage DNS, and the DigitalOcean token needs no `domain` scope.
 - `fantasy-hockey.yml` is seeded from the default template only when absent; when present it may be overwritten only from a backup, never from template contents.
 - `DIGITALOCEAN_ACCESS_TOKEN` is the token env var that `doctl`, OpenTofu and the dynamic inventory read. Locally it is exported from the vault key `DIGITALOCEAN_TOKEN` in `configs-homelab/ansible/vars/vault.yml` via `configs-homelab/ansible/tasks/bash-secrets.yml`, not from playbooks that target DigitalOcean. CI needs separate org-level GitHub secrets for the token and the vault password (OpenTofu runs before Ansible); all vaults share one password. The CI SSH keypair is fresh and its private key never leaves CI.
 - Inventory is the DigitalOcean dynamic inventory plugin selecting by tag; no static IPs and no generated or committed inventory (a commit under `configs-cloud/digital-ocean` would retrigger the pipeline).
