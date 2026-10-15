@@ -23,3 +23,7 @@ Inpec Droplet
 ## Versions
 
 use dependabot do watch opentofu??
+
+## Reveal JS
+
+Architecture of the repo and the homelab and cloud and pipeline setup etc. as RevealJS presentation? As part of the docs page?
