@@ -201,7 +201,7 @@ action_items:
       or a docker.service drop-in with RequiresMountsFor) and check it with a droplet
       reboot"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-19-fix-replacement-md-a-targeted-destroy-of"
     epic: 4

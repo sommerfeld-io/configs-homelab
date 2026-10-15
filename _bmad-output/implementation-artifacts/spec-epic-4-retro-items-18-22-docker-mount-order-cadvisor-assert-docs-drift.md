@@ -60,7 +60,7 @@ context:
 - [x] `docs/cloud/digital-ocean/replacement.md` -- the targeted destroy also destroys `digitalocean_project_resources.this`; the next apply recreates it (and only updates it after a web-UI destroy).
 - [x] `docs/cloud/digital-ocean/droplet.md`, `tests.md` -- drop "data file copy"; four guard cases including the sibling; "no change" qualified for Docker and package releases.
 - [x] `docs/pipelines.md` -- bumps to the fleet roles the droplet runs (`grafana-cloud/exporters`, `grafana-cloud/alloy`) land under `configs-homelab/` and reach the droplet only with `task cloud:digital-ocean:ansible:provision`.
-- [ ] `_bmad-output/implementation-artifacts/sprint-status.yaml` -- set items 18-22 to `done` once verified.
+- [x] `_bmad-output/implementation-artifacts/sprint-status.yaml` -- set items 18-22 to `done` once verified.
 
 **Acceptance Criteria:**
 - Given the deploy ran, when `systemctl show docker.service -p Requires -p After` runs on the droplet, then the volume's mount unit is listed in both.
@@ -75,6 +75,8 @@ context:
 - `sprint-status.yaml`: items 19-22 set to `done`; item 18 stays `open` until the user's droplet reboot check (acceptance criteria 1 and 2) has run.
 - Verification pass: `replacement.md` bullet intro still said "only the droplet and its reserved IP assignment" next to the new three-resource list; changed to "the droplet and the resources that depend on it".
 - Matrix audit: rows "Lost bind override" verified by running the extracted assert task locally (unset and `0.0.0.0` fail with the message naming `vars/main.yml`; `127.0.0.1` passes). The reboot and second-deploy rows have no automated test by design (Never: no Molecule scenario for the playbook volume tasks, D8); they are covered by the user's droplet checks under Verification.
+
+- Droplet check (2026-10-15): the user ran `task cloud:digital-ocean:ansible:all` (second run `changed=0`). Before the reboot, `systemctl show docker.service` listed `mnt-prod_fantasy_hockey_data.mount` in `Requires=` and `After=`. Reboot through Ansible's `reboot` module (back after 42 s, boot 14:20:19): the mount was active at 12.7 s monotonic and `docker.service` at 27.9 s; volume on `/dev/sda`, `fantasy-hockey.yml` in place, all three containers restarted, `http://129.212.195.118/` 302, `/metrics` 404, port 9110 not reachable from outside. Item 18 set to `done`.
 
 ## Spec Change Log
 
