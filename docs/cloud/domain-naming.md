@@ -19,30 +19,24 @@ Example: `fantasy-hockey.prod.do.sommerfeld.app` is the fantasy hockey app in `p
 
 ## Stages
 
-| Stage  | Purpose                              |
-|--------|--------------------------------------|
-| `dev`  | Development deployments              |
-| `test` | Test deployments before a release    |
-| `prod` | Production deployments used for real |
+- `dev` → Development deployments
+- `test` → Test deployments before a release
+- `prod` → Production deployments used for real
 
 No other stages are allowed.
 
 ## Cloud Providers
 
-| Short name | Cloud provider |
-|------------|----------------|
-| `do`       | DigitalOcean   |
-| `linode`   | Linode         |
-| `aws`      | AWS            |
-| `gcp`      | Google Cloud   |
+- `do` → DigitalOcean
+- `linode` → Linode
+- `aws` → AWS
+- `gcp` → Google Cloud
 
-No other provider names are allowed. A new provider gets a short name in this table before its first deployment.
+No other provider names are allowed. A new provider gets a short name in this list before its first deployment.
 
 ## Domains
 
-| Domain           | Purpose                                                                                       |
-|------------------|-----------------------------------------------------------------------------------------------|
-| `sommerfeld.app` | Actual app deployments, always under a name that follows the pattern above                    |
-| `sommerfeld.io`  | The organization's website, which at the moment redirects to GitHub. No app deployments here. |
+- `sommerfeld.app` → Actual app deployments, always under a name that follows the pattern above
+- `sommerfeld.io` → The organization's website, which at the moment redirects to GitHub. No app deployments here.
 
 How the DNS record for a DigitalOcean deployment is created and checked is described in [Domain](digital-ocean/domain.md).
