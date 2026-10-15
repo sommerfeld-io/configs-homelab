@@ -7,7 +7,7 @@ inputDocuments: ['../specs/spec-fantasy-hockey-digitalocean/SPEC.md', '../specs/
 
 ## Overview
 
-Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS) is Epic 7 here; it was pulled forward on 2026-10-15 and runs after Story 5.1 and before Story 5.2 and Epic 6. The spec's E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
+Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS) is Epic 7 here; it was pulled forward on 2026-10-15 and runs after Story 5.1 and before Story 5.2 and Epic 6. Epic 8 (DNS for `do.sommerfeld.app` in OpenTofu) was added on 2026-10-15 after the Epic 7 retro (action item 27) and runs after Epic 7 and before Epic 6. The spec's E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
 
 ## Requirements Inventory
 
@@ -22,6 +22,7 @@ FR6: Every step runs locally and in CI through the same go-task entry points, ch
 FR7: The setup is documented under `docs/cloud/digital-ocean` with diagrams. (SPEC CAP-7)
 FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-8)
 FR9: Users reach the app over HTTPS at `fantasy-hockey.prod.do.sommerfeld.app`, and only there, with automatically renewed certificates. (SPEC CAP-9)
+FR10: Operator manages every record under `do.sommerfeld.app` declaratively with OpenTofu in a DigitalOcean DNS zone delegated from all-inkl.com, with hostnames derived from the droplets' reserved IPs. (SPEC CAP-9, AD-10 DNS)
 
 ### NonFunctional Requirements
 
@@ -42,6 +43,7 @@ FR6: Epic 2 - scaffold and linters; Epic 6 - CI checks
 FR7: Every epic - docs skeleton in Epic 2
 FR8: Epic 4 - replacement drill
 FR9: Epic 7 - DNS record and Caddy with automatic TLS
+FR10: Epic 8 - delegated zone in OpenTofu and cutover from the KAS record
 
 ## Epic List
 
@@ -64,6 +66,10 @@ The droplet and app are observable in Grafana Cloud from the inside and the outs
 ### Epic 7: HTTPS on a custom domain
 The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.app` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
 **FRs covered:** FR9, FR7
+
+### Epic 8: DNS for do.sommerfeld.app in OpenTofu
+Every record under `do.sommerfeld.app` lives in a DigitalOcean DNS zone declared in OpenTofu and delegated from all-inkl.com; no hostname-to-IP mapping is kept by hand. Runs after Epic 7 and before Epic 6.
+**FRs covered:** FR10, FR7
 
 ### Epic 6: GitHub Actions
 Changes under `configs-cloud/digital-ocean` are applied by a workflow with shared state.
@@ -429,6 +435,51 @@ So that the connection is encrypted and the address does not change.
 **Given** the change
 **When** it is done
 **Then** the nginx files are gone from the droplet, the `fantasy-hockey` Molecule scenario checks the Caddyfile instead of `nginx/default.conf`, Dependabot bumps the Caddy image through the existing compose entry, and the docs (deployment, replacement checks, overview diagram, monitoring) name Caddy and the domain
+
+## Epic 8: DNS for do.sommerfeld.app in OpenTofu
+
+Every record under `do.sommerfeld.app` lives in a DigitalOcean DNS zone declared in OpenTofu and delegated from all-inkl.com; no hostname-to-IP mapping is kept by hand. `sommerfeld.app`, its registration and its other records stay at all-inkl.com. Runs after Epic 7 and before Epic 6, so the CI token and workflow of Epic 6 are built with the `domain` scope from the start.
+
+### Story 8.1: DigitalOcean DNS zone do.sommerfeld.app in OpenTofu
+
+As an operator,
+I want the zone `do.sommerfeld.app` and its records declared in OpenTofu,
+So that hostname-to-IP mappings follow the reserved IPs and are reviewed in a plan instead of edited by hand.
+
+**Acceptance Criteria:**
+
+**Given** the `droplets` map
+**When** `tofu plan` runs
+**Then** it creates the zone, an A record `<key>.<stage>` for each droplet with a reserved IP whose value references `digitalocean_reserved_ip.this`, and a CAA record for `letsencrypt.org`, and changes nothing else
+**And** a second plan after the apply reports no changes, and a droplet replacement changes no record
+
+**Given** the applied zone, which is not yet delegated
+**When** `ns1.digitalocean.com` is queried directly
+**Then** it answers authoritatively with the reserved IP, while public resolution is unchanged
+
+**Given** the change
+**When** it is done
+**Then** the token has the `domain` scope, a docs page describes the zone, the record rules and the how-tos (add, update, remove, replace, move, external IP) with PlantUML architecture and update-sequence diagrams, and every manual step is listed
+
+### Story 8.2: Delegate do.sommerfeld.app and retire the KAS record
+
+As an operator,
+I want `do.sommerfeld.app` delegated to DigitalOcean and the hand-made KAS record removed,
+So that DigitalOcean is authoritative for every cloud hostname without an outage.
+
+**Acceptance Criteria:**
+
+**Given** three NS records `do` → `ns1`-`ns3.digitalocean.com.` created by hand in the KAS while the old A record stays
+**When** the KAS and public resolvers are queried
+**Then** the KAS refers to DigitalOcean, public resolvers return the reserved IP and the CAA record from the DigitalOcean zone, and records outside `do` are unchanged
+
+**Given** the delegation verified for at least twice the KAS TTL and HTTPS verified from outside
+**When** the KAS A record `fantasy-hockey.prod.do` is deleted
+**Then** the app stays reachable over HTTPS with the same certificate
+
+**Given** the change
+**When** it is done
+**Then** a runbook with a PlantUML migration sequence, rollback procedures and every manual step exists, and the docs, the deploy guard message and the planning docs describe the delegated zone
 
 ## Epic 6: GitHub Actions
 
