@@ -8,13 +8,6 @@ Every app deployment in the cloud gets a hostname that says which app it is, whi
 <app>.<stage>.<cloud-provider>.sommerfeld.app
 ```
 
-| Part               | Meaning                                       | Example          |
-|--------------------|-----------------------------------------------|------------------|
-| `<app>`            | Name of the app                               | `fantasy-hockey` |
-| `<stage>`          | Stage the deployment belongs to               | `prod`           |
-| `<cloud-provider>` | Short name of the provider that hosts the app | `do`             |
-| `sommerfeld.app`   | Domain for all app deployments                | `sommerfeld.app` |
-
 Example: `fantasy-hockey.prod.do.sommerfeld.app` is the fantasy hockey app in `prod` on DigitalOcean.
 
 ## Stages
