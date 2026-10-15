@@ -7,7 +7,7 @@ inputDocuments: ['../specs/spec-fantasy-hockey-digitalocean/SPEC.md', '../specs/
 
 ## Overview
 
-Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS), E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
+Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS) is Epic 7 here; it was pulled forward on 2026-10-15 and runs after Story 5.1 and before Story 5.2 and Epic 6. The spec's E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
 
 ## Requirements Inventory
 
@@ -21,6 +21,7 @@ FR5: A change under `configs-cloud/digital-ocean` is applied by a GitHub Actions
 FR6: Every step runs locally and in CI through the same go-task entry points, checked by the repo's linters. (SPEC CAP-6)
 FR7: The setup is documented under `docs/cloud/digital-ocean` with diagrams. (SPEC CAP-7)
 FR8: Operator can replace the droplet without losing data or the URL. (SPEC CAP-8)
+FR9: Users reach the app over HTTPS at `fantasy-hockey.prod.do.sommerfeld.io`, and only there, with automatically renewed certificates. (SPEC CAP-9)
 
 ### NonFunctional Requirements
 
@@ -40,6 +41,7 @@ FR5: Epic 6 - GitHub Actions
 FR6: Epic 2 - scaffold and linters; Epic 6 - CI checks
 FR7: Every epic - docs skeleton in Epic 2
 FR8: Epic 4 - replacement drill
+FR9: Epic 7 - DNS record and Caddy with automatic TLS
 
 ## Epic List
 
@@ -58,6 +60,10 @@ The app runs as docker compose on the droplet and is reachable at the reserved I
 ### Epic 5: Grafana dashboard
 The droplet and app are observable in Grafana Cloud from the inside and the outside.
 **FRs covered:** FR4
+
+### Epic 7: HTTPS on a custom domain
+The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.io` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
+**FRs covered:** FR9, FR7
 
 ### Epic 6: GitHub Actions
 Changes under `configs-cloud/digital-ocean` are applied by a workflow with shared state.
@@ -358,9 +364,53 @@ So that outages on the path to the droplet become visible.
 
 **Acceptance Criteria:**
 
-**Given** the existing Grafana Cloud synthetic monitoring
+**Given** the existing Grafana Cloud synthetic monitoring and the domain from Epic 7
 **When** the check runs
-**Then** it probes `http://<reserved-ip>` from outside, like the existing checks from Frankfurt and Paris
+**Then** it probes `https://fantasy-hockey.prod.do.sommerfeld.io` from outside, like the existing checks from Frankfurt and Paris
+**And** it fails when the certificate is invalid or expires within 14 days
+
+## Epic 7: HTTPS on a custom domain
+
+The app is served only at `https://fantasy-hockey.prod.do.sommerfeld.io` through Caddy with automatic TLS. Runs after Story 5.1 and before Story 5.2 and Epic 6.
+
+### Story 7.1: DNS record for the droplet
+
+As an operator,
+I want a fixed domain that points at the droplet,
+So that users reach the app by name instead of by IP.
+
+**Acceptance Criteria:**
+
+**Given** the reserved IP from `tofu output reserved_ip_addresses`
+**When** the A record `fantasy-hockey.prod.do.sommerfeld.io` is created by hand at all-inkl.com
+**Then** `dig +short fantasy-hockey.prod.do.sommerfeld.io` returns the reserved IP from outside the home network
+**And** a docs page under `docs/cloud/digital-ocean` describes the record, the hostname pattern `<app>.<stage>.do.sommerfeld.io`, the manual steps at all-inkl.com and the check, and says that a droplet replacement needs no DNS change
+
+### Story 7.2: Caddy with automatic TLS replaces nginx
+
+As a user,
+I want the app over HTTPS at its domain,
+So that the connection is encrypted and the address does not change.
+
+**Acceptance Criteria:**
+
+**Given** the DNS record from Story 7.1
+**When** the deploy runs
+**Then** a Caddy container replaces nginx in the compose project, listens on ports 80 and 443, obtains and renews the certificate for `fantasy-hockey.prod.do.sommerfeld.io` automatically, and proxies to the app on `127.0.0.1:8080`
+**And** the domain is derived from the droplet's stage and app name, not hard-coded per host
+**And** `https://fantasy-hockey.prod.do.sommerfeld.io` serves the app, `http://` on the domain redirects to `https://`, `/metrics` returns 404, and `http://<reserved-ip>` no longer serves the app
+
+**Given** the Caddy data folder (certificates and ACME account) on the volume
+**When** the droplet is replaced
+**Then** the new droplet reuses the stored certificate instead of requesting a new one
+
+**Given** the domain does not resolve
+**When** the deploy runs
+**Then** it stops with a clear message before Caddy starts, so no certificate requests fail against Let's Encrypt's rate limits
+
+**Given** the change
+**When** it is done
+**Then** the nginx files are gone from the droplet, the `fantasy-hockey` Molecule scenario checks the Caddyfile instead of `nginx/default.conf`, Dependabot bumps the Caddy image through the existing compose entry, and the docs (deployment, replacement checks, overview diagram, monitoring) name Caddy and the domain
 
 ## Epic 6: GitHub Actions
 

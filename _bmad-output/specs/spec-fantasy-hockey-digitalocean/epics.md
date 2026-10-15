@@ -8,10 +8,12 @@ Delivery order. Everything runs locally via go-task before CI (E5). Each epic in
 | E2   | Provisioning via Ansible     | Must            | CAP-2, CAP-4 |
 | E3   | App deployment               | Must            | CAP-3, CAP-8 |
 | E4   | Grafana dashboard            | Should          | CAP-4        |
+| E6   | HTTPS, domain, Caddy         | Should          | CAP-9        |
 | E5   | GitHub Actions               | Must            | CAP-5        |
-| E6   | HTTPS, domain, Caddy         | Could           | CAP-9        |
 | E7   | Operations hardening         | Could           | CAP-10       |
 | E8   | Backup and restore           | Won't this time | CAP-11       |
+
+E6 runs between the E4 dashboard and the E4 synthetic check (re-prioritized 2026-10-15), so the check probes the domain.
 
 CAP-7 (docs) applies to every epic.
 
@@ -55,8 +57,8 @@ CAP-7 (docs) applies to every epic.
 
 ## E6 HTTPS, domain, Caddy
 
-- Custom domain, Caddy with automatic TLS replacing nginx, app on `127.0.0.1:8080`.
-- Fallback if no domain: `<ip>.sslip.io`.
+- Domain `fantasy-hockey.prod.do.sommerfeld.io` (pattern `<app>.<stage>.do.sommerfeld.io`): A record to the reserved IP, created by hand at all-inkl.com and documented.
+- Caddy with automatic TLS replaces nginx and serves only that domain; the app stays on `127.0.0.1:8080`; certificates on the volume.
 
 ## E7 Operations hardening
 
