@@ -209,7 +209,7 @@ action_items:
     action: "Merge PR #366 so main has the configs-cloud Dependabot entry, then check
       that the Dependabot view lists configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
   - id: "epic-4-retro-item-18-order-docker-after-the-volume-mount-on-t"
     epic: 4
@@ -339,5 +339,5 @@ action_items:
       its own acceptance check and review triage log; a story whose AC depends on
       Git Sync or a deploy is not done until that was observed"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
