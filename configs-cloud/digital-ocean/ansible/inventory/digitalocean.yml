@@ -30,6 +30,8 @@ compose:
   ansible_user: "'root'"
   ansible_ssh_common_args: "'-o StrictHostKeyChecking=accept-new'"
   # The droplet name is <stage>-<key> (set by OpenTofu), so the name prefix is the
-  # single source of the stage. Alloy sets both as labels on every series.
+  # single source of the stage. Alloy sets both as labels on every series, and
+  # deploy-fantasy-hockey.yml builds the app's domain from alloy_stage, so a
+  # change here also changes the domain.
   alloy_stage: do_name.split('-')[0]
   alloy_environment: "'digital-ocean'"

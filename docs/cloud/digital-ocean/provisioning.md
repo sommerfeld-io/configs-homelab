@@ -25,7 +25,7 @@ A tag group exists only while at least one droplet carries the tag. Today the gr
 
 `provision.yml` targets `ubuntu`, so it provisions every Ubuntu droplet in the account, of every stage. To provision one stage only, pass `--limit dev`, `--limit test` or `--limit prod` to `ansible-playbook`.
 
-`compose` also sets `alloy_stage` (the droplet name prefix, `prod` for `prod-fantasy-hockey`, so the stage comes from OpenTofu only) and `alloy_environment` (`digital-ocean`). Check them with `ansible-inventory -i configs-cloud/digital-ocean/ansible/inventory --host prod-fantasy-hockey`.
+`compose` also sets `alloy_stage` (the droplet name prefix, `prod` for `prod-fantasy-hockey`, so the stage comes from OpenTofu only; the deploy builds the app's domain from it too) and `alloy_environment` (`digital-ocean`). Check them with `ansible-inventory -i configs-cloud/digital-ocean/ansible/inventory --host prod-fantasy-hockey`.
 
 The tag `fantasy-hockey` is set through the optional `tags` list of the droplet map, see [Droplet](droplet.md). The collections `community.digitalocean` (inventory plugin) and `community.general` (the fleet Alloy role uses its `capabilities` module) are pinned third-party dependencies in `ansible/requirements.yml`; the tasks install them before Ansible runs.
 

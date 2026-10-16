@@ -271,7 +271,7 @@ action_items:
     action: "Enforce the dev/test/prod stage list with an OpenTofu validation and
       derive the playbook stage the same way as the inventory alloy_stage"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
   - id: "epic-7-retro-item-26-add-explicit-caa-0-issue-letsencrypt-org"
     epic: 7

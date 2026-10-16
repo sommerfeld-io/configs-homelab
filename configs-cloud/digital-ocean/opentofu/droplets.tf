@@ -1,10 +1,15 @@
 locals {
   region = "fra1"
 
+  # The only stages allowed (docs/cloud/domain-naming.md). The stage is the
+  # second label of the app's domain <app>.<stage>.do.sommerfeld.app.
+  stages = ["dev", "test", "prod"]
+
   # One entry per droplet. The droplet name is "<stage>-<key>".
   #
   # Options (all required):
-  #   stage          Label of the droplet: "dev", "test" or "prod".
+  #   stage          Label of the droplet: "dev", "test" or "prod"
+  #                  (local.stages). Any other value fails the plan.
   #                  Builds the name prefix and the tag. Do not repeat it in
   #                  the key.
   #   size           DigitalOcean droplet size slug, e.g. "s-1vcpu-1gb".
@@ -74,4 +79,13 @@ resource "digitalocean_droplet" "this" {
   # Attach the data volume at creation so DigitalOcean mounts it automatically
   # (the volume itself is formatted at volume creation).
   volume_ids = contains(keys(local.droplets_with_volume), each.key) ? [digitalocean_volume.this[each.key].id] : []
+
+  lifecycle {
+    # locals cannot carry a validation block, so the stage list is checked
+    # here. The plan fails before anything is created or changed.
+    precondition {
+      condition     = contains(local.stages, each.value.stage)
+      error_message = "Droplet \"${each.key}\" has stage \"${each.value.stage}\", but the stage must be one of ${join(", ", local.stages)} (docs/cloud/domain-naming.md)."
+    }
+  }
 }

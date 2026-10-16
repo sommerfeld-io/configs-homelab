@@ -32,7 +32,7 @@ Each entry of the `droplets` map describes one droplet. The `stage` and the map 
 
 | Option           | Allowed values          | Effect                                                                                                                                                                         |
 |------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `stage`          | `dev`, `test` or `prod` | Name prefix and tag of the droplet. The volume name uses it as well                                                                                                            |
+| `stage`          | `dev`, `test` or `prod` | Name prefix and tag of the droplet. The volume name uses it as well. Any other value fails `tofu plan`                                                                         |
 | `size`           | DigitalOcean size slug  | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                 |
 | `image`          | DigitalOcean image slug | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`. Changing it [replaces](replacement.md) the droplet                                                      |
 | `resize_disk`    | `true` or `false`       | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                         |
@@ -73,7 +73,7 @@ The `digitalocean_droplet.this` resource iterates over `local.droplets` with `fo
 
 ### stage
 
-The stage labels the environment of a droplet. It becomes the name prefix and the tag, so `stage = "test"` with the key `example-scratch` creates `test-example-scratch` tagged `test`. The volume of that droplet is called `test-example-scratch-data`. Different droplets can have different stages. The stages are `dev`, `test` and `prod`; Ansible makes one inventory group per stage, see [Provisioning](provisioning.md).
+The stage labels the environment of a droplet. It becomes the name prefix and the tag, so `stage = "test"` with the key `example-scratch` creates `test-example-scratch` tagged `test`. The volume of that droplet is called `test-example-scratch-data`. Different droplets can have different stages. The stages are `dev`, `test` and `prod` (`local.stages`); a precondition on the droplet makes `tofu plan` fail for any other value, before anything is created. Ansible makes one inventory group per stage, see [Provisioning](provisioning.md).
 
 ### size and image
 

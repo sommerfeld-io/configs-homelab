@@ -16,7 +16,7 @@ Example: `fantasy-hockey.prod.do.sommerfeld.app` is the fantasy hockey app in `p
 - `test` → Test deployments before a release
 - `prod` → Production deployments used for real
 
-No other stages are allowed.
+No other stages are allowed. For DigitalOcean, OpenTofu enforces the list: `tofu plan` fails for a droplet with any other `stage` (`local.stages` in `configs-cloud/digital-ocean/opentofu/droplets.tf`).
 
 ## Cloud Providers
 
