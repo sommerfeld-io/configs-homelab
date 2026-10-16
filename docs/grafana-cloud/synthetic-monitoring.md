@@ -8,7 +8,7 @@ The Grafana Cloud Synthetic Monitoring checks for the public websites are declar
 |-----------------------------------------|----------------------------------|-------------------------------------------------|------------------|-----------|---------------------------------|
 | `www.fb-brunnenbau.de`                  | `up-and-running___websites`      | `https://www.fb-brunnenbau.de`                  | Frankfurt, Paris | 10 min    | 1200 ms                         |
 | `www.minifigs.de`                       | `up-and-running___websites`      | `https://www.minifigs.de`                       | Frankfurt, Paris | 10 min    | 2000 ms                         |
-| `fantasy-hockey.prod.do.sommerfeld.app` | `up-and-running___digital-ocean` | `https://fantasy-hockey.prod.do.sommerfeld.app` | Frankfurt, Paris | 10 min    | 2000 ms                         |
+| `fantasy-hockey.prod.do.sommerfeld.app` | `up-and-running___digital-ocean` | `https://fantasy-hockey.prod.do.sommerfeld.app` | Frankfurt, Paris | 10 min    | 300 ms                          |
 
 Every check is an HTTP `GET` over IPv4. The job label and the probe locations are set per check. It fails without TLS, follows redirects, has a 10 s timeout and carries the label `site=<key>`. Every check has the same three alert rules (`grafana_synthetic_monitoring_check_alerts`):
 

@@ -36,7 +36,7 @@ locals {
       job                        = "up-and-running___digital-ocean"
       probes                     = [local.probe_location_frankfurt, local.probe_location_paris]
       target                     = "https://fantasy-hockey.prod.do.sommerfeld.app"
-      http_duration_threshold_ms = 2000
+      http_duration_threshold_ms = 300
       tls_expiry_threshold_days  = 14
     }
   }
