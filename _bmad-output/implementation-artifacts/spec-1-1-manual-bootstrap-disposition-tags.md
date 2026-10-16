@@ -23,28 +23,28 @@ context: []
 **Legend / convention**
 
 - Explains what disposition tags mean and that they're scoped to only the four automation-boundary steps
-  [`ubuntu-workstations/index.md:11`](../../docs/nodes/ubuntu-workstations/index.md#L11)
+  [`ubuntu-workstations/index.md:11`](../../docs/homelab/nodes/ubuntu-workstations/index.md#L11)
 - Same legend, Raspberry Pi setup guide
-  [`raspi/index.md:41`](../../docs/nodes/raspi/index.md#L41)
+  [`raspi/index.md:41`](../../docs/homelab/nodes/raspi/index.md#L41)
 
 **Disposition tags — Ubuntu workstations**
 
 - SSH key exchange tagged permanently accepted
-  [`ubuntu-workstations/index.md:32`](../../docs/nodes/ubuntu-workstations/index.md#L32)
+  [`ubuntu-workstations/index.md:32`](../../docs/homelab/nodes/ubuntu-workstations/index.md#L32)
 - Sudoers NOPASSWD workaround tagged tracked to close (issue #160 already linked inline)
-  [`ubuntu-workstations/index.md:44`](../../docs/nodes/ubuntu-workstations/index.md#L44)
+  [`ubuntu-workstations/index.md:44`](../../docs/homelab/nodes/ubuntu-workstations/index.md#L44)
 - GitHub deploy-key setup tagged permanently accepted
-  [`ubuntu-workstations/index.md:49`](../../docs/nodes/ubuntu-workstations/index.md#L49)
+  [`ubuntu-workstations/index.md:49`](../../docs/homelab/nodes/ubuntu-workstations/index.md#L49)
 - Docker registry login tagged permanently accepted
-  [`ubuntu-workstations/index.md:50`](../../docs/nodes/ubuntu-workstations/index.md#L50)
+  [`ubuntu-workstations/index.md:50`](../../docs/homelab/nodes/ubuntu-workstations/index.md#L50)
 
 **Disposition tags — Raspberry Pi nodes**
 
 - SSH key exchange tagged permanently accepted
-  [`raspi/index.md:50`](../../docs/nodes/raspi/index.md#L50)
+  [`raspi/index.md:50`](../../docs/homelab/nodes/raspi/index.md#L50)
 - Sudoers NOPASSWD workaround tagged tracked to close
-  [`raspi/index.md:51`](../../docs/nodes/raspi/index.md#L51)
+  [`raspi/index.md:51`](../../docs/homelab/nodes/raspi/index.md#L51)
 - GitHub deploy-key setup tagged permanently accepted
-  [`raspi/index.md:56`](../../docs/nodes/raspi/index.md#L56)
+  [`raspi/index.md:56`](../../docs/homelab/nodes/raspi/index.md#L56)
 - Docker registry login tagged permanently accepted
-  [`raspi/index.md:57`](../../docs/nodes/raspi/index.md#L57)
+  [`raspi/index.md:57`](../../docs/homelab/nodes/raspi/index.md#L57)

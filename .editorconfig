@@ -13,6 +13,10 @@ indent_size = 2
 [*.js]
 indent_size = 4
 
+# caddy fmt indents with tabs; Caddy warns at start about other indentation.
+[Caddyfile.j2]
+indent_style = tab
+
 [*.json]
 indent_size = 2
 
@@ -30,6 +34,9 @@ indent_size = 2
 indent_size = 2
 
 [*.sh]
+indent_size = 2
+
+[*.tf]
 indent_size = 2
 
 [Vagrantfile]

@@ -140,17 +140,17 @@ A role fix in progress lives on a branch; nodes already provisioned from the las
 
 ### 4.5 Documentation (MkDocs)
 
-**Description:** Docs (MkDocs, Material theme) mirror the `ansible/` structure, so playbooks, roles, and profiles are discoverable and presentable — this also serves the secondary, previously-unstated motivation of the public repo being a polished portfolio/talking-point artifact, not purely private utility.
+**Description:** Docs (MkDocs, Material theme) mirror the `configs-homelab/ansible/` structure, so playbooks, roles, and profiles are discoverable and presentable — this also serves the secondary, previously-unstated motivation of the public repo being a polished portfolio/talking-point artifact, not purely private utility.
 
 **Functional Requirements:**
 
 #### FR-7: Docs stay structurally aligned with automation
 
-The docs tree mirrors the `ansible/` directory structure: every top-level `ansible/` directory has a corresponding `docs/` directory of the same name, so a new playbook or role has a defined, discoverable place for its documentation to live.
+The docs tree mirrors the `configs-homelab/ansible/` directory structure: every top-level `configs-homelab/ansible/` directory has a corresponding `docs/` directory of the same name, so a new playbook or role has a defined, discoverable place for its documentation to live.
 
 **Consequences (testable):**
 
-- Every top-level directory under `ansible/` has a same-named counterpart under `docs/`.
+- Every top-level directory under `configs-homelab/ansible/` has a same-named counterpart under `docs/`.
 
 ### 4.6 Manual Bootstrap Steps (Accepted, Documented, Closed)
 
@@ -205,7 +205,7 @@ The sudoers NOPASSWD workaround needed on newer Ubuntu versions is resolved so i
 - Compliance verification via role-matched InSpec profiles (FR-3)
 - Observability via Grafana Alloy → Grafana Cloud (FR-4)
 - CI safety net + git-branch isolation for role changes (FR-5, FR-6)
-- Docs mirroring the ansible/ structure (FR-7)
+- Docs mirroring the configs-homelab/ansible/ structure (FR-7)
 - Documented, closed manual bootstrap steps (FR-8)
 - Closing #160 (FR-9)
 

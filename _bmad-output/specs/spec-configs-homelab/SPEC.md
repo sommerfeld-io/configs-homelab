@@ -39,8 +39,8 @@ Manual machine setup at this homelab produces "snowflakes" — machines meant to
     - **success:** Nodes already provisioned from the last-known-good configuration show no change until the fix branch is merged and its playbook is re-applied.
 
 - **CAP-7**
-    - **intent:** Docs stay structurally aligned with `ansible/playbooks/` — one doc per playbook, kept in sync when a playbook is renamed or removed.
-    - **success:** Every playbook under `ansible/playbooks/` has exactly one corresponding `docs/ansible/playbooks/*.md`; renaming or removing a playbook renames or removes its doc in the same change.
+    - **intent:** Docs stay structurally aligned with `configs-homelab/ansible/playbooks/` — one doc per playbook, kept in sync when a playbook is renamed or removed.
+    - **success:** Every playbook under `configs-homelab/ansible/playbooks/` has exactly one corresponding `docs/ansible/playbooks/*.md`; renaming or removing a playbook renames or removes its doc in the same change.
 
 - **CAP-8**
     - **intent:** Every currently-manual bootstrap step (SSH key exchange, the sudoers workaround, Docker registry login, GitHub key setup) is documented with an explicit disposition.

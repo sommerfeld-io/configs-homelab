@@ -6,11 +6,12 @@ ignore: |
   node_modules
   .vagrant
   target
-  tests/inspec/*/vendor
-  ansible/roles/ansible-roles-collection
-  ansible/vars/vault.yml
-  ansible/vars/grafana-vault.yml
-  ansible/host_vars/*/*-vault.yml
+  configs-homelab/tests/inspec/*/vendor
+  configs-homelab/ansible/roles/ansible-roles-collection
+  configs-homelab/ansible/vars/vault.yml
+  configs-homelab/ansible/vars/grafana-vault.yml
+  configs-homelab/ansible/host_vars/*/*-vault.yml
+  configs-cloud/*/ansible/vars/*-vault.yml
 
 rules:
   line-length:

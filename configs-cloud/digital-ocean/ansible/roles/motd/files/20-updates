@@ -1,0 +1,17 @@
+#!/bin/sh
+# Update info from Ubuntu's cached stamp (refreshed by the apt and dpkg hooks).
+# The stamp always holds "<N> update(s) can be applied immediately.", also for
+# 0, and the "apt list --upgradable" hint only when something is pending. Only
+# these two lines are kept, the ESM and security lines are left out. Prints
+# nothing at all when the stamp is missing or the count is 0. Never runs
+# apt-check (about 2.8 s of CPU on a 1 vCPU droplet).
+stamp=/var/lib/update-notifier/updates-available
+[ -r "$stamp" ] || exit 0
+count_line=$(grep -m 1 'can be applied immediately' "$stamp")
+count=${count_line%% *}
+case "$count" in
+'' | 0 | *[!0-9]*) exit 0 ;;
+esac
+printf '%s\n' "$count_line"
+grep -m 1 'apt list --upgradable' "$stamp"
+echo

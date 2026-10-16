@@ -1,0 +1,21 @@
+---
+# Debian defaults. Overridden with Arch-specific values by the
+# "Set OS-specific facts" task, since the grafana-alloy pacman package
+# uses different names for the service, user/group, binary and env file.
+alloy_env_file: /etc/default/alloy
+alloy_user: alloy
+alloy_group: alloy
+
+# Value of the environment label on every series and log line. The DigitalOcean
+# inventory sets digital-ocean.
+alloy_environment: homelab
+
+# Config template written to config.alloy. The default is the apartment (fleet)
+# template in this role; the DigitalOcean playbook points it at the cloud template.
+alloy_config_template: config.alloy.j2
+
+# Fleet-only extras: the GitHub token file for the GitHub exporter, the eBPF
+# capabilities on the Alloy binary and the capability lines in the systemd
+# override. Set to false (DigitalOcean) to leave them out; on a host that already
+# has them they are removed.
+alloy_fleet_extras: true

@@ -1,0 +1,9 @@
+---
+# Notified by every task that changes something Alloy reads at start (config,
+# environment file, systemd override, token file, capabilities, docker group).
+# daemon_reload picks up a changed override before the restart.
+- name: Restart Alloy
+  ansible.builtin.systemd:
+    name: "{{ alloy_service_name }}"
+    daemon_reload: true
+    state: restarted

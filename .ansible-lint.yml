@@ -8,17 +8,20 @@ var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 use_default_rules: false
 
 exclude_paths:
-  - ansible/roles/ansible-roles-collection
+  - configs-homelab/ansible/roles/ansible-roles-collection
   ## Ignore the following due to ansible-vault usage in playbooks and vars files
   ## TODO https://github.com/sommerfeld-io/configs-homelab/issues/172
-  - ansible/vars/grafana-vault.yml
-  - ansible/vars/vault.yml
-  - ansible/playbooks/all.yml
-  - ansible/playbooks/desktop.yml
-  - ansible/playbooks/grafana-agents.yml
-  - ansible/playbooks/ollama.yml
-  - ansible/playbooks/raspi.yml
-  - ansible/playbooks/server.yml
+  - configs-homelab/ansible/vars/grafana-vault.yml
+  - configs-homelab/ansible/vars/vault.yml
+  - configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml
+  - configs-homelab/ansible/playbooks/all.yml
+  - configs-homelab/ansible/playbooks/desktop.yml
+  - configs-homelab/ansible/playbooks/grafana-agents.yml
+  - configs-homelab/ansible/playbooks/ollama.yml
+  - configs-homelab/ansible/playbooks/raspi.yml
+  - configs-homelab/ansible/playbooks/server.yml
+  - configs-cloud/digital-ocean/ansible/playbooks/all.yml
+  - configs-cloud/digital-ocean/ansible/playbooks/provision.yml
 
 enable_list:
   - no-log-password

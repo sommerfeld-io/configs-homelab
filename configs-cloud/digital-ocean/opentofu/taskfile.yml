@@ -1,0 +1,40 @@
+---
+version: '3.42.1'
+
+# Included in configs-cloud/taskfile.yml with prefix `digital-ocean:opentofu` and
+# `dir: digital-ocean/opentofu`, so the tasks are called as
+# `task cloud:digital-ocean:opentofu:<name>`.
+
+tasks:
+
+  init:
+    desc: Initialize the OpenTofu working directory for DigitalOcean
+    cmds:
+      - tofu init
+
+  fmt:
+    desc: Format the OpenTofu files for DigitalOcean
+    cmds:
+      - tofu fmt -recursive
+
+  plan:
+    desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: &do-token
+      - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
+        msg: DIGITALOCEAN_ACCESS_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
+    cmds:
+      - tofu plan
+
+  apply:
+    desc: Apply the OpenTofu configuration to DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - tofu apply
+
+  # Applies without the "yes" prompt, so read `plan` first. prevent_destroy
+  # still refuses any plan that would destroy the volume or the reserved IP.
+  apply:yes:
+    desc: Apply the OpenTofu configuration to DigitalOcean without asking for confirmation (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: *do-token
+    cmds:
+      - tofu apply -auto-approve

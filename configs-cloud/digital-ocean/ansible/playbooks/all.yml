@@ -1,0 +1,6 @@
+---
+- name: Include Ansible Playbook to provision droplets on DigitalOcean
+  ansible.builtin.import_playbook: ./provision.yml
+
+- name: Include Ansible Playbook to deploy the fantasy hockey app on DigitalOcean droplets
+  ansible.builtin.import_playbook: ./deploy-fantasy-hockey.yml

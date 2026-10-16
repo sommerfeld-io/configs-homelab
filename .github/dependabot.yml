@@ -17,31 +17,41 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/common/taskfile-dev/files/docker-stacks/portainer
+    directory: configs-homelab/ansible/roles/common/taskfile-dev/files/docker-stacks/portainer
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/grafana-cloud/exporters/files
+    directory: configs-homelab/ansible/roles/grafana-cloud/exporters/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/media/jellyfin/files
+    directory: configs-homelab/ansible/roles/media/jellyfin/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/raspi/fantasy-hockey/files
+    directory: configs-homelab/ansible/roles/raspi/fritz-box-exporter/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/raspi/fritz-box-exporter/files
+    directory: configs-homelab/ansible/roles/raspi/pihole/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
-    directory: ansible/roles/raspi/pihole/files
+    directory: configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: opentofu
+    directory: /configs-cloud/digital-ocean/opentofu
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: opentofu
+    directory: /grafana-cloud/opentofu
     schedule:
       interval: weekly

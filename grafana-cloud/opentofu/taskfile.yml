@@ -1,0 +1,44 @@
+---
+version: '3.42.1'
+
+# Included in the root taskfile with prefix `grafana-cloud` and
+# `dir: grafana-cloud/opentofu`, so the tasks are called as
+# `task grafana-cloud:<name>`.
+
+tasks:
+
+  init:
+    desc: Initialize the OpenTofu working directory for Grafana Cloud
+    cmds:
+      - tofu init
+
+  fmt:
+    desc: Format the OpenTofu files for Grafana Cloud
+    cmds:
+      - tofu fmt -recursive
+
+  validate:
+    desc: Validate the OpenTofu configuration for Grafana Cloud
+    cmds:
+      - tofu validate
+
+  plan:
+    desc: Show the changes OpenTofu would make on Grafana Cloud (needs GRAFANA_SM_ACCESS_TOKEN)
+    preconditions: &sm-token
+      - sh: test -n "$GRAFANA_SM_ACCESS_TOKEN"
+        msg: GRAFANA_SM_ACCESS_TOKEN is not set, see docs/grafana-cloud/synthetic-monitoring.md
+    cmds:
+      - tofu plan
+
+  apply:
+    desc: Apply the OpenTofu configuration to Grafana Cloud (needs GRAFANA_SM_ACCESS_TOKEN)
+    preconditions: *sm-token
+    cmds:
+      - tofu apply
+
+  # Applies without the "yes" prompt, so read `plan` first.
+  apply:yes:
+    desc: Apply the OpenTofu configuration to Grafana Cloud without asking for confirmation (needs GRAFANA_SM_ACCESS_TOKEN)
+    preconditions: *sm-token
+    cmds:
+      - tofu apply -auto-approve

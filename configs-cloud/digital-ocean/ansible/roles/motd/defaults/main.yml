@@ -1,0 +1,10 @@
+---
+motd_dir: /etc/update-motd.d
+# Ubuntu's own restart notice stays.
+motd_keep_scripts:
+  - 98-reboot-required
+# The role's own MOTD scripts in files/, installed to motd_dir.
+motd_scripts:
+  - 00-banner
+  - 10-os-line
+  - 20-updates

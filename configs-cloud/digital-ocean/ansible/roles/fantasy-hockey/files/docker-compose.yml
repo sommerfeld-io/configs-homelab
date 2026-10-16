@@ -1,0 +1,41 @@
+---
+## See <https://github.com/sommerfeld-io/fantasy-hockey/blob/main/docs/index.md>
+## Values for the ${...} variables below are read from the .env file that
+## this role templates into the same directory as this compose file.
+services:
+  app:
+    image: sommerfeldio/fantasy-hockey:0.1.1
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    restart: unless-stopped
+    # Loopback-only: the app's /metrics endpoint is otherwise unauthenticated,
+    # and Caddy reaches this service over the compose network. Alloy scrapes
+    # 127.0.0.1:8080/metrics.
+    ports:
+      - 127.0.0.1:8080:8080
+    volumes:
+      - ./data:/data
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET}
+      DATA_FILE: /data/fantasy-hockey.yml
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_APP_PASSWORD: ${SMTP_APP_PASSWORD}
+
+  # Terminates TLS for the domain in the Caddyfile and proxies to app:8080. The
+  # certificate and the ACME account live in ./caddy/data on the volume.
+  caddy:
+    image: caddy:2.11.7
+    container_name: ${COMPOSE_PROJECT_NAME}-caddy
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - 80:80
+      - 443:443
+      # HTTP/3
+      - 443:443/udp
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/data:/data
+      - ./caddy/config:/config

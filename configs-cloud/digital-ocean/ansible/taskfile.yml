@@ -1,0 +1,50 @@
+---
+version: '3.42.1'
+
+# Included in configs-cloud/taskfile.yml with prefix `digital-ocean:ansible` and
+# `dir: digital-ocean/ansible`, so the tasks are called as
+# `task cloud:digital-ocean:ansible:<name>`.
+
+tasks:
+
+  requirements:
+    internal: true
+    cmds:
+      - ansible-galaxy collection install -r requirements.yml
+
+  inventory:
+    desc: List the droplets found by the dynamic inventory with their groups (needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: &do-token
+      - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
+        msg: DIGITALOCEAN_ACCESS_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
+    cmds:
+      - task: requirements
+      - ansible-inventory -i inventory --graph
+
+  all:
+    desc: Run all.yml (provision, then fantasy hockey deploy, needs DIGITALOCEAN_ACCESS_TOKEN, asks for vault password)
+    preconditions: *do-token
+    cmds:
+      - task: requirements
+      # Extra arguments after --, e.g. `-- --limit fantasy-hockey`.
+      - ansible-playbook -i inventory --ask-vault-pass playbooks/all.yml {{ .CLI_ARGS }}
+
+  provision:
+    desc: Provision all Ubuntu droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for vault password)
+    preconditions: *do-token
+    cmds:
+      - task: requirements
+      - ansible-playbook -i inventory --ask-vault-pass playbooks/provision.yml
+
+  deploy-fantasy-hockey:
+    desc: Deploy fantasy hockey app to the droplets with Ansible (needs DIGITALOCEAN_ACCESS_TOKEN, asks for vault password)
+    preconditions: *do-token
+    cmds:
+      - task: requirements
+      # Extra arguments after --, e.g. `-- --tags volume` (mount the volume only).
+      - ansible-playbook -i inventory --ask-vault-pass playbooks/deploy-fantasy-hockey.yml {{ .CLI_ARGS }}
+
+  vault:fantasy-hockey:
+    desc: Show and edit the fantasy hockey secrets in the Ansible Vault file vars/fantasy-hockey-vault.yml
+    cmds:
+      - ansible-vault edit vars/fantasy-hockey-vault.yml

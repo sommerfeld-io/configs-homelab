@@ -1,4 +1,3 @@
----
 # STATUS DEFINITIONS:
 # ==================
 # Epic Status:
@@ -30,15 +29,66 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 08-25-2026 19:28
+last_updated: 10-16-2026 12:44
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 development_status:
+
   epic-1: done
   1-1-tag-every-manual-bootstrap-step-with-an-explicit-disposition: done
   epic-1-retrospective: done
+
+  epic-2: done
+  2-1-devcontainer-tools-and-digitalocean_token-delivery: done
+  2-2-cloud-configs-scaffold-with-taskfile-and-linters: done
+  2-3-docs-skeleton-for-cloud-digital-ocean: done
+  2-4-opentofu-droplet-ssh-keys-tag-and-project: done
+  2-5-reserved-ip-and-2-gb-volume-with-prevent_destroy: done
+  epic-2-retrospective: done
+
+  epic-3: done
+  3-1-dynamic-inventory-and-base-provision-yml: done
+  3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-lab: done
+  3-3-environment-homelab-label-in-the-homelab-alloy-config: done
+  3-4-droplet-motd-with-banner-live-os-line-and-update-info: done
+  3-5-molecule-tests-for-the-cloud-ansible-roles: done
+  epic-3-retrospective: done
+
+  epic-4: done
+  4-1-move-fantasy-hockey-role-and-deploy-fantasy-hockey-yml-with-nginx: done
+  4-2-dependabot-compose-bumps-for-cloud-configs: done
+  4-3-droplet-replacement-drill: done
+  epic-4-retrospective: done
+
+  epic-5: done
+  5-1-grafana-dashboard-for-the-droplet-and-the-app: done
+  # 5.2 waits for Epic 7: it probes the domain (sprint-change-proposal-2026-10-15)
+  5-2-synthetic-monitoring-check-for-the-public-url: done
+  # 5.3 is built after 5.2: its certificate-expiry panel reads the 5.2 check
+  5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard: done
+  epic-5-retrospective: done
+
+  # Epic 7 runs before Story 5.2 and Epic 6 (sprint-change-proposal-2026-10-15)
+  epic-7: done
+  7-1-dns-record-for-the-droplet: done
+  7-2-caddy-with-automatic-tls-replaces-nginx: done
+  epic-7-retrospective: done
+
+  # Epic 8 runs after Epic 7 and before Epic 6 (Epic 7 retro item 27: DNS moves into OpenTofu)
+  epic-8: backlog
+  8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu: ready-for-dev
+  # 8.2 needs 8.1 applied and checked against ns1.digitalocean.com (manual tasks M1-M6)
+  8-2-delegate-do-sommerfeld-app-and-retire-the-kas-record: ready-for-dev
+  epic-8-retrospective: optional
+
+  epic-6: backlog
+  6-1-ci-static-checks-for-opentofu-and-ansible: backlog
+  6-2-remote-state-with-locking: backlog
+  6-3-cloud-deployment-yml-with-org-secrets-and-ci-ssh-key: backlog
+  epic-6-retrospective: optional
+
 action_items:
   - id: "epic-1-retro-item-1-reconcile-epic-1-context-md-story-1-2-re"
     epic: 1
@@ -52,5 +102,242 @@ action_items:
     action: "Resolve or commit the dirty ansible-roles-collection submodule pointer
       currently in the working tree"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-08-25.md"
+  - id: "epic-2-retro-item-3-reconcile-the-planning-docs-with-the-as"
+    epic: 2
+    action: "Reconcile the planning docs with the as-built droplet before Story 3.1:
+      DIGITALOCEAN_ACCESS_TOKEN (incl. the inventory env lookup), one SSH key, the
+      underscores mount path"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-4-clean-up-the-bashrc-token-exports-in-bas"
+    epic: 2
+    action: "Clean up the .bashrc token exports in bash-secrets.yml: remove the stale
+      DIGITALOCEAN_TOKEN export and replace instead of append on rotation"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-5-decide-the-opentofu-pin-strategy-exact-r"
+    epic: 2
+    action: "Decide the OpenTofu pin strategy (exact required_version vs ~> constraint,
+      host install) and fix the 1.12.x wording in api-token.md"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-6-verify-the-digitalocean-token-scopes-nee"
+    epic: 2
+    action: "Verify the DigitalOcean token scopes needed for droplets with tags, trim
+      ssh_key to read, and update api-token.md"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-2-retro-item-7-record-the-epic-2-process-lessons-as-pro"
+    epic: 2
+    action: "Record the Epic 2 process lessons as project pitfalls (run documented
+      commands first, reconcile planning docs with decisions, copy epic resource constraints
+      into story specs, grep all consumers on cross-tool renames)"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-2-retro-2026-10-12.md"
+  - id: "epic-3-retro-item-8-stop-fleet-only-side-effects-on-the-drop"
+    epic: 3
+    action: "Stop fleet-only side effects on the droplet (GitHub token, eBPF capabilities,
+      remotecfg collector) - decide template variable vs feature switches, then build"
+    owner: "user + dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-9-fix-docs-drift-tasks-and-linters-md-tree"
+    epic: 3
+    action: "Fix docs drift: tasks-and-linters.md (tree, provision row, folderslint
+      row, ansible-lint exclusion), droplet.md Tags row, provisioning.md role order"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-10-pin-every-collection-provisioning-uses-c"
+    epic: 3
+    action: "Pin every collection provisioning uses (community.general first) in configs-cloud/digital-ocean/ansible/requirements.yml"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-11-make-deploy-wait-for-a-new-droplet-befor"
+    epic: 3
+    action: "Make deploy wait for a new droplet before Story 4.3: wait_for_connection,
+      cloud-init wait, safe ansible_host"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-12-reconcile-the-idempotence-statement-in-e"
+    epic: 3
+    action: "Reconcile the idempotence statement in epic-3-context.md and the 3.1
+      AC with the per-run Alloy restart"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-13-run-provision-a-second-time-swap-and-mot"
+    epic: 3
+    action: "Run provision a second time (swap and motd no change) and roll out grafana-agents.yml
+      for environment=homelab"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-14-record-epic-3-process-lessons-as-project"
+    epic: 3
+    action: "Record Epic 3 process lessons as project pitfalls (verify third-party
+      defaults before rejecting findings, timestamps from date, re-test environment
+      limits, check option descriptions)"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-15-plan-a-cloud-test-harness-story-provisio"
+    epic: 3
+    action: "Plan a cloud test-harness story: provision.yml syntax check in CI, rendered
+      label assertions, 20-updates fixtures, Molecule/InSpec for cloud roles"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-3-retro-item-16-add-a-lychee-retry-or-accept-rule-for-42"
+    epic: 3
+    action: "Add a lychee retry or accept rule for 429 and 5xx in the markdown link
+      check"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-3-retro-2026-10-13.md"
+  - id: "epic-4-retro-item-17-merge-pr-366-so-main-has-the-configs-clo"
+    epic: 4
+    action: "Merge PR #366 so main has the configs-cloud Dependabot entry, then check
+      that the Dependabot view lists configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-18-order-docker-after-the-volume-mount-on-t"
+    epic: 4
+    action: "Order Docker after the volume mount on the fantasy hockey droplet (x-systemd.before=docker.service
+      or a docker.service drop-in with RequiresMountsFor) and check it with a droplet
+      reboot"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-19-fix-replacement-md-a-targeted-destroy-of"
+    epic: 4
+    action: "Fix replacement.md: a targeted destroy of the droplet also destroys digitalocean_project_resources.this,
+      which the next apply recreates"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-20-assert-in-provision-yml-that-the-droplet"
+    epic: 4
+    action: "Assert in provision.yml that the droplet resolves exporters_cadvisor_bind_address
+      to 127.0.0.1 before the exporters role runs"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-21-fix-doc-drift-droplet-md-no-data-file-co"
+    epic: 4
+    action: "Fix doc drift: droplet.md (no data file copy), tests.md (four guard cases,
+      provision no-change except Docker or package releases), and document that provision
+      can restart the app when Docker is upgraded"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-22-document-in-pipelines-md-that-bumps-to-t"
+    epic: 4
+    action: "Document in pipelines.md that bumps to the fleet roles the droplet runs
+      (grafana-cloud/exporters, grafana-cloud/alloy) land under configs-homelab and
+      need task cloud:digital-ocean:ansible:provision"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-4-retro-item-23-record-epic-4-process-lessons-as-project"
+    epic: 4
+    action: "Record Epic 4 process lessons as project pitfalls: run a drill before
+      writing its procedure, check against the reserved IP not the droplet IP, DigitalOcean
+      mounts a volume automatically only when it is created with the droplet"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-4-retro-2026-10-14.md"
+  - id: "epic-7-retro-item-24-reconcile-the-epic-7-docs-and-the-dns-gu"
+    epic: 7
+    action: "Reconcile the Epic 7 docs and the DNS guard message with the as-built:
+      exactly the reserved IP, no dig hint, wildcard as CNAME, http vs https on the
+      IP, new-droplet order, renewal-window caveat, KAS TTL, test droplet needs reserved_ip,
+      firewall must allow 80/443/443udp"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-25-enforce-the-dev-test-prod-stage-list-wit"
+    epic: 7
+    action: "Enforce the dev/test/prod stage list with an OpenTofu validation and
+      derive the playbook stage the same way as the inventory alloy_stage"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-26-add-explicit-caa-0-issue-letsencrypt-org"
+    epic: 7
+    action: "Add explicit CAA 0 issue letsencrypt.org records for prod.do.sommerfeld.app
+      in the KAS and document them in domain.md"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-27-decide-whether-dns-moves-into-opentofu-b"
+    epic: 7
+    action: "Decide whether DNS moves into OpenTofu before writing the drafted story;
+      it reverses the Epic 7 decision (run bmad-correct-course if yes)"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-7-retro-item-28-at-the-next-droplet-replacement-check-th"
+    epic: 7
+    action: "At the next droplet replacement, check that the metadata read finds the
+      reserved IP on the first run; add a retry to the uri task if not"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-5-retro-item-29-merge-digital-ocean-into-main-so-git-syn"
+    epic: 5
+    action: "Merge digital-ocean into main so Git Sync publishes the droplet dashboard,
+      then run the monitoring.md Checks for the 5.1 rows and the Proxy row with stage=prod"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-30-run-provision-and-deploy-fantasy-hockey"
+    epic: 5
+    action: "Run provision and deploy-fantasy-hockey (short outage), then Story 5.3
+      manual checks 3-5: log_type and stream on Caddy lines only, masked IPv4/IPv6,
+      no forwarded-IP headers, no duplicated lines"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-31-reconcile-the-epic-5-docs-with-the-as-bu"
+    epic: 5
+    action: "Reconcile the Epic 5 docs with the as-built: the no-alerts non-goal vs
+      the 5.2 check alerts, monitoring.md line 3, the 5.2 AC wording (alert fires
+      within 14 days), the 5.3 AC in the epics file, alert routing and detection latency
+      in synthetic-monitoring.md"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-32-set-the-fantasy-hockey-duration-threshol"
+    epic: 5
+    action: "Set the fantasy hockey duration threshold from a week of probe_http_total_duration_seconds
+      per probe and decide whether the check alerts route to a contact point"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-33-add-a-lint-check-that-the-git-sync-dashb"
+    epic: 5
+    action: "Add a lint check that the git-sync dashboard manifests parse and every
+      droplet dashboard query carries environment and stage filters except the documented
+      Synthetic Monitoring panel"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-34-record-as-project-pitfalls-a-story-built"
+    epic: 5
+    action: "Record as project pitfalls: a story built inside another spec still gets
+      its own acceptance check and review triage log; a story whose AC depends on
+      Git Sync or a deploy is not done until that was observed"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"

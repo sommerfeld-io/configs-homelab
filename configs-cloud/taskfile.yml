@@ -1,0 +1,41 @@
+---
+version: '3.42.1'
+
+# Included in the root taskfile with prefix `cloud` and `dir: configs-cloud`,
+# so every task here is called as `task cloud:<name>`.
+
+includes:
+  # OpenTofu for the DigitalOcean infrastructure: `task cloud:digital-ocean:opentofu:<name>`.
+  digital-ocean:opentofu:
+    taskfile: digital-ocean/opentofu/taskfile.yml
+    dir: digital-ocean/opentofu
+
+  # Ansible for the DigitalOcean droplets: `task cloud:digital-ocean:ansible:<name>`.
+  digital-ocean:ansible:
+    taskfile: digital-ocean/ansible/taskfile.yml
+    dir: digital-ocean/ansible
+
+  # Molecule scenarios for the roles the droplet runs: `task cloud:molecule:test`.
+  molecule:
+    taskfile: digital-ocean/tests/molecule/taskfile.yml
+    dir: digital-ocean/tests/molecule
+
+tasks:
+
+  deploy:all:
+    desc: Run full cloud deployment pipeline, (OpenTofu, all playbooks, needs DIGITALOCEAN_ACCESS_TOKEN)
+    preconditions: &do-token
+      - sh: test -n "$DIGITALOCEAN_ACCESS_TOKEN"
+        msg: DIGITALOCEAN_ACCESS_TOKEN is not set, see docs/cloud/digital-ocean/api-token.md
+    cmds:
+      - task: digital-ocean:opentofu:apply
+      - task: digital-ocean:ansible:all
+
+  info:
+    desc: Print information for all cloud environments
+    preconditions: *do-token
+    cmds:
+      - doctl account get
+      - doctl compute droplet list
+      - doctl compute reserved-ip list
+      - doctl compute volume list

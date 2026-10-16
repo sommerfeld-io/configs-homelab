@@ -1,0 +1,155 @@
+---
+- name: Install and configure nodes
+  hosts: raspi
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+    - ../vars/vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/hardening
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/bash
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/filesystem
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/packages
+        tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/packages
+        tasks_from: raspi
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/packages
+        tasks_from: fastfetch
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/taskfile-dev
+    - ansible.builtin.include_role:
+        name: ../roles/common/taskfile-dev
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/docker
+        tasks_from: main
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/cron
+        tasks_from: main
+    - ansible.builtin.include_tasks:
+        file: ../tasks/fix-system-clock-not-synchronized.yml
+
+- name: Install and configure nodes (non-root)
+  hosts: raspi
+  gather_facts: true
+  become: false
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+    - ../vars/vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/atuin
+
+- name: Install and configure pi4-0005 specifics
+  hosts: pi4-0005.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/common/mount-disk
+      vars:
+        mount_disk_uuid: "c9a69508-2ed1-4d74-9494-72da540a1421" # run `sudo blkid` to get ID
+        mount_disk_path: "/mnt/data"
+
+- name: Install and configure pi4-0006 specifics
+  hosts: pi4-0006.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/common/mount-disk
+      vars:
+        mount_disk_uuid: "68a36c9f-9a1b-40e9-9bf4-fd2b6b6eeeef" # run `sudo blkid` to get ID
+        mount_disk_path: "/mnt/data"
+
+- name: Install and configure pi4-dradis specifics
+  hosts: pi4-dradis.fritz.box
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/raspi.yml
+    - ../host_vars/pi4-dradis/fritz-box-vault.yml
+  tasks:
+    - ansible.builtin.include_role:
+        name: ../roles/raspi/pihole
+
+    - ansible.builtin.include_role:
+        name: ../roles/raspi/fritz-box-exporter
+      tags:
+        - fritz-box-exporter
+
+# The fantasy hockey app moved to the DigitalOcean droplet
+# (configs-cloud/digital-ocean/ansible/playbooks/deploy-fantasy-hockey.yml).
+# This play removes the old deployment from pi4-0002. Run it only after the app
+# is verified on the droplet. The Pi's data is deleted without a backup.
+# Tagged never: `task homelab:ansible:raspi` and `task homelab:ansible:all` (all.yml imports this
+# playbook) skip it. Only `task homelab:ansible:raspi:fantasy-hockey-cleanup` runs it.
+- name: Remove the old fantasy hockey deployment from pi4-0002
+  hosts: pi4-0002.fritz.box
+  gather_facts: false
+  become: true
+  tags:
+    - never
+    - fantasy-hockey-cleanup
+  vars:
+    fantasy_hockey_pi_path: /opt/fantasy-hockey
+    # Containers the homelab roles run on every Pi. They are expected and do not
+    # block the cleanup: cadvisor from grafana-cloud/exporters (grafana-agents.yml).
+    fantasy_hockey_pi_fleet_containers:
+      - cadvisor
+  tasks:
+    - name: Fantasy Hockey Cleanup  ----  List the running containers
+      ansible.builtin.command:
+        argv: [docker, ps, --format, "{{ '{{.Names}}' }}"]
+      register: fantasy_hockey_pi_containers
+      changed_when: false
+
+    - name: Fantasy Hockey Cleanup  ----  Stop when containers outside the fantasy-hockey project and the fleet run
+      vars:
+        fantasy_hockey_pi_other_containers: >-
+          {{ fantasy_hockey_pi_containers.stdout_lines
+             | reject('match', '^fantasy-hockey-')
+             | reject('in', fantasy_hockey_pi_fleet_containers)
+             | list }}
+      ansible.builtin.assert:
+        that:
+          - fantasy_hockey_pi_other_containers | length == 0
+        fail_msg: >-
+          {{ inventory_hostname }} runs containers outside the fantasy-hockey project
+          and the fleet containers ({{ fantasy_hockey_pi_fleet_containers | join(', ') }}):
+          {{ fantasy_hockey_pi_other_containers | join(', ') }}. Nothing was removed.
+        quiet: true
+
+    - name: Fantasy Hockey Cleanup  ----  Check for the old deploy directory
+      ansible.builtin.stat:
+        path: "{{ fantasy_hockey_pi_path }}"
+      register: fantasy_hockey_pi_dir
+
+    - name: Fantasy Hockey Cleanup  ----  Stop and remove the containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ fantasy_hockey_pi_path }}"
+        state: absent
+      when: fantasy_hockey_pi_dir.stat.exists
+
+    - name: Fantasy Hockey Cleanup  ----  Remove the old deploy directory
+      ansible.builtin.file:
+        path: "{{ fantasy_hockey_pi_path }}"
+        state: absent
+      when: fantasy_hockey_pi_dir.stat.exists

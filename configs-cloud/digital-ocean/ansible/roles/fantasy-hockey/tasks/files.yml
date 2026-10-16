@@ -1,0 +1,93 @@
+---
+# Everything that lands on disk: directories, compose file, Caddyfile, .env
+# and the seeded data file. No Docker needed, so the Molecule scenario runs these
+# tasks alone (tasks_from: files).
+
+- name: Fantasy Hockey  ----  Create deploy directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rwx,g=rx,o=rx
+  loop:
+    - "{{ fantasy_hockey_path }}"
+    - "{{ fantasy_hockey_path }}/caddy"
+
+# Caddy's certificates, private keys and ACME account (/data) and its autosaved
+# config (/config). On the volume, so a replacement droplet reuses the
+# certificate instead of ordering a new one. Caddy runs as root in its container.
+- name: Fantasy Hockey  ----  Create Caddy data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{ fantasy_hockey_path }}/caddy/data"
+    - "{{ fantasy_hockey_path }}/caddy/config"
+
+# Left over from the nginx proxy that Caddy replaced (Story 7.2). docker compose
+# removes the old container (remove_orphans in tasks/main.yml).
+- name: Fantasy Hockey  ----  Remove the old nginx config
+  ansible.builtin.file:
+    path: "{{ fantasy_hockey_path }}/nginx"
+    state: absent
+
+# UID 1000 is the image's non-root fantasy-hockey user.
+- name: Fantasy Hockey  ----  Create data directory
+  ansible.builtin.file:
+    path: "{{ fantasy_hockey_path }}/data"
+    state: directory
+    owner: "1000"
+    group: "1000"
+    mode: u=rwx,g=rx,o=rx
+
+- name: Fantasy Hockey  ----  Copy docker-compose.yml
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: "{{ fantasy_hockey_path }}/docker-compose.yml"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rw,g=r,o=r
+  register: fantasy_hockey_compose_file
+
+- name: Fantasy Hockey  ----  Template Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: "{{ fantasy_hockey_path }}/caddy/Caddyfile"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rw,g=r,o=r
+  register: fantasy_hockey_caddyfile
+
+- name: Fantasy Hockey  ----  Template .env
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ fantasy_hockey_path }}/.env"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: u=rw,g=,o=
+  register: fantasy_hockey_env_file
+
+- name: Fantasy Hockey  ----  Check for an existing data file
+  ansible.builtin.stat:
+    path: "{{ fantasy_hockey_path }}/data/fantasy-hockey.yml"
+  register: fantasy_hockey_data_file
+
+# fantasy-hockey.yml is the app's working file, hand-edited by the pool
+# operator and mutated at runtime. Once it exists on the target, Ansible
+# must never touch it again - not its content, not its ownership/mode -
+# no matter how it differs from this template. Gating on the stat result
+# above (rather than relying on the template module's own force/diff
+# behavior) keeps that guarantee explicit and independent of the file's
+# contents.
+- name: Fantasy Hockey  ----  Seed initial data file
+  ansible.builtin.template:
+    src: fantasy-hockey.yml.j2
+    dest: "{{ fantasy_hockey_path }}/data/fantasy-hockey.yml"
+    owner: "1000"
+    group: "1000"
+    mode: u=rw,g=r,o=r
+  when: not fantasy_hockey_data_file.stat.exists
