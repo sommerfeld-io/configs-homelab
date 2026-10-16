@@ -20,6 +20,20 @@ Every check is an HTTP `GET` over IPv4. The job label and the probe locations ar
 
 The certificate expiry threshold defaults to 5 days and can be set per check with `tls_expiry_threshold_days`. The fantasy hockey app on the DigitalOcean droplet uses 14 days: Caddy renews its certificate when about 30 days are left, so an alert at 14 days means renewal has been failing for two weeks (see [Monitoring](../cloud/digital-ocean/monitoring.md)). A certificate that is invalid fails the check on every run, because the probes verify it and the check requires TLS.
 
+## Alert Routing and Detection Time
+
+OpenTofu creates the alert rules but no contact point and no notification policy, so nothing in this repository decides where an alert goes. A firing alert shows up in Grafana Cloud under Alerts & IRM > Alerting; whether it notifies anyone depends on the notification policy of the Grafana Cloud stack, which is set up outside this repository. Whether these alerts should notify someone, and through which contact point, is still open.
+
+How long a failure takes to fire an alert, estimated from the frequency and thresholds, not measured. The estimates assume that `ProbeFailedExecutionsTooHigh` fires when the failed executions in its 30-minute window exceed the threshold of 2, and they leave out the evaluation interval and any pending period of the rules Grafana Cloud generates; neither is set in `checks.tf`, so check the generated rule under Alerting before relying on these numbers.
+
+| Alert                                 | Fires after                                                                                       | Clears after                                      |
+|---------------------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| `ProbeFailedExecutionsTooHigh`        | about 10 to 20 minutes for a full outage (two locations every 10 minutes), plus evaluation        | up to 30 minutes after recovery (the window)      |
+| `TLSTargetCertificateCloseToExpiring` | the first run that sees fewer days left than the threshold                                        | the first run after a renewal                     |
+| `HTTPRequestDurationTooHighAvg`       | once the 1-hour average is over the threshold, so a short slow spell may never fire it            | once the 1-hour average is back under             |
+
+The failure count adds up all locations. A problem at one location alone (for example Paris losing its route) fails once per 10-minute run and passes the threshold after about 20 to 30 minutes, so it fires the alert while the site is reachable from elsewhere. Check the per-probe results in Synthetics before treating it as an outage.
+
 ## Probe Locations
 
 Probe locations are referenced by name, never by ID. `probes.tf` looks up the IDs of the public probes with the data source `grafana_synthetic_monitoring_probes` and exposes them as `local.probe_location_frankfurt` and `local.probe_location_paris`. A check lists the locations it runs from in its `probes` option. For a new location, add a local with the probe's name as shown in Synthetics > Probes. A name that does not exist fails the plan.

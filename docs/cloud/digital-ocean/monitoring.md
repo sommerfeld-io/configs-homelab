@@ -1,6 +1,6 @@
 # Monitoring
 
-The droplet and the fantasy hockey app have one Grafana Cloud dashboard: `Apps / Fantasy Hockey / Droplet` in the folder `apps`. It shows the host, the app, the Caddy proxy in front of it (with the certificate status), the containers and the logs of all containers on the droplet. It has no alert rules: for now the droplet is observed first, alerting comes later.
+The droplet and the fantasy hockey app have one Grafana Cloud dashboard: `Apps / Fantasy Hockey / Droplet` in the folder `apps`. It shows the host, the app, the Caddy proxy in front of it (with the certificate status), the containers and the logs of all containers on the droplet. The dashboard has no alert rules. The only alerts for the droplet are the three built-in rules of its [External Probe](#external-probe), and they are not routed to a contact point yet, see [Synthetic Monitoring](../../grafana-cloud/synthetic-monitoring.md#alert-routing-and-detection-time).
 
 ## Where the Dashboard Lives
 
@@ -174,3 +174,4 @@ After the commit is on `main` and Git Sync picked it up, open `Apps / Fantasy Ho
 - No Caddy line is duplicated: over the same short window (for example the last 5 minutes), the line count of `{environment="digital-ocean", stage="prod", container="fantasy-hockey-caddy"}` in Explore matches `ssh root@<reserved-ip> 'docker logs --since 5m fantasy-hockey-caddy 2>&1 | wc -l'`.
 - An IPv6 client IP is cut to /48: after opening the domain over IPv6 (`curl -6 https://fantasy-hockey.prod.do.sommerfeld.app/login` from an IPv6 network), the access line's `client_ip` keeps only the first three groups, followed by `::`.
 - The dashboard has no alert rules.
+- In Grafana Cloud under Alerts & IRM > Alerting, the check `fantasy-hockey.prod.do.sommerfeld.app` has its three alert rules, `TLSTargetCertificateCloseToExpiring` with 14 days and `HTTPRequestDurationTooHighAvg` with 300 ms (`tofu state show 'grafana_synthetic_monitoring_check_alerts.this["fantasy-hockey.prod.do.sommerfeld.app"]'` in `grafana-cloud/opentofu` shows the same).

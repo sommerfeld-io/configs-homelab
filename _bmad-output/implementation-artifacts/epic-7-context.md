@@ -37,5 +37,5 @@ Serve the fantasy hockey app only at `https://fantasy-hockey.prod.do.sommerfeld.
 
 - Story 7.1 must come before 7.2: Caddy needs a name that resolves before it can get a certificate. Story 7.1's manual step (creating the A record) is done by the operator. The agent writes the docs page and runs the `dig` check once the record exists.
 - In Story 7.2 the operator runs the deploy (vault password) and confirms the HTTPS checks from outside.
-- Story 5.2 (synthetic check) waits for this epic. It probes `https://fantasy-hockey.prod.do.sommerfeld.app` and fails when the certificate is invalid or expires within 14 days.
+- Story 5.2 (synthetic check) waits for this epic. It probes `https://fantasy-hockey.prod.do.sommerfeld.app` and fails when the certificate is invalid; its `TLSTargetCertificateCloseToExpiring` alert fires when the certificate expires within 14 days.
 - Epic 6 (GitHub Actions) follows this epic and is otherwise unchanged. The later hardening epic's post-deploy smoke test targets the domain.

@@ -42,7 +42,7 @@
 
 - Alloy installed through `configs-homelab/ansible/roles/grafana-cloud`, secrets from `configs-homelab/ansible/vars/grafana-vault.yml`; scrapes the app at `:8080/metrics`, ships OS metrics and logs.
 - Labels: `environment` (`homelab` or `digital-ocean`) in both Alloy configs; `stage=prod` on the droplet only (the homelab has no `stage` label).
-- External availability through Grafana Cloud synthetic monitoring; no alerts yet.
+- External availability through Grafana Cloud synthetic monitoring. Its check has the three built-in alert rules; they are not routed to a contact point yet.
 
 ## Exposure
 

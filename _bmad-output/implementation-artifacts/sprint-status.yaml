@@ -316,7 +316,7 @@ action_items:
       within 14 days), the 5.3 AC in the epics file, alert routing and detection latency
       in synthetic-monitoring.md"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
   - id: "epic-5-retro-item-32-set-the-fantasy-hockey-duration-threshol"
     epic: 5

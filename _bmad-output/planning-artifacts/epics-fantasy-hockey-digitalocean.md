@@ -360,7 +360,7 @@ So that I can investigate CPU, memory, containers and logs in one place.
 
 **Given** the dashboard in `grafana-cloud/manifests/git-sync/apps`
 **When** it syncs to Grafana Cloud
-**Then** it shows CPU, memory and more, the app, containers and logs of all containers, and no alerts
+**Then** it shows CPU, memory and more, the app, containers and logs of all containers, and no alert rules
 
 ### Story 5.2: Synthetic monitoring check for the public URL
 
@@ -373,7 +373,7 @@ So that outages on the path to the droplet become visible.
 **Given** the existing Grafana Cloud synthetic monitoring and the domain from Epic 7
 **When** the check runs
 **Then** it probes `https://fantasy-hockey.prod.do.sommerfeld.app` from outside, like the existing checks from Frankfurt and Paris
-**And** it fails when the certificate is invalid or expires within 14 days
+**And** it fails when the certificate is invalid, and its `TLSTargetCertificateCloseToExpiring` alert fires when the certificate expires within 14 days (the check itself has no expiry setting)
 
 ### Story 5.3: Caddy logs and certificate status on the droplet dashboard
 
@@ -386,11 +386,12 @@ So that the dashboard is the one place to watch the droplet, the reverse proxy, 
 **Given** Caddy's JSON logs, which already reach Loki through the droplet's Alloy Docker log source
 **When** the cloud Alloy config is provisioned
 **Then** every Caddy line carries a `log_type` label (`access`, `tls` or `operational`), with no second log pipeline and no duplicate lines
-**And** access lines carry client IPs masked to /24 (IPv4) and /48 (IPv6)
+**And** only Caddy lines also carry a `stream` label (`stdout` or `stderr`)
+**And** client IPs are masked to /24 (IPv4) and /48 (IPv6) in the access log and, through a global `log` block, in Caddy's own logs (proxy errors included), and the client-sent `X-Forwarded-For`, `X-Real-Ip` and `Forwarded` headers are deleted from logged requests
 
 **Given** the dashboard `grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json`
 **When** it syncs to Grafana Cloud
-**Then** a Proxy row shows requests by status (Caddy's own 502s included), duration, top paths, the operational log, certificate events and the days until the certificate expires (from the Story 5.2 check), and the dashboard still has no alerts
+**Then** a Proxy row shows requests by status (Caddy's own 502s included), duration, top paths, the operational log, certificate events and the days until the certificate expires (from the Story 5.2 check), access log lines by level and Caddy log lines by stream over time with a donut for each, and the dashboard still has no alert rules
 **And** `docs/cloud/digital-ocean/monitoring.md` describes the row, the log types and the flow from Caddy to Grafana Cloud in a PlantUML diagram
 
 ## Epic 7: HTTPS on a custom domain

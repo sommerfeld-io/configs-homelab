@@ -78,7 +78,7 @@ A pain to solve and a vision to realize. The fantasy hockey app (a hobby for abo
 
 - Scaling the production app, zero-downtime migration, in-place OS upgrades.
 - Tailscale, Cloudflare, DO App Platform and DO Load Balancer.
-- HTTPS or a custom domain before E6; backup and restore before E8; alerts (observe first).
+- HTTPS or a custom domain before E6; backup and restore before E8; alert rules beyond the built-in ones of the synthetic check, which are not routed to a contact point yet (observe first).
 - Building a second droplet (test stage or another app); the design only has to make it cheap later.
 - Migrating existing data from the Raspberry Pi to the droplet.
 
