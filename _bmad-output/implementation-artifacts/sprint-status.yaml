@@ -292,7 +292,7 @@ action_items:
     action: "At the next droplet replacement, check that the metadata read finds the
       reserved IP on the first run; add a retry to the uri task if not"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
   - id: "epic-5-retro-item-29-merge-digital-ocean-into-main-so-git-syn"
     epic: 5
