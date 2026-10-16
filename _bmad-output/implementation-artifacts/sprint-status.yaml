@@ -299,7 +299,7 @@ action_items:
     action: "Merge digital-ocean into main so Git Sync publishes the droplet dashboard,
       then run the monitoring.md Checks for the 5.1 rows and the Proxy row with stage=prod"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
   - id: "epic-5-retro-item-30-run-provision-and-deploy-fantasy-hockey"
     epic: 5
@@ -307,7 +307,7 @@ action_items:
       manual checks 3-5: log_type and stream on Caddy lines only, masked IPv4/IPv6,
       no forwarded-IP headers, no duplicated lines"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
   - id: "epic-5-retro-item-31-reconcile-the-epic-5-docs-with-the-as-bu"
     epic: 5
@@ -323,7 +323,7 @@ action_items:
     action: "Set the fantasy hockey duration threshold from a week of probe_http_total_duration_seconds
       per probe and decide whether the check alerts route to a contact point"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
   - id: "epic-5-retro-item-33-add-a-lint-check-that-the-git-sync-dashb"
     epic: 5
@@ -331,7 +331,7 @@ action_items:
       droplet dashboard query carries environment and stage filters except the documented
       Synthetic Monitoring panel"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
   - id: "epic-5-retro-item-34-record-as-project-pitfalls-a-story-built"
     epic: 5
