@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-16-2026 12:35
+last_updated: 10-16-2026 12:44
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -62,13 +62,13 @@ development_status:
   4-3-droplet-replacement-drill: done
   epic-4-retrospective: done
 
-  epic-5: in-progress
+  epic-5: done
   5-1-grafana-dashboard-for-the-droplet-and-the-app: done
   # 5.2 waits for Epic 7: it probes the domain (sprint-change-proposal-2026-10-15)
   5-2-synthetic-monitoring-check-for-the-public-url: done
   # 5.3 is built after 5.2: its certificate-expiry panel reads the 5.2 check
   5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard: done
-  epic-5-retrospective: optional
+  epic-5-retrospective: done
 
   # Epic 7 runs before Story 5.2 and Epic 6 (sprint-change-proposal-2026-10-15)
   epic-7: done
@@ -294,3 +294,50 @@ action_items:
     owner: "user"
     status: open
     ref: "_bmad-output/implementation-artifacts/epic-7-retro-2026-10-15.md"
+  - id: "epic-5-retro-item-29-merge-digital-ocean-into-main-so-git-syn"
+    epic: 5
+    action: "Merge digital-ocean into main so Git Sync publishes the droplet dashboard,
+      then run the monitoring.md Checks for the 5.1 rows and the Proxy row with stage=prod"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-30-run-provision-and-deploy-fantasy-hockey"
+    epic: 5
+    action: "Run provision and deploy-fantasy-hockey (short outage), then Story 5.3
+      manual checks 3-5: log_type and stream on Caddy lines only, masked IPv4/IPv6,
+      no forwarded-IP headers, no duplicated lines"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-31-reconcile-the-epic-5-docs-with-the-as-bu"
+    epic: 5
+    action: "Reconcile the Epic 5 docs with the as-built: the no-alerts non-goal vs
+      the 5.2 check alerts, monitoring.md line 3, the 5.2 AC wording (alert fires
+      within 14 days), the 5.3 AC in the epics file, alert routing and detection latency
+      in synthetic-monitoring.md"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-32-set-the-fantasy-hockey-duration-threshol"
+    epic: 5
+    action: "Set the fantasy hockey duration threshold from a week of probe_http_total_duration_seconds
+      per probe and decide whether the check alerts route to a contact point"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-33-add-a-lint-check-that-the-git-sync-dashb"
+    epic: 5
+    action: "Add a lint check that the git-sync dashboard manifests parse and every
+      droplet dashboard query carries environment and stage filters except the documented
+      Synthetic Monitoring panel"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-5-retro-item-34-record-as-project-pitfalls-a-story-built"
+    epic: 5
+    action: "Record as project pitfalls: a story built inside another spec still gets
+      its own acceptance check and review triage log; a story whose AC depends on
+      Git Sync or a deploy is not done until that was observed"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
