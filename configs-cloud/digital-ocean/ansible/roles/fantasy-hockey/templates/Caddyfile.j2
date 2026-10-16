@@ -1,10 +1,38 @@
 # Managed by Ansible (role fantasy-hockey, templates/Caddyfile.j2)
 
+# Caddy masks client IPs (IPv4 to /24, IPv6 to /48) before it writes a line, so
+# visitors are not identifiable in Grafana Cloud. The global log covers Caddy's
+# own logs, the proxy errors (http.log.error) included; the site's access log
+# below needs its own filter. Both delete the client-sent X-Forwarded-For,
+# X-Real-Ip and Forwarded headers, which can carry the full IP. Cookie and
+# Authorization values stay redacted (Caddy's default, log_credentials is off).
+{
+	log {
+		format filter {
+			request>remote_ip ip_mask 24 48
+			request>client_ip ip_mask 24 48
+			request>headers>X-Forwarded-For delete
+			request>headers>X-Real-Ip delete
+			request>headers>Forwarded delete
+		}
+	}
+}
+
 # The app's domain. Caddy gets the Let's Encrypt certificate for it, stores it in
 # /data (caddy/data on the volume) and redirects http:// on the domain to
 # https:// (308).
 {{ fantasy_hockey_domain }} {
-	log
+	# Access log (logger http.log.access.log0), JSON on stderr like all of
+	# Caddy's logs. Alloy labels it log_type="access".
+	log {
+		format filter {
+			request>remote_ip ip_mask 24 48
+			request>client_ip ip_mask 24 48
+			request>headers>X-Forwarded-For delete
+			request>headers>X-Real-Ip delete
+			request>headers>Forwarded delete
+		}
+	}
 
 	# The app serves /metrics anonymously; hide it from outside. Matches /metrics,
 	# //metrics and /metrics/ in any case and answers without forwarding. Alloy
@@ -19,7 +47,7 @@
 
 # Every other name on port 80, the reserved IP included, gets a 404 instead of
 # the app. https:// on the IP fails the TLS handshake: Caddy has no certificate
-# for it.
+# for it. No log here: scanners on the IP write no access lines.
 http:// {
 	respond 404
 }

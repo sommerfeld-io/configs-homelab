@@ -170,3 +170,19 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-7-retro-item-24-reconcile-epic-7-docs-with-the-as-built.md`
   summary: Add a Molecule case for the fantasy-hockey DNS guard where the domain resolves to the reserved IP plus a second address, and assert that it fails.
   evidence: Story 7.2's triage made the guard an equality check (`tasks/dns.yml`), but `tests/molecule/fantasy-hockey/molecule/default/verify.yml` only tests one wrong address, so the second-address rule is untested. Not caused by item 24, which changed only the message and the docs.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard.md`
+  summary: No automated `caddy validate` runs on the rendered Caddyfile; Molecule only text-matches it, so a Caddyfile Caddy rejects (outage) or that stops masking IPs passes lint and Molecule.
+  evidence: Pre-existing since Story 7.2 (no Caddyfile linter in docker-compose.yml, taskfile.yml or pipeline.yml); Story 5.3's global log block raises the stakes. Fix is a `lint-caddyfile` service on `caddy:2.11.7` wired into `task lint` and the pipeline linter matrix.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard.md`
+  summary: The `loki.process "caddy"` log_type mapping and the Caddy-only `stream` rule have no repeatable behavioral test; reordering stages or dropping `stage.labels` keeps Molecule and `alloy validate` green while emptying the Proxy row.
+  evidence: Only a one-off manual `loki.source.file` -> `loki.echo` run proves the labels (spec Implementation Notes); turning it into a lint service with fixture lines and a label diff needs a new Docker-based harness.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard.md`
+  summary: Unverified (medium if true): query strings in Caddy's `request.uri` may carry tokens or e-mail addresses (password reset or confirmation links) into Grafana Cloud Loki.
+  evidence: Settle by checking whether sommerfeld-io/fantasy-hockey puts secrets or personal data in GET query strings; if so, filter `request>uri` with Caddy's `query` filter.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard.md`
+  summary: Unverified (medium if true): Top Paths `sum by (path)` over `[$__range]` may exceed Grafana Cloud Loki's series limit when scanners hit many distinct paths over long ranges.
+  evidence: Settle by running the panel query over 7d and 30d in Explore after a few weeks of traffic; if it errors, reduce paths to their first segment or exclude 404s.

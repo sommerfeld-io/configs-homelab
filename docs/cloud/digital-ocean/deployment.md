@@ -48,6 +48,10 @@ Caddy keeps the certificate, its private key and the ACME account in `caddy/data
 curl -sv https://fantasy-hockey.prod.do.sommerfeld.app -o /dev/null 2>&1 | grep -E 'issuer|expire'
 ```
 
+A Caddyfile change, such as the log masking of Story 5.3, restarts the whole stack once on the next deploy, a short outage of the app.
+
+In Grafana Cloud, the Proxy row of the droplet dashboard shows the days until the certificate expires (Certificate Expires In) and Caddy's certificate lines (Certificate Events), see [Certificate Status](monitoring.md#certificate-status).
+
 ## Boot Order
 
 At boot, `docker.service` waits for the volume mount:

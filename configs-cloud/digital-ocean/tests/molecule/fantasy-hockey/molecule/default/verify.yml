@@ -91,6 +91,23 @@
           - "'respond @metrics 404' in (caddyfile.content | b64decode)"
           - (caddyfile.content | b64decode) is search('(?m)^http:// \\{\\n\\s*respond 404\\n\\}')
 
+    # Two filters: the global log (Caddy's own logs, http.log.error included)
+    # and the site's access log. Both mask IPv4 to /24 and IPv6 to /48 and
+    # delete the client-sent IP headers.
+    - name: Assert the Caddyfile masks client IPs in every log
+      vars:
+        caddyfile_text: "{{ caddyfile.content | b64decode }}"
+      ansible.builtin.assert:
+        that:
+          - caddyfile_text | regex_findall('(?m)^\\s*format filter \\{$') | length == 2
+          - caddyfile_text | regex_findall('(?m)^\\s*request>remote_ip ip_mask 24 48$') | length == 2
+          - caddyfile_text | regex_findall('(?m)^\\s*request>client_ip ip_mask 24 48$') | length == 2
+          - caddyfile_text | regex_findall('(?m)^\\s*request>headers>X-Forwarded-For delete$') | length == 2
+          - caddyfile_text | regex_findall('(?m)^\\s*request>headers>X-Real-Ip delete$') | length == 2
+          - caddyfile_text | regex_findall('(?m)^\\s*request>headers>Forwarded delete$') | length == 2
+          - caddyfile_text is search('(?m)^\\{\\n\\s*log \\{\\n\\s*format filter \\{')
+          - caddyfile_text is not search('(?m)^\\s*log_credentials')
+
     - name: Read .env
       ansible.builtin.slurp:
         src: "{{ fantasy_hockey_path }}/.env"

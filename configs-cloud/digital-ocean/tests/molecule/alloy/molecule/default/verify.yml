@@ -37,6 +37,35 @@
           - "'github' not in alloy_config"
           - "'remotecfg' not in alloy_config"
 
+    # Story 5.3: the Docker log source forwards to loki.process "caddy", which
+    # labels Caddy's lines with log_type; the relabel rules give only the Caddy
+    # container a stream label. The pipeline itself cannot run here (no Docker).
+    - name: Assert the Caddy log pipeline
+      vars:
+        alloy_config: "{{ alloy_config_file.content | b64decode }}"
+        # The config with every run of whitespace collapsed to one space.
+        flat: "{{ alloy_config | regex_replace('\\s+', ' ') }}"
+        docker_source: "{{ flat | regex_search('loki\\.source\\.docker \"docker_containers\" \\{[^}]*\\}') }}"
+        caddy_process: "{{ flat | regex_search('loki\\.process \"caddy\" \\{.*?\\} \\} \\} /\\*') }}"
+      ansible.builtin.assert:
+        that:
+          - flat | regex_findall('loki\\.source\\.docker ') | length == 1
+          - "'forward_to = [loki.process.caddy.receiver]' in docker_source"
+          - "'forward_to = [loki.write.grafana_cloud_loki.receiver]' in caddy_process"
+          - "'selector = `{container=~\".+-caddy\"}`' in caddy_process"
+          - "'stage.json { expressions = { logger = \"\" } }' in caddy_process"
+          - "'stage.static_labels { values = { log_type = \"operational\" } }' in caddy_process"
+          - >-
+            'selector = `{logger=~"http\\\\.log\\\\.access.*"}` stage.static_labels { values = { log_type = "access" } }'
+            in caddy_process
+          - >-
+            'selector = `{logger=~"(tls|http\\\\.acme_client|pki).*"}` stage.static_labels { values = { log_type = "tls" } }'
+            in caddy_process
+          - "'stage.label_drop { values = [\"logger\"] }' in caddy_process"
+          - >-
+            'source_labels = ["__meta_docker_container_name", "__meta_docker_container_log_stream"]
+            regex = "/.+-caddy;(.*)" target_label = "stream"' in flat
+
     # systemctl is a stub that logs its calls (see ../../../prepare.yml). The
     # handler restarts Alloy once in converge and never in the idempotence run.
     - name: Read the systemctl stub log

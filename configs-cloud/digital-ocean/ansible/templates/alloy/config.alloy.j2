@@ -181,13 +181,74 @@ discovery.relabel "docker_containers" {
     target_label = "job"
     replacement  = "integrations/docker"
   }
+
+  // Caddy only: Docker's output stream (stdout or stderr) as label stream.
+  // Caddy writes all its logs to stderr. Other containers get no stream label.
+  rule {
+    source_labels = ["__meta_docker_container_name", "__meta_docker_container_log_stream"]
+    regex         = "/.+-caddy;(.*)"
+    target_label  = "stream"
+  }
 }
 
 loki.source.docker "docker_containers" {
   host          = "unix:///var/run/docker.sock"
   targets       = discovery.docker.docker_containers.targets
-  forward_to    = [loki.write.grafana_cloud_loki.receiver]
+  forward_to    = [loki.process.caddy.receiver]
   relabel_rules = discovery.relabel.docker_containers.rules
+}
+
+/*
+ * Caddy logs. Reuses the Docker log source above instead of a second pipeline
+ * for the same container (that would duplicate streams). Lines of the Caddy
+ * container get the label log_type from the JSON field logger:
+ *   access       http.log.access... (http.log.access.log0 with a log block)
+ *   tls          tls..., http.acme_client..., pki... (certificates, ACME)
+ *   operational  everything else: http.log.error (proxy failures), startup
+ *                lines without a logger, lines that are not JSON
+ * logger is a temporary label for the matching and is dropped again; uri,
+ * status, client_ip, duration and level stay in the line (| json at query
+ * time). Lines of other containers pass unchanged.
+ */
+loki.process "caddy" {
+  forward_to = [loki.write.grafana_cloud_loki.receiver]
+
+  stage.match {
+    selector = `{container=~".+-caddy"}`
+
+    // A line that is not JSON keeps no logger and stays operational.
+    stage.json {
+      expressions = { logger = "" }
+    }
+
+    stage.labels {
+      values = { logger = "" }
+    }
+
+    stage.static_labels {
+      values = { log_type = "operational" }
+    }
+
+    stage.match {
+      selector = `{logger=~"http\\.log\\.access.*"}`
+
+      stage.static_labels {
+        values = { log_type = "access" }
+      }
+    }
+
+    stage.match {
+      selector = `{logger=~"(tls|http\\.acme_client|pki).*"}`
+
+      stage.static_labels {
+        values = { log_type = "tls" }
+      }
+    }
+
+    stage.label_drop {
+      values = ["logger"]
+    }
+  }
 }
 
 /*
