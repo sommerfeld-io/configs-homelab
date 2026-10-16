@@ -10,6 +10,7 @@
     - ../vars/main.yml
     - ../vars/amd64.yml
     - ../vars/vault.yml
+    - ../vars/grafana-vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/hardening
@@ -23,6 +24,7 @@
       loop:
         - "export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}"
         - "export DIGITALOCEAN_ACCESS_TOKEN={{ DIGITALOCEAN_TOKEN }}"
+        - "export GRAFANA_SM_ACCESS_TOKEN={{ GRAFANA_SM_ACCESS_TOKEN }}"
 
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem

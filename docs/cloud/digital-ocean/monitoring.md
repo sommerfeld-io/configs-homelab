@@ -38,6 +38,10 @@ The app panels leave out `route="GET /metrics"`: Alloy scrapes that route every 
 
 All panels use series the cloud Alloy config (`configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`) ships today: node exporter, journal logs, Docker logs, cAdvisor and the app scrape at `localhost:8080/metrics` (job `fantasy-hockey`). A panel that needs a new series needs a change to that template first.
 
+## External Probe
+
+A Grafana Cloud Synthetic Monitoring check requests `https://fantasy-hockey.prod.do.sommerfeld.app` every 10 minutes from the public probes in Frankfurt and Paris, under the job `up-and-running___digital-ocean`, so an outage anywhere on the path to the droplet (DNS, reserved IP, Caddy, the app) becomes visible from outside. The check fails when the certificate is invalid, and its alert fires when the certificate expires within 14 days. It is declared with OpenTofu next to the website checks, see [Synthetic Monitoring](../../grafana-cloud/synthetic-monitoring.md).
+
 ## Checks
 
 After the commit is on `main` and Git Sync picked it up, open `Apps / Fantasy Hockey / Droplet` with `stage=prod`:

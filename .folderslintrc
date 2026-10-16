@@ -52,12 +52,14 @@
 
 		"docs/ai-implementation-plans",
 		"docs/cloud/**",
+		"docs/grafana-cloud",
 		"docs/homelab/**",
 		"docs/incidents/reports",
 		"docs/incidents/runbooks",
 
 		"grafana-cloud/manifests/git-sync/**",
 		"grafana-cloud/manifests/unsycned/**",
+		"grafana-cloud/opentofu",
 
 		"node_modules/**",
 

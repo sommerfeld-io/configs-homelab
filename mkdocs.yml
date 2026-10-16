@@ -120,6 +120,8 @@ nav:
           - Fantasy Hockey: cloud/ansible/roles/fantasy-hockey.md
           - MOTD: cloud/ansible/roles/motd.md
           - Swap: cloud/ansible/roles/swap.md
+  - Grafana Cloud:
+      - Synthetic Monitoring: grafana-cloud/synthetic-monitoring.md
   - Pipelines: pipelines.md
   - Incidents:
       - Runbooks:

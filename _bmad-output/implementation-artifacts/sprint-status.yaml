@@ -65,7 +65,7 @@ development_status:
   epic-5: in-progress
   5-1-grafana-dashboard-for-the-droplet-and-the-app: done
   # 5.2 waits for Epic 7: it probes the domain (sprint-change-proposal-2026-10-15)
-  5-2-synthetic-monitoring-check-for-the-public-url: backlog
+  5-2-synthetic-monitoring-check-for-the-public-url: review
   # 5.3 is built after 5.2: its certificate-expiry panel reads the 5.2 check
   5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard: ready-for-dev
   epic-5-retrospective: optional

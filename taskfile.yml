@@ -13,6 +13,9 @@ includes:
     taskfile: configs-cloud/taskfile.yml
     dir: configs-cloud
   common: .task/common/taskfile.yml
+  grafana-cloud:
+    taskfile: grafana-cloud/opentofu/taskfile.yml
+    dir: grafana-cloud/opentofu
   homelab:
     taskfile: configs-homelab/taskfile.yml
     dir: configs-homelab
@@ -42,6 +45,7 @@ tasks:
       - task: symlinks
       - task: docs:generate
       - task: cloud:digital-ocean:opentofu:fmt
+      - task: grafana-cloud:fmt
       - for: ['yaml', 'filenames', 'folders', 'ansible', 'opentofu', 'alloy-config', 'workflows', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 

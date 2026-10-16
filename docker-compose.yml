@@ -73,7 +73,7 @@ services:
     image: ghcr.io/opentofu/opentofu:1.12.7
     volumes: *volumes
     working_dir: *default-workdir
-    command: fmt -check -diff -recursive configs-cloud
+    command: fmt -check -diff -recursive configs-cloud grafana-cloud
     tty: *tty
 
   lint-alloy-config:

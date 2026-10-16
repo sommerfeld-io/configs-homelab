@@ -108,8 +108,11 @@ Until Story 6.3 is done, a merged change under `configs-cloud/` reaches DigitalO
 | `docker-compose` | `configs-homelab/ansible/roles/raspi/pihole/files`                                                                 |
 | `docker-compose` | `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files` (the fantasy hockey app and Caddy on the droplet) |
 | `opentofu`       | `/configs-cloud/digital-ocean/opentofu` (the `digitalocean` provider)                                              |
+| `opentofu`       | `/grafana-cloud/opentofu` (the `grafana` provider)                                                                 |
 
 The fantasy-hockey compose file moved from the RasPi role to `configs-cloud/digital-ocean/ansible/roles/fantasy-hockey`, and its Dependabot entry moved with it, so a compose bump is a change under `configs-cloud/digital-ocean`. Nothing redeploys the droplet after a merged bump yet: run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` by hand (see [Deployment](cloud/digital-ocean/deployment.md)).
+
+An `opentofu` bump only changes the provider pin in `versions.tf` and `.terraform.lock.hcl`. Nothing applies it: after the merge, run `tofu init` (installs the new provider from the lock file) and the `plan` task of that config (`task cloud:digital-ocean:opentofu:plan` or `task grafana-cloud:plan`), and expect `No changes.` A provider upgrade that suddenly shows changes needs a look before any apply.
 
 The droplet also runs fleet roles from `configs-homelab/`: `grafana-cloud/exporters` (cAdvisor) and `grafana-cloud/alloy`. A Dependabot cAdvisor bump in `configs-homelab/ansible/roles/grafana-cloud/exporters/files`, or an edit to either role, is a change under `configs-homelab/`, not under `configs-cloud/`, and reaches the droplet only when an operator runs `task cloud:digital-ocean:ansible:provision` (see [Provisioning](cloud/digital-ocean/provisioning.md)). Dependabot has no Alloy entry: Alloy itself comes from the Grafana APT repo on the next provision run.
 

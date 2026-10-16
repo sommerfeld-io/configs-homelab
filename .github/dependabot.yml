@@ -50,3 +50,8 @@ updates:
     directory: /configs-cloud/digital-ocean/opentofu
     schedule:
       interval: weekly
+
+  - package-ecosystem: opentofu
+    directory: /grafana-cloud/opentofu
+    schedule:
+      interval: weekly
