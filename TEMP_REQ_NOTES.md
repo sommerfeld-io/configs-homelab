@@ -20,6 +20,12 @@ Inpec Droplet
     Assert Timezone Europe/Berlin
     App up-and-running? ports listening? endpoints available?
 
+## Pipeline 2
+
+The OpenTofu for grafana cloud should also be its own github actions workflow and should deploy opentofu changes to grafana cloud.
+
+all workflows for cloud deployments should be named "Cloud Deploy: <type>" (e.g. "Cloud Deploy: Applications" for all app deployments or "Cloud Deploy: Grafana Cloud")
+
 ## Versions
 
 use dependabot do watch opentofu??
