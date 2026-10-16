@@ -16,7 +16,7 @@ The play first mounts the droplet's data volume. DigitalOcean mounts a volume au
 Then the play loads the secrets from the vault file with an `include_vars` task and reads the droplet's reserved IP from the DigitalOcean metadata service (`http://169.254.169.254/metadata/v1/reserved_ip/ipv4/ip_address`, reachable only on the droplet) into `fantasy_hockey_reserved_ip`. It stops when the droplet has no reserved IP. The domain `fantasy_hockey_domain` is a play variable, `<app>.<stage>.do.sommerfeld.app` derived from the droplet name `<stage>-<app>`, so `prod-fantasy-hockey` gets `fantasy-hockey.prod.do.sommerfeld.app`. Then it runs the cloud role `ansible/roles/fantasy-hockey`. The role runs these steps in this order:
 
 1. **Volume check (`tasks/main.yml`):** it fails, before anything is written, when `fantasy_hockey_volume_mount` (`/mnt/prod_fantasy_hockey_data` as role default; the play sets it from the droplet name) is not a mount point, naming the missing mount. A second check fails when `fantasy_hockey_path` is not below that mount, for example because the vault overrides it. It compares the normalized path, so a path that leaves the mount through `..` fails too. The app data must live on the volume, not on the droplet's disk.
-2. **DNS check (`tasks/dns.yml`):** it resolves the domain on the droplet (`getent ahostsv4`) and fails, before anything is written, when the reserved IP is not among the addresses. See [DNS Check](#dns-check).
+2. **DNS check (`tasks/dns.yml`):** it resolves the domain on the droplet (`getent ahostsv4`) and fails, before anything is written, unless the addresses are exactly the reserved IP. See [DNS Check](#dns-check).
 3. **User (`tasks/user.yml`):** the `docker` role of the roles collection (only `50-user`) creates the user `fantasy-hockey` with `/bin/bash` and a home folder from `/etc/skel`, and adds it to the `docker` group.
 4. **Prompt (`tasks/user.yml`):** the `bash` role (only `10-bash-config`) writes the exports, aliases and the prompt to `/home/fantasy-hockey/.bashrc`. The prompt is the role default `fantasy_hockey_ps1`, the orange `ubuntu_server` prompt of the homelab without the git branch.
 5. **Files (`tasks/files.yml`):** the deploy directory, the compose file, the Caddyfile and Caddy's data folders, `.env` and the seeded data file. It deletes the `nginx/` folder of the former nginx proxy.
@@ -30,17 +30,19 @@ A second run reports `changed=0`.
 
 ## DNS Check
 
-Caddy asks Let's Encrypt for a certificate as soon as it starts, and Let's Encrypt validates the request against the address the domain resolves to. A request that cannot be validated counts against the Let's Encrypt rate limits, so the role checks the name first. "Resolves at all" is not enough: the `sommerfeld.app` zone has a wildcard record, so a missing record still resolves, to the web host `85.13.131.235`. The check therefore requires the reserved IP among the addresses, and stops with a message that names the domain, the addresses found and the expected reserved IP:
+Caddy asks Let's Encrypt for a certificate as soon as it starts, and Let's Encrypt validates the request against the address the domain resolves to. A request that cannot be validated counts against the Let's Encrypt rate limits, so the role checks the name first. "Resolves at all" is not enough: the `sommerfeld.app` zone has a wildcard record, so a missing record still resolves, through a CNAME to the all-inkl web host. The check therefore requires the addresses to be exactly the reserved IP. A second A record fails it too, because Let's Encrypt may validate against the other address. It stops with a message that names the domain, the addresses found and the expected reserved IP:
 
 ```text
-fantasy-hockey.prod.do.sommerfeld.app resolves to 85.13.131.235, not to the reserved IP <reserved-ip> of prod-fantasy-hockey. ... Create or fix the A record as described in docs/cloud/digital-ocean/domain.md ...
+fantasy-hockey.prod.do.sommerfeld.app resolves to <web-host-ip>, not to the reserved IP <reserved-ip> of prod-fantasy-hockey. ... Create or fix the A record as described in docs/cloud/digital-ocean/domain.md, check public resolvers as in its section Check, and repeat this lookup on the droplet with `getent ahostsv4 fantasy-hockey.prod.do.sommerfeld.app` ...
 ```
 
-Create or fix the record as described in [Domain](domain.md) and deploy again once public resolvers return the reserved IP. The check resolves through the droplet's resolver, which may cache the wildcard answer for up to 2 hours.
+Create or fix the record as described in [Domain](domain.md) and deploy again once public resolvers return the reserved IP (see [Check](domain.md#check)). The check resolves through the droplet's resolver, which may cache the wildcard answer for up to 2 hours; `ssh root@<reserved-ip> getent ahostsv4 fantasy-hockey.prod.do.sommerfeld.app` shows what it sees.
+
+The check runs only at deploy time and only through the droplet's resolver. It does not cover certificate renewals, CAA records, AAAA records (`getent ahostsv4` sees IPv4 only, and Let's Encrypt prefers IPv6) or whether Let's Encrypt can reach ports 80 and 443.
 
 ## Certificates
 
-Caddy keeps the certificate, its private key and the ACME account in `caddy/data/` on the volume, so a replacement droplet reuses the certificate and orders no new one (see [Replacement](replacement.md)). Caddy renews the certificate itself about 30 days before it expires; the renewal needs ports 80 and 443 open, which they are (no DigitalOcean firewall). There is no ACME email address: Let's Encrypt no longer sends expiry mails. Check the certificate from outside with:
+Caddy keeps the certificate, its private key and the ACME account in `caddy/data/` on the volume, so a replacement droplet reuses the certificate and orders no new one (see [Replacement](replacement.md)). Caddy renews the certificate itself about 30 days before it expires; the renewal needs ports 80 and 443 open, which they are (no DigitalOcean firewall). A firewall added later must allow, besides SSH (22/tcp) for Ansible, 80/tcp and 443/tcp for the ACME challenges and renewals, and 443/udp for HTTP/3. There is no ACME email address: Let's Encrypt no longer sends expiry mails. Check the certificate from outside with:
 
 ```bash
 curl -sv https://fantasy-hockey.prod.do.sommerfeld.app -o /dev/null 2>&1 | grep -E 'issuer|expire'

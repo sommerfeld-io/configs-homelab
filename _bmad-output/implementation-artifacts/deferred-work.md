@@ -166,3 +166,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-7-2-caddy-with-automatic-tls-replaces-nginx.md`
   summary: Automated test for the fantasy-hockey compose orchestration (remove_orphans freeing port 80, restart on Caddyfile change, container asserts) and the playbook's domain derivation and metadata read.
   evidence: Story 7.2 verification-gap review; Molecule cannot run Docker without a privileged container, so these run only in the operator's droplet deploy.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-7-retro-item-24-reconcile-epic-7-docs-with-the-as-built.md`
+  summary: Add a Molecule case for the fantasy-hockey DNS guard where the domain resolves to the reserved IP plus a second address, and assert that it fails.
+  evidence: Story 7.2's triage made the guard an equality check (`tasks/dns.yml`), but `tests/molecule/fantasy-hockey/molecule/default/verify.yml` only tests one wrong address, so the second-address rule is untested. Not caused by item 24, which changed only the message and the docs.

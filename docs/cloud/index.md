@@ -8,6 +8,8 @@ Cloud deployments run in three steps, always in this order. Each step builds on 
 
 `task cloud:deploy:all` runs all three steps in one go. Each step also has its own task.
 
+A new droplet that runs an app cannot pass its first `deploy:all`: steps 1 and 2 succeed, but the app deployment stops unless the app's domain resolves to the droplet's reserved IP, and that IP exists only after step 1. Its DNS record is created by hand in between. So run step 1 alone (`task cloud:digital-ocean:opentofu:apply`), create the record, wait until public resolvers and the droplet return the reserved IP, then run `deploy:all`. See [Domain](digital-ocean/domain.md#check) for the steps. A replacement keeps the reserved IP and its record, so `deploy:all` works in one go there.
+
 ```kroki-plantuml
 @startuml
 start
@@ -41,6 +43,12 @@ partition "2. Provisioning - Ansible" {
 
 partition "3. App deployment - Ansible" {
   :Mount the data volume;
+  if (Domain resolves to exactly the reserved IP?) then (yes)
+  else (no)
+    :Stop before anything is written;
+    note right: New droplet: create the DNS record first
+    stop
+  endif
   :Start the app stack;
   note right
     playbooks/deploy-*.yml
@@ -48,7 +56,7 @@ partition "3. App deployment - Ansible" {
   end note
 }
 
-:App reachable at the reserved IP;
+:App reachable over HTTPS at its domain;
 stop
 @enduml
 ```
