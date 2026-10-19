@@ -13,7 +13,7 @@
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
+          "name": "Annotations \u0026 Alerts",
           "query": {
             "datasource": {
               "name": "-- Grafana --"
@@ -74,32 +74,35 @@
             "spec": {
               "fieldConfig": {
                 "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
                   "mappings": [
                     {
-                      "type": "value",
                       "options": {
                         "0": {
-                          "text": "Down",
                           "color": "red",
-                          "index": 0
+                          "index": 0,
+                          "text": "Down"
                         },
                         "1": {
-                          "text": "Up",
                           "color": "green",
-                          "index": 1
+                          "index": 1,
+                          "text": "Up"
                         }
-                      }
+                      },
+                      "type": "value"
                     },
                     {
-                      "type": "special",
                       "options": {
                         "match": "null",
                         "result": {
-                          "text": "No data",
                           "color": "red",
-                          "index": 2
+                          "index": 2,
+                          "text": "No data"
                         }
-                      }
+                      },
+                      "type": "special"
                     }
                   ],
                   "thresholds": {
@@ -115,10 +118,7 @@
                       }
                     ]
                   },
-                  "unit": "none",
-                  "color": {
-                    "mode": "thresholds"
-                  }
+                  "unit": "none"
                 },
                 "overrides": []
               },
@@ -140,792 +140,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-2": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "min(up{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/cadvisor\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Whether Alloy can scrape cAdvisor at localhost:9110 (up of job integrations/cadvisor).",
-          "id": 2,
-          "links": [],
-          "title": "cAdvisor",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "text": "Down",
-                          "color": "red",
-                          "index": 0
-                        },
-                        "1": {
-                          "text": "Up",
-                          "color": "green",
-                          "index": 1
-                        }
-                      }
-                    },
-                    {
-                      "type": "special",
-                      "options": {
-                        "match": "null",
-                        "result": {
-                          "text": "No data",
-                          "color": "red",
-                          "index": 2
-                        }
-                      }
-                    }
-                  ],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "red",
-                        "value": 0
-                      },
-                      {
-                        "color": "green",
-                        "value": 1
-                      }
-                    ]
-                  },
-                  "unit": "none",
-                  "color": {
-                    "mode": "thresholds"
-                  }
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-3": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "min(time() - node_boot_time_seconds{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Time since the droplet booted.",
-          "id": 3,
-          "links": [],
-          "title": "Uptime",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "blue",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "s",
-                  "color": {
-                    "mode": "thresholds"
-                  }
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-4": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "1 - avg(rate(node_cpu_seconds_total{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mode=\"idle\"}[$__rate_interval]))",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "CPU busy share across all cores (everything but idle).",
-          "id": 4,
-          "links": [],
-          "title": "CPU",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 0.75
-                      },
-                      {
-                        "color": "red",
-                        "value": 0.9
-                      }
-                    ]
-                  },
-                  "unit": "percentunit",
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "min": 0,
-                  "max": 1
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "area",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-5": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "max(1 - node_memory_MemAvailable_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} / node_memory_MemTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Memory in use: 1 - MemAvailable / MemTotal.",
-          "id": 5,
-          "links": [],
-          "title": "Memory",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 0.75
-                      },
-                      {
-                        "color": "red",
-                        "value": 0.9
-                      }
-                    ]
-                  },
-                  "unit": "percentunit",
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "min": 0,
-                  "max": 1
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "area",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-6": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "max(node_memory_SwapTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} - node_memory_SwapFree_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Swap in use (swap file). Linux keeps pages in swap after memory pressure ends, so a high value alone is not a shortage; a rising value is.",
-          "id": 6,
-          "links": [],
-          "title": "Swap Used",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 268435456
-                      },
-                      {
-                        "color": "red",
-                        "value": 536870912
-                      }
-                    ]
-                  },
-                  "unit": "bytes",
-                  "color": {
-                    "mode": "thresholds"
-                  }
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "area",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-7": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Used share of the root filesystem (/). Resizing the droplet does not grow the disk.",
-          "id": 7,
-          "links": [],
-          "title": "Root Disk",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 0.75
-                      },
-                      {
-                        "color": "red",
-                        "value": 0.9
-                      }
-                    ]
-                  },
-                  "unit": "percentunit",
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "min": 0,
-                  "max": 1
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-8": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"})",
-                        "instant": true,
-                        "legendFormat": "",
-                        "queryType": "instant",
-                        "range": false
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Used share of the data volume (/mnt/<droplet_name>_data) that holds the app data. Red \"No data\" when the volume is not mounted, or when Alloy or node exporter sends nothing.",
-          "id": 8,
-          "links": [],
-          "title": "Volume Disk",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "mappings": [
-                    {
-                      "type": "special",
-                      "options": {
-                        "match": "null",
-                        "result": {
-                          "text": "No data",
-                          "color": "red",
-                          "index": 0
-                        }
-                      }
-                    }
-                  ],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 0.75
-                      },
-                      {
-                        "color": "red",
-                        "value": 0.9
-                      }
-                    ]
-                  },
-                  "unit": "percentunit",
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "min": 0,
-                  "max": 1
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.1.0-25668120414"
-          }
-        }
-      },
-      "panel-9": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "grafanacloud-prom"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "expr": "avg by (instance, mode) (rate(node_cpu_seconds_total{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mode!=\"idle\"}[$__rate_interval]))",
-                        "instant": false,
-                        "legendFormat": "{{mode}}",
-                        "queryType": "range",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "CPU time per mode as a share of all cores, idle left out.",
-          "id": 9,
-          "links": [],
-          "title": "CPU by Mode",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 30,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "normal"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "percentunit",
-                  "min": 0,
-                  "max": 1
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              }
-            },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1066,6 +281,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1075,6 +291,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1084,8 +301,7 @@
                       }
                     ]
                   },
-                  "unit": "bytes",
-                  "min": 0
+                  "unit": "bytes"
                 },
                 "overrides": []
               },
@@ -1103,7 +319,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1178,6 +394,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1187,6 +404,8 @@
                       "mode": "off"
                     }
                   },
+                  "max": 1,
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1196,9 +415,7 @@
                       }
                     ]
                   },
-                  "unit": "percentunit",
-                  "min": 0,
-                  "max": 1
+                  "unit": "percentunit"
                 },
                 "overrides": []
               },
@@ -1216,7 +433,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1313,6 +530,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1322,6 +540,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1331,8 +550,7 @@
                       }
                     ]
                   },
-                  "unit": "Bps",
-                  "min": 0
+                  "unit": "Bps"
                 },
                 "overrides": []
               },
@@ -1350,7 +568,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1447,6 +665,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1456,6 +675,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1465,8 +685,7 @@
                       }
                     ]
                   },
-                  "unit": "Bps",
-                  "min": 0
+                  "unit": "Bps"
                 },
                 "overrides": []
               },
@@ -1484,7 +703,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1603,6 +822,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1612,6 +832,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1621,8 +842,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -1640,7 +860,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1715,6 +935,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1724,6 +945,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1733,8 +955,7 @@
                       }
                     ]
                   },
-                  "unit": "reqps",
-                  "min": 0
+                  "unit": "reqps"
                 },
                 "overrides": []
               },
@@ -1752,7 +973,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1827,6 +1048,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1836,6 +1058,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1845,8 +1068,7 @@
                       }
                     ]
                   },
-                  "unit": "reqps",
-                  "min": 0
+                  "unit": "reqps"
                 },
                 "overrides": []
               },
@@ -1864,7 +1086,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -1939,6 +1161,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -1948,6 +1171,8 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
+                  "noValue": "No 5xx responses",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1957,9 +1182,7 @@
                       }
                     ]
                   },
-                  "unit": "reqps",
-                  "min": 0,
-                  "noValue": "No 5xx responses"
+                  "unit": "reqps"
                 },
                 "overrides": []
               },
@@ -1977,7 +1200,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2074,6 +1297,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2083,6 +1307,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2092,8 +1317,7 @@
                       }
                     ]
                   },
-                  "unit": "s",
-                  "min": 0
+                  "unit": "s"
                 },
                 "overrides": []
               },
@@ -2111,7 +1335,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2188,6 +1412,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2197,6 +1422,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2206,8 +1432,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -2225,7 +1450,121 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "min(up{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/cadvisor\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Whether Alloy can scrape cAdvisor at localhost:9110 (up of job integrations/cadvisor).",
+          "id": 2,
+          "links": [],
+          "title": "cAdvisor",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "mappings": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "red",
+                          "index": 0,
+                          "text": "Down"
+                        },
+                        "1": {
+                          "color": "green",
+                          "index": 1,
+                          "text": "Up"
+                        }
+                      },
+                      "type": "value"
+                    },
+                    {
+                      "options": {
+                        "match": "null",
+                        "result": {
+                          "color": "red",
+                          "index": 2,
+                          "text": "No data"
+                        }
+                      },
+                      "type": "special"
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "green",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2302,6 +1641,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2311,6 +1651,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2320,8 +1661,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -2339,7 +1679,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2436,6 +1776,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2445,6 +1786,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2454,8 +1796,7 @@
                       }
                     ]
                   },
-                  "unit": "bytes",
-                  "min": 0
+                  "unit": "bytes"
                 },
                 "overrides": []
               },
@@ -2473,7 +1814,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2548,6 +1889,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2557,6 +1899,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2566,8 +1909,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -2585,7 +1927,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2660,6 +2002,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2669,6 +2012,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2678,8 +2022,7 @@
                       }
                     ]
                   },
-                  "unit": "percentunit",
-                  "min": 0
+                  "unit": "percentunit"
                 },
                 "overrides": []
               },
@@ -2697,7 +2040,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2772,6 +2115,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2781,6 +2125,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2790,8 +2135,7 @@
                       }
                     ]
                   },
-                  "unit": "bytes",
-                  "min": 0
+                  "unit": "bytes"
                 },
                 "overrides": []
               },
@@ -2809,7 +2153,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2906,6 +2250,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -2915,6 +2260,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2924,8 +2270,7 @@
                       }
                     ]
                   },
-                  "unit": "Bps",
-                  "min": 0
+                  "unit": "Bps"
                 },
                 "overrides": []
               },
@@ -2943,7 +2288,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -2996,13 +2341,19 @@
                 "enableLogDetails": true,
                 "prettifyLogMessage": false,
                 "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
                 "showLabels": true,
+                "showLevel": true,
+                "showLogAttributes": true,
                 "showTime": true,
                 "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
                 "wrapLogMessage": true
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3055,13 +2406,19 @@
                 "enableLogDetails": true,
                 "prettifyLogMessage": false,
                 "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
                 "showLabels": true,
+                "showLevel": true,
+                "showLogAttributes": true,
                 "showTime": true,
                 "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
                 "wrapLogMessage": true
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3084,8 +2441,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (status) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json status [$__auto]))",
-                        "queryType": "range",
-                        "legendFormat": "{{status}}"
+                        "legendFormat": "{{status}}",
+                        "queryType": "range"
                       },
                       "version": "v0"
                     },
@@ -3134,6 +2491,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -3143,6 +2501,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3152,8 +2511,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -3171,7 +2529,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3194,8 +2552,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (status) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json status | status=~\"5..\" [$__auto]))",
-                        "queryType": "range",
-                        "legendFormat": "{{status}}"
+                        "legendFormat": "{{status}}",
+                        "queryType": "range"
                       },
                       "version": "v0"
                     },
@@ -3244,6 +2602,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -3253,6 +2612,8 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
+                  "noValue": "No 5xx responses",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3262,9 +2623,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0,
-                  "noValue": "No 5xx responses"
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -3282,7 +2641,89 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "min(time() - node_boot_time_seconds{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Time since the droplet booted.",
+          "id": 3,
+          "links": [],
+          "title": "Uptime",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "s"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3304,9 +2745,11 @@
                       "group": "loki",
                       "kind": "DataQuery",
                       "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
                         "expr": "quantile_over_time(0.95, {environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json duration | __error__=\"\" | unwrap duration | __error__=\"\" [$__auto]) by (stage)",
-                        "queryType": "range",
-                        "legendFormat": "p95"
+                        "legendFormat": "p95",
+                        "queryType": "range"
                       },
                       "version": "v0"
                     },
@@ -3354,8 +2797,9 @@
                     "scaleDistribution": {
                       "type": "linear"
                     },
-                    "showPoints": "never",
-                    "spanNulls": false,
+                    "showPoints": "always",
+                    "showValues": false,
+                    "spanNulls": true,
                     "stacking": {
                       "group": "A",
                       "mode": "none"
@@ -3364,6 +2808,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3373,8 +2818,7 @@
                       }
                     ]
                   },
-                  "unit": "s",
-                  "min": 0
+                  "unit": "s"
                 },
                 "overrides": []
               },
@@ -3392,7 +2836,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3415,8 +2859,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "topk(10, sum by (path) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json uri=\"request.uri\" | label_format path=`{{ regexReplaceAll \"[?].*\" .uri \"\" }}` [$__range])))",
-                        "queryType": "instant",
-                        "legendFormat": "{{path}}"
+                        "legendFormat": "{{path}}",
+                        "queryType": "instant"
                       },
                       "version": "v0"
                     },
@@ -3441,6 +2885,7 @@
                   "color": {
                     "mode": "thresholds"
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3450,8 +2895,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -3473,14 +2917,15 @@
                     "lastNotNull"
                   ],
                   "fields": "",
-                  "values": false
+                  "values": true
                 },
                 "showUnfilled": true,
                 "sizing": "auto",
+                "textMode": "auto",
                 "valueMode": "color"
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3533,13 +2978,19 @@
                 "enableLogDetails": true,
                 "prettifyLogMessage": false,
                 "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
                 "showLabels": true,
+                "showLevel": true,
+                "showLogAttributes": true,
                 "showTime": true,
                 "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
                 "wrapLogMessage": true
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3592,13 +3043,19 @@
                 "enableLogDetails": true,
                 "prettifyLogMessage": false,
                 "showCommonLabels": false,
+                "showControls": false,
+                "showFieldSelector": false,
                 "showLabels": true,
+                "showLevel": true,
+                "showLogAttributes": true,
                 "showTime": true,
                 "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
                 "wrapLogMessage": true
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3636,7 +3093,7 @@
               "transformations": []
             }
           },
-          "description": "Days until the certificate served on https://fantasy-hockey.<stage>.do.sommerfeld.app expires, as the Synthetic Monitoring check (job up-and-running___digital-ocean, Story 5.2) sees it from outside; the lowest value of its probes. Synthetic Monitoring series carry no environment or stage label, so this query filters by the check's job and instance. Caddy renews when about 30 days are left (orange below 30, red below 14). Red No data: the check has no recent result.",
+          "description": "Days until the certificate served on https://fantasy-hockey.\u003cstage\u003e.do.sommerfeld.app expires, as the Synthetic Monitoring check (job up-and-running___digital-ocean, Story 5.2) sees it from outside; the lowest value of its probes. Synthetic Monitoring series carry no environment or stage label, so this query filters by the check's job and instance. Caddy renews when about 30 days are left (orange below 30, red below 14). Red No data: the check has no recent result.",
           "id": 34,
           "links": [],
           "title": "Certificate Expires In",
@@ -3646,17 +3103,21 @@
             "spec": {
               "fieldConfig": {
                 "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 1,
                   "mappings": [
                     {
-                      "type": "special",
                       "options": {
                         "match": "null",
                         "result": {
-                          "text": "No data",
                           "color": "red",
-                          "index": 0
+                          "index": 0,
+                          "text": "No data"
                         }
-                      }
+                      },
+                      "type": "special"
                     }
                   ],
                   "thresholds": {
@@ -3676,11 +3137,7 @@
                       }
                     ]
                   },
-                  "unit": "suffix: days",
-                  "decimals": 1,
-                  "color": {
-                    "mode": "thresholds"
-                  }
+                  "unit": "suffix: days"
                 },
                 "overrides": []
               },
@@ -3702,7 +3159,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3725,8 +3182,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (level) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json level [$__auto]))",
-                        "queryType": "range",
-                        "legendFormat": "{{level}}"
+                        "legendFormat": "{{level}}",
+                        "queryType": "range"
                       },
                       "version": "v0"
                     },
@@ -3775,6 +3232,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -3784,6 +3242,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3793,8 +3252,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -3812,7 +3270,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3835,8 +3293,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (stream) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", stream=~\".+\"} [$__auto]))",
-                        "queryType": "range",
-                        "legendFormat": "{{stream}}"
+                        "legendFormat": "{{stream}}",
+                        "queryType": "range"
                       },
                       "version": "v0"
                     },
@@ -3885,6 +3343,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -3894,6 +3353,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -3903,8 +3363,7 @@
                       }
                     ]
                   },
-                  "unit": "short",
-                  "min": 0
+                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -3922,7 +3381,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -3945,8 +3404,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (level) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json level [$__range]))",
-                        "queryType": "instant",
-                        "legendFormat": "{{level}}"
+                        "legendFormat": "{{level}}",
+                        "queryType": "instant"
                       },
                       "version": "v0"
                     },
@@ -3969,6 +3428,7 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
+                    "fixedColor": "#73BF69",
                     "mode": "palette-classic"
                   },
                   "custom": {
@@ -4001,7 +3461,7 @@
                     "lastNotNull"
                   ],
                   "fields": "",
-                  "values": false
+                  "values": true
                 },
                 "sort": "desc",
                 "tooltip": {
@@ -4011,7 +3471,7 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
           }
         }
       },
@@ -4034,8 +3494,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "expr": "sum by (stream) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", stream=~\".+\"} [$__range]))",
-                        "queryType": "instant",
-                        "legendFormat": "{{stream}}"
+                        "legendFormat": "{{stream}}",
+                        "queryType": "instant"
                       },
                       "version": "v0"
                     },
@@ -4058,6 +3518,7 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
+                    "fixedColor": "#73BF69",
                     "mode": "palette-classic"
                   },
                   "custom": {
@@ -4090,7 +3551,7 @@
                     "lastNotNull"
                   ],
                   "fields": "",
-                  "values": false
+                  "values": true
                 },
                 "sort": "desc",
                 "tooltip": {
@@ -4100,7 +3561,872 @@
                 }
               }
             },
-            "version": "13.1.0-25668120414"
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-39": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-logs"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "topk(10, sum by (path) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json uri=\"request.uri\", status=\"status\" | status=\"404\" | label_format path=`{{ regexReplaceAll \"[?].*\" .uri \"\" }}` [$__range])))",
+                        "legendFormat": "{{path}}",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "The 10 paths most often answered with HTTP 404 in the time range.",
+          "id": 39,
+          "links": [],
+          "title": "Top 404 Paths",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "orange",
+                    "mode": "fixed"
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayMode": "basic",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "left",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "textMode": "auto",
+                "valueMode": "color"
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "1 - avg(rate(node_cpu_seconds_total{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mode=\"idle\"}[$__rate_interval]))",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "CPU busy share across all cores (everything but idle).",
+          "id": 4,
+          "links": [],
+          "title": "CPU",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 0.75
+                      },
+                      {
+                        "color": "red",
+                        "value": 0.9
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-40": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-logs"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "topk(10, sum by (user_agent) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json user_agent=\"request.headers[\\\"User-Agent\\\"][0]\" [$__range])))",
+                        "legendFormat": "{{user_agent}}",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "The 10 most frequent User-Agent headers in the time range.",
+          "id": 40,
+          "links": [],
+          "title": "Top User Agents",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "min": 0,
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "percent",
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-41": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-logs"
+                      },
+                      "group": "loki",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "topk(10, sum by (referer) (count_over_time({environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/docker\", container=~\".+-caddy\", log_type=\"access\"} | json referer=\"request.headers[\\\"Referer\\\"][0]\" | referer!=\"\" [$__range])))",
+                        "legendFormat": "{{referer}}",
+                        "queryType": "instant"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "The 10 most frequent Referer headers in the time range.",
+          "id": 41,
+          "links": [],
+          "title": "Top Referers",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayMode": "basic",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "left",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "textMode": "auto",
+                "valueMode": "color"
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "max(1 - node_memory_MemAvailable_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} / node_memory_MemTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Memory in use: 1 - MemAvailable / MemTotal.",
+          "id": 5,
+          "links": [],
+          "title": "Memory",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 0.75
+                      },
+                      {
+                        "color": "red",
+                        "value": 0.9
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "max(node_memory_SwapTotal_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"} - node_memory_SwapFree_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Swap in use (swap file). Linux keeps pages in swap after memory pressure ends, so a high value alone is not a shortage; a rising value is.",
+          "id": 6,
+          "links": [],
+          "title": "Swap Used",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 268435456
+                      },
+                      {
+                        "color": "red",
+                        "value": 536870912
+                      }
+                    ]
+                  },
+                  "unit": "bytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=\"/\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Used share of the root filesystem (/). Resizing the droplet does not grow the disk.",
+          "id": 7,
+          "links": [],
+          "title": "Root Disk",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 0.75
+                      },
+                      {
+                        "color": "red",
+                        "value": 0.9
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "max(1 - node_filesystem_avail_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"} / node_filesystem_size_bytes{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mountpoint=~\"/mnt/.+_data\"})",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Used share of the data volume (/mnt/\u003cdroplet_name\u003e_data) that holds the app data. Red \"No data\" when the volume is not mounted, or when Alloy or node exporter sends nothing.",
+          "id": 8,
+          "links": [],
+          "title": "Volume Disk",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "mappings": [
+                    {
+                      "options": {
+                        "match": "null",
+                        "result": {
+                          "color": "red",
+                          "index": 0,
+                          "text": "No data"
+                        }
+                      },
+                      "type": "special"
+                    }
+                  ],
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 0.75
+                      },
+                      {
+                        "color": "red",
+                        "value": 0.9
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-38695524555"
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "grafanacloud-prom"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expr": "avg by (instance, mode) (rate(node_cpu_seconds_total{environment=\"digital-ocean\", stage=~\"$stage\", job=\"integrations/node_exporter\", mode!=\"idle\"}[$__rate_interval]))",
+                        "instant": false,
+                        "legendFormat": "{{mode}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "CPU time per mode as a share of all cores, idle left out.",
+          "id": 9,
+          "links": [],
+          "title": "CPU by Mode",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-38695524555"
           }
         }
       }
@@ -4113,7 +4439,6 @@
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "Overview",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4125,10 +4450,10 @@
                           "kind": "ElementReference",
                           "name": "panel-1"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4138,10 +4463,10 @@
                           "kind": "ElementReference",
                           "name": "panel-2"
                         },
-                        "x": 3,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 3,
+                        "y": 0
                       }
                     },
                     {
@@ -4151,10 +4476,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3"
                         },
-                        "x": 6,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 6,
+                        "y": 0
                       }
                     },
                     {
@@ -4164,10 +4489,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4"
                         },
-                        "x": 9,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 9,
+                        "y": 0
                       }
                     },
                     {
@@ -4177,10 +4502,10 @@
                           "kind": "ElementReference",
                           "name": "panel-5"
                         },
-                        "x": 12,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 12,
+                        "y": 0
                       }
                     },
                     {
@@ -4190,10 +4515,10 @@
                           "kind": "ElementReference",
                           "name": "panel-6"
                         },
-                        "x": 15,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 15,
+                        "y": 0
                       }
                     },
                     {
@@ -4203,10 +4528,10 @@
                           "kind": "ElementReference",
                           "name": "panel-7"
                         },
-                        "x": 18,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 18,
+                        "y": 0
                       }
                     },
                     {
@@ -4216,22 +4541,22 @@
                           "kind": "ElementReference",
                           "name": "panel-8"
                         },
-                        "x": 21,
-                        "y": 0,
+                        "height": 4,
                         "width": 3,
-                        "height": 4
+                        "x": 21,
+                        "y": 0
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "Overview"
             }
           },
           {
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "Host",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4243,10 +4568,10 @@
                           "kind": "ElementReference",
                           "name": "panel-9"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4256,10 +4581,10 @@
                           "kind": "ElementReference",
                           "name": "panel-10"
                         },
-                        "x": 12,
-                        "y": 0,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 0
                       }
                     },
                     {
@@ -4269,10 +4594,10 @@
                           "kind": "ElementReference",
                           "name": "panel-11"
                         },
-                        "x": 0,
-                        "y": 8,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 8
                       }
                     },
                     {
@@ -4282,10 +4607,10 @@
                           "kind": "ElementReference",
                           "name": "panel-12"
                         },
-                        "x": 12,
-                        "y": 8,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 8
                       }
                     },
                     {
@@ -4295,10 +4620,10 @@
                           "kind": "ElementReference",
                           "name": "panel-13"
                         },
-                        "x": 0,
-                        "y": 16,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 16
                       }
                     },
                     {
@@ -4308,22 +4633,22 @@
                           "kind": "ElementReference",
                           "name": "panel-14"
                         },
-                        "x": 12,
-                        "y": 16,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 16
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "Host"
             }
           },
           {
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "App",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4335,10 +4660,10 @@
                           "kind": "ElementReference",
                           "name": "panel-15"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4348,10 +4673,10 @@
                           "kind": "ElementReference",
                           "name": "panel-16"
                         },
-                        "x": 12,
-                        "y": 0,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 0
                       }
                     },
                     {
@@ -4361,10 +4686,10 @@
                           "kind": "ElementReference",
                           "name": "panel-17"
                         },
-                        "x": 0,
-                        "y": 8,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 8
                       }
                     },
                     {
@@ -4374,10 +4699,10 @@
                           "kind": "ElementReference",
                           "name": "panel-18"
                         },
-                        "x": 12,
-                        "y": 8,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 8
                       }
                     },
                     {
@@ -4387,10 +4712,10 @@
                           "kind": "ElementReference",
                           "name": "panel-19"
                         },
-                        "x": 0,
-                        "y": 16,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 16
                       }
                     },
                     {
@@ -4400,10 +4725,10 @@
                           "kind": "ElementReference",
                           "name": "panel-20"
                         },
-                        "x": 12,
-                        "y": 16,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 16
                       }
                     },
                     {
@@ -4413,10 +4738,10 @@
                           "kind": "ElementReference",
                           "name": "panel-21"
                         },
-                        "x": 0,
-                        "y": 24,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 0,
+                        "y": 24
                       }
                     },
                     {
@@ -4426,22 +4751,22 @@
                           "kind": "ElementReference",
                           "name": "panel-22"
                         },
-                        "x": 12,
-                        "y": 24,
+                        "height": 8,
                         "width": 12,
-                        "height": 8
+                        "x": 12,
+                        "y": 24
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "App"
             }
           },
           {
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "Proxy",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4453,10 +4778,10 @@
                           "kind": "ElementReference",
                           "name": "panel-28"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 8,
                         "width": 10,
-                        "height": 8
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4466,10 +4791,10 @@
                           "kind": "ElementReference",
                           "name": "panel-29"
                         },
-                        "x": 10,
-                        "y": 0,
+                        "height": 8,
                         "width": 10,
-                        "height": 8
+                        "x": 10,
+                        "y": 0
                       }
                     },
                     {
@@ -4479,36 +4804,10 @@
                           "kind": "ElementReference",
                           "name": "panel-34"
                         },
-                        "x": 20,
-                        "y": 0,
+                        "height": 8,
                         "width": 4,
-                        "height": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-30"
-                        },
-                        "x": 0,
-                        "y": 8,
-                        "width": 12,
-                        "height": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-31"
-                        },
-                        "x": 12,
-                        "y": 8,
-                        "width": 12,
-                        "height": 8
+                        "x": 20,
+                        "y": 0
                       }
                     },
                     {
@@ -4518,10 +4817,10 @@
                           "kind": "ElementReference",
                           "name": "panel-35"
                         },
-                        "x": 0,
-                        "y": 16,
+                        "height": 8,
                         "width": 8,
-                        "height": 8
+                        "x": 0,
+                        "y": 8
                       }
                     },
                     {
@@ -4531,10 +4830,10 @@
                           "kind": "ElementReference",
                           "name": "panel-37"
                         },
-                        "x": 8,
-                        "y": 16,
+                        "height": 8,
                         "width": 4,
-                        "height": 8
+                        "x": 8,
+                        "y": 8
                       }
                     },
                     {
@@ -4544,10 +4843,10 @@
                           "kind": "ElementReference",
                           "name": "panel-36"
                         },
-                        "x": 12,
-                        "y": 16,
+                        "height": 8,
                         "width": 8,
-                        "height": 8
+                        "x": 12,
+                        "y": 8
                       }
                     },
                     {
@@ -4557,10 +4856,23 @@
                           "kind": "ElementReference",
                           "name": "panel-38"
                         },
-                        "x": 20,
-                        "y": 16,
+                        "height": 8,
                         "width": 4,
-                        "height": 8
+                        "x": 20,
+                        "y": 8
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-30"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 16
                       }
                     },
                     {
@@ -4570,10 +4882,36 @@
                           "kind": "ElementReference",
                           "name": "panel-33"
                         },
-                        "x": 0,
-                        "y": 24,
+                        "height": 12,
                         "width": 12,
-                        "height": 10
+                        "x": 12,
+                        "y": 16
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-31"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 0,
+                        "y": 24
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-39"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 6,
+                        "y": 24
                       }
                     },
                     {
@@ -4583,22 +4921,48 @@
                           "kind": "ElementReference",
                           "name": "panel-32"
                         },
-                        "x": 12,
-                        "y": 24,
+                        "height": 12,
                         "width": 12,
-                        "height": 10
+                        "x": 12,
+                        "y": 28
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-41"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 0,
+                        "y": 32
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-40"
+                        },
+                        "height": 8,
+                        "width": 6,
+                        "x": 6,
+                        "y": 32
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "Proxy"
             }
           },
           {
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "Containers",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4610,10 +4974,10 @@
                           "kind": "ElementReference",
                           "name": "panel-23"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 8,
                         "width": 8,
-                        "height": 8
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4623,10 +4987,10 @@
                           "kind": "ElementReference",
                           "name": "panel-24"
                         },
-                        "x": 8,
-                        "y": 0,
+                        "height": 8,
                         "width": 8,
-                        "height": 8
+                        "x": 8,
+                        "y": 0
                       }
                     },
                     {
@@ -4636,22 +5000,22 @@
                           "kind": "ElementReference",
                           "name": "panel-25"
                         },
-                        "x": 16,
-                        "y": 0,
+                        "height": 8,
                         "width": 8,
-                        "height": 8
+                        "x": 16,
+                        "y": 0
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "Containers"
             }
           },
           {
             "kind": "RowsLayoutRow",
             "spec": {
               "collapse": false,
-              "title": "Logs",
               "layout": {
                 "kind": "GridLayout",
                 "spec": {
@@ -4663,10 +5027,10 @@
                           "kind": "ElementReference",
                           "name": "panel-26"
                         },
-                        "x": 0,
-                        "y": 0,
+                        "height": 12,
                         "width": 24,
-                        "height": 12
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
@@ -4676,15 +5040,16 @@
                           "kind": "ElementReference",
                           "name": "panel-27"
                         },
-                        "x": 0,
-                        "y": 12,
+                        "height": 12,
                         "width": 24,
-                        "height": 12
+                        "x": 0,
+                        "y": 12
                       }
                     }
                   ]
                 }
-              }
+              },
+              "title": "Logs"
             }
           }
         ]
@@ -4754,6 +5119,7 @@
       {
         "kind": "QueryVariable",
         "spec": {
+          "allValue": ".+",
           "allowCustomValue": true,
           "current": {
             "text": [
@@ -4786,8 +5152,7 @@
           "regex": "",
           "regexApplyTo": "value",
           "skipUrlSync": false,
-          "sort": "alphabeticalAsc",
-          "allValue": ".+"
+          "sort": "alphabeticalAsc"
         }
       }
     ]
