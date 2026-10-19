@@ -1,5 +1,5 @@
 ---
-# Plain defaults. The secrets (session secret, SMTP settings and the players)
+# Plain defaults. The secrets (session secret, Gmail API settings and the players)
 # are in configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml,
 # which deploy-fantasy-hockey.yml loads.
 

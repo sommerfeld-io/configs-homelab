@@ -120,10 +120,11 @@
         that:
           - "'COMPOSE_PROJECT_NAME=fantasy-hockey' in env_lines"
           - "'SESSION_SECRET=molecule-session-secret' in env_lines"
-          - "'SMTP_HOST=smtp.molecule.invalid' in env_lines"
-          - "'SMTP_PORT=2525' in env_lines"
-          - "'SMTP_USERNAME=molecule@molecule.invalid' in env_lines"
-          - "'SMTP_APP_PASSWORD=molecule-smtp-password' in env_lines"
+          - "'GMAIL_CLIENT_ID=molecule-client-id' in env_lines"
+          - "'GMAIL_CLIENT_SECRET=molecule-client-secret' in env_lines"
+          - "'GMAIL_REFRESH_TOKEN=molecule-refresh-token' in env_lines"
+          - "'GMAIL_SENDER=molecule@molecule.invalid' in env_lines"
+          - env_lines | select('search', '^SMTP_') | list == []
 
     - name: Read the seeded data file
       ansible.builtin.slurp:

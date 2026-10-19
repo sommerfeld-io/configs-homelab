@@ -85,7 +85,7 @@ The deploy directory is `fantasy_hockey_path`, `/mnt/prod_fantasy_hockey_data/fa
 | `caddy/Caddyfile`         | `fantasy-hockey`, `0644`       | Templated: serves only `fantasy_hockey_domain`, proxies to the app and answers `/metrics` with 404; every other name on port 80 gets 404                                              |
 | `caddy/data/`             | `fantasy-hockey`, `0700`       | Caddy's `/data`: certificate, private key and ACME account                                                                                                                            |
 | `caddy/config/`           | `fantasy-hockey`, `0700`       | Caddy's `/config`: its autosaved config                                                                                                                                               |
-| `.env`                    | `fantasy-hockey`, `0600`       | Project name, session secret and SMTP settings from the vault, read by `docker compose`                                                                                               |
+| `.env`                    | `fantasy-hockey`, `0600`       | Project name, session secret and Gmail API settings from the vault, read by `docker compose`                                                                                          |
 | `data/`                   | UID 1000, `0755`               | Mounted into the app container at `/data`. UID 1000 is the image's non-root user                                                                                                      |
 | `data/fantasy-hockey.yml` | UID 1000, `0644` (when seeded) | The app's data file: players, prediction sets, teams, predictions                                                                                                                     |
 
@@ -99,7 +99,7 @@ Alloy (installed by `provision.yml`) scrapes the app at `localhost:8080/metrics`
 
 ## Secrets
 
-The secrets are in the Ansible Vault file `configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml`: `fantasy_hockey_session_secret`, `fantasy_hockey_smtp_host`, `fantasy_hockey_smtp_port`, `fantasy_hockey_smtp_username`, `fantasy_hockey_smtp_password` and `fantasy_hockey_players`. Edit them with:
+The secrets are in the Ansible Vault file `configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml`: `fantasy_hockey_session_secret`, `fantasy_hockey_gmail_client_id`, `fantasy_hockey_gmail_client_secret`, `fantasy_hockey_gmail_refresh_token`, `fantasy_hockey_gmail_sender` and `fantasy_hockey_players`. Edit them with:
 
 ```bash
 task cloud:digital-ocean:ansible:vault:fantasy-hockey

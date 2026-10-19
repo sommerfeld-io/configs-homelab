@@ -16,10 +16,10 @@ fantasy_hockey_reserved_ip: 127.0.0.1
 fantasy_hockey_season: "2099-00"
 fantasy_hockey_regular_season_deadline_utc: "2099-10-01T00:00:00Z"
 fantasy_hockey_session_secret: molecule-session-secret
-fantasy_hockey_smtp_host: smtp.molecule.invalid
-fantasy_hockey_smtp_port: 2525
-fantasy_hockey_smtp_username: molecule@molecule.invalid
-fantasy_hockey_smtp_password: molecule-smtp-password
+fantasy_hockey_gmail_client_id: molecule-client-id
+fantasy_hockey_gmail_client_secret: molecule-client-secret
+fantasy_hockey_gmail_refresh_token: molecule-refresh-token
+fantasy_hockey_gmail_sender: molecule@molecule.invalid
 fantasy_hockey_players:
   - id: alice
     name: Alice
