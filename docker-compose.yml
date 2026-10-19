@@ -63,7 +63,7 @@ services:
     tty: *tty
 
   lint-ansible:
-    image: pipelinecomponents/ansible-lint:0.79.33
+    image: pipelinecomponents/ansible-lint:0.79.54
     volumes: *volumes
     working_dir: *default-workdir
     command: ansible-lint configs-homelab/ansible configs-cloud -c .ansible-lint.yml
