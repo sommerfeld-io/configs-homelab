@@ -29,6 +29,8 @@ compose:
   ansible_host: do_networks.v4 | selectattr('type', 'eq', 'public') | map(attribute='ip_address') | first
   ansible_user: "'root'"
   ansible_ssh_common_args: "'-o StrictHostKeyChecking=accept-new'"
+  # Pin the interpreter, so Ansible does not warn about the discovered one.
+  ansible_python_interpreter: "'/usr/bin/python3'"
   # The droplet name is <stage>-<key> (set by OpenTofu), so the name prefix is the
   # single source of the stage. Alloy sets both as labels on every series, and
   # deploy-fantasy-hockey.yml builds the app's domain from alloy_stage, so a

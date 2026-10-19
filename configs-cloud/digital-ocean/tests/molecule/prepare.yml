@@ -17,7 +17,7 @@
           - python3-apt
           - cron
           - libcap2-bin
-          # apt_repository in the Alloy role needs gpg.
+          # The droplet image ships gnupg.
           - gnupg
           # Some Alloy role tasks set become: true.
           - sudo
