@@ -15,6 +15,16 @@ node_modules
 
 .ansible
 
+## OpenTofu: provider cache, local state, variable files and crash logs
+## (may hold secrets). The .terraform.lock.hcl lock file is tracked.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+
 ## BMad Method: _bmad/ holds fetched framework code, regenerated via
 ## `task bmad:install` — not tracked. _bmad-output/ (PRDs, architecture,
 ## stories) is tracked as a living record.

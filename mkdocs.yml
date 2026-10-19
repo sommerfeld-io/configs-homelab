@@ -65,47 +65,74 @@ extra:
 
 nav:
   - Introduction: index.md
-  - Ubuntu Workstations: nodes/ubuntu-workstations/index.md
-  - Omarchy Workstations: nodes/omarchy-workstations/index.md
-  - Omarchy in Virtual Machine: nodes/omarchy-workstations/vm.md
-  - Raspberry Pi Nodes: nodes/raspi/index.md
-  - Node Configs: nodes/node-configs.md
-  - Ansible - Playbooks:
-      - All (provision full Homelab): ansible/playbooks/all.md
-      - Cleanup: ansible/playbooks/cleanup.md
-      - Desktop: ansible/playbooks/desktop.md
-      - Desktop Media: ansible/playbooks/desktop-media.md
-      - Grafana Agents: ansible/playbooks/grafana-agents.md
-      - Ollama: ansible/playbooks/ollama.md
-      - Omarchy Snapshot Create: ansible/playbooks/omarchy-snapshot-create.md
-      - Omarchy Snapshot List: ansible/playbooks/omarchy-snapshot-list.md
-      - Ping: ansible/playbooks/ping.md
-      - RasPi: ansible/playbooks/raspi.md
-      - Repositories: ansible/playbooks/repositories.md
-      - Scan: ansible/playbooks/scan.md
-      - Server: ansible/playbooks/server.md
-      - SSH Trust: ansible/playbooks/ssh-trust.md
-  - Ansible - Roles:
-      - Common / Mount HDD: ansible/roles/common/mount-disk.md
-      - Common / Taskfile Dev: ansible/roles/common/taskfile-dev.md
-      - Grafana Cloud / Alloy: ansible/roles/grafana-cloud/alloy.md
-      - Grafana Cloud / Exporters: ansible/roles/grafana-cloud/exporters.md
-      - Media / Jellyfin: ansible/roles/media/jellyfin.md
-      - Omarchy / Customizations: ansible/roles/omarchy/customizations.md
-      - Omarchy / Monitor Config: ansible/roles/omarchy/monitor-config.md
-      - Omarchy / Snapshot: ansible/roles/omarchy/snapshot.md
-      - RasPi / Pi-hole: ansible/roles/raspi/pihole.md
-      - RasPi / Fritz-Box Exporter: ansible/roles/raspi/fritz-box-exporter.md
-  - ansible/molecule.md
+  - Homelab:
+      - Ubuntu Workstations: homelab/nodes/ubuntu-workstations/index.md
+      - Omarchy Workstations: homelab/nodes/omarchy-workstations/index.md
+      - Omarchy in Virtual Machine: homelab/nodes/omarchy-workstations/vm.md
+      - Raspberry Pi Nodes: homelab/nodes/raspi/index.md
+      - Node Configs: homelab/nodes/node-configs.md
+      - Ansible - Playbooks:
+          - All (provision full Homelab): homelab/ansible/playbooks/all.md
+          - Cleanup: homelab/ansible/playbooks/cleanup.md
+          - Desktop: homelab/ansible/playbooks/desktop.md
+          - Desktop Media: homelab/ansible/playbooks/desktop-media.md
+          - Grafana Agents: homelab/ansible/playbooks/grafana-agents.md
+          - Ollama: homelab/ansible/playbooks/ollama.md
+          - Omarchy Snapshot Create: homelab/ansible/playbooks/omarchy-snapshot-create.md
+          - Omarchy Snapshot List: homelab/ansible/playbooks/omarchy-snapshot-list.md
+          - Ping: homelab/ansible/playbooks/ping.md
+          - RasPi: homelab/ansible/playbooks/raspi.md
+          - Repositories: homelab/ansible/playbooks/repositories.md
+          - Scan: homelab/ansible/playbooks/scan.md
+          - Server: homelab/ansible/playbooks/server.md
+          - SSH Trust: homelab/ansible/playbooks/ssh-trust.md
+      - Ansible - Roles:
+          - Common / Mount HDD: homelab/ansible/roles/common/mount-disk.md
+          - Common / Taskfile Dev: homelab/ansible/roles/common/taskfile-dev.md
+          - Grafana Cloud / Alloy: homelab/ansible/roles/grafana-cloud/alloy.md
+          - Grafana Cloud / Exporters: homelab/ansible/roles/grafana-cloud/exporters.md
+          - Media / Jellyfin: homelab/ansible/roles/media/jellyfin.md
+          - Omarchy / Customizations: homelab/ansible/roles/omarchy/customizations.md
+          - Omarchy / Monitor Config: homelab/ansible/roles/omarchy/monitor-config.md
+          - Omarchy / Snapshot: homelab/ansible/roles/omarchy/snapshot.md
+          - RasPi / Pi-hole: homelab/ansible/roles/raspi/pihole.md
+          - RasPi / Fritz-Box Exporter: homelab/ansible/roles/raspi/fritz-box-exporter.md
+      - homelab/ansible/molecule.md
+  - Cloud:
+      - Overview: cloud/index.md
+      - Domain Naming: cloud/domain-naming.md
+      - Digital Ocean:
+          - Overview: cloud/digital-ocean/index.md
+          - API Token: cloud/digital-ocean/api-token.md
+          - Tasks and Linters: cloud/digital-ocean/tasks-and-linters.md
+          - Droplet: cloud/digital-ocean/droplet.md
+          - Domain: cloud/digital-ocean/domain.md
+          - Provisioning: cloud/digital-ocean/provisioning.md
+          - Deployment: cloud/digital-ocean/deployment.md
+          - Replacement: cloud/digital-ocean/replacement.md
+          - Monitoring: cloud/digital-ocean/monitoring.md
+          - Tests: cloud/digital-ocean/tests.md
+      - Ansible - Playbooks:
+          - All (provision and deploy all droplets): cloud/ansible/playbooks/all.md
+          - Provision: cloud/ansible/playbooks/provision.md
+          - Deploy Fantasy Hockey: cloud/ansible/playbooks/deploy-fantasy-hockey.md
+      - Ansible - Roles:
+          - Fantasy Hockey: cloud/ansible/roles/fantasy-hockey.md
+          - MOTD: cloud/ansible/roles/motd.md
+          - Swap: cloud/ansible/roles/swap.md
+  - Grafana Cloud:
+      - Synthetic Monitoring: grafana-cloud/synthetic-monitoring.md
+  - Pipelines: pipelines.md
   - Incidents:
       - Runbooks:
           - incidents/runbooks/pihole.md
   - license.md
-  - Releases on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/releases
-  - Architecture Decision Records on GitHub ⧉: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
-  - Development Guide ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/development-guide.md
-  - Other Code Guidelines ⧉: https://github.com/sommerfeld-io/.github/blob/main/.github/copilot-instructions.md
-  - How to Contribute ⧉: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
-  - Code of Conduct ⧉: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
-  - Security Policy ⧉: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
-  - Terms of Use ⧉: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md
+  - On GitHub ⧉:
+      - Releases: https://github.com/sommerfeld-io/configs-homelab/releases
+      - Architecture Decision Records: https://github.com/sommerfeld-io/configs-homelab/issues?q=is%3Aissue+label%3AADR
+      - Development Guide: https://github.com/sommerfeld-io/.github/blob/main/docs/development-guide.md
+      - Other Code Guidelines: https://github.com/sommerfeld-io/.github/blob/main/.github/copilot-instructions.md
+      - How to Contribute: https://github.com/sommerfeld-io/.github/blob/main/CONTRIBUTING.md
+      - Code of Conduct: https://github.com/sommerfeld-io/.github/blob/main/CODE_OF_CONDUCT.md
+      - Security Policy: https://github.com/sommerfeld-io/.github/blob/main/SECURITY.md
+      - Terms of Use: https://github.com/sommerfeld-io/.github/blob/main/docs/terms.md

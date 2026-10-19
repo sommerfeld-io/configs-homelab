@@ -1,0 +1,69 @@
+---
+- name: Ping all nodes on the homelab
+  hosts: all
+  gather_facts: true
+  become: false
+  tasks:
+
+    - name: Ping nodes
+      ansible.builtin.ping:
+
+    - name: Network  ----  Check network route metrics
+      block:
+        - name: Network  ----  Show default routes with metrics
+          ansible.builtin.shell: ip route show default
+          args:
+            executable: /bin/bash
+          register: routes
+          changed_when: false
+        - name: Network  ----  Print routes
+          ansible.builtin.debug:
+            var: routes.stdout_lines
+
+    - name: Network  ----  Check all interface link states
+      block:
+        - name: Network  ----  Show all interfaces
+          ansible.builtin.shell: ip -brief link show
+          args:
+            executable: /bin/bash
+          register: ip_links
+          changed_when: false
+        - name: Network  ----  Print interfaces
+          ansible.builtin.debug:
+            var: ip_links.stdout_lines
+
+    - name: Network  ----  Show IP addresses on real interfaces
+      block:
+        - name: Network  ----  Get IP addresses for ethernet and wifi interfaces
+          ansible.builtin.shell:
+            cmd: ip -brief -4 addr show | grep -vE '^lo|^docker|^br-|^veth|^virbr'
+          args:
+            executable: /bin/bash
+          register: ip_addrs
+          changed_when: false
+          failed_when: false
+        - name: Network  ----  Print IP addresses
+          ansible.builtin.debug:
+            var: ip_addrs.stdout_lines
+
+    - name: SSH  ----  Show public key
+      block:
+        - name: SSH  ----  Read id_rsa.pub
+          ansible.builtin.shell: cat /home/sebastian/.ssh/id_rsa.pub
+          args:
+            executable: /bin/bash
+          register: ssh_pub_key
+          changed_when: false
+          failed_when: false
+        - name: SSH  ----  Print id_rsa.pub
+          ansible.builtin.debug:
+            var: ssh_pub_key.stdout_lines
+
+    - name: Docs  ----  Generate node configs documentation
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/node-configs.md.j2"
+        dest: "{{ playbook_dir }}/../../../docs/homelab/nodes/node-configs.md"
+        mode: "0644"
+      delegate_to: localhost
+      become: false
+      run_once: true

@@ -7,16 +7,18 @@ vars:
   REPO: https://raw.githubusercontent.com/sommerfeld-io/.github
 
 includes:
-  ansible:
-    taskfile: ansible/taskfile.yml
-    dir: ansible
   bmad: .task/bmad/taskfile.yml
   cleanup: .task/cleanup/taskfile.yml
+  cloud:
+    taskfile: configs-cloud/taskfile.yml
+    dir: configs-cloud
   common: .task/common/taskfile.yml
-  inspec: tests/inspec/taskfile.yml
-  molecule:
-    taskfile: tests/molecule/taskfile.yml
-    dir: tests/molecule
+  grafana-cloud:
+    taskfile: grafana-cloud/opentofu/taskfile.yml
+    dir: grafana-cloud/opentofu
+  homelab:
+    taskfile: configs-homelab/taskfile.yml
+    dir: configs-homelab
   vm:
     taskfile: virtual-machines/taskfile.yml
     dir: virtual-machines
@@ -38,11 +40,13 @@ tasks:
   lint:
     desc: Run all project linters (except Dockerfile linters)
     cmds:
-      - task: inspec:cleanup
+      - task: homelab:inspec:cleanup
       - task: cleanup:filesystem
       - task: symlinks
       - task: docs:generate
-      - for: ['yaml', 'filenames', 'folders', 'ansible', 'alloy-config', 'workflows', 'markdown-links']
+      - task: cloud:digital-ocean:opentofu:fmt
+      - task: grafana-cloud:fmt
+      - for: ['yaml', 'filenames', 'folders', 'ansible', 'opentofu', 'alloy-config', 'workflows', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
   # ===============================================================================================
@@ -50,8 +54,10 @@ tasks:
   docs:generate:
     desc: 'Generate Markdown files for documentation'
     vars:
-      ROLES_DOCS: docs/ansible/roles
-      ROLES_SRC: ansible/roles
+      ROLES_DOCS: docs/homelab/ansible/roles
+      ROLES_SRC: configs-homelab/ansible/roles
+      CLOUD_ROLES_DOCS: docs/cloud/ansible/roles
+      CLOUD_ROLES_SRC: configs-cloud/digital-ocean/ansible/roles
     cmds:
       - echo "Collecting documentation from other Markdown files ..."
       - task: common:copy
@@ -84,7 +90,11 @@ tasks:
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/grafana-cloud/exporters/README.md", DEST: "{{ .ROLES_DOCS }}/grafana-cloud/exporters.md" }
       - task: common:copy
-        vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/nodes/omarchy-workstations/vm.md" }
+        vars: { SRC: "virtual-machines/omarchy/README.md", DEST: "docs/homelab/nodes/omarchy-workstations/vm.md" }
+      - mkdir -p {{ .CLOUD_ROLES_DOCS }}
+      - for: ['fantasy-hockey', 'motd', 'swap']
+        task: common:copy
+        vars: { SRC: "{{ .CLOUD_ROLES_SRC }}/{{ .ITEM }}/README.md", DEST: "{{ .CLOUD_ROLES_DOCS }}/{{ .ITEM }}.md" }
 
   docs:run:
     desc: Run the documentation server

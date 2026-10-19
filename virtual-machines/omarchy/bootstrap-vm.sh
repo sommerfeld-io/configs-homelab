@@ -1,7 +1,7 @@
 #!/bin/bash
 # Initialize SSH and other mandatory things to allow further setup using Ansible.
 # Password-less SSH auth (ssh-copy-id) stays a manual step and is not handled here.
-# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/bootstrap/omarchy.sh | bash -
+# Run with: curl https://raw.githubusercontent.com/sommerfeld-io/configs-homelab/main/configs-homelab/bootstrap/omarchy.sh | bash -
 
 set -o errexit
 set -o pipefail

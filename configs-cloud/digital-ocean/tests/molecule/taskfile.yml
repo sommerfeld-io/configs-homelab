@@ -1,0 +1,45 @@
+---
+version: '3.42.1'
+
+# Included in configs-cloud/taskfile.yml with prefix `molecule` and
+# `dir: digital-ocean/tests/molecule`, so the tasks are called as
+# `task cloud:molecule:<name>`.
+
+env:
+  # Molecule/Ansible only colorize output when they detect a TTY. GitHub Actions runners
+  # attach a pipe, not a TTY, so force colors on regardless.
+  PY_COLORS: '1'
+
+vars:
+  MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config ../base.yml
+
+tasks:
+
+  test:
+    desc: Run every DigitalOcean molecule scenario end-to-end
+    cmds:
+      - task: test:motd
+      - task: test:alloy
+      - task: test:fantasy-hockey
+
+  test:motd:
+    desc: &molecule-desc Run the {{ .DIR }} role scenario end-to-end
+    vars:
+      DIR: motd
+    dir: &molecule-dir "{{ .DIR }}"
+    cmds: &molecule-cmds
+      - "{{ .MOLECULE_CMD }} test"
+
+  test:alloy:
+    desc: *molecule-desc
+    vars:
+      DIR: alloy
+    dir: *molecule-dir
+    cmds: *molecule-cmds
+
+  test:fantasy-hockey:
+    desc: *molecule-desc
+    vars:
+      DIR: fantasy-hockey
+    dir: *molecule-dir
+    cmds: *molecule-cmds

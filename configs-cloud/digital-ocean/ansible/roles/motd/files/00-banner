@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blank line, banner art, blank line. The art is stored once in banner.txt.
+echo
+cat /usr/local/share/motd/banner.txt
+echo

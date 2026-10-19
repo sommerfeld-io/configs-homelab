@@ -1,0 +1,70 @@
+---
+# Gives the test container what the droplet image has and the Docker image lacks.
+# Test-only setup lives here, so the roles run unchanged.
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Install python3
+      ansible.builtin.raw: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+      changed_when: false
+
+    - name: Install the packages the droplet image ships
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - python3-apt
+          - cron
+          - libcap2-bin
+          # apt_repository in the Alloy role needs gpg.
+          - gnupg
+          # Some Alloy role tasks set become: true.
+          - sudo
+          # Without it the motd debconf task is not idempotent.
+          - landscape-common
+          # Ships 98-reboot-required.
+          - update-notifier-common
+        state: present
+
+    # The Alloy role adds the alloy user to the docker group (Docker is installed
+    # before Alloy on the droplet).
+    - name: Create the docker group
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    # systemd cannot run as PID 1 in an unprivileged container, and privileged
+    # containers with systemd can take over the host's processes. The stub answers
+    # the Alloy role's service calls instead: every unit is loaded, enabled and
+    # active, every other command succeeds and is logged to
+    # /var/log/systemctl-stub.log. /usr/local/bin comes before /usr/bin
+    # in PATH, so a systemd package pulled in by apt does not replace it.
+    - name: Replace systemctl with a stub
+      ansible.builtin.copy:
+        dest: /usr/local/bin/systemctl
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+        content: |
+          #!/bin/sh
+          # Molecule stub, see configs-cloud/digital-ocean/tests/molecule/prepare.yml
+          # Every call is logged, so verify can check restarts.
+          echo "$*" >> /var/log/systemctl-stub.log
+          for arg in "$@"; do
+            case "$arg" in
+            show)
+              printf '%s\n' LoadState=loaded ActiveState=active SubState=running UnitFileState=enabled
+              exit 0
+              ;;
+            is-enabled)
+              echo enabled
+              exit 0
+              ;;
+            is-active)
+              echo active
+              exit 0
+              ;;
+            esac
+          done
+          exit 0

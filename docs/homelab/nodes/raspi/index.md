@@ -1,0 +1,66 @@
+# Raspberry Pi Nodes
+
+The Raspberry Pi fleet consists of multiple Raspberry Pi devices that serve as lightweight nodes in the home lab infrastructure. These devices handle dedicated roles including administrative tasks, monitoring and logging aggregation, and testing environments.
+
+## RasPi Fleet Overview
+
+The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle dedicated roles. Each Pi is configured through automated Ansible playbooks to ensure consistent deployment and management across the entire fleet. No Pi has password-less SSH connections configured so they cannot easily connect to any other node.
+
+| Name         | Model    | RAM | Main Storage  | Role                             |
+| ------------ | -------- | --- | ------------- | -------------------------------- |
+| `pi4-dradis` | RasPi 4B | 8GB | 64GB microSD  | Connected to Fritz!Box via cable |
+| `pi4-0005`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi4-0002`   | RasPi 4B | 8GB | 64GB microSD  | -                                |
+| `pi4-0006`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
+| `pi5-0004`   | RasPi 5  | 8GB | 128GB microSD | -                                |
+
+Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a compact 10-inch rack system. This setup keeps all devices securely mounted and easily accessible.
+
+```ditaa
++-------------+      +------------+------------+      +-------------+
+|  SSD 120GB  +------+  pi4-0006  |  pi4-0005  +------+  SSD 240GB  |
++-------------+      +------------+------------+      +-------------+
+                     |  pi5-0004  |  pi4-0002  |
+                     +------------+------------+
+                     |  Power                  |
+                     +-------------------------+
+                     |  Network Switch         |
+                     +-------------------------+
+```
+
+`pi4-dradis` is in a separate case outside of the rack
+
+> **:NOTE:** Node numbers are not necessarily sequential. When a node is reinstalled, its number is incremented to avoid hostname conflicts with the FritzBox router.
+
+## Setup Guide
+
+The entire setup of all Raspi nodes is automated using Ansible playbooks. This ensures a consistent, repeatable, and documented process. The playbooks handle everything from installing the necessary software to configuring and starting the services, meaning we can easily redeploy or scale with minimal manual effort.
+
+Ubuntu Server (or Raspberry Pi OS) is used on RasPi Nodes, since there is currently no viable Arch-based OS for RasPi. This will be re-evaluated later.
+
+> **Disposition tags:** a few steps below carry a `_Disposition: permanently accepted_` or `_Disposition: tracked to close_` note. This describes whether that specific manual step is expected to stay manual forever, or is being tracked to become automated — not whether you've completed it in this run (the checkbox still tracks that). Only the small set of steps considered part of Homelab Configs' automation boundary carry a tag; every other checklist item here is ordinary one-time physical/OS setup, out of that scope.
+
+### Installation and Configuration
+
+* [ ] Use the RasPi Imager to install Ubuntu Server onto a SD card.
+* [ ] Set `sebastian` as user and set the default password.
+* [ ] Configure hostname, Wifi settings and enable SSH server with password-based auth.
+* [ ] Insert the SD card into the Raspberry Pi and power it on.
+* [ ] Connect to new Raspberry Pi via `ssh sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines.
+* [ ] Setup password-less ssh connections via `ssh-copy-id sebastian@<THE_HOSTNAME>.fritz.box` from all relevant machines. — _Disposition: permanently accepted_
+* [ ] When running Ansible against Ubuntu 25.10 or 26.04 machines, disable sudo password prompts for the `sebastian` user. **Note:** This means you won't be prompted for a password when running `sudo` at all. We monitor this problem with <https://github.com/sommerfeld-io/configs-homelab/issues/160>. — _Disposition: tracked to close_
+    * [ ] `ssh sebastian@<hostname>.fritz.box` (connect to the new machine)
+    * [ ] `sudo visudo` and add this line at the end of the file: `sebastian ALL=(ALL) NOPASSWD: ALL`
+* [ ] Install machine using the Ansible configs from this repo using `task`.
+    * [ ] [Playbook "raspi"](../../ansible/playbooks/raspi.md)
+    * [ ] Allow the machine to interact with GitHub. Use public key `id_rsa.pub`, NOT the private key! — _Disposition: permanently accepted_
+    * [ ] Login to Docker registry on the new machine: `docker login` — _Disposition: permanently accepted_
+    * [ ] [Playbook "repositories"](../../ansible/playbooks/repositories.md)
+    * [ ] [Playbook "grafana-agents"](../../ansible/playbooks/grafana-agents.md)
+
+### Follow-Up Todos
+
+* [ ] Add the new RasPi Node to `configs-homelab/ansible/roles/common/taskfile-dev/files/taskfile.yml` for easy SSH connections.
+* [ ] Setup password-less ssh connections from `picon` and `kobol` to the RasPi node
+    * [ ] Add the pairs (e.g. `{ src: kobol.fritz.box, dest: <NODE_NAME>.fritz.box }`) to `configs-homelab/ansible/vars/ssh-trust.yml`
+    * [ ] Run the [Playbook "ssh-trust"](../../ansible/playbooks/ssh-trust.md) (`task homelab:ansible:ssh:trust`)

@@ -55,12 +55,12 @@ ignore:
   - _bmad
   - _bmad-output
   - .claude/skills
-  - tests/inspec/admin-pi/vendor
-  - tests/inspec/desktop-baseline/vendor
-  - tests/inspec/raspi-baseline/vendor
-  - tests/inspec/server-baseline/vendor
-  - tests/inspec/runner-04-pi/vendor
-  - ansible/roles
+  - configs-homelab/tests/inspec/admin-pi/vendor
+  - configs-homelab/tests/inspec/desktop-baseline/vendor
+  - configs-homelab/tests/inspec/raspi-baseline/vendor
+  - configs-homelab/tests/inspec/server-baseline/vendor
+  - configs-homelab/tests/inspec/runner-04-pi/vendor
+  - configs-homelab/ansible/roles
 
   - .github/skills/.markdownlint.yml
 

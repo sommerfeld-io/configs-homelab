@@ -1,0 +1,35 @@
+---
+# Caddy orders the certificate for fantasy_hockey_domain as soon as it starts.
+# Let's Encrypt validates against the address the name resolves to, so the
+# deploy stops first when that is not this droplet's reserved IP. "Resolves at
+# all" is not enough: the sommerfeld.app wildcard answers every missing name
+# with a CNAME to the web host. fantasy_hockey_reserved_ip comes from the
+# DigitalOcean metadata service (deploy-fantasy-hockey.yml).
+
+- name: Fantasy Hockey  ----  Resolve the domain
+  ansible.builtin.command: getent ahostsv4 {{ fantasy_hockey_domain }}
+  register: fantasy_hockey_domain_lookup
+  failed_when: false
+  changed_when: false
+  check_mode: false
+
+- name: Fantasy Hockey  ----  Stop when the domain does not resolve to the reserved IP
+  vars:
+    fantasy_hockey_domain_addresses: >-
+      {{ fantasy_hockey_domain_lookup.stdout_lines | map('split') | map('first') | unique | list }}
+  ansible.builtin.assert:
+    that:
+      # Exactly the reserved IP: with a second A record, Let's Encrypt may
+      # validate against the other address.
+      - fantasy_hockey_domain_addresses == [fantasy_hockey_reserved_ip]
+    fail_msg: >-
+      {{ fantasy_hockey_domain }} resolves to
+      {{ fantasy_hockey_domain_addresses | join(', ') if fantasy_hockey_domain_addresses else 'nothing' }},
+      not to the reserved IP {{ fantasy_hockey_reserved_ip }} of {{ inventory_hostname }}.
+      Caddy would request a certificate that Let's Encrypt cannot validate, so
+      nothing was written. Create or fix the A record as described in
+      docs/cloud/digital-ocean/domain.md, check public resolvers as in its
+      section Check, and repeat this lookup on the droplet with
+      `getent ahostsv4 {{ fantasy_hockey_domain }}` (its resolver may cache
+      the wildcard answer for up to 2 hours).
+    quiet: true

@@ -1,0 +1,28 @@
+---
+# What the role does up to docker compose: the DNS guard with a domain that
+# resolves to the test reserved IP (tasks_from: dns), the user with its prompt
+# (tasks_from: user) and the deploy files (tasks_from: files). The container
+# cannot run Docker and has no volume, so the stack and its asserts are verified
+# on the droplet; verify tests the mount and path guards of tasks/main.yml. The
+# test values are in vars/test-vars.yml; the prompt comes from the role
+# defaults, like on the droplet.
+- name: Converge
+  hosts: all
+  vars_files:
+    - vars/test-vars.yml
+  tasks:
+
+    - name: Check the domain
+      ansible.builtin.include_role:
+        name: ../../../../../ansible/roles/fantasy-hockey
+        tasks_from: dns
+
+    - name: Create the fantasy-hockey user
+      ansible.builtin.include_role:
+        name: ../../../../../ansible/roles/fantasy-hockey
+        tasks_from: user
+
+    - name: Write the deploy files
+      ansible.builtin.include_role:
+        name: ../../../../../ansible/roles/fantasy-hockey
+        tasks_from: files

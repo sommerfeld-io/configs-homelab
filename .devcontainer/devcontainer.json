@@ -30,6 +30,12 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:4.0.0": {
             "moby": false
+        },
+        "ghcr.io/devcontainers-extra/features/opentofu:1.0.0": {
+            "version": "1.12.7"
+        },
+        "ghcr.io/devcontainers-extra/features/digitalocean-cli:1.0.4": {
+            "version": "1.183.0"
         }
     },
 
@@ -37,7 +43,9 @@
       "SONARCLOUD_TOKEN": "${localEnv:SONARCLOUD_TOKEN}",
       "SONARQUBE_TOKEN": "${localEnv:SONARCLOUD_TOKEN}",
       "SONARQUBE_URL": "https://sonarcloud.io",
-      "SONARQUBE_ORGANIZATION": "sommerfeld-io"
+      "SONARQUBE_ORGANIZATION": "sommerfeld-io",
+      "DIGITALOCEAN_ACCESS_TOKEN": "${localEnv:DIGITALOCEAN_ACCESS_TOKEN}",
+      "GRAFANA_SM_ACCESS_TOKEN": "${localEnv:GRAFANA_SM_ACCESS_TOKEN}"
     },
 
     "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",

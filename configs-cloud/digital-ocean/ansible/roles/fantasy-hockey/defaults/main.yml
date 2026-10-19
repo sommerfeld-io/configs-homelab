@@ -1,0 +1,29 @@
+---
+# Plain defaults. The secrets (session secret, Gmail API settings and the players)
+# are in configs-cloud/digital-ocean/ansible/vars/fantasy-hockey-vault.yml,
+# which deploy-fantasy-hockey.yml loads.
+
+# The volume from OpenTofu. tasks/main.yml stops before writing anything when it
+# is not a mount point, or when fantasy_hockey_path is not below it.
+fantasy_hockey_volume_mount: /mnt/prod_fantasy_hockey_data
+
+# Deploy directory: compose file, Caddy config and data, .env and the data
+# folder. It lives on the volume, so the app data and the certificates survive a
+# droplet replacement.
+fantasy_hockey_path: "{{ fantasy_hockey_volume_mount }}/fantasy-hockey"
+
+# The only name Caddy serves the app at, with a Let's Encrypt certificate. The
+# pattern is <app>.<stage>.do.sommerfeld.app. deploy-fantasy-hockey.yml derives
+# it from the droplet name (<stage>-<app>); this default only covers the prod
+# droplet. tasks/dns.yml stops the deploy when it does not resolve to the
+# reserved IP (fantasy_hockey_reserved_ip, read by the playbook).
+fantasy_hockey_domain: fantasy-hockey.prod.do.sommerfeld.app
+
+# Written into the seeded data file only (see tasks/files.yml).
+fantasy_hockey_season: "2026-27"
+fantasy_hockey_regular_season_deadline_utc: "2026-10-24T23:59:00Z"
+
+# Prompt of the user default_user. Derived from the orange ubuntu_server ps1 in
+# configs-homelab/ansible/hosts.yml, without $(__git_ps1); keep the two in sync.
+# The only copy in configs-cloud: the Molecule verify reads it from here.
+fantasy_hockey_ps1: '${debian_chroot:+($debian_chroot)}\[\033[1;38;5;208m\]\u@\h:\[\033[1;34m\]\w\[\033[00m\] $ '

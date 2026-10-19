@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From the Pi to the Droplet - a brainstorm keepsake</title>
+<style>
+:root{
+  --bg:#f3f7fa;--bg2:#e6eef4;--ink:#16232e;--mute:#566a7a;--line:#c3d3df;
+  --ice:#cfe6f3;--blue:#2a6f97;--deep:#0f3d5c;--amber:#c77d0a;--red:#b8392f;--green:#2f7d4f;
+  --user:#2a6f97;--coach:#8a4fb0;--card:#ffffff;--shadow:0 1px 0 rgba(15,61,92,.06),0 8px 24px rgba(15,61,92,.07);
+  --rink:#e4f1f8;
+}
+@media (prefers-color-scheme:dark){:root[data-theme=auto]{
+  --bg:#0c1620;--bg2:#101f2c;--ink:#e3edf4;--mute:#8da4b5;--line:#25384a;
+  --ice:#1a3447;--blue:#6fb6e0;--deep:#9fd3ef;--amber:#f0b04a;--red:#ff7f72;--green:#6fd39a;
+  --user:#6fb6e0;--coach:#c99af0;--card:#132636;--shadow:0 8px 24px rgba(0,0,0,.35);--rink:#0f2230;}}
+:root[data-theme=dark]{
+  --bg:#0c1620;--bg2:#101f2c;--ink:#e3edf4;--mute:#8da4b5;--line:#25384a;
+  --ice:#1a3447;--blue:#6fb6e0;--deep:#9fd3ef;--amber:#f0b04a;--red:#ff7f72;--green:#6fd39a;
+  --user:#6fb6e0;--coach:#c99af0;--card:#132636;--shadow:0 8px 24px rgba(0,0,0,.35);--rink:#0f2230;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Iowan Old Style",serif;}
+h1,h2,h3,.mono,.tag,nav{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+a{color:var(--blue)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-size:12px}
+nav .wrap{display:flex;gap:16px;align-items:center;overflow-x:auto;padding-top:9px;padding-bottom:9px;white-space:nowrap}
+nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--ink)}
+nav button{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:20px;padding:3px 10px;font:inherit;cursor:pointer}
+section{padding:70px 0 30px}
+.kicker{font:600 12px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+h2{font-size:clamp(26px,4vw,38px);margin:6px 0 8px;letter-spacing:-.02em;color:var(--deep)}
+h3{font-size:15px;margin:0 0 6px;color:var(--deep)}
+.lede{color:var(--mute);max-width:660px;margin:0 0 28px}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:1px 7px;border-radius:10px;border:1px solid currentColor;vertical-align:1px;margin-right:4px}
+.tag.user{color:var(--user)}.tag.coach{color:var(--coach)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.small{font-size:14px;color:var(--mute)}
+.warn{color:var(--red)}
+s{color:var(--mute);text-decoration-thickness:2px;text-decoration-color:var(--red)}
+/* hero */
+.hero{padding:60px 0 30px;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(34px,6.5vw,68px);line-height:1.02;margin:10px 0 14px;letter-spacing:-.04em;color:var(--deep)}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p{max-width:600px;color:var(--mute);font-size:18px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.meta span{font:12px ui-monospace,monospace;border:1px solid var(--line);padding:3px 10px;border-radius:14px;color:var(--mute)}
+.moveart{margin-top:30px;background:var(--rink);border:1px solid var(--line);border-radius:16px;padding:10px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:ui-monospace,Menlo,monospace;fill:var(--ink)}
+.t-mute{fill:var(--mute)!important}
+.dash{stroke-dasharray:5 5;animation:flow 1.2s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+@media (prefers-reduced-motion:reduce){.dash{animation:none}}
+/* constraint chain */
+.chain{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:8px 0}
+.link{flex:1 1 140px;border:1.5px solid var(--blue);border-radius:10px;padding:9px 11px;background:var(--card);font-size:13px;position:relative}
+.link b{display:block;font:600 11px ui-monospace,monospace;color:var(--blue);text-transform:uppercase;letter-spacing:.08em}
+.link.ci{border-color:var(--amber)}.link.ci b{color:var(--amber)}
+.arrow{align-self:center;color:var(--mute);font-family:monospace}
+.rejected{display:flex;gap:10px;flex-wrap:wrap}
+.rejected span{border:1.5px dashed var(--red);color:var(--red);padding:3px 12px;border-radius:8px;font:13px ui-monospace,monospace;text-decoration:line-through}
+/* morph */
+.morph{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.morph th,.morph td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.morph th{font:600 11px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--mute);background:var(--bg2);width:28%}
+.morph tr:last-child th,.morph tr:last-child td{border-bottom:0}
+.pick{display:inline-block;background:var(--ice);color:var(--deep);border-radius:6px;padding:1px 8px;margin:1px 3px 1px 0;font:13px ui-monospace,monospace}
+.pick.later{background:transparent;border:1px dashed var(--mute);color:var(--mute)}
+.pick.new{background:var(--amber);color:#1b1200}
+.spec{background:linear-gradient(160deg,var(--deep),#1a5a85);color:#eaf5fb;border-radius:16px;padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;box-shadow:var(--shadow)}
+:root[data-theme=dark] .spec,:root[data-theme=auto] .spec{--x:0}
+.spec div b{display:block;font:600 24px ui-monospace,monospace}
+.spec div span{font:11px ui-monospace,monospace;letter-spacing:.09em;text-transform:uppercase;opacity:.75}
+.spec .wide{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.2);padding-top:12px;font:13px ui-monospace,monospace;opacity:.9}
+/* failures */
+.fail{border-left:5px solid var(--red)}
+.fail.fore{border-left-color:var(--amber)}
+.stamp{font:700 11px ui-monospace,monospace;color:var(--red);border:1.5px solid var(--red);padding:1px 8px;border-radius:4px;transform:rotate(-3deg);display:inline-block;margin-bottom:6px}
+.lesson{margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:8px;font-size:14px}
+.lesson::before{content:"lesson \2192 ";font:11px ui-monospace,monospace;text-transform:uppercase;color:var(--green)}
+/* ladder */
+.ladder{position:relative;padding-left:46px;margin-top:10px}
+.ladder::before{content:"";position:absolute;left:14px;top:6px;bottom:6px;width:4px;background:repeating-linear-gradient(var(--line) 0 10px,transparent 10px 16px);border-radius:2px}
+.rung{position:relative;margin-bottom:20px}
+.rung::before{content:"";position:absolute;left:-42px;top:20px;width:26px;height:4px;background:var(--blue);border-radius:2px}
+.rung .when{font:700 13px ui-monospace,monospace;color:var(--amber);letter-spacing:.08em;text-transform:uppercase}
+.rung ul{margin:6px 0 0;padding-left:18px}
+.rung li{margin:4px 0}
+/* epics */
+.epics{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.epic{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
+.epic:hover,.epic.hl{transform:translateY(-3px);border-color:var(--amber)}
+.epic .n{font:800 30px ui-monospace,monospace;color:var(--ice);position:absolute;right:12px;top:4px;-webkit-text-stroke:1px var(--blue)}
+.epic h3{padding-right:44px}
+.epic p{margin:0;font-size:13.5px;color:var(--mute)}
+.epic .ord{font:11px ui-monospace,monospace;color:var(--blue)}
+.lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px}
+.lane{border-radius:12px;padding:14px;border:1px solid var(--line);background:var(--card)}
+.lane h3{display:flex;justify-content:space-between}
+.lane.must{border-top:5px solid var(--green)}.lane.should{border-top:5px solid var(--blue)}
+.lane.could{border-top:5px solid var(--amber)}.lane.wont{border-top:5px dashed var(--mute)}
+.chip{display:inline-block;font:12px ui-monospace,monospace;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:2px 8px;margin:3px 3px 3px 0}
+.chip.moved{border-color:var(--green);color:var(--green)}
+/* synthesis */
+.climax{background:radial-gradient(ellipse at 50% 0%,var(--ice),transparent 70%);border-radius:24px;padding:30px 0}
+.six{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:20px;counter-reset:c}
+.conn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;position:relative;box-shadow:var(--shadow);cursor:default}
+.conn::before{counter-increment:c;content:counter(c);position:absolute;top:-14px;left:16px;width:30px;height:30px;border-radius:50%;background:var(--amber);color:#1b1200;font:800 15px/30px ui-monospace,monospace;text-align:center}
+.conn h3{margin-top:8px;font-size:16px}
+.conn p{margin:0;font-size:14.5px}
+.conn .eps{margin-top:10px;font:12px ui-monospace,monospace;color:var(--blue)}
+.conn:hover{border-color:var(--amber)}
+footer{padding:60px 0 80px;text-align:center;color:var(--mute);font-size:14px}
+.puck{display:inline-block;width:34px;height:12px;background:var(--deep);border-radius:50%/50%;margin-bottom:8px;box-shadow:0 4px 0 var(--ink)}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a href="#top">start</a><a href="#constraint">constraints</a><a href="#morph">morphology</a><a href="#failure">failures</a><a href="#horizon">horizons</a><a href="#converge">converge</a><a href="#synthesis">synthesis</a>
+<button id="tg" aria-label="Toggle theme">theme</button></div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+<div class="kicker">Brainstorm keepsake / 2026-10-10 / partner mode</div>
+<h1>From a flaky door<br>to a <em>small, steady</em> droplet</h1>
+<p>A hobby fantasy-hockey app for three people, a Raspberry Pi behind a Fritzbox that never quite let the internet in, and a decision to stop opening doors into the home network. One DigitalOcean droplet, built by OpenTofu, dressed by Ansible, watched by Grafana, and meant to run unattended for years.</p>
+<div class="meta"><span>OpenTofu</span><span>Ansible</span><span>GitHub Actions</span><span>Grafana Cloud</span><span>cloud-configs/digital-ocean</span></div>
+
+<div class="moveart">
+<svg viewBox="0 0 900 250" role="img" aria-label="Before: internet to Fritzbox to Raspberry Pi with a crossed-out port forward. After: internet straight to a droplet with a reserved IP.">
+<line x1="450" y1="20" x2="450" y2="230" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 8"/>
+<circle cx="450" cy="125" r="34" fill="none" stroke="var(--line)" stroke-width="2"/>
+<text x="20" y="28" class="t-mute" font-size="12">BEFORE</text>
+<text x="470" y="28" class="t-mute" font-size="12">AFTER</text>
+<!-- before -->
+<rect x="20" y="95" width="80" height="60" rx="10" fill="var(--card)" stroke="var(--mute)"/><text x="60" y="130" text-anchor="middle" font-size="12">internet</text>
+<rect x="170" y="85" width="110" height="80" rx="10" fill="var(--card)" stroke="var(--red)" stroke-width="2"/><text x="225" y="120" text-anchor="middle" font-size="13">Fritzbox</text><text x="225" y="140" text-anchor="middle" font-size="10" class="t-mute">:80 = router UI</text>
+<rect x="340" y="95" width="90" height="60" rx="10" fill="var(--card)" stroke="var(--mute)"/><text x="385" y="130" text-anchor="middle" font-size="12">Pi + app</text>
+<path d="M100 125 H170" stroke="var(--mute)" stroke-width="2" class="dash" fill="none"/>
+<path d="M280 125 H340" stroke="var(--red)" stroke-width="2" class="dash" fill="none"/>
+<text x="140" y="75" text-anchor="middle" font-size="22" fill="var(--red)" style="fill:var(--red)">?</text>
+<text x="310" y="108" text-anchor="middle" font-size="11" style="fill:var(--red)">timeouts</text>
+<text x="225" y="195" text-anchor="middle" font-size="11" class="t-mute">a door into the home network</text>
+<!-- after -->
+<rect x="490" y="95" width="80" height="60" rx="10" fill="var(--card)" stroke="var(--mute)"/><text x="530" y="130" text-anchor="middle" font-size="12">internet</text>
+<rect x="620" y="85" width="110" height="80" rx="10" fill="var(--card)" stroke="var(--green)" stroke-width="2"/><text x="675" y="115" text-anchor="middle" font-size="12">reserved IP</text><text x="675" y="135" text-anchor="middle" font-size="10" class="t-mute">static, survives</text><text x="675" y="149" text-anchor="middle" font-size="10" class="t-mute">rebuilds</text>
+<rect x="780" y="90" width="100" height="70" rx="35" fill="var(--amber)" stroke="none"/><text x="830" y="122" text-anchor="middle" font-size="12" style="fill:#1b1200">droplet</text><text x="830" y="138" text-anchor="middle" font-size="10" style="fill:#1b1200">nginx + app</text>
+<path d="M570 125 H620" stroke="var(--green)" stroke-width="2" class="dash" fill="none"/>
+<path d="M730 125 H780" stroke="var(--green)" stroke-width="2" class="dash" fill="none"/>
+<text x="690" y="195" text-anchor="middle" font-size="11" class="t-mute">no door into home</text>
+</svg></div>
+</div></header>
+
+<section id="constraint"><div class="wrap">
+<div class="kicker">Technique 1</div><h2>Constraint Mapping</h2>
+<p class="lede">Before choosing anything, we mapped what must stay true. The map grew from the inside out: why we leave, which secrets must travel, what state lives where.</p>
+
+<div class="grid g2">
+<div class="card"><h3>Why we are moving</h3>
+<p>The Fritzbox port exposure on the Raspi was unstable, and the user does not want a door into the home network. A small DO droplet answers both. <span class="tag user">user</span></p>
+<p class="small">Goal: stable gitops-style cloud deployment, extensible to more apps or microVMs, identical locally (task) and in CI.</p></div>
+<div class="card"><h3>The shape of the folder</h3>
+<p class="mono small">cloud-configs/digital-ocean/<br>&nbsp;&nbsp;opentofu/<br>&nbsp;&nbsp;ansible/ (own inventory, provision + services playbooks)</p>
+<p>Roles are recycled from <span class="mono">ansible/roles</span> without moving them; only the fantasy-hockey compose moves. <span class="tag user">user</span></p>
+<p class="small">Taskfile: <span class="mono">cloud-configs/taskfile.yml</span> included with prefix <span class="mono">cloud</span>, so tasks read <span class="mono">cloud:digital-ocean:*</span>. Devcontainer installs doctl and OpenTofu. <span class="tag user">user</span></p></div>
+</div>
+
+<h3 style="margin-top:28px">The secrets chain: two paths, one token</h3>
+<p class="small">The DO token never comes from a playbook that targets DO. Locally it rides the existing desktop path; in CI OpenTofu runs before Ansible, so the vault cannot unlock it. <span class="tag user">user</span></p>
+<div class="chain">
+<div class="link"><b>local</b>vault password typed by hand</div><span class="arrow">&rarr;</span>
+<div class="link"><b>local</b>ansible/vars/vault.yml var</div><span class="arrow">&rarr;</span>
+<div class="link"><b>local</b>bash-secrets.yml via desktop.yml</div><span class="arrow">&rarr;</span>
+<div class="link"><b>local</b><span class="mono">DIGITALOCEAN_TOKEN</span> in .bashrc</div>
+</div>
+<div class="chain">
+<div class="link ci"><b>actions</b>org-level GH secret: DO token</div><span class="arrow">+</span>
+<div class="link ci"><b>actions</b>org-level GH secret: vault password</div><span class="arrow">&rarr;</span>
+<div class="link ci"><b>actions</b>tofu first, then ansible</div>
+</div>
+<div class="grid g3" style="margin-top:16px">
+<div class="card"><h3>Two SSH keys</h3><p class="small">Local: existing id_rsa.pub already on DO. Actions: a fresh dedicated keypair, private key never copied from the laptop, relevant only in E5. <span class="tag user">user</span></p></div>
+<div class="card"><h3>State</h3><p class="small">Epic 1 uses local OpenTofu state. When Actions arrives: brainstorm remote storage with locking, shared by laptop and CI. <span class="tag user">user</span> A Spaces bucket could double as backend and backup target. <span class="tag coach">coach</span></p></div>
+<div class="card"><h3>Reach and wrapping</h3><p class="small">Static URL, no SSL chores, DO hostname fine, open to the internet, avoid DO firewall. Start on plain HTTP; HTTPS, custom domain and Caddy come in a later epic. <span class="tag user">user</span> Coach floated reserved IP + sslip.io + Caddy. <span class="tag coach">coach</span></p></div>
+</div>
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h3>Observability constraints</h3><p class="small">Alloy installed like the homelab (role grafana-cloud), reusing grafana-vault.yml; all vaults share one password. Scrapes app at :8080/metrics plus OS metrics and logs to Grafana Cloud. New label <span class="mono">environment</span> = homelab | digitalocean in both configs, droplet also <span class="mono">stage=prod</span>. <span class="tag user">user</span></p></div>
+<div class="card"><h3>Terms and rules</h3><p class="small">'terraform' always means OpenTofu. Droplet tagged <span class="mono">prod</span>, stage in its name too. Data file: if absent write default, if present overwrite only from backup. Backup/restore comes later. <span class="tag user">user</span></p></div>
+</div>
+<p style="margin-top:18px" class="small">Turned away, as too complex:</p>
+<div class="rejected"><span>Tailscale</span><span>Cloudflare</span></div>
+</div></section>
+
+<section id="morph"><div class="wrap">
+<div class="kicker">Technique 2</div><h2>Morphological Analysis</h2>
+<p class="lede">Break the droplet into independent parameters, pick one value per row, and let the combination be the design. The spec sheet below is the result.</p>
+
+<div class="spec" role="group" aria-label="Droplet spec sheet">
+<div><b>s-1vcpu-1gb</b><span>basic shared CPU</span></div>
+<div><b>~$6</b><span>per month, approx.</span></div>
+<div><b>fra1</b><span>region</span></div>
+<div><b>26.04</b><span>Ubuntu LTS x64</span></div>
+<div><b>2 GB</b><span>block volume, ~$0.20</span></div>
+<div><b>1</b><span>quantity</span></div>
+<div class="wide">1 vCPU / 1 GB RAM / 25 GB SSD / 1000 GB transfer / public IPv4 / budget $5-6 per month: start small and see if it struggles <span class="tag user">user</span></div>
+</div>
+
+<h3 style="margin-top:30px">The parameter board</h3>
+<table class="morph">
+<tr><th>Droplet identity</th><td><span class="pick">name starts prod-fantasy-hockey</span><span class="pick">tag prod</span><span class="pick">project sommerfeld.io</span> <span class="tag user">user</span></td></tr>
+<tr><th>Address</th><td><span class="pick">reserved IP via OpenTofu</span> <span class="tag coach">coach</span> <span class="small">static address survives droplet rebuilds; epic 1 serves http://&lt;reserved-ip&gt; with nginx on :80 kept <span class="tag user">user</span></span></td></tr>
+<tr><th>SSH</th><td><span class="pick">existing DO key</span><span class="pick">picon___id_rsa.pub</span> <span class="tag user">user</span></td></tr>
+<tr><th>Volume</th><td><span class="pick">2 GB ext4</span><span class="pick">declarative in OpenTofu</span><span class="pick">attached at creation, DO auto-mount</span><span class="pick">/mnt/&lt;volume-name&gt;/fantasy-hockey</span> <span class="tag user">user</span></td></tr>
+<tr><th>Startup</th><td><span class="pick">no DO user-data scripts</span><span class="pick">no managed DB</span><span class="pick">Improved Metrics + monitoring</span> <span class="small">Ansible provisions; containers use unless-stopped; cron for jobs; Alloy as systemd service <span class="tag user">user</span></span></td></tr>
+<tr><th>Protection</th><td><span class="pick">prevent_destroy on volume</span><span class="pick">prevent_destroy on reserved IP</span> <span class="tag coach">coach</span> <span class="small">adopted by user for now, may change with backup/restore <span class="tag user">user</span></span></td></tr>
+<tr><th>Playbooks</th><td><span class="pick">provision.yml</span> bash config, docker, alloy, prompt, swap <span class="pick">deploy-services.yml</span> fantasy-hockey <span class="tag user">user</span><br><span class="small">Dependabot bumps compose, the pipeline redeploys. Moved role lives in cloud-configs/digital-ocean/ansible/roles, vars renamed raspi_ to fantasy_hockey_ if ansible-lint agrees.</span></td></tr>
+<tr><th>Role reuse</th><td><span class="pick">relative paths (../../..)</span><span class="pick later"><s>roles_path</s></span> <span class="small">cloud-specific roles may appear <span class="tag user">user</span></span></td></tr>
+<tr><th>Inventory</th><td><span class="pick later"><s>static hosts.yml, hard-coded IP</s></span> <span class="pick new">DO dynamic inventory plugin</span> <span class="small">replaced the static decision after the pipeline problem: tofu and ansible run back-to-back and the fresh IP is unknown. <span class="tag coach">coach</span> proposed, <span class="tag user">user</span> chose, and it gets explained in the docs. Groups: ubuntu and fantasy-hockey, same droplet; bash prompt as on the homelab server with user@host in yellow.</span></td></tr>
+<tr><th>Pipeline</th><td><span class="pick">cloud-deployment.yml</span> triggers on changes in cloud-configs/digital-ocean, then opentofu, ansible software (alloy etc.), ansible services; decoupled from app releases <span class="tag user">user</span></td></tr>
+</table>
+<p class="small" style="margin-top:10px">Disk-backed data stays out of Ansible's hands: formatting and mounting the volume is OpenTofu's job.</p>
+</div></section>
+
+<section id="failure"><div class="wrap">
+<div class="kicker">Technique 3</div><h2>Failure Analysis</h2>
+<p class="lede">Two failures from the Fritzbox years, three the new setup could invent. Each one leaves a lesson behind.</p>
+
+<div class="grid g2">
+<div class="card fail"><span class="stamp">PAST FAILURE 1</span>
+<h3>The port that worked only from outside</h3>
+<p>The port 80 forward worked from the internet, but from LAN or WiFi the router's management UI took priority. It could never be tested locally. <span class="tag user">user</span></p>
+<div class="lesson">The new URL is reachable from anywhere, home network included, so this failure disappears. A post-deploy smoke test is a good idea, but in a later epic. <span class="tag coach">coach</span> <span class="tag user">user</span></div></div>
+<div class="card fail"><span class="stamp">PAST FAILURE 2</span>
+<h3>Timeouts that monitoring never saw</h3>
+<p>Random request timeouts from outside while Pi and container monitoring showed no downtime, and the app answered on pi4-0002.fritz.box. Internal monitoring was blind to the external path. <span class="tag user">user</span></p>
+<div class="lesson">Monitor from outside too. Use the Grafana Cloud synthetic monitoring already watching other URLs from Frankfurt and Paris. <span class="tag coach">coach</span> <span class="tag user">user</span></div></div>
+</div>
+
+<svg viewBox="0 0 900 130" style="margin:22px 0" role="img" aria-label="Inside view by Alloy and outside view by synthetic monitoring both look at the app">
+<rect x="360" y="40" width="180" height="50" rx="12" fill="var(--card)" stroke="var(--amber)" stroke-width="2"/><text x="450" y="70" text-anchor="middle" font-size="13">fantasy-hockey app</text>
+<rect x="20" y="40" width="190" height="50" rx="12" fill="var(--card)" stroke="var(--blue)"/><text x="115" y="62" text-anchor="middle" font-size="12">Alloy: inside view</text><text x="115" y="78" text-anchor="middle" font-size="10" class="t-mute">metrics + logs</text>
+<rect x="690" y="40" width="190" height="50" rx="12" fill="var(--card)" stroke="var(--green)"/><text x="785" y="62" text-anchor="middle" font-size="12">synthetic probe: outside</text><text x="785" y="78" text-anchor="middle" font-size="10" class="t-mute">Frankfurt / Paris</text>
+<path d="M210 65 H360" stroke="var(--blue)" stroke-width="2" class="dash" fill="none"/>
+<path d="M690 65 H540" stroke="var(--green)" stroke-width="2" class="dash" fill="none"/>
+</svg>
+
+<h3>Foreseeable failures <span class="tag user">user</span></h3>
+<p class="small">Decision: observe first, maybe alert later.</p>
+<div class="grid g3">
+<div class="card fail fore"><span class="stamp" style="color:var(--amber);border-color:var(--amber)">LIKELY</span><h3>Full disk</h3><p class="small">Later epic or story: Ansible logrotate and cleanup (lands in E7).</p></div>
+<div class="card fail fore"><span class="stamp" style="color:var(--amber);border-color:var(--amber)">SCARIEST</span><h3>Too little RAM</h3><p class="small">OOM kills services, may even restart the droplet.</p>
+<p class="small"><span class="tag coach">coach</span> swap file, docker mem_limit and restart: unless-stopped, Alloy MemoryMax in systemd, alert on available memory and OOM kill count. Resize is a one-line OpenTofu change, CPU/RAM only, never disk, to stay reversible.</p></div>
+<div class="card fail fore"><span class="stamp" style="color:var(--amber);border-color:var(--amber)">OBVIOUS</span><h3>Unreachable from the internet</h3><p class="small">Covered by the outside probe, and later by the smoke test.</p></div>
+</div>
+</div></section>
+
+<section id="horizon"><div class="wrap">
+<div class="kicker">Technique 4</div><h2>Time Horizon Ladder</h2>
+<p class="lede">Climb the rungs and ask what still holds. The surprise at the top: scale is not the threat, neglect is.</p>
+<div class="ladder">
+<div class="rung card"><div class="when">Now</div>
+<ul><li>Order of work: OpenTofu creates the droplet, Ansible provisions, Ansible deploys the app. <span class="tag user">user</span></li>
+<li>Epic 1 runs fully local through the taskfile; Actions comes later.</li>
+<li>Docs under docs/cloud/digital-ocean are part of every epic, with kroki.io diagrams and nav item 'Cloud - Digital Ocean'; all GitHub secrets at org level. <span class="tag user">user</span></li>
+<li>A comprehensive Grafana dashboard (CPU, memory, app, containers, all container logs) in grafana-cloud/manifests/git-sync/apps. No alerts yet. <span class="tag user">user</span></li></ul></div>
+<div class="rung card"><div class="when">One year</div>
+<ul><li>Prefer adding a second droplet over enlarging the first; it may be disposed when no longer needed. Candidates: a test stage (stage=test) or an unrelated app, never a bigger prod. <span class="tag user">user</span></li>
+<li>Droplet as a reusable module or for_each keyed by name and stage, inventory groups per purpose, quantity stays 1. <span class="tag coach">coach</span></li></ul></div>
+<div class="rung card"><div class="when">Ten years and beyond</div>
+<ul><li>The app is a hobby for three people and will stay so: scaling prod is not a driver. <span class="tag user">user</span></li>
+<li>Must run unattended long-term. <span class="tag user">user</span></li>
+<li>Real risks: unattended-upgrades, Dependabot for images, Ubuntu 26.04 LTS end of life, pinned OpenTofu and provider versions. <span class="tag coach">coach</span></li>
+<li>OS upgrade path (e.g. 28.04 LTS): no in-place dist-upgrade. Change the image slug, the droplet is replaced, volume and reserved IP re-attach, rerun provision and deploy. A short outage is fine; easiest way wins. <span class="tag coach">coach</span> <span class="tag user">user</span></li></ul></div>
+</div>
+</div></section>
+
+<section id="converge"><div class="wrap">
+<div class="kicker">Converge</div><h2>Affinity Clustering and MoSCoW</h2>
+<p class="lede">Ideas drift together into eight epics, then each gets a verdict. The epic clustering was approved by the user.</p>
+<div class="epics" id="epics">
+<div class="epic" data-e="1"><span class="n">E1</span><h3>Droplet via OpenTofu</h3><p>Droplet, volume, reserved IP, tags; local state.</p><div class="ord">order 1 / local</div></div>
+<div class="epic" data-e="2"><span class="n">E2</span><h3>Provisioning via Ansible</h3><p>Bash, docker, Alloy, prompt, swap.</p><div class="ord">order 2</div></div>
+<div class="epic" data-e="3"><span class="n">E3</span><h3>App deployment</h3><p>fantasy-hockey compose, nginx on :80.</p><div class="ord">order 3</div></div>
+<div class="epic" data-e="4"><span class="n">E4</span><h3>Grafana dashboard</h3><p>Host, containers, app, logs.</p><div class="ord">order 4</div></div>
+<div class="epic" data-e="5"><span class="n">E5</span><h3>GitHub Actions</h3><p>cloud-deployment.yml, secrets, shared state.</p><div class="ord">order 5 / promoted to Must</div></div>
+<div class="epic" data-e="6"><span class="n">E6</span><h3>HTTPS, domain, Caddy</h3><p>do.sommerfeld.io variants.</p><div class="ord">order 6</div></div>
+<div class="epic" data-e="7"><span class="n">E7</span><h3>Operations hardening</h3><p>logrotate, unattended-upgrades, cleanup.</p><div class="ord">order 7</div></div>
+<div class="epic" data-e="8"><span class="n">E8</span><h3>Backup / restore</h3><p>Of fantasy-hockey.yml, an infra concern.</p><div class="ord">order 8 / last</div></div>
+</div>
+
+<h3 style="margin-top:34px">MoSCoW <span class="small">(coach proposed, user amended)</span></h3>
+<div class="lanes">
+<div class="lane must"><h3>Must</h3><span class="chip">E1</span><span class="chip">E2</span><span class="chip">E3</span><span class="chip moved">E5 GitHub Actions</span><p class="small">E5 moved up from Should at the user's verdict, but stays fifth in epic order.</p></div>
+<div class="lane should"><h3>Should</h3><span class="chip">E4 dashboard</span><span class="chip">swap file</span><span class="chip">synthetic check</span><span class="chip">Pi decommission</span></div>
+<div class="lane could"><h3>Could</h3><span class="chip">E6 HTTPS</span><span class="chip">E7 hardening</span><span class="chip">unattended-upgrades</span><p class="small">Unattended-upgrades stays in E7.</p></div>
+<div class="lane wont"><h3>Won't this time</h3><span class="chip">E8 backup/restore</span><span class="chip">alerts</span></div>
+</div>
+</div></section>
+
+<section id="synthesis"><div class="wrap climax">
+<div class="kicker">Synthesis</div><h2>Six connections</h2>
+<p class="lede">Hover a connection to light up the epics it touches. <span class="tag coach">coach</span></p>
+<svg viewBox="0 0 900 150" role="img" aria-label="Disposable droplet surrounded by identity, state and discovery which persist" style="margin-bottom:10px">
+<rect x="360" y="35" width="180" height="80" rx="40" fill="var(--amber)" opacity=".92"/><text x="450" y="70" text-anchor="middle" font-size="14" style="fill:#1b1200">droplet</text><text x="450" y="90" text-anchor="middle" font-size="11" style="fill:#1b1200">the only disposable part</text>
+<g font-size="12"><rect x="30" y="50" width="200" height="50" rx="10" fill="var(--card)" stroke="var(--green)" stroke-width="2"/><text x="130" y="72" text-anchor="middle">identity</text><text x="130" y="89" text-anchor="middle" class="t-mute" font-size="10">reserved IP</text>
+<rect x="670" y="20" width="200" height="50" rx="10" fill="var(--card)" stroke="var(--blue)" stroke-width="2"/><text x="770" y="42" text-anchor="middle">state</text><text x="770" y="59" text-anchor="middle" class="t-mute" font-size="10">volume</text>
+<rect x="670" y="85" width="200" height="50" rx="10" fill="var(--card)" stroke="var(--coach)" stroke-width="2"/><text x="770" y="107" text-anchor="middle">discovery</text><text x="770" y="124" text-anchor="middle" class="t-mute" font-size="10">tag-based inventory</text></g>
+<path d="M230 75 H360 M540 60 H670 M540 90 H670" stroke="var(--mute)" stroke-width="2" class="dash" fill="none"/>
+</svg>
+<div class="six" id="six">
+<div class="conn" data-e="1 2 8"><h3>The disposable droplet</h3><p>Identity (reserved IP), state (volume) and discovery (tag-based dynamic inventory) are independent of the droplet. OS migration means replacing it with no extra tooling, and backup can wait.</p><div class="eps">E1 / E2 / E8</div></div>
+<div class="conn" data-e="2 5"><h3>Inventory frees Ansible from state</h3><p>Dynamic inventory removed Ansible's need for OpenTofu state, so the shared state question in E5 concerns OpenTofu only.</p><div class="eps">E2 / E5</div></div>
+<div class="conn" data-e="1 2 4"><h3>Stage, defined once</h3><p>'stage' appears in the tag, droplet name, inventory group and Alloy label. Define it once and let it flow.</p><div class="eps">E1 / E2 / E4</div></div>
+<div class="conn" data-e="2 4"><h3>Two views, two failure modes</h3><p>Alloy gives the inside view, synthetic monitoring the outside view. Together they cover both Fritzbox failure modes.</p><div class="eps">E2 / E4</div></div>
+<div class="conn" data-e="5 7"><h3>Neglect is the real risk</h3><p>Unattended-upgrades, expiring tokens, Ubuntu EOL. At the ten-year rung, the docs are the only memory.</p><div class="eps">E5 / E7 / docs in every epic</div></div>
+<div class="conn" data-e="1 2 3 4 5 6 7 8"><h3>The order of the game</h3><p>E1 droplet, E2 provision, E3 deploy, E4 dashboard, E5 Actions (Must), E6 HTTPS, E7 hardening, E8 backup.</p><div class="eps">E1 &rarr; E8</div></div>
+</div>
+</div></section>
+
+<footer><div class="puck"></div><div>Small droplet, steady hobby. Session complete, 2026-10-10.</div></footer>
+
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById('tg');
+  b.onclick=function(){
+    var dark=r.dataset.theme==='dark'||(r.dataset.theme==='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);
+    r.dataset.theme=dark?'light':'dark';
+  };
+  var eps=document.querySelectorAll('.epic');
+  document.querySelectorAll('.conn').forEach(function(c){
+    var ids=c.dataset.e.split(' ');
+    function on(){eps.forEach(function(e){if(ids.indexOf(e.dataset.e)>-1)e.classList.add('hl')})}
+    function off(){eps.forEach(function(e){e.classList.remove('hl')})}
+    c.addEventListener('mouseenter',on);c.addEventListener('mouseleave',off);
+    c.tabIndex=0;c.addEventListener('focus',on);c.addEventListener('blur',off);
+  });
+})();
+</script>
+</body>
+</html>

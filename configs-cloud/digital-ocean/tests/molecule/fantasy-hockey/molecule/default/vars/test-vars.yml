@@ -1,0 +1,29 @@
+---
+# Test values instead of the vault and the play vars of deploy-fantasy-hockey.yml,
+# shared by converge and verify (which runs the seed tasks again). Not in
+# molecule.yml: Molecule expands ${...}. No ps1 here: the role passes its default
+# fantasy_hockey_ps1, and verify checks the .bashrc against it.
+default_user: fantasy-hockey
+# A plain folder that overrides the volume-derived default: the container has no
+# volume, and converge does not run tasks/main.yml (verify tests its guards
+# with values of its own).
+fantasy_hockey_path: /srv/fantasy-hockey
+# The DNS guard (tasks/dns.yml) passes: localhost resolves to 127.0.0.1 in the
+# container. On the droplet the playbook derives the domain and reads the
+# reserved IP from the metadata service.
+fantasy_hockey_domain: localhost
+fantasy_hockey_reserved_ip: 127.0.0.1
+fantasy_hockey_season: "2099-00"
+fantasy_hockey_regular_season_deadline_utc: "2099-10-01T00:00:00Z"
+fantasy_hockey_session_secret: molecule-session-secret
+fantasy_hockey_gmail_client_id: molecule-client-id
+fantasy_hockey_gmail_client_secret: molecule-client-secret
+fantasy_hockey_gmail_refresh_token: molecule-refresh-token
+fantasy_hockey_gmail_sender: molecule@molecule.invalid
+fantasy_hockey_players:
+  - id: alice
+    name: Alice
+    email: alice@molecule.invalid
+  - id: bob
+    name: Bob
+    email: bob@molecule.invalid

@@ -1,0 +1,6 @@
+---
+exporters_path: /opt/grafana-cloud/exporters
+
+# Host address cAdvisor's port 9110 is published on. 0.0.0.0 publishes it on every
+# interface; set 127.0.0.1 when only the local Alloy may scrape it.
+exporters_cadvisor_bind_address: 0.0.0.0

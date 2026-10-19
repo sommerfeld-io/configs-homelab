@@ -1,0 +1,18 @@
+---
+# Third-party collections for the DigitalOcean playbooks (pinned, AD-7).
+# Installed by the go-task entry points before Ansible runs.
+collections:
+  - name: community.digitalocean
+    version: 1.27.0
+  # The fleet Alloy role run from provision.yml uses
+  # community.general.capabilities; provision.yml itself uses
+  # community.general.timezone.
+  - name: community.general
+    version: 13.5.0
+  # The role fantasy-hockey and the fleet role grafana-cloud/exporters (cAdvisor,
+  # run from provision.yml) use docker_compose_v2 and docker_container_info.
+  - name: community.docker
+    version: 5.4.0
+  # deploy-fantasy-hockey.yml mounts the data volume with ansible.posix.mount.
+  - name: ansible.posix
+    version: 2.2.2

@@ -1,0 +1,13 @@
+---
+dependency:
+  name: galaxy
+  options:
+    # The pinned collections of the DigitalOcean playbooks.
+    role-file: "${MOLECULE_SCENARIO_DIRECTORY}/../../../../../ansible/requirements.yml"
+    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/../../../../../ansible/requirements.yml"
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../../../prepare.yml
+    converge: converge.yml
+    verify: verify.yml

@@ -1,0 +1,19 @@
+---
+# The user default_user (fantasy-hockey on the droplet) that owns the deploy
+# files and runs docker compose. Reuses two task files of the roles collection,
+# not the full docker role: its state: latest install is not idempotent.
+# include_role resolves relative names against the playbook folder, which differs
+# between deploy-fantasy-hockey.yml and the Molecule converge, so the paths start
+# at this role (role_path), 5 levels below the repository root.
+
+- name: Fantasy Hockey  ----  Create the user in the docker group
+  ansible.builtin.include_role:
+    name: "{{ role_path }}/../../../../../configs-homelab/ansible/roles/ansible-roles-collection/docker"
+    tasks_from: 50-user
+
+- name: Fantasy Hockey  ----  Configure the bash prompt of the user
+  ansible.builtin.include_role:
+    name: "{{ role_path }}/../../../../../configs-homelab/ansible/roles/ansible-roles-collection/bash"
+    tasks_from: 10-bash-config
+  vars:
+    ps1: "{{ fantasy_hockey_ps1 }}"

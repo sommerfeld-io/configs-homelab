@@ -1,0 +1,27 @@
+---
+# The droplet's Alloy setup: the fleet role with the cloud template and without
+# the fleet extras. The Grafana Cloud secrets are fake, no vault is read.
+- name: Converge
+  hosts: all
+  # The droplet's own vars (default_user, alloy_fleet_extras, ...), so the test
+  # follows them. playbook_dir is the scenario directory, 5 levels below
+  # configs-cloud/digital-ocean.
+  vars_files:
+    - ../../../../../ansible/vars/main.yml
+  # What the droplet gets from the inventory and the vault.
+  vars:
+    alloy_environment: digital-ocean
+    alloy_stage: prod
+    grafana_cloud_api_key: molecule-fake-api-key
+    grafana_cloud_prometheus_user: '000000'
+    grafana_cloud_loki_user: '000000'
+    grafana_cloud_tempo_url: https://tempo.invalid
+    grafana_cloud_tempo_user: '000000'
+    grafana_cloud_tempo_api_key: molecule-fake-tempo-key
+  roles:
+    # Relative to this playbook (7 levels below the repository root), like
+    # provision.yml, so ansible-lint finds the role too.
+    - role: ../../../../../../../configs-homelab/ansible/roles/grafana-cloud/alloy
+      # vars/main.yml builds the path from playbook_dir (the provision playbook
+      # folder). A role parameter takes precedence over vars_files.
+      alloy_config_template: "{{ playbook_dir }}/../../../../../ansible/templates/alloy/config.alloy.j2"

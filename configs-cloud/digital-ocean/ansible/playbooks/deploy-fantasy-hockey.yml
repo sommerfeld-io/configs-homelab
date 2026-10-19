@@ -1,0 +1,157 @@
+---
+# Runs the fantasy hockey app (app + Caddy, docker compose) on the droplets with
+# the tag fantasy-hockey. Caddy serves it over HTTPS at the droplet's domain.
+# Needs a provisioned droplet: provision.yml installs Docker, so the docker group
+# exists before the role adds the user to it.
+- name: Deploy Fantasy Hockey
+  hosts: fantasy-hockey
+  gather_facts: true
+  become: true
+  # No vars_files. vars/main.yml sets default_user: root for provision, and
+  # vars_files outrank play vars, so loading it here would win over the
+  # default_user below. The vault is loaded by an include_vars task, so
+  # ansible-lint can check this playbook without the vault password.
+  vars:
+    # The tasks become the non-root user fantasy-hockey. Without pipelining,
+    # Ansible would need ACLs to hand its temporary module files to that user.
+    ansible_pipelining: true
+    # The user that owns the deploy files and runs docker compose. It has no SSH
+    # key: log in as root and use `sudo -iu fantasy-hockey`.
+    default_user: fantasy-hockey
+    # The data volume of this droplet. OpenTofu names it "<droplet-name>-data", and
+    # DigitalOcean links it as /dev/disk/by-id/scsi-0DO_Volume_<volume-name>. The
+    # mount point follows DigitalOcean's convention (hyphens become underscores).
+    # Overrides the role default, which only covers the prod droplet.
+    fantasy_hockey_volume_device: "/dev/disk/by-id/scsi-0DO_Volume_{{ inventory_hostname }}-data"
+    fantasy_hockey_volume_mount: "/mnt/{{ inventory_hostname | replace('-', '_') }}_data"
+    # The domain Caddy serves the app at: <app>.<stage>.do.sommerfeld.app, from
+    # the droplet name <stage>-<app> (prod-fantasy-hockey becomes
+    # fantasy-hockey.prod.do.sommerfeld.app). The stage is the inventory's
+    # alloy_stage, the same value as the stage label of the droplet's series.
+    # The app is the rest of the name after the first hyphen; that is the key
+    # because OpenTofu allows only dev, test and prod, none with a hyphen. The A
+    # record is created by hand, see docs/cloud/digital-ocean/domain.md.
+    # Overrides the role default, which only covers the prod droplet.
+    fantasy_hockey_domain: "{{ inventory_hostname.split('-', 1) | last }}.{{ alloy_stage }}.do.sommerfeld.app"
+  tasks:
+
+    # DigitalOcean mounts a volume automatically only when the volume and the
+    # droplet are created together. A replacement droplet gets the existing volume
+    # attached but not mounted, so the deploy mounts it. Only tasks tagged volume
+    # run with `-- --tags volume`, which mounts the volume without starting the app
+    # (see docs/cloud/digital-ocean/replacement.md).
+    - name: Read the volume device
+      ansible.builtin.stat:
+        path: "{{ fantasy_hockey_volume_device }}"
+      register: fantasy_hockey_volume_device_stat
+      tags: [volume]
+
+    - name: Stop when the volume is not attached
+      ansible.builtin.assert:
+        that:
+          - fantasy_hockey_volume_device_stat.stat.exists
+        fail_msg: >-
+          {{ fantasy_hockey_volume_device }} does not exist on {{ inventory_hostname }},
+          so the volume is not attached. Check it with `doctl compute volume list
+          --format ID,Name,DropletIDs`.
+        quiet: true
+      tags: [volume]
+
+    # Mounts the existing ext4 file system and writes the fstab entry. It never
+    # formats the volume.
+    - name: Mount the volume
+      ansible.posix.mount:
+        path: "{{ fantasy_hockey_volume_mount }}"
+        src: "{{ fantasy_hockey_volume_device }}"
+        fstype: ext4
+        opts: defaults,nofail,discard,noatime
+        state: mounted
+      register: fantasy_hockey_volume_mounted
+      tags: [volume]
+
+    # nofail lets the droplet boot without the volume, and the stack restarts with
+    # dockerd (restart: unless-stopped). Without an order, a volume that appears
+    # late lets Docker create empty data/ and caddy/ folders on the root disk
+    # below the mount point. RequiresMountsFor= adds Requires= and After= on the
+    # mount unit: Docker waits for the volume up to systemd's default device timeout
+    # (90 s, no x-systemd.device-timeout= is set). A volume that comes later is
+    # handled like a missing one: Docker does not start (start it with
+    # `systemctl start docker` once the volume is back).
+    - name: Create the docker.service drop-in folder
+      ansible.builtin.file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      tags: [volume]
+
+    - name: Start Docker only after the volume is mounted
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker.service.d/fantasy-hockey-volume.conf
+        content: |
+          # Managed by Ansible (deploy-fantasy-hockey.yml)
+          [Unit]
+          RequiresMountsFor={{ fantasy_hockey_volume_mount }}
+        owner: root
+        group: root
+        mode: '0644'
+      register: fantasy_hockey_docker_dropin
+      tags: [volume]
+
+    # Only reloads the unit files. Docker is not restarted: it already runs after
+    # the mount task above, and the order matters only at the next boot.
+    - name: Reload systemd after the drop-in changed
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+      when: fantasy_hockey_docker_dropin.changed
+      tags: [volume]
+
+    # The role checks the mount in ansible_facts, which were gathered before the
+    # mount.
+    - name: Refresh the mount facts
+      ansible.builtin.setup:
+        gather_subset: ['!all', '!min', 'hardware']
+        filter: ['ansible_mounts']
+      when: fantasy_hockey_volume_mounted.changed
+      tags: [volume]
+
+    - name: Load the fantasy hockey secrets
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/../vars/fantasy-hockey-vault.yml"
+
+    # The role compares the domain's A record with this address before Caddy
+    # requests a certificate. The metadata service answers on the droplet only and
+    # returns 404 when no reserved IP is assigned.
+    - name: Read the reserved IP from the metadata service
+      ansible.builtin.uri:
+        url: http://169.254.169.254/metadata/v1/reserved_ip/ipv4/ip_address
+        return_content: true
+        timeout: 5
+      register: fantasy_hockey_reserved_ip_metadata
+      failed_when: false
+      check_mode: false
+
+    - name: Stop when the droplet has no reserved IP
+      ansible.builtin.assert:
+        that:
+          - fantasy_hockey_reserved_ip_metadata.status | default(0) == 200
+          - fantasy_hockey_reserved_ip_metadata.content | default('') | trim is match('^[0-9]{1,3}(\\.[0-9]{1,3}){3}$')
+        fail_msg: >-
+          The DigitalOcean metadata service either reports no reserved IP for
+          {{ inventory_hostname }} or could not be reached (HTTP status
+          {{ fantasy_hockey_reserved_ip_metadata.status | default('none') }}, -1 means
+          no connection or a timeout).
+          The domain points at the reserved IP, so nothing was deployed. Check the
+          assignment with `doctl compute reserved-ip list --format IP,DropletName`.
+        quiet: true
+
+    - name: Remember the reserved IP
+      ansible.builtin.set_fact:
+        fantasy_hockey_reserved_ip: "{{ fantasy_hockey_reserved_ip_metadata.content | trim }}"
+
+    # The role checks the volume mount and the domain first, then creates the
+    # user, writes the files and runs the stack.
+    - name: Deploy the app
+      ansible.builtin.include_role:
+        name: ../roles/fantasy-hockey

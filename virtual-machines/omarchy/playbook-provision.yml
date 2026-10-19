@@ -4,61 +4,61 @@
   gather_facts: true
   become: true
   vars_files:
-    - ../../ansible/vars/main.yml
-    - ../../ansible/vars/amd64.yml
-    - ../../ansible/vars/vault.yml
+    - ../../configs-homelab/ansible/vars/main.yml
+    - ../../configs-homelab/ansible/vars/amd64.yml
+    - ../../configs-homelab/ansible/vars/vault.yml
     - vars/vm.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/hardening
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/hardening
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/bash
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/bash
 
     - ansible.builtin.include_tasks:
-        file: ../../ansible/tasks/bash-secrets.yml
+        file: ../../configs-homelab/ansible/tasks/bash-secrets.yml
       vars:
         line: "{{ item }}"
       loop:
         - "export SONARCLOUD_TOKEN={{ SONARCLOUD_TOKEN }}"
 
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/filesystem
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/filesystem
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/git
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/git
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/packages
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/packages
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/packages
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/packages
         tasks_from: fastfetch
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/packages
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/packages
         tasks_from: desktop
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/docker
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/docker
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/vscode
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/vscode
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/cron
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/cron
         tasks_from: main
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/taskfile-dev
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/common/taskfile-dev
+        name: ../../configs-homelab/ansible/roles/common/taskfile-dev
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/omarchy/customizations
+        name: ../../configs-homelab/ansible/roles/omarchy/customizations
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/ansible
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/ansible
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/conky
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/conky
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/github-cli
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/github-cli
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/virtualization
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/virtualization
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/node
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/node
         tasks_from: main
 
 - name: Install and configure nodes (non-root)
@@ -66,24 +66,24 @@
   gather_facts: true
   become: false
   vars_files:
-    - ../../ansible/vars/main.yml
-    - ../../ansible/vars/amd64.yml
-    - ../../ansible/vars/vault.yml
+    - ../../configs-homelab/ansible/vars/main.yml
+    - ../../configs-homelab/ansible/vars/amd64.yml
+    - ../../configs-homelab/ansible/vars/vault.yml
     - vars/vm.yml
   tasks:
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/atuin
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/atuin
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/cron
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/cron
         tasks_from: jobs
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/docker
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/docker
         tasks_from: scout
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/vscode
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/vscode
         tasks_from: plugins
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/node
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/node
         tasks_from: modules-ai
     - ansible.builtin.include_role:
-        name: ../../ansible/roles/ansible-roles-collection/claude
+        name: ../../configs-homelab/ansible/roles/ansible-roles-collection/claude
