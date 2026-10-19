@@ -4,7 +4,7 @@
 ## this role templates into the same directory as this compose file.
 services:
   app:
-    image: sommerfeldio/fantasy-hockey:0.3.0
+    image: sommerfeldio/fantasy-hockey:0.3.1
     container_name: ${COMPOSE_PROJECT_NAME}-app
     restart: unless-stopped
     # Loopback-only: the app's /metrics endpoint is otherwise unauthenticated,

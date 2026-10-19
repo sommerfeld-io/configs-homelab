@@ -23,11 +23,21 @@
         dest: /etc/apt/keyrings/grafana.asc
         mode: u=rw,g=r,o=r
 
+    - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Remove stale apt_repository sources file
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/grafana.list
+        state: absent
+
     - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Add Grafana APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
+      ansible.builtin.deb822_repository:
+        name: grafana
+        types: [deb]
+        uris: https://apt.grafana.com
+        suites: [stable]
+        components: [main]
+        signed_by: /etc/apt/keyrings/grafana.asc
+        install_python_debian: true
         state: present
-        filename: grafana
         mode: '0644'
 
     - name: Grafana Cloud  ----  Alloy  ----  Debian  ----  Install Alloy package
