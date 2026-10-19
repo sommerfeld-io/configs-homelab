@@ -6,6 +6,16 @@
     - Add a taskfile-ssh-digital-ocean.yml next to configs-homelab/ansible/roles/common/taskfile-dev/files/taskfile.yml and roll out with configs-homelab/ansible/roles/common/taskfile-dev/files/taskfile.yml (as long as a node does not get a dedicated taskfile like raspi or caprica) and include the file in configs-homelab/ansible/roles/common/taskfile-dev/files/taskfile.yml. the goal is to generate ssh-connect command into the new taskfile-ssh-digital-ocean.yml for digital ocean that i  can use as `task digital-ocean:ssh:connect:<droplet-name>` with `digital-ocean` being the include-identifier.
     - Question: do i want to run this locally or from a github actions pipeline? this should be a story or epic towards the very end.
 
+## Grafana / Logging
+
+- fantasy-hockey
+    - App should log all outputs to (all log levels and all output streams) as JSON. Do not implement this on your own. Use some logging library
+- configs-homelab
+    - Alloy should parse caddy logs which are JSON (container = fantasy-hockey-caddy). Alloy should parse app logs which are JSON (container = fantasy-hockey-app).
+- Grafana Cloud AI
+    - Update dashboard for fantasy hockey app to show all relevant information from the json logs in diagrams.
+    - This one needs some more details before prompting
+
 ## Firewall
 
 Lock the droplet in a way that only the app (or the proxy or nginx proxy manager) is reachable from the outside. Management UI should not be reachable publicly bt should be reachable for me. but first check if this is needed or if my app is protected enough. does a firewall cost me real-life money or is it free/included?
