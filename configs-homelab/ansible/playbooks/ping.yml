@@ -59,11 +59,316 @@
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
 
-    - name: Docs  ----  Generate node configs documentation
-      ansible.builtin.template:
-        src: "{{ playbook_dir }}/../templates/node-configs.md.j2"
-        dest: "{{ playbook_dir }}/../../../docs/homelab/nodes/node-configs.md"
-        mode: "0644"
-      delegate_to: localhost
-      become: false
-      run_once: true
+- name: Scan the homelab network for devices and services
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true # nmap needs root for ARP discovery (MAC addresses) and OS detection
+  vars:
+    lan_scan_subnet: "{{ ansible_facts.default_ipv4.network }}/{{ ansible_facts.default_ipv4.prefix }}"
+    lan_scan_top_ports: 100
+    # Ports probed by the web scan in addition to the HTTP(S) ports found by the service scan (Ollama API, Docker API)
+    lan_scan_web_extra_ports: [11434, 2375, 2376]
+    # HTTP(S) and TLS ports found by the service scan
+    lan_scan_web_ports: >-
+      {{ (lan_scan_services.stdout | default('') | regex_findall('(?m)^(\d+)/tcp\s+open\s+(?:ssl/)?https?\S*')
+          + (lan_scan_web_extra_ports | map('string') | list)) | unique | join(',') }}
+    lan_scan_tls_ports: >-
+      {{ lan_scan_services.stdout | default('') | regex_findall('(?m)^(\d+)/tcp\s+open\s+(?:ssl/\S+|https\S*)') | unique | join(',') }}
+    # MAC prefixes (OUIs) of Raspberry Pi Foundation / Raspberry Pi Ltd
+    lan_scan_raspi_ouis: "raspberry|b8:27:eb|dc:a6:32|e4:5f:01|d8:3a:dd|28:cd:c1|2c:cf:67|88:a2:9e"
+    # "host=distribution version|..." from the facts the first play gathered (nmap cannot tell Linux distributions apart)
+    lan_scan_distros: >-
+      {% for h in groups['all'] if hostvars[h].ansible_facts.distribution is defined -%}
+      {{ h }}={{ hostvars[h].ansible_facts.distribution }} {{ hostvars[h].ansible_facts.distribution_version }}|
+      {%- endfor %}
+  tasks:
+
+    - name: LAN Scan  ----  Install nmap
+      ansible.builtin.package:
+        name: nmap
+        state: present
+      tags: [always]
+
+    - name: LAN Scan  ----  Device overview (IP, MAC, hostname, SSH/HTTP/HTTPS, Raspberry Pi, inventory, vendor)
+      block:
+        - name: LAN Scan  ----  Scan {{ lan_scan_subnet }} for devices
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n" IP MAC HOSTNAME SSH HTTP HTTPS PI INVENTORY VENDOR
+              nmap -p 22,80,443 "{{ lan_scan_subnet }}" | awk \
+                -v lip="{{ ansible_facts.default_ipv4.address }}" \
+                -v lmac="{{ ansible_facts.default_ipv4.macaddress | upper }}" \
+                -v inv=" {{ groups['all'] | join(' ') }} " '
+                function flush() {
+                  if (ip == "") return
+                  if (mac == "" && ip == lip) { mac = lmac; vendor = "(this machine)" }
+                  if (mac == "")   mac = "-"
+                  if (host == "")  host = "-"
+                  if (ssh == "")   ssh = "-"
+                  if (http == "")  http = "-"
+                  if (https == "") https = "-"
+                  pi = (tolower(mac " " vendor) ~ /{{ lan_scan_raspi_ouis }}/) ? "yes" : ""
+                  known = (host != "-" && index(inv, " " host " ")) ? "yes" : ""
+                  printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n", ip, mac, substr(host,1,28), ssh, http, https, pi, known, vendor
+                }
+                /^Nmap scan report for/ {
+                  flush()
+                  ip = $NF; gsub(/[()]/, "", ip)
+                  host = (NF > 5 ? $5 : "")
+                  mac = ""; vendor = ""; ssh = ""; http = ""; https = ""
+                }
+                /^22\/tcp/  { ssh = $2 }
+                /^80\/tcp/  { http = $2 }
+                /^443\/tcp/ { https = $2 }
+                /^MAC Address:/ {
+                  mac = $3
+                  vendor = $0; sub(/^[^(]*\(/, "", vendor); sub(/\)$/, "", vendor)
+                }
+                END { flush() }
+              ' | sort -V
+            executable: /bin/bash
+          register: lan_scan_devices
+          changed_when: false
+        - name: LAN Scan  ----  Print devices
+          ansible.builtin.debug:
+            var: lan_scan_devices.stdout_lines
+
+    - name: LAN Scan  ----  Inventory hosts not found on the network
+      ansible.builtin.debug:
+        msg: "{{ groups['all'] | reject('in', lan_scan_devices.stdout) | list }}"
+
+    - name: LAN Scan  ----  Services and operating systems (top {{ lan_scan_top_ports }} ports, takes a few minutes)
+      tags: [lan-scan-services, lan-scan-web, lan-scan-tls]
+      block:
+        - name: LAN Scan  ----  Detect service versions and operating systems on {{ lan_scan_subnet }}
+          ansible.builtin.command:
+            cmd: nmap -sV -O --osscan-guess --top-ports {{ lan_scan_top_ports }} --open -T4 {{ lan_scan_subnet }}
+          register: lan_scan_services
+          changed_when: false
+        - name: LAN Scan  ----  Extract open ports and services
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-28s %-10s %-16s %s\n" IP HOSTNAME PORT SERVICE VERSION
+              awk '
+                /^Nmap scan report for/ { ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+                /^[0-9]+\/(tcp|udp) +open/ {
+                  version = ""; for (i = 4; i <= NF; i++) version = version " " $i
+                  printf "%-16s %-28s %-10s %-16s %s\n", ip, substr(host,1,28), $1, $3, version
+                }
+              ' | sort -V
+            stdin: "{{ lan_scan_services.stdout }}"
+            executable: /bin/bash
+          register: lan_scan_ports
+          changed_when: false
+        - name: LAN Scan  ----  Print open ports and services
+          ansible.builtin.debug:
+            var: lan_scan_ports.stdout_lines
+        - name: LAN Scan  ----  Extract operating systems
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-28s %-24s %s\n" IP HOSTNAME "DISTRO (ANSIBLE FACTS)" "OS (NMAP)"
+              awk -v distros="{{ lan_scan_distros }}" '
+                BEGIN {
+                  n = split(distros, entries, "|")
+                  for (i = 1; i <= n; i++) if ((p = index(entries[i], "=")) > 0) distro[substr(entries[i], 1, p - 1)] = substr(entries[i], p + 1)
+                }
+                function flush() {
+                  if (ip == "") return
+                  printf "%-16s %-28s %-24s %s\n", ip, substr(host,1,28), ((host in distro) ? distro[host] : "-"), (os == "" ? "-" : os)
+                }
+                /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-"); os = "" }
+                /^OS details:/ { os = $0; sub(/^OS details: /, "", os) }
+                /^Running/ && os == "" { os = $0; sub(/^Running[^:]*: /, "", os) }
+                /^Aggressive OS guesses:/ && os == "" { os = $0; sub(/^Aggressive OS guesses: /, "", os); sub(/\), .*$/, ")", os) }
+                /^Service Info:.*OS:/ && os == "" { os = $0; sub(/^.*OS: /, "", os); sub(/;.*$/, "", os) }
+                END { flush() }
+              ' | sort -V
+            stdin: "{{ lan_scan_services.stdout }}"
+            executable: /bin/bash
+          register: lan_scan_os
+          changed_when: false
+        - name: LAN Scan  ----  Print operating systems
+          ansible.builtin.debug:
+            var: lan_scan_os.stdout_lines
+
+    - name: LAN Scan  ----  Web services and exposed APIs
+      tags: [lan-scan-web]
+      block:
+        - name: LAN Scan  ----  Read HTTP titles and server headers on ports {{ lan_scan_web_ports }}
+          ansible.builtin.command:
+            cmd: nmap -sV -p {{ lan_scan_web_ports }} --script http-title,http-server-header --open -T4 {{ lan_scan_subnet }}
+          register: lan_scan_web
+          changed_when: false
+        - name: LAN Scan  ----  Extract web services
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-28s %-10s %-30s %-40s %s\n" IP HOSTNAME PORT SERVER TITLE WARNING
+              awk '
+                function flush() {
+                  if (port == "") return
+                  warning = ""
+                  if (port == "2375/tcp")  warning = "Docker API without TLS (root access to the host)"
+                  if (port == "11434/tcp") warning = "Ollama API without authentication"
+                  if (server == "") server = "-"
+                  if (title == "")  title = "-"
+                  printf "%-16s %-28s %-10s %-30s %-40s %s\n", ip, substr(host,1,28), port, substr(server,1,30), substr(title,1,40), warning
+                  port = ""
+                }
+                /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+                /^[0-9]+\/tcp +open/ {
+                  flush()
+                  port = $1; title = ""
+                  server = ""; for (i = 4; i <= NF; i++) server = server (server == "" ? "" : " ") $i
+                }
+                /^\|_? ?http-title: / { title = $0; sub(/^\|_? ?http-title: /, "", title) }
+                /^\|_? ?http-server-header: ./ { server = $0; sub(/^\|_? ?http-server-header: /, "", server) }
+                END { flush() }
+              ' | sort -V
+            stdin: "{{ lan_scan_web.stdout }}"
+            executable: /bin/bash
+          register: lan_scan_web_table
+          changed_when: false
+        - name: LAN Scan  ----  Print web services
+          ansible.builtin.debug:
+            var: lan_scan_web_table.stdout_lines
+
+    - name: LAN Scan  ----  TLS certificates
+      when: lan_scan_tls_ports | length > 0
+      tags: [lan-scan-tls]
+      block:
+        - name: LAN Scan  ----  Read TLS certificates and ciphers on ports {{ lan_scan_tls_ports }}
+          ansible.builtin.command:
+            cmd: nmap -sV -p {{ lan_scan_tls_ports }} --script ssl-cert,ssl-enum-ciphers --open -T4 {{ lan_scan_subnet }}
+          register: lan_scan_tls
+          changed_when: false
+        - name: LAN Scan  ----  Extract TLS certificates
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n" \
+                IP HOSTNAME PORT SUBJECT ISSUER SELF-SIGNED EXPIRES "DAYS LEFT" "CIPHER GRADE"
+              awk -v now="$(date +%s)" '
+                function cn(dn) { return match(dn, /commonName=[^\/]*/) ? substr(dn, RSTART + 11, RLENGTH - 11) : dn }
+                function flush() {
+                  if (port == "" || subject == "") { port = ""; return }
+                  days = "-"
+                  if (expires != "") {
+                    cmd = "date -d \"" expires "\" +%s"; cmd | getline t; close(cmd)
+                    days = int((t - now) / 86400)
+                  }
+                  printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n", ip, substr(host,1,28), port, \
+                    substr(cn(subject),1,30), substr(cn(issuer),1,30), (subject == issuer ? "yes" : "no"), \
+                    substr(expires,1,10), days, (grade == "" ? "-" : grade)
+                  port = ""
+                }
+                /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+                /^[0-9]+\/tcp +open/ { flush(); port = $1; subject = ""; issuer = ""; expires = ""; grade = "" }
+                /ssl-cert: Subject: / { subject = $0; sub(/^.*Subject: /, "", subject) }
+                /^\| Issuer: /        { issuer = $0; sub(/^\| Issuer: /, "", issuer) }
+                /Not valid after:/    { expires = $NF }
+                /least strength:/     { grade = $NF }
+                END { flush() }
+              ' | sort -V
+            stdin: "{{ lan_scan_tls.stdout }}"
+            executable: /bin/bash
+          register: lan_scan_tls_table
+          changed_when: false
+        - name: LAN Scan  ----  Print TLS certificates
+          ansible.builtin.debug:
+            var: lan_scan_tls_table.stdout_lines
+
+    - name: LAN Scan  ----  Broadcast discovery (DHCP servers, mDNS services, UPnP devices)
+      tags: [lan-scan-broadcast]
+      block:
+        - name: LAN Scan  ----  Send DHCP, mDNS and UPnP broadcasts on {{ ansible_facts.default_ipv4.interface }}
+          ansible.builtin.command:
+            cmd: >-
+              nmap -e {{ ansible_facts.default_ipv4.interface }}
+              --script broadcast-dhcp-discover,broadcast-dns-service-discovery,broadcast-upnp-info
+          register: lan_scan_broadcast
+          changed_when: false
+        - name: LAN Scan  ----  Extract DHCP servers
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-16s %-16s %-34s %s\n" SERVER "OFFERED IP" ROUTER DNS DOMAIN
+              awk '
+                function flush() {
+                  if (server == "") return
+                  printf "%-16s %-16s %-16s %-34s %s\n", server, offered, router, dns, domain
+                  if (!(server in seen)) { seen[server] = 1; servers++ }
+                  server = ""
+                }
+                /^\|_? ?[a-z-]+: *$/ { section = $0; sub(/^\|_? ?/, "", section); sub(/: *$/, "", section) }
+                section != "broadcast-dhcp-discover" { next }
+                /Response [0-9]+ of [0-9]+:/ { flush(); offered = "-"; router = "-"; dns = "-"; domain = "-" }
+                {
+                  line = $0; sub(/^\|_? */, "", line)
+                  key = line; sub(/: .*$/, "", key)
+                  value = line; sub(/^[^:]*: /, "", value)
+                }
+                key == "Server Identifier"  { server = value }
+                key == "IP Offered"         { offered = value }
+                key == "Router"             { router = value }
+                key == "Domain Name Server" { dns = value }
+                key == "Domain Name"        { domain = value }
+                END {
+                  flush()
+                  if (servers > 1) print "WARNING: " servers " DHCP servers answered, only one should hand out addresses"
+                  if (servers == 0) print "No DHCP server answered"
+                }
+              '
+            stdin: "{{ lan_scan_broadcast.stdout }}"
+            executable: /bin/bash
+          register: lan_scan_dhcp_table
+          changed_when: false
+        - name: LAN Scan  ----  Print DHCP servers
+          ansible.builtin.debug:
+            var: lan_scan_dhcp_table.stdout_lines
+        - name: LAN Scan  ----  Extract mDNS services and UPnP devices
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              printf "%-16s %-28s %-9s %-24s %s\n" IP HOSTNAME PROTOCOL "SERVICE / DEVICE" DETAILS
+              # The device table maps IPs to hostnames, the broadcast output is read from stdin
+              awk '
+                FNR == NR { if ($1 ~ /^[0-9.]+$/) hostname[$1] = $3; next }
+                function row(proto, what, details) {
+                  if (ip == "") return
+                  printf "%-16s %-28s %-9s %-24s %s\n", ip, substr((ip in hostname) ? hostname[ip] : "-", 1, 28), proto, substr(what, 1, 24), details
+                }
+                function flush() {
+                  if (section == "broadcast-dns-service-discovery" && service != "") row("mDNS", service, details)
+                  if (section == "broadcast-upnp-info" && ip != "") row("UPnP", (name != "" ? name : server), details)
+                  service = ""; name = ""; server = ""; details = ""
+                }
+                function add(text) { details = details (details == "" ? "" : ", ") text }
+                /^\|_? ?[a-z-]+: *$/ { flush(); ip = ""; section = $0; sub(/^\|_? ?/, "", section); sub(/: *$/, "", section); next }
+                section !~ /^broadcast-(dns-service-discovery|upnp-info)$/ { next }
+                {
+                  line = $0; sub(/^\|_? */, "", line)
+                  key = line; sub(/: .*$/, "", key)
+                  value = line; sub(/^[^:]*: /, "", value)
+                }
+                line ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ { flush(); ip = line; next }
+                section == "broadcast-dns-service-discovery" && line ~ /^[0-9]+\/(tcp|udp) / { flush(); service = line; next }
+                section == "broadcast-dns-service-discovery" && line ~ /^(model|md|fn|ty)=/ { add(line) }
+                section == "broadcast-upnp-info" && key == "Server"       { server = value }
+                section == "broadcast-upnp-info" && key == "Name"         { name = value }
+                section == "broadcast-upnp-info" && key ~ /^(Manufacturer|Model Name|Model Version)$/ { add(value) }
+                END { flush() }
+              ' <(printf "%s\n" "$LAN_SCAN_DEVICES") - | sort -u | sort -V
+            stdin: "{{ lan_scan_broadcast.stdout }}"
+            executable: /bin/bash
+          environment:
+            LAN_SCAN_DEVICES: "{{ lan_scan_devices.stdout | default('') }}"
+          register: lan_scan_discovery_table
+          changed_when: false
+        - name: LAN Scan  ----  Print mDNS services and UPnP devices
+          ansible.builtin.debug:
+            var: lan_scan_discovery_table.stdout_lines

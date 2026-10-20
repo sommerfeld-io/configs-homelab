@@ -70,7 +70,6 @@ nav:
       - Omarchy Workstations: homelab/nodes/omarchy-workstations/index.md
       - Omarchy in Virtual Machine: homelab/nodes/omarchy-workstations/vm.md
       - Raspberry Pi Nodes: homelab/nodes/raspi/index.md
-      - Node Configs: homelab/nodes/node-configs.md
       - Ansible - Playbooks:
           - All (provision full Homelab): homelab/ansible/playbooks/all.md
           - Cleanup: homelab/ansible/playbooks/cleanup.md

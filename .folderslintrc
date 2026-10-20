@@ -41,7 +41,6 @@
 		"configs-homelab/ansible/roles/*/*/vars",
 		"configs-homelab/ansible/roles/ansible-roles-collection/tests/**",
 		"configs-homelab/ansible/tasks",
-		"configs-homelab/ansible/templates",
 		"configs-homelab/ansible/vars",
 
 		"configs-homelab/bootstrap",
