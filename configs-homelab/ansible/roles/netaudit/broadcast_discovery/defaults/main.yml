@@ -1,0 +1,4 @@
+---
+# Markdown reports, controlled by the play-level netaudit_reports and netaudit_reports_dir
+broadcast_discovery_report: "{{ netaudit_reports | default(false) }}"
+broadcast_discovery_report_dir: "{{ netaudit_reports_dir | default(role_path ~ '/../../../../../target/netaudit') | realpath }}/broadcast_discovery"

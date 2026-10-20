@@ -1,0 +1,18 @@
+Nmap scan report for fritz.box (192.168.178.1)
+443/tcp open  ssl/http AVM
+| ssl-cert: Subject: commonName=fritz.box/organizationName=AVM
+| Subject Alternative Name: DNS:fritz.box
+| Issuer: commonName=fritz.box/organizationName=AVM
+| Not valid before: 2024-01-01T00:00:00
+|_Not valid after:  2038-01-15T23:59:59
+| ssl-enum-ciphers:
+|   TLSv1.2:
+|_  least strength: A
+Nmap scan report for pi4-0002.fritz.box (192.168.178.21)
+443/tcp open  https
+| ssl-cert: Subject: commonName=pi.example.org
+| Issuer: commonName=R11/organizationName=Let's Encrypt/countryName=US
+| Not valid before: 2026-09-01T00:00:00
+|_Not valid after:  2026-11-30T00:00:00
+| ssl-enum-ciphers:
+|_  least strength: C

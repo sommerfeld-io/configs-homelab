@@ -1,45 +1,116 @@
 ---
 - name: LAN Scan  ----  TLS certificates
-  when: tls_certificates_ports | length > 0
   tags: [lan-scan-tls]
+  vars:
+    tls_certificates_columns:
+      - { name: IP, width: 16 }
+      - { name: HOSTNAME, width: 28 }
+      - { name: PORT, width: 10 }
+      - { name: SUBJECT, width: 30 }
+      - { name: ISSUER, width: 30 }
+      - { name: SELF-SIGNED, width: 11 }
+      - { name: EXPIRES, width: 10 }
+      - { name: DAYS LEFT, width: 9 }
+      - { name: CIPHER GRADE, width: 0 }
   block:
-    - name: LAN Scan  ----  Read TLS certificates and ciphers on ports {{ tls_certificates_ports }}
-      ansible.builtin.command:
-        cmd: nmap -sV -p {{ tls_certificates_ports }} --script ssl-cert,ssl-enum-ciphers --open -T4 {{ subnet }}
-      register: tls_certificates_scan
-      changed_when: false
-    - name: LAN Scan  ----  Extract TLS certificates
-      ansible.builtin.shell:
-        cmd: |
-          set -o pipefail
-          printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n" \
-            IP HOSTNAME PORT SUBJECT ISSUER SELF-SIGNED EXPIRES "DAYS LEFT" "CIPHER GRADE"
-          awk -v now="$(date +%s)" '
-            function cn(dn) { return match(dn, /commonName=[^\/]*/) ? substr(dn, RSTART + 11, RLENGTH - 11) : dn }
-            function flush() {
-              if (port == "" || subject == "") { port = ""; return }
-              days = "-"
-              if (expires != "") {
-                cmd = "date -d \"" expires "\" +%s"; cmd | getline t; close(cmd)
-                days = int((t - now) / 86400)
-              }
-              printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n", ip, substr(host,1,28), port, \
-                substr(cn(subject),1,30), substr(cn(issuer),1,30), (subject == issuer ? "yes" : "no"), \
-                substr(expires,1,10), days, (grade == "" ? "-" : grade)
-              port = ""
-            }
-            /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
-            /^[0-9]+\/tcp +open/ { flush(); port = $1; subject = ""; issuer = ""; expires = ""; grade = "" }
-            /ssl-cert: Subject: / { subject = $0; sub(/^.*Subject: /, "", subject) }
-            /^\| Issuer: /        { issuer = $0; sub(/^\| Issuer: /, "", issuer) }
-            /Not valid after:/    { expires = $NF }
-            /least strength:/     { grade = $NF }
-            END { flush() }
-          ' | sort -V
-        stdin: "{{ tls_certificates_scan.stdout }}"
-        executable: /bin/bash
-      register: tls_certificates_table
-      changed_when: false
-    - name: LAN Scan  ----  Print TLS certificates
-      ansible.builtin.debug:
-        var: tls_certificates_table.stdout_lines
+    - name: LAN Scan  ----  TLS certificates  ----  Scan
+      when: tls_certificates_ports | length > 0
+      block:
+        - name: LAN Scan  ----  Read TLS certificates and ciphers on ports {{ tls_certificates_ports }}
+          ansible.builtin.command:
+            cmd: nmap -sV -p {{ tls_certificates_ports }} --script ssl-cert,ssl-enum-ciphers --open -T4 {{ subnet }}
+          register: tls_certificates_scan
+          changed_when: false
+        - name: LAN Scan  ----  Extract TLS certificates
+          ansible.builtin.shell:
+            cmd: |
+              set -o pipefail
+              awk -v OFS='\t' -v now="$(date +%s)" '
+                function cn(dn) { return match(dn, /commonName=[^\/]*/) ? substr(dn, RSTART + 11, RLENGTH - 11) : dn }
+                function flush() {
+                  if (port == "" || subject == "") { port = ""; return }
+                  days = "-"
+                  if (expires != "") {
+                    cmd = "date -d \"" expires "\" +%s"; cmd | getline t; close(cmd)
+                    days = int((t - now) / 86400)
+                  }
+                  print ip, substr(host,1,28), port, \
+                    substr(cn(subject),1,30), substr(cn(issuer),1,30), (subject == issuer ? "yes" : "no"), \
+                    substr(expires,1,10), days, (grade == "" ? "-" : grade)
+                  port = ""
+                }
+                /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+                /^[0-9]+\/tcp +open/ { flush(); port = $1; subject = ""; issuer = ""; expires = ""; grade = "" }
+                /ssl-cert: Subject: / { subject = $0; sub(/^.*Subject: /, "", subject) }
+                /^\| Issuer: /        { issuer = $0; sub(/^\| Issuer: /, "", issuer) }
+                /Not valid after:/    { expires = $NF }
+                /least strength:/     { grade = $NF }
+                END { flush() }
+              ' | sort -V
+            stdin: "{{ tls_certificates_scan.stdout }}"
+            executable: /bin/bash
+          register: tls_certificates_table
+          changed_when: false
+        - name: LAN Scan  ----  Print TLS certificates
+          ansible.builtin.debug:
+            msg: >-
+              {{ lookup('ansible.builtin.template', role_path ~ '/../report/templates/table.txt.j2',
+                 template_vars={'table_columns': tls_certificates_columns, 'table_lines': tls_certificates_table.stdout_lines})
+                 | from_json }}
+
+        - name: LAN Scan  ----  TLS certificates  ----  Write certificates.md
+          when: tls_certificates_report | bool
+          ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+          vars:
+            report_dir: "{{ tls_certificates_report_dir }}"
+            report_role: tls_certificates
+            report_file: certificates.md
+            report_title: TLS Certificates
+            report_description: >-
+              TLS certificates with subject, issuer, self-signed state, expiry and the weakest cipher grade.
+            report_scope: "subnet `{{ subnet }}`, ports `{{ tls_certificates_ports }}`"
+            table_columns: "{{ tls_certificates_columns }}"
+            table_lines: "{{ tls_certificates_table.stdout_lines }}"
+
+      rescue:
+        - name: LAN Scan  ----  TLS certificates  ----  Remember the error
+          ansible.builtin.set_fact:
+            tls_certificates_error: "{{ ansible_failed_result.msg | default('unknown error') }} {{ ansible_failed_result.stderr | default('') }}"
+
+        - name: LAN Scan  ----  TLS certificates  ----  Write certificates.md (failed)
+          when: tls_certificates_report | bool
+          ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+          vars:
+            report_dir: "{{ tls_certificates_report_dir }}"
+            report_role: tls_certificates
+            report_file: certificates.md
+            report_title: TLS Certificates
+            report_description: >-
+              TLS certificates with subject, issuer, self-signed state, expiry and the weakest cipher grade.
+            report_scope: "subnet `{{ subnet }}`, ports `{{ tls_certificates_ports }}`"
+            report_status: "failed: {{ tls_certificates_error | trim }}"
+            table_columns: "{{ tls_certificates_columns }}"
+            table_lines: []
+
+        - name: LAN Scan  ----  TLS certificates  ----  Fail
+          ansible.builtin.fail:
+            msg: "TLS certificates failed: {{ tls_certificates_error | trim }}"
+
+    - name: LAN Scan  ----  TLS certificates  ----  Write certificates.md (skipped)
+      when:
+        - tls_certificates_report | bool
+        - tls_certificates_ports | length == 0
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ tls_certificates_report_dir }}"
+        report_role: tls_certificates
+        report_file: certificates.md
+        report_title: TLS Certificates
+        report_description: >-
+          TLS certificates with subject, issuer, self-signed state, expiry and the weakest cipher grade.
+        report_scope: "subnet `{{ subnet }}`"
+        report_status: >-
+          skipped: {{ 'the service scan found no TLS ports' if service_detection_scan.stdout is defined
+          else 'the service scan (netaudit/service_detection) did not run, so there are no TLS ports to scan' }}
+        table_columns: "{{ tls_certificates_columns }}"
+        table_lines: []

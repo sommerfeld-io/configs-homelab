@@ -1,6 +1,18 @@
 ---
 - name: LAN Scan  ----  Services and operating systems (top {{ service_detection_top_ports }} ports, takes a few minutes)
   tags: [lan-scan-services, lan-scan-web, lan-scan-tls]
+  vars:
+    service_detection_ports_columns:
+      - { name: IP, width: 16 }
+      - { name: HOSTNAME, width: 28 }
+      - { name: PORT, width: 10 }
+      - { name: SERVICE, width: 16 }
+      - { name: VERSION, width: 0 }
+    service_detection_os_columns:
+      - { name: IP, width: 16 }
+      - { name: HOSTNAME, width: 28 }
+      - { name: DISTRO (ANSIBLE FACTS), width: 24 }
+      - { name: OS (NMAP), width: 0 }
   block:
     - name: LAN Scan  ----  Detect service versions and operating systems on {{ subnet }}
       ansible.builtin.command:
@@ -11,12 +23,11 @@
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          printf "%-16s %-28s %-10s %-16s %s\n" IP HOSTNAME PORT SERVICE VERSION
-          awk '
+          awk -v OFS='\t' '
             /^Nmap scan report for/ { ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
             /^[0-9]+\/(tcp|udp) +open/ {
               version = ""; for (i = 4; i <= NF; i++) version = version " " $i
-              printf "%-16s %-28s %-10s %-16s %s\n", ip, substr(host,1,28), $1, $3, version
+              print ip, substr(host,1,28), $1, $3, version
             }
           ' | sort -V
         stdin: "{{ service_detection_scan.stdout }}"
@@ -25,20 +36,22 @@
       changed_when: false
     - name: LAN Scan  ----  Print open ports and services
       ansible.builtin.debug:
-        var: service_detection_ports.stdout_lines
+        msg: >-
+          {{ lookup('ansible.builtin.template', role_path ~ '/../report/templates/table.txt.j2',
+             template_vars={'table_columns': service_detection_ports_columns, 'table_lines': service_detection_ports.stdout_lines})
+             | from_json }}
     - name: LAN Scan  ----  Extract operating systems
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          printf "%-16s %-28s %-24s %s\n" IP HOSTNAME "DISTRO (ANSIBLE FACTS)" "OS (NMAP)"
-          awk -v distros="{{ service_detection_distros }}" '
+          awk -v OFS='\t' -v distros="{{ service_detection_distros }}" '
             BEGIN {
               n = split(distros, entries, "|")
               for (i = 1; i <= n; i++) if ((p = index(entries[i], "=")) > 0) distro[substr(entries[i], 1, p - 1)] = substr(entries[i], p + 1)
             }
             function flush() {
               if (ip == "") return
-              printf "%-16s %-28s %-24s %s\n", ip, substr(host,1,28), ((host in distro) ? distro[host] : "-"), (os == "" ? "-" : os)
+              print ip, substr(host,1,28), ((host in distro) ? distro[host] : "-"), (os == "" ? "-" : os)
             }
             /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-"); os = "" }
             /^OS details:/ { os = $0; sub(/^OS details: /, "", os) }
@@ -53,4 +66,76 @@
       changed_when: false
     - name: LAN Scan  ----  Print operating systems
       ansible.builtin.debug:
-        var: service_detection_os.stdout_lines
+        msg: >-
+          {{ lookup('ansible.builtin.template', role_path ~ '/../report/templates/table.txt.j2',
+             template_vars={'table_columns': service_detection_os_columns, 'table_lines': service_detection_os.stdout_lines})
+             | from_json }}
+
+    - name: LAN Scan  ----  Service detection  ----  Write open-ports.md
+      when: service_detection_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ service_detection_report_dir }}"
+        report_role: service_detection
+        report_file: open-ports.md
+        report_title: Open Ports and Services
+        report_description: >-
+          Open ports of the top {{ service_detection_top_ports }} ports per device, with service name and version detected by nmap.
+        report_scope: "subnet `{{ subnet }}`"
+        table_columns: "{{ service_detection_ports_columns }}"
+        table_lines: "{{ service_detection_ports.stdout_lines }}"
+
+    - name: LAN Scan  ----  Service detection  ----  Write operating-systems.md
+      when: service_detection_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ service_detection_report_dir }}"
+        report_role: service_detection
+        report_file: operating-systems.md
+        report_title: Operating Systems
+        report_description: >-
+          Operating system per device. The distribution comes from the Ansible facts of the inventory hosts,
+          the OS from nmap's fingerprint (kernel only, nmap cannot tell Linux distributions apart).
+        report_scope: "subnet `{{ subnet }}`"
+        table_columns: "{{ service_detection_os_columns }}"
+        table_lines: "{{ service_detection_os.stdout_lines }}"
+
+  rescue:
+    - name: LAN Scan  ----  Service detection  ----  Remember the error
+      ansible.builtin.set_fact:
+        service_detection_error: "{{ ansible_failed_result.msg | default('unknown error') }} {{ ansible_failed_result.stderr | default('') }}"
+
+    - name: LAN Scan  ----  Service detection  ----  Write open-ports.md (failed)
+      when: service_detection_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ service_detection_report_dir }}"
+        report_role: service_detection
+        report_file: open-ports.md
+        report_title: Open Ports and Services
+        report_description: >-
+          Open ports of the top {{ service_detection_top_ports }} ports per device, with service name and version detected by nmap.
+        report_scope: "subnet `{{ subnet }}`"
+        report_status: "failed: {{ service_detection_error | trim }}"
+        table_columns: "{{ service_detection_ports_columns }}"
+        table_lines: []
+
+    - name: LAN Scan  ----  Service detection  ----  Write operating-systems.md (failed)
+      when: service_detection_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ service_detection_report_dir }}"
+        report_role: service_detection
+        report_file: operating-systems.md
+        report_title: Operating Systems
+        report_description: >-
+          Operating system per device. The distribution comes from the Ansible facts of the inventory hosts,
+          the OS from nmap's fingerprint (kernel only, nmap cannot tell Linux distributions apart).
+        report_scope: "subnet `{{ subnet }}`"
+        report_status: "failed: {{ service_detection_error | trim }}"
+        table_columns: "{{ service_detection_os_columns }}"
+        table_lines: []
+
+    - name: LAN Scan  ----  Service detection  ----  Fail
+      ansible.builtin.fail:
+        msg: "Service detection failed: {{ service_detection_error | trim }}"

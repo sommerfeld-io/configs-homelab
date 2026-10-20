@@ -5,3 +5,6 @@ web_services_extra_ports: [11434, 2375, 2376]
 web_services_ports: >-
   {{ (service_detection_scan.stdout | default('') | regex_findall('(?m)^(\d+)/tcp\s+open\s+(?:ssl/)?https?\S*')
       + (web_services_extra_ports | map('string') | list)) | unique | join(',') }}
+# Markdown reports, controlled by the play-level netaudit_reports and netaudit_reports_dir
+web_services_report: "{{ netaudit_reports | default(false) }}"
+web_services_report_dir: "{{ netaudit_reports_dir | default(role_path ~ '/../../../../../target/netaudit') | realpath }}/web_services"

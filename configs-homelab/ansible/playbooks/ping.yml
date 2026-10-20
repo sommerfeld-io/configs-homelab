@@ -58,18 +58,3 @@
         - name: SSH  ----  Print id_rsa.pub
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
-
-- name: Scan the homelab network for devices and services
-  hosts: localhost
-  connection: local
-  gather_facts: true
-  become: true # nmap needs root for ARP discovery (MAC addresses) and OS detection
-  vars:
-    subnet: "{{ ansible_facts.default_ipv4.network }}/{{ ansible_facts.default_ipv4.prefix }}"
-  roles:
-    - ../roles/netaudit/nmap
-    - ../roles/netaudit/device_discovery
-    - ../roles/netaudit/service_detection
-    - ../roles/netaudit/web_services
-    - ../roles/netaudit/tls_certificates
-    - ../roles/netaudit/broadcast_discovery

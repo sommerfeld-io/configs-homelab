@@ -1,6 +1,14 @@
 ---
 - name: LAN Scan  ----  Web services and exposed APIs
   tags: [lan-scan-web]
+  vars:
+    web_services_columns:
+      - { name: IP, width: 16 }
+      - { name: HOSTNAME, width: 28 }
+      - { name: PORT, width: 10 }
+      - { name: SERVER, width: 30 }
+      - { name: TITLE, width: 40 }
+      - { name: WARNING, width: 0 }
   block:
     - name: LAN Scan  ----  Read HTTP titles and server headers on ports {{ web_services_ports }}
       ansible.builtin.command:
@@ -11,8 +19,7 @@
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          printf "%-16s %-28s %-10s %-30s %-40s %s\n" IP HOSTNAME PORT SERVER TITLE WARNING
-          awk '
+          awk -v OFS='\t' '
             function flush() {
               if (port == "") return
               warning = ""
@@ -20,7 +27,7 @@
               if (port == "11434/tcp") warning = "Ollama API without authentication"
               if (server == "") server = "-"
               if (title == "")  title = "-"
-              printf "%-16s %-28s %-10s %-30s %-40s %s\n", ip, substr(host,1,28), port, substr(server,1,30), substr(title,1,40), warning
+              print ip, substr(host,1,28), port, substr(server,1,30), substr(title,1,40), warning
               port = ""
             }
             /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
@@ -39,4 +46,45 @@
       changed_when: false
     - name: LAN Scan  ----  Print web services
       ansible.builtin.debug:
-        var: web_services_table.stdout_lines
+        msg: >-
+          {{ lookup('ansible.builtin.template', role_path ~ '/../report/templates/table.txt.j2',
+             template_vars={'table_columns': web_services_columns, 'table_lines': web_services_table.stdout_lines})
+             | from_json }}
+
+    - name: LAN Scan  ----  Web services  ----  Write web-services.md
+      when: web_services_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ web_services_report_dir }}"
+        report_role: web_services
+        report_file: web-services.md
+        report_title: Web Services
+        report_description: >-
+          Web services with HTTP title and server header; open Docker (2375) and Ollama (11434) APIs are flagged.
+        report_scope: "subnet `{{ subnet }}`, ports `{{ web_services_ports }}`"
+        table_columns: "{{ web_services_columns }}"
+        table_lines: "{{ web_services_table.stdout_lines }}"
+
+  rescue:
+    - name: LAN Scan  ----  Web services  ----  Remember the error
+      ansible.builtin.set_fact:
+        web_services_error: "{{ ansible_failed_result.msg | default('unknown error') }} {{ ansible_failed_result.stderr | default('') }}"
+
+    - name: LAN Scan  ----  Web services  ----  Write web-services.md (failed)
+      when: web_services_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ web_services_report_dir }}"
+        report_role: web_services
+        report_file: web-services.md
+        report_title: Web Services
+        report_description: >-
+          Web services with HTTP title and server header; open Docker (2375) and Ollama (11434) APIs are flagged.
+        report_scope: "subnet `{{ subnet }}`, ports `{{ web_services_ports }}`"
+        report_status: "failed: {{ web_services_error | trim }}"
+        table_columns: "{{ web_services_columns }}"
+        table_lines: []
+
+    - name: LAN Scan  ----  Web services  ----  Fail
+      ansible.builtin.fail:
+        msg: "Web services failed: {{ web_services_error | trim }}"

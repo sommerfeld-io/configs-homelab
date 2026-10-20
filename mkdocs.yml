@@ -76,6 +76,7 @@ nav:
           - Desktop: homelab/ansible/playbooks/desktop.md
           - Desktop Media: homelab/ansible/playbooks/desktop-media.md
           - Grafana Agents: homelab/ansible/playbooks/grafana-agents.md
+          - Netaudit: homelab/ansible/playbooks/netaudit.md
           - Ollama: homelab/ansible/playbooks/ollama.md
           - Omarchy Snapshot Create: homelab/ansible/playbooks/omarchy-snapshot-create.md
           - Omarchy Snapshot List: homelab/ansible/playbooks/omarchy-snapshot-list.md
@@ -96,6 +97,7 @@ nav:
           - Netaudit / Web Services: homelab/ansible/roles/netaudit/web-services.md
           - Netaudit / TLS Certificates: homelab/ansible/roles/netaudit/tls-certificates.md
           - Netaudit / Broadcast Discovery: homelab/ansible/roles/netaudit/broadcast-discovery.md
+          - Netaudit / Report: homelab/ansible/roles/netaudit/report.md
           - Omarchy / Customizations: homelab/ansible/roles/omarchy/customizations.md
           - Omarchy / Monitor Config: homelab/ansible/roles/omarchy/monitor-config.md
           - Omarchy / Snapshot: homelab/ansible/roles/omarchy/snapshot.md

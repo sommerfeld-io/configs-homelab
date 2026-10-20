@@ -5,3 +5,6 @@ service_detection_distros: >-
   {% for h in groups['all'] if hostvars[h].ansible_facts.distribution is defined -%}
   {{ h }}={{ hostvars[h].ansible_facts.distribution }} {{ hostvars[h].ansible_facts.distribution_version }}|
   {%- endfor %}
+# Markdown reports, controlled by the play-level netaudit_reports and netaudit_reports_dir
+service_detection_report: "{{ netaudit_reports | default(false) }}"
+service_detection_report_dir: "{{ netaudit_reports_dir | default(role_path ~ '/../../../../../target/netaudit') | realpath }}/service_detection"

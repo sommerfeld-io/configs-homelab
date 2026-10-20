@@ -1,0 +1,12 @@
+Nmap scan report for fritz.box (192.168.178.1)
+PORT      STATE SERVICE  VERSION
+80/tcp    open  http     AVM FRITZ!Box http config
+|_http-title: Did not follow redirect to https://fritz.box/
+443/tcp   open  ssl/http AVM FRITZ!Box http config
+| http-title: FRITZ!Box
+|_Requested resource was /
+|_http-server-header: AVM FRITZ!Box
+Nmap scan report for caprica.fritz.box (192.168.178.200)
+2375/tcp  open  docker   Docker 27.3.1 (API 1.47)
+11434/tcp open  http     Golang net/http server
+|_http-title: Site doesn't have a title (text/plain; charset=utf-8).

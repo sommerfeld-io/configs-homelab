@@ -1,0 +1,62 @@
+{#-
+  Markdown report of a netaudit role, rendered by tasks/write.yml.
+  report_role, report_title, report_description, report_scope: tool, heading, intro sentence, what was scanned
+  report_status: "completed", "failed: <message>" or "skipped: <reason>"
+  table_columns: list of {name, width} (width is only used for the console)
+  table_lines:   tab-separated rows; with more than one column, lines without a tab are notes
+-#}
+{%- set multi = table_columns | length > 1 -%}
+{%- set names = table_columns | map(attribute='name') | list -%}
+{%- set rows = table_lines | select('search', '\t' if multi else '.') | map('split', '\t') | list -%}
+{%- set notes = (table_lines | reject('search', '\t') | reject('equalto', '') | list) if multi else [] -%}
+{%- set status = report_status | default('completed') -%}
+{%- set completed = status == 'completed' -%}
+{%- set ns = namespace(rows=[], widths=[]) -%}
+{%- for row in rows -%}
+  {%- set ns2 = namespace(cells=[]) -%}
+  {%- for i in range(names | length) -%}
+    {%- set ns2.cells = ns2.cells + [(row[i] | default('') | trim | replace('|', '\\|'))] -%}
+  {%- endfor -%}
+  {%- set ns.rows = ns.rows + [ns2.cells] -%}
+{%- endfor -%}
+{%- for i in range(names | length) -%}
+  {%- set ns3 = namespace(width=names[i] | length) -%}
+  {%- for row in ns.rows -%}
+    {%- set ns3.width = [ns3.width, row[i] | length] | max -%}
+  {%- endfor -%}
+  {%- set ns.widths = ns.widths + [ns3.width] -%}
+{%- endfor -%}
+# {{ report_title }}
+
+{{ report_description }}
+
+- **Tool:** netaudit role `{{ report_role }}`
+- **Status:** {{ status if not completed else ('completed, ' ~ (ns.rows | length) ~ ' finding(s)') }}
+- **Target host:** `{{ inventory_hostname }}`
+- **Scope:** {{ report_scope }}
+- **Date:** {{ ansible_facts['date_time']['iso8601'] | default(now(utc=true).isoformat()) }}
+
+## Findings
+
+{% if not completed %}
+The scan did not run to completion ({{ status }}), so there are no findings. This is not a clean result.
+{% elif ns.rows | length == 0 %}
+No findings. The scan completed and found nothing to report.
+{% else %}
+| {% for name in names %}{{ name.ljust(ns.widths[loop.index0]) }} |{% if not loop.last %} {% endif %}{% endfor %}
+
+|{% for width in ns.widths %}{{ '-' * (width + 2) }}|{% endfor %}
+
+{% for row in ns.rows %}
+| {% for cell in row %}{{ cell.ljust(ns.widths[loop.index0]) }} |{% if not loop.last %} {% endif %}{% endfor %}
+
+{% endfor %}
+{% endif %}
+{% if notes %}
+
+## Notes
+
+{% for note in notes %}
+- {{ note }}
+{% endfor %}
+{% endif %}

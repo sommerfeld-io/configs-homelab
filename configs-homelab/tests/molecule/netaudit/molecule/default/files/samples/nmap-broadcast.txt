@@ -1,0 +1,37 @@
+Starting Nmap 7.95 ( https://nmap.org ) at 2026-10-20 10:00 CEST
+Pre-scan script results:
+| broadcast-dhcp-discover:
+|   Response 1 of 2:
+|     Interface: wlan0
+|     IP Offered: 192.168.178.50
+|     DHCP Message Type: DHCPOFFER
+|     Server Identifier: 192.168.178.1
+|     Subnet Mask: 255.255.255.0
+|     Router: 192.168.178.1
+|     Domain Name Server: 192.168.178.1
+|     Domain Name: fritz.box
+|   Response 2 of 2:
+|     IP Offered: 192.168.178.99
+|     Server Identifier: 192.168.178.21
+|     Router: 192.168.178.1
+|_    Domain Name Server: 192.168.178.21
+| broadcast-dns-service-discovery:
+|   192.168.178.23
+|     7000/tcp airplay
+|       acl=0
+|       model=iPad13,1
+|     Address=192.168.178.23 fe80::1
+|   192.168.178.141
+|     22/tcp ssh
+|_    Address=192.168.178.141
+| broadcast-upnp-info:
+|   192.168.178.1
+|       Server: FRITZ!Box 7590 UPnP/1.0 AVM FRITZ!Box 7590 154.07.57
+|       Location: http://192.168.178.1:49000/tr64desc.xml
+|         Webserver: LINUX FRITZ!Box UPnP/1.0 AVM FRITZ!Box 7590 154.07.57
+|         Name: FRITZ!Box 7590
+|         Manufacturer: AVM Berlin
+|         Model Name: FRITZ!Box 7590
+|_        Model Version: 154.07.57
+WARNING: No targets were specified, so 0 hosts scanned.
+Nmap done: 0 IP addresses (0 hosts up) scanned in 10.10 seconds

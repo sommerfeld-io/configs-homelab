@@ -1,0 +1,31 @@
+---
+# Scans the homelab network with the netaudit roles (devices, services, operating systems, web
+# services, TLS certificates, DHCP/mDNS/UPnP broadcasts), prints the findings and writes them as
+# markdown reports to target/netaudit/<role>/ on the controller. Run via `task homelab:ansible:netaudit`,
+# see docs/homelab/ansible/playbooks/netaudit.md.
+
+# The service_detection role fills its distribution column from the facts of the inventory hosts.
+# Unreachable hosts are expected (they show up as missing inventory hosts) and don't stop the scan.
+- name: Gather facts of all inventory hosts
+  hosts: all
+  gather_facts: true
+  become: false
+  ignore_unreachable: true
+  tasks: []
+
+- name: Scan the homelab network for devices and services
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true # nmap needs root for ARP discovery (MAC addresses) and OS detection
+  vars:
+    subnet: "{{ ansible_facts.default_ipv4.network }}/{{ ansible_facts.default_ipv4.prefix }}"
+    netaudit_reports: true
+    netaudit_reports_dir: "{{ playbook_dir }}/../../../target/netaudit"
+  roles:
+    - ../roles/netaudit/nmap
+    - ../roles/netaudit/device_discovery
+    - ../roles/netaudit/service_detection
+    - ../roles/netaudit/web_services
+    - ../roles/netaudit/tls_certificates
+    - ../roles/netaudit/broadcast_discovery

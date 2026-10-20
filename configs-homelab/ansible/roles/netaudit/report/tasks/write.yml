@@ -1,0 +1,35 @@
+---
+# Writes one markdown report of a netaudit role on the Ansible controller.
+# Include it from a netaudit role with:
+#
+#   - ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+#     vars:
+#       report_dir: "{{ <role>_report_dir }}"
+#       report_role: <role>
+#       report_file: <finding>.md
+#       report_title / report_description / report_scope
+#       report_status: completed | "failed: <message>" | "skipped: <reason>" (default: completed)
+#       table_columns / table_lines
+#
+# The report is written to the controller (delegate_to: localhost) without become, so reports of
+# managed hosts don't end up scattered on those hosts and belong to the user running the playbook.
+# The file name is made filesystem-safe. The reports contain the scan date, so the tasks are never
+# idempotent.
+- name: Netaudit report  ----  {{ report_role }}  ----  Write {{ report_file }}
+  delegate_to: localhost
+  become: false
+  tags: [always, molecule-idempotence-notest] # included tasks do not inherit the tags of the include
+  vars:
+    report_path: "{{ report_dir }}/{{ report_file | regex_replace('[^A-Za-z0-9._-]+', '-') }}"
+  block:
+    - name: Netaudit report  ----  {{ report_role }}  ----  Create {{ report_dir }}
+      ansible.builtin.file:
+        path: "{{ report_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Netaudit report  ----  {{ report_role }}  ----  Render {{ report_path }}
+      ansible.builtin.template:
+        src: "{{ role_path }}/../report/templates/report.md.j2"
+        dest: "{{ report_path }}"
+        mode: "0644"

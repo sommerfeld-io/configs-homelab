@@ -1,0 +1,22 @@
+Nmap scan report for fritz.box (192.168.178.1)
+Host is up (0.0010s latency).
+PORT    STATE  SERVICE
+22/tcp  closed ssh
+80/tcp  open   http
+443/tcp open   https
+MAC Address: 3C:A6:2F:11:22:33 (AVM GmbH)
+
+Nmap scan report for pi4-0002.fritz.box (192.168.178.20)
+PORT    STATE  SERVICE
+22/tcp  open   ssh
+80/tcp  closed http
+443/tcp closed https
+MAC Address: DC:A6:32:AA:BB:CC (Raspberry Pi Trading)
+
+Nmap scan report for 192.168.178.9
+PORT    STATE    SERVICE
+22/tcp  filtered ssh
+MAC Address: 00:11:22:33:44:55 (Unknown)
+
+Nmap scan report for picon.fritz.box (192.168.178.30)
+22/tcp  open   ssh

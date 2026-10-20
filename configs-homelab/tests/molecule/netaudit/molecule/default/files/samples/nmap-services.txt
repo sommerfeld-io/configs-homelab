@@ -1,0 +1,16 @@
+Nmap scan report for fritz.box (192.168.178.1)
+80/tcp   open  http     AVM FRITZ!Box http config
+443/tcp  open  ssl/http AVM FRITZ!Box http config
+8080/tcp open  http-proxy
+Nmap scan report for pi4-0002.fritz.box (192.168.178.21)
+22/tcp   open  ssh      OpenSSH 9.2p1
+443/tcp  open  https
+Nmap scan report for fritz-nas.fritz.box (192.168.178.1)
+OS details: Linux 4.15 - 5.19
+Nmap scan report for kobol.fritz.box (192.168.178.112)
+22/tcp open  ssh     OpenSSH 10.0 (protocol 2.0)
+Aggressive OS guesses: Linux 5.0 - 6.2 (96%), Linux 4.15 (93%), MikroTik RouterOS 7.2 (91%)
+Nmap scan report for picon.fritz.box (192.168.178.141)
+Running (JUST GUESSING): Linux 6.X (97%)
+Nmap scan report for pi4-gone.fritz.box (192.168.178.99)
+443/tcp open  ssl/http AVM

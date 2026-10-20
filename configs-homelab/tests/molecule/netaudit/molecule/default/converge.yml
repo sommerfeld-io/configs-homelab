@@ -1,12 +1,11 @@
 ---
-- name: Converge
+# No real scans in Molecule: a stub in /usr/local/bin (before /usr/bin in PATH) replaces nmap and
+# prints canned sample output. The real package is still installed by the nmap role, so installation
+# and idempotence are tested.
+- name: Prepare the stubs
   hosts: all
   gather_facts: true
-  # Molecule connects as root (no sudo in the containers), which nmap needs
-  vars:
-    # Each container only scans itself, never the Docker network or the host
-    subnet: "{{ ansible_facts.default_ipv4.address }}/32"
-  pre_tasks:
+  tasks:
     # The Ubuntu images ship without iproute2, so the default_ipv4 facts the roles use stay empty
     - name: Install iproute2
       ansible.builtin.apt:
@@ -18,10 +17,46 @@
       ansible.builtin.setup:
         gather_subset: [network]
 
-  roles:
+    - name: Copy the sample outputs
+      ansible.builtin.copy:
+        src: samples/
+        dest: /usr/local/share/netaudit-samples/
+        mode: "0644"
+
+    - name: Install the nmap stub
+      ansible.builtin.copy:
+        src: stubs/nmap.sh
+        dest: /usr/local/bin/nmap
+        mode: "0755"
+
+    - name: Remove the reports of earlier runs on the controller
+      ansible.builtin.file:
+        path: /tmp/molecule-netaudit
+        state: absent
+      delegate_to: localhost
+      run_once: true
+      tags: [molecule-idempotence-notest]
+
+# Molecule connects as root (no sudo in the containers), which the roles need.
+# Reports go to the controller, one directory per platform, so verify.yml can check them.
+- name: Converge with markdown reports disabled
+  hosts: all
+  vars:
+    subnet: "{{ ansible_facts.default_ipv4.address }}/32"
+    netaudit_reports: false
+    netaudit_reports_dir: "/tmp/molecule-netaudit/disabled/{{ inventory_hostname }}"
+  roles: &netaudit-roles
     - nmap
     - device_discovery
     - service_detection
     - web_services
     - tls_certificates
     - broadcast_discovery
+
+- name: Converge with markdown reports enabled
+  hosts: all
+  vars:
+    subnet: "{{ ansible_facts.default_ipv4.address }}/32"
+    netaudit_reports: true
+    netaudit_reports_dir: "/tmp/molecule-netaudit/enabled/{{ inventory_hostname }}"
+  roles: *netaudit-roles

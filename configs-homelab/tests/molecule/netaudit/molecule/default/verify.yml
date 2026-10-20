@@ -2,12 +2,49 @@
 - name: Verify
   hosts: all
   gather_facts: false
+  vars:
+    enabled_dir: "/tmp/molecule-netaudit/enabled/{{ inventory_hostname }}"
+    # report file and a regex its content must match
+    expected_reports:
+      - { file: device_discovery/devices.md, pattern: '192\.168\.178\.20 +\| DC:A6:32:AA:BB:CC +\| pi4-0002\.fritz\.box' }
+      - { file: device_discovery/missing-inventory-hosts.md, pattern: 'Status:\*\* completed' }
+      - { file: service_detection/open-ports.md, pattern: '22/tcp +\| ssh +\| OpenSSH 9\.2p1' }
+      - { file: service_detection/operating-systems.md, pattern: 'Linux 5\.0 - 6\.2 \(96%\)' }
+      - { file: web_services/web-services.md, pattern: 'Docker API without TLS' }
+      - { file: tls_certificates/certificates.md, pattern: 'pi\.example\.org +\| R11' }
+      - { file: broadcast_discovery/dhcp-servers.md, pattern: 'WARNING: 2 DHCP servers answered' }
+      - { file: broadcast_discovery/mdns-upnp-devices.md, pattern: 'model=iPad13,1' }
   tasks:
-    - name: Check nmap is installed
-      ansible.builtin.command: nmap --version
-      register: nmap_version
-      changed_when: false
+    - name: Gather package facts
+      ansible.builtin.package_facts:
 
-    - name: Assert nmap is installed
+    - name: Assert the real nmap package is installed (the scans themselves used the stub)
       ansible.builtin.assert:
-        that: nmap_version.stdout is search('Nmap version')
+        that: "'nmap' in ansible_facts.packages"
+
+    - name: Check that the disabled run wrote no reports
+      ansible.builtin.stat:
+        path: "/tmp/molecule-netaudit/disabled/{{ inventory_hostname }}"
+      register: disabled_dir
+      delegate_to: localhost
+
+    - name: Assert that the disabled run wrote no reports
+      ansible.builtin.assert:
+        that: not disabled_dir.stat.exists
+
+    - name: Read the reports of the enabled run
+      ansible.builtin.slurp:
+        src: "{{ enabled_dir }}/{{ item.file }}"
+      loop: "{{ expected_reports }}"
+      loop_control:
+        label: "{{ item.file }}"
+      register: reports
+      delegate_to: localhost
+
+    - name: Assert the reports contain the expected findings
+      ansible.builtin.assert:
+        that: item.content | b64decode is search(item.item.pattern)
+        fail_msg: "{{ item.item.file }} does not match {{ item.item.pattern }}"
+      loop: "{{ reports.results }}"
+      loop_control:
+        label: "{{ item.item.file }}"

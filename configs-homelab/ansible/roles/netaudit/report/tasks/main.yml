@@ -1,0 +1,4 @@
+---
+# The report role only provides tasks/write.yml and the templates the netaudit roles share.
+- name: Netaudit report  ----  Nothing to do (use tasks/write.yml)
+  ansible.builtin.meta: noop

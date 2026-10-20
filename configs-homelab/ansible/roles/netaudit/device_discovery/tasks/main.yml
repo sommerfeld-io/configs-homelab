@@ -1,12 +1,23 @@
 ---
 - name: LAN Scan  ----  Device overview (IP, MAC, hostname, SSH/HTTP/HTTPS, Raspberry Pi, inventory, vendor)
+  vars:
+    device_discovery_devices_columns:
+      - { name: IP, width: 16 }
+      - { name: MAC, width: 18 }
+      - { name: HOSTNAME, width: 28 }
+      - { name: SSH, width: 9 }
+      - { name: HTTP, width: 9 }
+      - { name: HTTPS, width: 9 }
+      - { name: PI, width: 4 }
+      - { name: INVENTORY, width: 9 }
+      - { name: VENDOR, width: 0 }
   block:
     - name: LAN Scan  ----  Scan {{ subnet }} for devices
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n" IP MAC HOSTNAME SSH HTTP HTTPS PI INVENTORY VENDOR
           nmap -p 22,80,443 "{{ subnet }}" | awk \
+            -v OFS='\t' \
             -v lip="{{ ansible_facts.default_ipv4.address }}" \
             -v lmac="{{ ansible_facts.default_ipv4.macaddress | upper }}" \
             -v inv=" {{ groups['all'] | join(' ') }} " '
@@ -20,7 +31,7 @@
               if (https == "") https = "-"
               pi = (tolower(mac " " vendor) ~ /{{ device_discovery_raspi_ouis }}/) ? "yes" : ""
               known = (host != "-" && index(inv, " " host " ")) ? "yes" : ""
-              printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n", ip, mac, substr(host,1,28), ssh, http, https, pi, known, vendor
+              print ip, mac, substr(host,1,28), ssh, http, https, pi, known, vendor
             }
             /^Nmap scan report for/ {
               flush()
@@ -42,8 +53,62 @@
       changed_when: false
     - name: LAN Scan  ----  Print devices
       ansible.builtin.debug:
-        var: device_discovery_devices.stdout_lines
+        msg: >-
+          {{ lookup('ansible.builtin.template', role_path ~ '/../report/templates/table.txt.j2',
+             template_vars={'table_columns': device_discovery_devices_columns, 'table_lines': device_discovery_devices.stdout_lines})
+             | from_json }}
 
-- name: LAN Scan  ----  Inventory hosts not found on the network
-  ansible.builtin.debug:
-    msg: "{{ groups['all'] | reject('in', device_discovery_devices.stdout) | list }}"
+    - name: LAN Scan  ----  Inventory hosts not found on the network
+      ansible.builtin.debug:
+        msg: "{{ groups['all'] | reject('in', device_discovery_devices.stdout) | list }}"
+
+    - name: LAN Scan  ----  Device discovery  ----  Write devices.md
+      when: device_discovery_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ device_discovery_report_dir }}"
+        report_role: device_discovery
+        report_file: devices.md
+        report_title: Devices
+        report_description: >-
+          All devices on the network with MAC address, hostname, state of SSH, HTTP and HTTPS,
+          Raspberry Pi detection, inventory membership and MAC vendor.
+        report_scope: "subnet `{{ subnet }}`"
+        table_columns: "{{ device_discovery_devices_columns }}"
+        table_lines: "{{ device_discovery_devices.stdout_lines }}"
+
+    - name: LAN Scan  ----  Device discovery  ----  Write missing-inventory-hosts.md
+      when: device_discovery_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ device_discovery_report_dir }}"
+        report_role: device_discovery
+        report_file: missing-inventory-hosts.md
+        report_title: Missing Inventory Hosts
+        report_description: Hosts of the Ansible inventory that did not show up in the device scan.
+        report_scope: "subnet `{{ subnet }}`"
+        table_columns: [{ name: HOST, width: 0 }]
+        table_lines: "{{ groups['all'] | reject('in', device_discovery_devices.stdout) | list }}"
+
+  rescue:
+    - name: LAN Scan  ----  Device discovery  ----  Remember the error
+      ansible.builtin.set_fact:
+        device_discovery_error: "{{ ansible_failed_result.msg | default('unknown error') }} {{ ansible_failed_result.stderr | default('') }}"
+
+    - name: LAN Scan  ----  Device discovery  ----  Write devices.md (failed)
+      when: device_discovery_report | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/../report/tasks/write.yml"
+      vars:
+        report_dir: "{{ device_discovery_report_dir }}"
+        report_role: device_discovery
+        report_file: devices.md
+        report_title: Devices
+        report_description: All devices on the network.
+        report_scope: "subnet `{{ subnet }}`"
+        report_status: "failed: {{ device_discovery_error | trim }}"
+        table_columns: "{{ device_discovery_devices_columns }}"
+        table_lines: []
+
+    - name: LAN Scan  ----  Device discovery  ----  Fail
+      ansible.builtin.fail:
+        msg: "Device discovery failed: {{ device_discovery_error | trim }}"

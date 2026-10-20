@@ -85,6 +85,8 @@ tasks:
         vars: { SRC: "{{ .ROLES_SRC }}/netaudit/tls_certificates/README.md", DEST: "{{ .ROLES_DOCS }}/netaudit/tls-certificates.md" }
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/netaudit/broadcast_discovery/README.md", DEST: "{{ .ROLES_DOCS }}/netaudit/broadcast-discovery.md" }
+      - task: common:copy
+        vars: { SRC: "{{ .ROLES_SRC }}/netaudit/report/README.md", DEST: "{{ .ROLES_DOCS }}/netaudit/report.md" }
       - mkdir -p {{ .ROLES_DOCS }}/omarchy
       - task: common:copy
         vars: { SRC: "{{ .ROLES_SRC }}/omarchy/customizations/README.md", DEST: "{{ .ROLES_DOCS }}/omarchy/customizations.md" }

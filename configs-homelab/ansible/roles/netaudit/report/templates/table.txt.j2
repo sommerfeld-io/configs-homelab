@@ -1,0 +1,23 @@
+{#-
+  Console table of a netaudit role, rendered as a JSON list of lines for ansible.builtin.debug.
+  table_columns: list of {name, width}; each cell is padded to its width (0 = no padding),
+                 cells are joined by one space - the same layout as awk printf "%-<width>s".
+  table_lines:   tab-separated rows; with more than one column, lines without a tab are
+                 notes (e.g. warnings) and printed after the rows.
+-#}
+{%- set widths = table_columns | map(attribute='width') | list -%}
+{%- set multi = table_columns | length > 1 -%}
+{%- set ns = namespace(lines=[]) -%}
+{%- for cells in [table_columns | map(attribute='name') | list]
+      + (table_lines | select('search', '\t' if multi else '.') | map('split', '\t') | list) -%}
+  {%- set ns2 = namespace(cells=[]) -%}
+  {%- for cell in cells -%}
+    {%- set width = widths[loop.index0] | default(0) -%}
+    {%- set ns2.cells = ns2.cells + [cell.ljust(width) if width else cell] -%}
+  {%- endfor -%}
+  {%- set ns.lines = ns.lines + [ns2.cells | join(' ')] -%}
+{%- endfor -%}
+{%- if multi -%}
+  {%- set ns.lines = ns.lines + (table_lines | reject('search', '\t') | reject('equalto', '') | list) -%}
+{%- endif -%}
+{{ ns.lines | to_json }}

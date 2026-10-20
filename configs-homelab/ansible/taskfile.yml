@@ -9,7 +9,7 @@ tasks:
     desc: &ansible-desc HOST ONLY | Run Ansible playbook | {{ .PLAYBOOK }}
     cmds: &ansible-cmd
       - git submodule update --remote
-      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass
+      - ansible-playbook "playbooks/{{ .PLAYBOOK }}" --inventory hosts.yml --ask-become-pass --ask-vault-pass {{ .CLI_ARGS }}
 
   all:
     vars:
@@ -50,6 +50,12 @@ tasks:
   omarchy:snapshot:list:
     vars:
       PLAYBOOK: omarchy-snapshot-list.yml
+    desc: *ansible-desc
+    cmds: *ansible-cmd
+
+  netaudit:
+    vars:
+      PLAYBOOK: netaudit.yml
     desc: *ansible-desc
     cmds: *ansible-cmd
 
