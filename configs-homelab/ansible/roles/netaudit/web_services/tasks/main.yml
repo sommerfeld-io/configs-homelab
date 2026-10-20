@@ -1,0 +1,42 @@
+---
+- name: LAN Scan  ----  Web services and exposed APIs
+  tags: [lan-scan-web]
+  block:
+    - name: LAN Scan  ----  Read HTTP titles and server headers on ports {{ web_services_ports }}
+      ansible.builtin.command:
+        cmd: nmap -sV -p {{ web_services_ports }} --script http-title,http-server-header --open -T4 {{ subnet }}
+      register: web_services_scan
+      changed_when: false
+    - name: LAN Scan  ----  Extract web services
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          printf "%-16s %-28s %-10s %-30s %-40s %s\n" IP HOSTNAME PORT SERVER TITLE WARNING
+          awk '
+            function flush() {
+              if (port == "") return
+              warning = ""
+              if (port == "2375/tcp")  warning = "Docker API without TLS (root access to the host)"
+              if (port == "11434/tcp") warning = "Ollama API without authentication"
+              if (server == "") server = "-"
+              if (title == "")  title = "-"
+              printf "%-16s %-28s %-10s %-30s %-40s %s\n", ip, substr(host,1,28), port, substr(server,1,30), substr(title,1,40), warning
+              port = ""
+            }
+            /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+            /^[0-9]+\/tcp +open/ {
+              flush()
+              port = $1; title = ""
+              server = ""; for (i = 4; i <= NF; i++) server = server (server == "" ? "" : " ") $i
+            }
+            /^\|_? ?http-title: / { title = $0; sub(/^\|_? ?http-title: /, "", title) }
+            /^\|_? ?http-server-header: ./ { server = $0; sub(/^\|_? ?http-server-header: /, "", server) }
+            END { flush() }
+          ' | sort -V
+        stdin: "{{ web_services_scan.stdout }}"
+        executable: /bin/bash
+      register: web_services_table
+      changed_when: false
+    - name: LAN Scan  ----  Print web services
+      ansible.builtin.debug:
+        var: web_services_table.stdout_lines

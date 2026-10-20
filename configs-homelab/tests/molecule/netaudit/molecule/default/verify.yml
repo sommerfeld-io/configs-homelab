@@ -1,0 +1,13 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check nmap is installed
+      ansible.builtin.command: nmap --version
+      register: nmap_version
+      changed_when: false
+
+    - name: Assert nmap is installed
+      ansible.builtin.assert:
+        that: nmap_version.stdout is search('Nmap version')

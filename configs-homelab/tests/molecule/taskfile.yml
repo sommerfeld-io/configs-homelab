@@ -16,6 +16,7 @@ tasks:
     cmds:
       - task: test:common
       - task: test:omarchy
+      - task: test:netaudit
 
   test:common:
     desc: &molecule-desc Run the {{ .DIR }} role group scenario end-to-end
@@ -29,5 +30,12 @@ tasks:
     desc: *molecule-desc
     vars:
       DIR: omarchy
+    dir: *molecule-dir
+    cmds: *molecule-cmds
+
+  test:netaudit:
+    desc: *molecule-desc
+    vars:
+      DIR: netaudit
     dir: *molecule-dir
     cmds: *molecule-cmds

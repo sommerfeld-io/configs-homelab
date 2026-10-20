@@ -1,0 +1,45 @@
+---
+- name: LAN Scan  ----  TLS certificates
+  when: tls_certificates_ports | length > 0
+  tags: [lan-scan-tls]
+  block:
+    - name: LAN Scan  ----  Read TLS certificates and ciphers on ports {{ tls_certificates_ports }}
+      ansible.builtin.command:
+        cmd: nmap -sV -p {{ tls_certificates_ports }} --script ssl-cert,ssl-enum-ciphers --open -T4 {{ subnet }}
+      register: tls_certificates_scan
+      changed_when: false
+    - name: LAN Scan  ----  Extract TLS certificates
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n" \
+            IP HOSTNAME PORT SUBJECT ISSUER SELF-SIGNED EXPIRES "DAYS LEFT" "CIPHER GRADE"
+          awk -v now="$(date +%s)" '
+            function cn(dn) { return match(dn, /commonName=[^\/]*/) ? substr(dn, RSTART + 11, RLENGTH - 11) : dn }
+            function flush() {
+              if (port == "" || subject == "") { port = ""; return }
+              days = "-"
+              if (expires != "") {
+                cmd = "date -d \"" expires "\" +%s"; cmd | getline t; close(cmd)
+                days = int((t - now) / 86400)
+              }
+              printf "%-16s %-28s %-10s %-30s %-30s %-11s %-10s %-9s %s\n", ip, substr(host,1,28), port, \
+                substr(cn(subject),1,30), substr(cn(issuer),1,30), (subject == issuer ? "yes" : "no"), \
+                substr(expires,1,10), days, (grade == "" ? "-" : grade)
+              port = ""
+            }
+            /^Nmap scan report for/ { flush(); ip = $NF; gsub(/[()]/, "", ip); host = (NF > 5 ? $5 : "-") }
+            /^[0-9]+\/tcp +open/ { flush(); port = $1; subject = ""; issuer = ""; expires = ""; grade = "" }
+            /ssl-cert: Subject: / { subject = $0; sub(/^.*Subject: /, "", subject) }
+            /^\| Issuer: /        { issuer = $0; sub(/^\| Issuer: /, "", issuer) }
+            /Not valid after:/    { expires = $NF }
+            /least strength:/     { grade = $NF }
+            END { flush() }
+          ' | sort -V
+        stdin: "{{ tls_certificates_scan.stdout }}"
+        executable: /bin/bash
+      register: tls_certificates_table
+      changed_when: false
+    - name: LAN Scan  ----  Print TLS certificates
+      ansible.builtin.debug:
+        var: tls_certificates_table.stdout_lines

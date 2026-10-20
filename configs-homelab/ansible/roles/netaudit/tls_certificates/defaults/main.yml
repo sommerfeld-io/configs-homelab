@@ -1,0 +1,4 @@
+---
+# TLS ports found by the service scan (netaudit/service_detection)
+tls_certificates_ports: >-
+  {{ service_detection_scan.stdout | default('') | regex_findall('(?m)^(\d+)/tcp\s+open\s+(?:ssl/\S+|https\S*)') | unique | join(',') }}

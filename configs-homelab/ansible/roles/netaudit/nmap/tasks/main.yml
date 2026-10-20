@@ -1,0 +1,6 @@
+---
+- name: LAN Scan  ----  Install nmap
+  ansible.builtin.package:
+    name: nmap
+    state: present
+  tags: [always]

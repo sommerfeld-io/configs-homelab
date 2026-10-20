@@ -1,0 +1,49 @@
+---
+- name: LAN Scan  ----  Device overview (IP, MAC, hostname, SSH/HTTP/HTTPS, Raspberry Pi, inventory, vendor)
+  block:
+    - name: LAN Scan  ----  Scan {{ subnet }} for devices
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n" IP MAC HOSTNAME SSH HTTP HTTPS PI INVENTORY VENDOR
+          nmap -p 22,80,443 "{{ subnet }}" | awk \
+            -v lip="{{ ansible_facts.default_ipv4.address }}" \
+            -v lmac="{{ ansible_facts.default_ipv4.macaddress | upper }}" \
+            -v inv=" {{ groups['all'] | join(' ') }} " '
+            function flush() {
+              if (ip == "") return
+              if (mac == "" && ip == lip) { mac = lmac; vendor = "(this machine)" }
+              if (mac == "")   mac = "-"
+              if (host == "")  host = "-"
+              if (ssh == "")   ssh = "-"
+              if (http == "")  http = "-"
+              if (https == "") https = "-"
+              pi = (tolower(mac " " vendor) ~ /{{ device_discovery_raspi_ouis }}/) ? "yes" : ""
+              known = (host != "-" && index(inv, " " host " ")) ? "yes" : ""
+              printf "%-16s %-18s %-28s %-9s %-9s %-9s %-4s %-9s %s\n", ip, mac, substr(host,1,28), ssh, http, https, pi, known, vendor
+            }
+            /^Nmap scan report for/ {
+              flush()
+              ip = $NF; gsub(/[()]/, "", ip)
+              host = (NF > 5 ? $5 : "")
+              mac = ""; vendor = ""; ssh = ""; http = ""; https = ""
+            }
+            /^22\/tcp/  { ssh = $2 }
+            /^80\/tcp/  { http = $2 }
+            /^443\/tcp/ { https = $2 }
+            /^MAC Address:/ {
+              mac = $3
+              vendor = $0; sub(/^[^(]*\(/, "", vendor); sub(/\)$/, "", vendor)
+            }
+            END { flush() }
+          ' | sort -V
+        executable: /bin/bash
+      register: device_discovery_devices
+      changed_when: false
+    - name: LAN Scan  ----  Print devices
+      ansible.builtin.debug:
+        var: device_discovery_devices.stdout_lines
+
+- name: LAN Scan  ----  Inventory hosts not found on the network
+  ansible.builtin.debug:
+    msg: "{{ groups['all'] | reject('in', device_discovery_devices.stdout) | list }}"

@@ -1,0 +1,3 @@
+---
+# MAC prefixes (OUIs) of Raspberry Pi Foundation / Raspberry Pi Ltd
+device_discovery_raspi_ouis: "raspberry|b8:27:eb|dc:a6:32|e4:5f:01|d8:3a:dd|28:cd:c1|2c:cf:67|88:a2:9e"

@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: service_detection
+  description: Detects open ports, service versions and operating systems on the network
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies:
+  - role: nmap

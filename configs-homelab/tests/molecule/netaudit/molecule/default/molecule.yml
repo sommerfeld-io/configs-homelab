@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: "${MOLECULE_SCENARIO_DIRECTORY}/requirements.yml"
+    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/requirements.yml"
+# Ubuntu only: nmap 7.992 (Arch Linux, 2026-10) rejects every --top-ports value
+# ("--top-ports should be an integer between 1 and 65535"), so the service_detection
+# role fails there. Add archlinux-base back once Arch ships a fixed nmap.
+platforms:
+  - name: ubuntu-25.04
+    image: ubuntu:25.04
+    pre_build_image: true
+    groups: [ubuntu]
+  - name: ubuntu-25.10
+    image: ubuntu:25.10
+    pre_build_image: true
+    groups: [ubuntu]
+  - name: ubuntu-26.04
+    image: ubuntu:26.04
+    pre_build_image: true
+    groups: [ubuntu]
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "${MOLECULE_SCENARIO_DIRECTORY}/../../../../../ansible/roles/netaudit"
+  playbooks:
+    prepare: ../../../prepare.yml
+    converge: converge.yml
+    verify: verify.yml

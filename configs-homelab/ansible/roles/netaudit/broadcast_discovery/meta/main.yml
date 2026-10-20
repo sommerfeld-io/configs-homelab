@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: broadcast_discovery
+  description: Lists DHCP servers, mDNS services and UPnP devices from broadcasts
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies:
+  - role: nmap

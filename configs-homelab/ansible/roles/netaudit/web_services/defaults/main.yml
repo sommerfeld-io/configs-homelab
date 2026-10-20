@@ -1,0 +1,7 @@
+---
+# Ports probed by the web scan in addition to the HTTP(S) ports found by the service scan (Ollama API, Docker API)
+web_services_extra_ports: [11434, 2375, 2376]
+# HTTP(S) ports found by the service scan (netaudit/service_detection) plus the extra ports
+web_services_ports: >-
+  {{ (service_detection_scan.stdout | default('') | regex_findall('(?m)^(\d+)/tcp\s+open\s+(?:ssl/)?https?\S*')
+      + (web_services_extra_ports | map('string') | list)) | unique | join(',') }}

@@ -1,0 +1,27 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  # Molecule connects as root (no sudo in the containers), which nmap needs
+  vars:
+    # Each container only scans itself, never the Docker network or the host
+    subnet: "{{ ansible_facts.default_ipv4.address }}/32"
+  pre_tasks:
+    # The Ubuntu images ship without iproute2, so the default_ipv4 facts the roles use stay empty
+    - name: Install iproute2
+      ansible.builtin.apt:
+        name: iproute2
+        state: present
+        update_cache: true
+
+    - name: Gather network facts again
+      ansible.builtin.setup:
+        gather_subset: [network]
+
+  roles:
+    - nmap
+    - device_discovery
+    - service_detection
+    - web_services
+    - tls_certificates
+    - broadcast_discovery

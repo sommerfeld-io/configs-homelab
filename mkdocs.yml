@@ -90,6 +90,12 @@ nav:
           - Grafana Cloud / Alloy: homelab/ansible/roles/grafana-cloud/alloy.md
           - Grafana Cloud / Exporters: homelab/ansible/roles/grafana-cloud/exporters.md
           - Media / Jellyfin: homelab/ansible/roles/media/jellyfin.md
+          - Netaudit / Nmap: homelab/ansible/roles/netaudit/nmap.md
+          - Netaudit / Device Discovery: homelab/ansible/roles/netaudit/device-discovery.md
+          - Netaudit / Service Detection: homelab/ansible/roles/netaudit/service-detection.md
+          - Netaudit / Web Services: homelab/ansible/roles/netaudit/web-services.md
+          - Netaudit / TLS Certificates: homelab/ansible/roles/netaudit/tls-certificates.md
+          - Netaudit / Broadcast Discovery: homelab/ansible/roles/netaudit/broadcast-discovery.md
           - Omarchy / Customizations: homelab/ansible/roles/omarchy/customizations.md
           - Omarchy / Monitor Config: homelab/ansible/roles/omarchy/monitor-config.md
           - Omarchy / Snapshot: homelab/ansible/roles/omarchy/snapshot.md

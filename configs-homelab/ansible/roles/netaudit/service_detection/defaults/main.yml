@@ -1,0 +1,7 @@
+---
+service_detection_top_ports: 100
+# "host=distribution version|..." from the facts gathered for the inventory hosts earlier in the run (nmap cannot tell Linux distributions apart)
+service_detection_distros: >-
+  {% for h in groups['all'] if hostvars[h].ansible_facts.distribution is defined -%}
+  {{ h }}={{ hostvars[h].ansible_facts.distribution }} {{ hostvars[h].ansible_facts.distribution_version }}|
+  {%- endfor %}

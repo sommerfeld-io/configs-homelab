@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: tls_certificates
+  description: Lists TLS certificates with issuer, expiry and cipher grade
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies:
+  - role: nmap

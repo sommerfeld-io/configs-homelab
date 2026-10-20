@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: nmap
+  description: Installs nmap for the netaudit roles
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies: []

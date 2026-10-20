@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: device_discovery
+  description: Lists all devices on the network and the inventory hosts that were not found
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies:
+  - role: nmap
