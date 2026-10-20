@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: monitor_config
+  description: Hyprland monitor layout and workspace pinning for Omarchy workstations
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies: []

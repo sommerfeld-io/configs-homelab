@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: taskfile_dev
+  description: Copies task-related files and config like a taskfile.yml
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies: []

@@ -7,7 +7,8 @@
     - ../vars/main.yml
     - ../vars/amd64.yml
   tasks:
-    - ansible.builtin.include_role:
+    - name: Media  ----  Mount USB disks
+      ansible.builtin.include_role:
         name: ../roles/common/mount-disk
       vars:
         mount_disk_uuid: "{{ item.uuid }}"
@@ -16,5 +17,6 @@
         - { uuid: "18941ac5-f008-4eac-9464-3e47936e6836", path: "/mnt/usb-5tb" }
         - { uuid: "b829fc10-85d3-477a-b403-d42e9dac2b1a", path: "/mnt/usb-5tb-2" }
 
-    - ansible.builtin.include_role:
+    - name: Media  ----  Install Jellyfin
+      ansible.builtin.include_role:
         name: ../roles/media/jellyfin

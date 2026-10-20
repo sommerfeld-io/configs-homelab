@@ -6,7 +6,7 @@
     - name: RasPi  ----  Pi-hole  ----  Check for an already-running Pi-hole container
       community.docker.docker_container_info:
         name: pihole
-      register: raspi_pihole_existing_container
+      register: pihole_existing_container
 
     - name: RasPi  ----  Pi-hole  ----  Disable systemd-resolved DNS stub listener
       ansible.builtin.lineinfile:
@@ -14,7 +14,7 @@
         regexp: '^#?DNSStubListener='
         line: 'DNSStubListener=no'
         state: present
-      register: raspi_pihole_resolved_conf
+      register: pihole_resolved_conf
 
     - name: RasPi  ----  Pi-hole  ----  Point resolv.conf at the non-stub resolver
       ansible.builtin.file:
@@ -22,13 +22,13 @@
         dest: /etc/resolv.conf
         state: link
         force: true
-      register: raspi_pihole_resolv_conf
+      register: pihole_resolv_conf
 
     - name: RasPi  ----  Pi-hole  ----  Restart systemd-resolved
       ansible.builtin.systemd:
         name: systemd-resolved
         state: restarted
-      when: raspi_pihole_resolved_conf.changed or raspi_pihole_resolv_conf.changed
+      when: pihole_resolved_conf.changed or pihole_resolv_conf.changed
 
     - name: RasPi  ----  Pi-hole  ----  Verify port 53 is free
       ansible.builtin.wait_for:
@@ -36,8 +36,8 @@
         state: stopped
         timeout: 10
       when: >-
-        not (raspi_pihole_existing_container.exists and
-        raspi_pihole_existing_container.container.State.Running)
+        not (pihole_existing_container.exists and
+        pihole_existing_container.container.State.Running)
 
 - name: RasPi  ----  Pi-hole  ----  Deploy Pi-hole
   block:
@@ -50,37 +50,37 @@
         group: "{{ default_user }}"
         mode: u=rwx,g=rx,o=rx
       with_items:
-        - "{{ raspi_pihole_path }}"
+        - "{{ pihole_path }}"
 
     - name: RasPi  ----  Pi-hole  ----  Copy docker-compose.yml
       ansible.builtin.copy:
         src: files/docker-compose.yml
-        dest: "{{ raspi_pihole_path }}/docker-compose.yml"
+        dest: "{{ pihole_path }}/docker-compose.yml"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: u=rw,g=r,o=r
-      register: raspi_pihole_compose_file
+      register: pihole_compose_file
 
     - name: RasPi  ----  Pi-hole  ----  Start containers
       community.docker.docker_compose_v2:
-        project_src: "{{ raspi_pihole_path }}"
+        project_src: "{{ pihole_path }}"
         state: present
         pull: missing
 
     - name: RasPi  ----  Pi-hole  ----  Restart stack on config change
       community.docker.docker_compose_v2:
-        project_src: "{{ raspi_pihole_path }}"
+        project_src: "{{ pihole_path }}"
         state: restarted
-      when: raspi_pihole_compose_file.changed
+      when: pihole_compose_file.changed
 
     - name: RasPi  ----  Pi-hole  ----  Verify Pi-hole is running
       community.docker.docker_container_info:
         name: pihole
-      register: raspi_pihole_info
+      register: pihole_info
 
     - name: RasPi  ----  Pi-hole  ----  Assert Pi-hole is running
       ansible.builtin.assert:
         that:
-          - raspi_pihole_info.container.State.Running
+          - pihole_info.container.State.Running
         fail_msg: "Pi-hole container is not running"
         success_msg: "Pi-hole container is running"

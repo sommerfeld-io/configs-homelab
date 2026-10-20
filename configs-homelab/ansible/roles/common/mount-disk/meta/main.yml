@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: mount_disk
+  description: Mounts a disk by UUID to a path on a Linux file system
+  author: sommerfeld-io
+  license: MIT
+  min_ansible_version: "2.16"
+dependencies: []

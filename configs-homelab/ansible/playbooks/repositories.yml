@@ -6,7 +6,8 @@
   vars_files:
     - ../vars/main.yml
   tasks:
-    - ansible.builtin.include_role:
+    - name: Git Repositories  ----  Prepare directories
+      ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/filesystem
 
 - name: Clone git repositories 1

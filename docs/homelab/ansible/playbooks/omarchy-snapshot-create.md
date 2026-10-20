@@ -13,7 +13,7 @@ It is imported at the very top of the [desktop playbook](./desktop.md), so every
 To force a new snapshot within the day, pass the interval as an extra variable:
 
 ```bash
-ansible-playbook playbooks/omarchy-snapshot-create.yml --inventory hosts.yml --ask-become-pass -e omarchy_snapshot_min_interval_hours=0
+ansible-playbook playbooks/omarchy-snapshot-create.yml --inventory hosts.yml --ask-become-pass -e snapshot_min_interval_hours=0
 ```
 
 See the [Omarchy Snapshot role](../roles/omarchy/snapshot.md) for how to roll back to a snapshot.

@@ -7,11 +7,13 @@
     - ../vars/main.yml
   tasks:
 
-    - ansible.builtin.include_role:
+    - name: ClamAV  ----  Install
+      ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/clamav
         tasks_from: install
 
-    - ansible.builtin.include_role:
+    - name: ClamAV  ----  Scan
+      ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/clamav
         tasks_from: scan
       vars:

@@ -23,6 +23,7 @@
 		"configs-cloud/*/ansible/roles/*/defaults",
 		"configs-cloud/*/ansible/roles/*/files/**",
 		"configs-cloud/*/ansible/roles/*/handlers",
+		"configs-cloud/*/ansible/roles/*/meta",
 		"configs-cloud/*/ansible/roles/*/tasks",
 		"configs-cloud/*/ansible/roles/*/templates",
 		"configs-cloud/*/ansible/templates/*",

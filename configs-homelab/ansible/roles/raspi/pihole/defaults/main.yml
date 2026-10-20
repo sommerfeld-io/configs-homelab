@@ -1,2 +1,2 @@
 ---
-raspi_pihole_path: /opt/pihole
+pihole_path: /opt/pihole
