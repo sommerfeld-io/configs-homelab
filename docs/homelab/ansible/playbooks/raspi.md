@@ -4,6 +4,7 @@ This Ansible playbook configures all Raspberry Pi nodes in the home lab infrastr
 
 ## What it does
 
+- **ClamAV Removal**: Uninstalls ClamAV and removes its services, configuration, signature database, logs and `clamav` user (`tasks/uninstall-clamav.yml`). ClamAV is no longer installed on any host
 - **Base System Configuration**: Sets up essential system components including shell environment, filesystem structure, package management, and development tools across all Raspberry Pi nodes
 - **Container Platform**: Installs and configures Docker for containerized application deployment on all Pi devices
 - **Command Line Enhancement**: Configures improved console experience with Bash customizations

@@ -6,6 +6,7 @@ The playbook handles both system-level configuration requiring elevated privileg
 
 ## What it does
 
+- **ClamAV Removal**: Uninstalls ClamAV and removes its services, configuration, signature database, logs and `clamav` user (`tasks/uninstall-clamav.yml`). ClamAV is no longer installed on any host
 - **Security Hardening**: Applies security configurations and hardening measures to protect the system
 - **Shell Enhancement**: Sets up improved Bash configurations
 - **Virtualization Support**: Enables virtualization capabilities for running virtual machines and containers

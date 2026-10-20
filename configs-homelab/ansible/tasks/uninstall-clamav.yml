@@ -1,0 +1,54 @@
+---
+# Removes everything the former ansible-roles-collection/clamav role installed: the packages,
+# the freshclam and clamd services and configs, the signature database, logs and run directory.
+- name: Uninstall ClamAV  ----  Gather service facts
+  ansible.builtin.service_facts:
+
+- name: Uninstall ClamAV  ----  Stop and disable services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - clamav-daemon.service
+    - clamav-freshclam.service
+  when: item in ansible_facts.services
+
+- name: Uninstall ClamAV  ----  Ubuntu  ----  Purge packages
+  ansible.builtin.apt:
+    pkg:
+      - clamav
+      - clamav-base
+      - clamav-daemon
+      - clamav-freshclam
+    state: absent
+    purge: true
+    autoremove: true
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Uninstall ClamAV  ----  Arch  ----  Remove package
+  community.general.pacman:
+    name: clamav
+    state: absent
+    remove_nosave: true
+  when: ansible_facts['os_family'] == "Archlinux"
+
+- name: Uninstall ClamAV  ----  Remove configuration, signatures, logs and run directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/clamav
+    - /var/lib/clamav
+    - /var/log/clamav
+    - /var/run/clamav
+
+- name: Uninstall ClamAV  ----  Remove user
+  ansible.builtin.user:
+    name: clamav
+    state: absent
+
+- name: Uninstall ClamAV  ----  Remove group
+  ansible.builtin.group:
+    name: clamav
+    state: absent

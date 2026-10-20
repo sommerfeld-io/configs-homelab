@@ -9,6 +9,7 @@ The playbook handles both system-level configuration requiring elevated privileg
 ## What it does
 
 - **Snapshot (Omarchy)**: Imports the [Omarchy Snapshot Create playbook](./omarchy-snapshot-create.md) first, so Omarchy workstations get a snapper snapshot before anything is changed
+- **ClamAV Removal**: Uninstalls ClamAV and removes its services, configuration, signature database, logs and `clamav` user (`tasks/uninstall-clamav.yml`). ClamAV is no longer installed on any host
 - **Security Hardening**: Applies security configurations and hardening measures to protect the system
 - **Development Environment**: Installs and configures essential development tools
 - **Shell Enhancement**: Sets up improved Bash configurations

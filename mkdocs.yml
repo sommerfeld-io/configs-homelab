@@ -82,7 +82,6 @@ nav:
           - Ping: homelab/ansible/playbooks/ping.md
           - RasPi: homelab/ansible/playbooks/raspi.md
           - Repositories: homelab/ansible/playbooks/repositories.md
-          - Scan: homelab/ansible/playbooks/scan.md
           - Server: homelab/ansible/playbooks/server.md
           - SSH Trust: homelab/ansible/playbooks/ssh-trust.md
       - Ansible - Roles:

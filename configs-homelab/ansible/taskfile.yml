@@ -87,12 +87,6 @@ tasks:
     desc: *ansible-desc
     cmds: *ansible-cmd
 
-  scan:
-    vars:
-      PLAYBOOK: scan.yml
-    desc: *ansible-desc
-    cmds: *ansible-cmd
-
   server:
     vars:
       PLAYBOOK: server.yml
