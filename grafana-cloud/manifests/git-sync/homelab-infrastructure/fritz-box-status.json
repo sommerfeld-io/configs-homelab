@@ -40,7 +40,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -169,6 +169,1063 @@
           }
         }
       },
+      "panel-101": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_traffic_rate{direction=\"Received\",interface=\"WAN\"} * 8",
+                        "instant": false,
+                        "legendFormat": "Download",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_traffic_rate{direction=\"Sent\",interface=\"WAN\"} * 8",
+                        "instant": false,
+                        "legendFormat": "Upload",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Current WAN throughput, down/up",
+          "id": 101,
+          "links": [],
+          "title": "WAN Throughput",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-102": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_traffic_64{direction=\"Received\",interface=\"WAN\"}",
+                        "instant": false,
+                        "legendFormat": "Received",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_traffic_64{direction=\"Sent\",interface=\"WAN\"}",
+                        "instant": false,
+                        "legendFormat": "Sent",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Total bytes transferred on the WAN interface since last counter reset",
+          "id": 102,
+          "links": [],
+          "title": "WAN Traffic Totals",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "bytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-103": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_connection_uptime_seconds{connection=\"IP\"}",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Uptime of the current WAN IP connection",
+          "id": 103,
+          "links": [],
+          "title": "Connection Uptime",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "s"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-104": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "count(gateway_host_active == 1)",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant",
+                        "range": false
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Number of currently active hosts on the network",
+          "id": 104,
+          "links": [],
+          "title": "Connected Hosts",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-105": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_cable_power_downstream",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Downstream power level per channel, in dBmV",
+          "id": 105,
+          "links": [],
+          "title": "Downstream Power (DOCSIS 3.0)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "min",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-106": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_cable_power_downstream31",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Downstream power level per OFDM channel, in dBmV. Only populated if the box negotiated DOCSIS 3.1 channels with the ISP.",
+          "id": 106,
+          "links": [],
+          "title": "Downstream Power (DOCSIS 3.1 / OFDM)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "min",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-107": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_cable_power_upstream",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Upstream power level per channel, in dBmV",
+          "id": 107,
+          "links": [],
+          "title": "Upstream Power (DOCSIS 3.0)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "min",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-108": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_cable_power_upstream31",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Upstream power level per OFDMA channel, in dBmV. Only populated if the box negotiated DOCSIS 3.1 channels with the ISP.",
+          "id": 108,
+          "links": [],
+          "title": "Upstream Power (DOCSIS 3.1 / OFDMA)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "min",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-109": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "gateway_cable_mse_downstream",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Downstream Mean Square Error (MSE) per channel, in dB — the closest signal-quality proxy this metric set exposes. No MER/SNR-named series or any upstream signal-quality metric is available from this exporter's cable metric set.",
+          "id": 109,
+          "links": [],
+          "title": "Downstream MSE",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "none"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
       "panel-11": {
         "kind": "Panel",
         "spec": {
@@ -182,7 +1239,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -319,6 +1376,248 @@
           }
         }
       },
+      "panel-110": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(gateway_cable_correctables_downstream[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Rate of correctable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
+          "id": 110,
+          "links": [],
+          "title": "Downstream Correctable Codeword Errors",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-111": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(gateway_cable_uncorrectables_downstream[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Rate of uncorrectable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
+          "id": 111,
+          "links": [],
+          "title": "Downstream Uncorrectable Codeword Errors",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
       "panel-12": {
         "kind": "Panel",
         "spec": {
@@ -332,7 +1631,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -481,7 +1780,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -611,7 +1910,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -733,7 +2032,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -803,7 +2102,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1029,7 +2328,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1052,7 +2351,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1230,7 +2529,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1361,7 +2660,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1483,7 +2782,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1605,7 +2904,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1728,7 +3027,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -1798,7 +3097,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2029,7 +3328,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2109,7 +3408,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2235,7 +3534,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2391,7 +3690,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2513,7 +3812,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2533,7 +3832,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2652,7 +3951,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2767,7 +4066,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -2888,7 +4187,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "grafanacloud-prom"
+                        "name": "${prometheus_datasource}"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -3021,80 +4320,335 @@
       }
     },
     "layout": {
-      "kind": "RowsLayout",
+      "kind": "TabsLayout",
       "spec": {
-        "rows": [
+        "tabs": [
           {
-            "kind": "RowsLayoutRow",
+            "kind": "TabsLayoutTab",
             "spec": {
-              "collapse": false,
               "layout": {
-                "kind": "GridLayout",
+                "kind": "RowsLayout",
                 "spec": {
-                  "items": [
+                  "rows": [
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-10"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-10"
+                                  },
+                                  "height": 4,
+                                  "width": 4,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-29"
+                                  },
+                                  "height": 4,
+                                  "width": 7,
+                                  "x": 4,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-9"
+                                  },
+                                  "height": 4,
+                                  "width": 5,
+                                  "x": 11,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-21"
+                                  },
+                                  "height": 4,
+                                  "width": 4,
+                                  "x": 16,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-13"
+                                  },
+                                  "height": 4,
+                                  "width": 4,
+                                  "x": 20,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 4,
-                        "width": 4,
-                        "x": 0,
-                        "y": 0
+                        "title": "Status"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-29"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-11"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-12"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 4,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-3"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 8,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-22"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 12,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-8"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 16,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-16"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 20,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 4,
-                        "width": 7,
-                        "x": 4,
-                        "y": 0
+                        "title": "Bandwidth Overview"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-18"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-27"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-2"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "standard"
+                          }
                         },
-                        "height": 4,
-                        "width": 5,
-                        "x": 11,
-                        "y": 0
+                        "title": "Bandwidth Trends"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-21"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-34"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-36"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-38"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "standard"
+                          }
                         },
-                        "height": 4,
-                        "width": 4,
-                        "x": 16,
-                        "y": 0
+                        "title": "System Health"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-13"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-24"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-26"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "standard"
+                          }
                         },
-                        "height": 4,
-                        "width": 4,
-                        "x": 20,
-                        "y": 0
+                        "title": "WLAN \u0026 Devices"
+                      }
+                    },
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-32"
+                                  },
+                                  "height": 27,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "title": "Network Devices"
                       }
                     }
                   ]
@@ -3104,245 +4658,215 @@
             }
           },
           {
-            "kind": "RowsLayoutRow",
+            "kind": "TabsLayoutTab",
             "spec": {
-              "collapse": false,
               "layout": {
-                "kind": "GridLayout",
+                "kind": "RowsLayout",
                 "spec": {
-                  "items": [
+                  "rows": [
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-11"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-101"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-102"
+                                  },
+                                  "height": 8,
+                                  "width": 8,
+                                  "x": 12,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-103"
+                                  },
+                                  "height": 4,
+                                  "width": 4,
+                                  "x": 20,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-104"
+                                  },
+                                  "height": 4,
+                                  "width": 4,
+                                  "x": 20,
+                                  "y": 4
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 5,
-                        "width": 4,
-                        "x": 0,
-                        "y": 0
+                        "title": "WAN"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-12"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-105"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-106"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-107"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 8
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-108"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 8
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 5,
-                        "width": 4,
-                        "x": 4,
-                        "y": 0
+                        "title": "DOCSIS — Power"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-109"
+                                  },
+                                  "height": 8,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 5,
-                        "width": 4,
-                        "x": 8,
-                        "y": 0
+                        "title": "DOCSIS — Signal Quality"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "RowsLayoutRow",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-22"
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-110"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-111"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 5,
-                        "width": 4,
-                        "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-8"
-                        },
-                        "height": 5,
-                        "width": 4,
-                        "x": 16,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-16"
-                        },
-                        "height": 5,
-                        "width": 4,
-                        "x": 20,
-                        "y": 0
+                        "title": "DOCSIS — Errors"
                       }
                     }
                   ]
                 }
               },
-              "title": "Bandwidth Overview"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": false,
-              "layout": {
-                "kind": "AutoGridLayout",
-                "spec": {
-                  "columnWidthMode": "standard",
-                  "items": [
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-18"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-27"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-2"
-                        }
-                      }
-                    }
-                  ],
-                  "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
-                }
-              },
-              "title": "Bandwidth Trends"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": false,
-              "layout": {
-                "kind": "AutoGridLayout",
-                "spec": {
-                  "columnWidthMode": "standard",
-                  "items": [
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-34"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-36"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-38"
-                        }
-                      }
-                    }
-                  ],
-                  "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
-                }
-              },
-              "title": "System Health"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": false,
-              "layout": {
-                "kind": "AutoGridLayout",
-                "spec": {
-                  "columnWidthMode": "standard",
-                  "items": [
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-24"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "AutoGridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-26"
-                        }
-                      }
-                    }
-                  ],
-                  "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
-                }
-              },
-              "title": "WLAN \u0026 Devices"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": false,
-              "layout": {
-                "kind": "GridLayout",
-                "spec": {
-                  "items": [
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-32"
-                        },
-                        "height": 27,
-                        "width": 24,
-                        "x": 0,
-                        "y": 0
-                      }
-                    }
-                  ]
-                }
-              },
-              "title": "Network Devices"
+              "title": "Cable Modem"
             }
           }
         ]
@@ -3385,6 +4909,27 @@
       "to": "now"
     },
     "title": "FRITZ!Box / Status",
-    "variables": []
+    "variables": [
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "grafanacloud-sommerfeldio-prom",
+            "value": "grafanacloud-prom"
+          },
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "Prometheus Datasource",
+          "multi": false,
+          "name": "prometheus_datasource",
+          "options": [],
+          "pluginId": "prometheus",
+          "refresh": "onDashboardLoad",
+          "regex": "(?!grafanacloud-usage|grafanacloud-ml-metrics).+",
+          "skipUrlSync": false
+        }
+      }
+    ]
   }
 }
