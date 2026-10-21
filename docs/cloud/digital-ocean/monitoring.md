@@ -1,15 +1,15 @@
 # Monitoring
 
-The droplet and the fantasy hockey app have one Grafana Cloud dashboard: `Apps / Fantasy Hockey / Droplet` in the folder `apps`. It shows the host, the app, the Caddy proxy in front of it (with the certificate status), the containers and the logs of all containers on the droplet. The dashboard has no alert rules. The only alerts for the droplet are the three built-in rules of its [External Probe](#external-probe), and they are not routed to a contact point yet, see [Synthetic Monitoring](../../grafana-cloud/synthetic-monitoring.md#alert-routing-and-detection-time).
+The droplet and the fantasy hockey app have one Grafana Cloud dashboard: `Apps / Fantasy Hockey / Droplet` in the folder `apps-and-development`. It shows the host, the app, the Caddy proxy in front of it (with the certificate status), the containers and the logs of all containers on the droplet. The dashboard has no alert rules. The only alerts for the droplet are the three built-in rules of its [External Probe](#external-probe), and they are not routed to a contact point yet, see [Synthetic Monitoring](../../grafana-cloud/synthetic-monitoring.md#alert-routing-and-detection-time).
 
 ## Where the Dashboard Lives
 
 The dashboard is a hand-written manifest in this repository:
 
-| File                                                                | Content                                           |
-|---------------------------------------------------------------------|---------------------------------------------------|
-| `grafana-cloud/manifests/git-sync/apps/_folder.json`                | The Grafana folder `apps`                         |
-| `grafana-cloud/manifests/git-sync/apps/fantasy-hockey-droplet.json` | The dashboard (schema `dashboard.grafana.app/v2`) |
+| File                                                                                | Content                                           |
+|-------------------------------------------------------------------------------------|---------------------------------------------------|
+| `grafana-cloud/manifests/git-sync/apps-and-development/_folder.json`                | The Grafana folder `apps-and-development`         |
+| `grafana-cloud/manifests/git-sync/apps-and-development/fantasy-hockey-droplet.json` | The dashboard (schema `dashboard.grafana.app/v2`) |
 
 It reaches Grafana Cloud through Git Sync once the commit lands on `main`, the branch Git Sync reads. A dashboard change on a feature branch shows up only after the merge. Edits made later in the Grafana Cloud UI are written back to this file by Git Sync (see `grafana-cloud/manifests/git-sync/README.md`). Git Sync may rewrite IDs or the formatting of the files on its first sync, which is expected.
 

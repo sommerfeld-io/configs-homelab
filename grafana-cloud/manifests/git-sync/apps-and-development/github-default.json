@@ -2386,7 +2386,7 @@
         "title": "Source (GitHub)",
         "tooltip": "View source file in repository",
         "type": "link",
-        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-default.json"
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/apps-and-development/github-default.json"
       }
     ],
     "liveNow": false,
@@ -2414,7 +2414,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "GitHub / Default",
+    "title": "Development / GitHub / Default",
     "variables": [
       {
         "kind": "DatasourceVariable",

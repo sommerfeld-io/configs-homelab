@@ -1567,7 +1567,7 @@
         "title": "Source (GitHub)",
         "tooltip": "View source file in repository",
         "type": "link",
-        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-workflows-overview-by-repo-and-workflow.json"
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/apps-and-development/github-workflows-overview-by-repo-and-workflow.json"
       },
       {
         "asDropdown": true,
@@ -1631,7 +1631,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "GitHub / Workflows / Overview by Repo and Workflow",
+    "title": "Development / GitHub / Workflows / Overview by Repo and Workflow",
     "variables": [
       {
         "kind": "DatasourceVariable",
