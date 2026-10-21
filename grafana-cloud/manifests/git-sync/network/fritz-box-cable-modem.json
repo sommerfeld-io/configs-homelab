@@ -27,7 +27,7 @@
       }
     ],
     "cursorSync": "Off",
-    "description": "WAN throughput and DOCSIS cable-modem metrics for the FRITZ!Box 6591 Cable on pi4-dradis, via sberk42/fritzbox_exporter.",
+    "description": "WAN throughput and DOCSIS cable-modem metrics for the FRITZ!Box 6591 Cable on pi4-0002, via sberk42/fritzbox_exporter.",
     "editable": true,
     "elements": {
       "panel-1": {

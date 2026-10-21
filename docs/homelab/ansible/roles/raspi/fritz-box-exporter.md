@@ -1,10 +1,10 @@
 # Role: RasPi / Fritz Box Exporter
 
-This role deploys [`sberk42/fritzbox_exporter`](https://github.com/sberk42/fritzbox_exporter) as a Docker Compose service on `pi4-dradis`, exposing Prometheus metrics for an AVM FRITZ!Box 6591 Cable modem — WAN throughput/uptime/connected-host counts (via UPnP/TR-064) and DOCSIS cable metrics (downstream/upstream power, MSE, correctable/uncorrectable codeword errors, via the box's `data.lua` API).
+This role deploys [`sberk42/fritzbox_exporter`](https://github.com/sberk42/fritzbox_exporter) as a Docker Compose service on `pi4-0002`, exposing Prometheus metrics for an AVM FRITZ!Box 6591 Cable modem — WAN throughput/uptime/connected-host counts (via UPnP/TR-064) and DOCSIS cable metrics (downstream/upstream power, MSE, correctable/uncorrectable codeword errors, via the box's `data.lua` API).
 
 `files/docker-compose.yml` and `files/metrics-lua-cable.json` are plain, static files (no Ansible templating) copied to `{{ raspi_fritz_box_exporter_path }}`, and the container is brought up with `pull: always` so the pinned digest is always re-verified. FRITZ!Box credentials are never written to disk on the target: `FRITZBOX_USERNAME`/`FRITZBOX_PASSWORD` are set as task-level environment variables on the `docker_compose_v2` calls, and the plain compose file references them via Docker Compose's own `${VAR}` interpolation, which reads from that process environment.
 
-Metrics themselves are **not** shipped by a dedicated Alloy instance in this stack — this exporter is scraped by the homelab's existing, single, fleet-wide Alloy agent (`configs-homelab/ansible/roles/grafana-cloud/alloy`), which already runs on every host including `pi4-dradis`. A static `localhost:9042` scrape target was added to that shared `config.alloy.j2` template, following the exact same convention already used for the Ollama integration: the same rendered config goes to every host, and on hosts other than `pi4-dradis` the target simply reports `up=0` — no errors. See that role's template for details.
+Metrics themselves are **not** shipped by a dedicated Alloy instance in this stack — this exporter is scraped by the homelab's existing, single, fleet-wide Alloy agent (`configs-homelab/ansible/roles/grafana-cloud/alloy`), which already runs on every host including `pi4-0002`. A static `localhost:9042` scrape target was added to that shared `config.alloy.j2` template, following the exact same convention already used for the Ollama integration: the same rendered config goes to every host, and on hosts other than `pi4-0002` the target simply reports `up=0` — no errors. See that role's template for details.
 
 ## Manual prerequisites
 
@@ -16,7 +16,7 @@ Metrics themselves are **not** shipped by a dedicated Alloy instance in this sta
 
 ### 2. Grafana Cloud
 
-No new Grafana Cloud credentials are needed for this role. Metrics ride the homelab's existing shared Alloy pipeline and its existing `configs-homelab/ansible/vars/grafana-vault.yml` credentials, which are already applied to `pi4-dradis` via `configs-homelab/ansible/playbooks/grafana-agents.yml`.
+No new Grafana Cloud credentials are needed for this role. Metrics ride the homelab's existing shared Alloy pipeline and its existing `configs-homelab/ansible/vars/grafana-vault.yml` credentials, which are already applied to `pi4-0002` via `configs-homelab/ansible/playbooks/grafana-agents.yml`.
 
 ### 3. Git Sync caveat
 
@@ -24,10 +24,10 @@ No new Grafana Cloud credentials are needed for this role. Metrics ride the home
 
 ### 4. Secrets
 
-`configs-homelab/ansible/host_vars/pi4-dradis/fritz-box-vault.yml` currently holds empty placeholder values for `fritzbox_username` / `fritzbox_password` (the FRITZ!Box user created above) and is **not yet Ansible Vault-encrypted** — fill in the real values and vault-encrypt it yourself when ready:
+`configs-homelab/ansible/host_vars/pi4-0002/fritz-box-vault.yml` currently holds empty placeholder values for `fritzbox_username` / `fritzbox_password` (the FRITZ!Box user created above) and is **not yet Ansible Vault-encrypted** — fill in the real values and vault-encrypt it yourself when ready:
 
 ```bash
-ansible-vault encrypt configs-homelab/ansible/host_vars/pi4-dradis/fritz-box-vault.yml
+ansible-vault encrypt configs-homelab/ansible/host_vars/pi4-0002/fritz-box-vault.yml
 ```
 
 No other change is needed afterwards — this file is loaded via `vars_files` in `configs-homelab/ansible/playbooks/raspi.yml`, which transparently decrypts vault-encrypted files.
@@ -35,12 +35,12 @@ No other change is needed afterwards — this file is loaded via `vars_files` in
 ## Running the role
 
 ```bash
-ansible-playbook configs-homelab/ansible/playbooks/raspi.yml --limit pi4-dradis.fritz.box --tags fritz-box-exporter --ask-become-pass --ask-vault-pass
+ansible-playbook configs-homelab/ansible/playbooks/raspi.yml --limit pi4-0002.fritz.box --tags fritz-box-exporter --ask-become-pass --ask-vault-pass
 ```
 
 ## Verifying
 
-1. `curl http://pi4-dradis.fritz.box:9042/metrics | grep gateway_` — confirm real metric names, and correct the role's post-deploy assertion / the dashboard's panel expressions if they differ from what was assumed.
+1. `curl http://pi4-0002.fritz.box:9042/metrics | grep gateway_` — confirm real metric names, and correct the role's post-deploy assertion / the dashboard's panel expressions if they differ from what was assumed.
 2. Confirm the target is being scraped: check the Alloy UI or Grafana Cloud Explore for `job="integrations/fritz-box-exporter"`. This requires `configs-homelab/ansible/playbooks/grafana-agents.yml` to have been (re-)run after the shared Alloy config was updated.
 3. Confirm the dashboard renders under the `network` folder in Grafana Cloud once Git Sync reconciles.
 
@@ -55,5 +55,5 @@ ansible-playbook configs-homelab/ansible/playbooks/raspi.yml --limit pi4-dradis.
 | Variable            | Description                                                                                      |
 |---------------------|--------------------------------------------------------------------------------------------------|
 | `default_user`      | The user that owns the deploy directory and compose file on the node                             |
-| `fritzbox_username` | FRITZ!Box user created above; loaded from `configs-homelab/ansible/host_vars/pi4-dradis/fritz-box-vault.yml`     |
-| `fritzbox_password` | Password for `fritzbox_username`; loaded from `configs-homelab/ansible/host_vars/pi4-dradis/fritz-box-vault.yml` |
+| `fritzbox_username` | FRITZ!Box user created above; loaded from `configs-homelab/ansible/host_vars/pi4-0002/fritz-box-vault.yml`     |
+| `fritzbox_password` | Password for `fritzbox_username`; loaded from `configs-homelab/ansible/host_vars/pi4-0002/fritz-box-vault.yml` |

@@ -80,14 +80,14 @@
         mount_disk_uuid: "68a36c9f-9a1b-40e9-9bf4-fd2b6b6eeeef" # run `sudo blkid` to get ID
         mount_disk_path: "/mnt/data"
 
-- name: Install and configure pi4-dradis specifics
-  hosts: pi4-dradis.fritz.box
+- name: Install and configure pi4-0002 specifics
+  hosts: pi4-0002.fritz.box
   gather_facts: true
   become: true
   vars_files:
     - ../vars/main.yml
     - ../vars/raspi.yml
-    - ../host_vars/pi4-dradis/fritz-box-vault.yml
+    - ../host_vars/pi4-0002/fritz-box-vault.yml
   tasks:
     - ansible.builtin.include_role:
         name: ../roles/raspi/pihole

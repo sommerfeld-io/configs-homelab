@@ -77,13 +77,6 @@ tasks:
     desc: *ssh-connect-desc
     cmds: *ssh-connect-cmd
 
-  ssh:connect:pi4-dradis:
-    vars:
-      USER: sebastian
-      HOST: pi4-dradis.fritz.box
-    desc: *ssh-connect-desc
-    cmds: *ssh-connect-cmd
-
   ssh:connect:pi4-0005:
     vars:
       USER: sebastian

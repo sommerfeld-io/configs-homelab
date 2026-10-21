@@ -174,7 +174,7 @@ graph TD
     subgraph Inventory Groups
         UD["ubuntu_desktop<br/>kobol, picon"]
         US["ubuntu_server<br/>caprica"]
-        RP["raspi<br/>pi4-0006, pi4-0005, pi4-0002, pi4-dradis, pi5-0004"]
+        RP["raspi<br/>pi4-0006, pi4-0005, pi4-0002, pi5-0004"]
         OL["ollama (cross-cutting)<br/>caprica, picon"]
     end
     OP(["Operator<br/>runs ansible-playbook locally"])

@@ -27,7 +27,7 @@
       }
     ],
     "cursorSync": "Off",
-    "description": "Pi-hole container health, resource usage, and logs on pi4-dradis.",
+    "description": "Pi-hole container health, resource usage, and logs on pi4-0002.",
     "editable": true,
     "elements": {
       "panel-1": {

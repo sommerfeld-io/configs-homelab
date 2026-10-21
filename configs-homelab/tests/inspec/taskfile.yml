@@ -109,17 +109,6 @@ tasks:
           HOST: '{{ .HOST }}'
           PROFILE: '{{ .ITEM }}'
 
-  run:pi4-dradis:
-    desc: *inspec-run-desc
-    vars:
-      HOST: pi4-dradis.fritz.box
-    cmds:
-      - for: ['raspi-baseline']
-        task: internal:run-profile
-        vars:
-          HOST: '{{ .HOST }}'
-          PROFILE: '{{ .ITEM }}'
-
   run:pi5-0004:
     desc: *inspec-run-desc
     vars:

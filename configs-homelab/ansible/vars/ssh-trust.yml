@@ -19,19 +19,16 @@ ssh_trust_pairs:
   - { src: caprica.fritz.box, dest: kobol.fritz.box }
 
   # Workstations -> RasPi nodes (one way only: the RasPi nodes must not connect to other hosts)
-  - { src: picon.fritz.box, dest: pi4-dradis.fritz.box }
   - { src: picon.fritz.box, dest: pi4-0002.fritz.box }
   - { src: picon.fritz.box, dest: pi5-0004.fritz.box }
   - { src: picon.fritz.box, dest: pi4-0005.fritz.box }
   - { src: picon.fritz.box, dest: pi4-0006.fritz.box }
 
-  - { src: kobol.fritz.box, dest: pi4-dradis.fritz.box }
   - { src: kobol.fritz.box, dest: pi4-0002.fritz.box }
   - { src: kobol.fritz.box, dest: pi5-0004.fritz.box }
   - { src: kobol.fritz.box, dest: pi4-0005.fritz.box }
   - { src: kobol.fritz.box, dest: pi4-0006.fritz.box }
 
-  - { src: caprica.fritz.box, dest: pi4-dradis.fritz.box }
   - { src: caprica.fritz.box, dest: pi4-0002.fritz.box }
   - { src: caprica.fritz.box, dest: pi5-0004.fritz.box }
   - { src: caprica.fritz.box, dest: pi4-0005.fritz.box }

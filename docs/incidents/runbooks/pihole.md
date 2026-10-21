@@ -1,10 +1,10 @@
 # Runbook - Pi-hole
 
-Pi-hole runs as a Docker Compose service on `pi4-dradis.fritz.box`, deployed by the [RasPi / Pi-hole](../../homelab/ansible/roles/raspi/pihole.md) Ansible role. Use this runbook when Pi-hole is not resolving DNS queries or the container is otherwise not up and running.
+Pi-hole runs as a Docker Compose service on `pi4-0002.fritz.box`, deployed by the [RasPi / Pi-hole](../../homelab/ansible/roles/raspi/pihole.md) Ansible role. Use this runbook when Pi-hole is not resolving DNS queries or the container is otherwise not up and running.
 
 ## Todo
 
-- [ ] SSH into `pi4-dradis.fritz.box`
+- [ ] SSH into `pi4-0002.fritz.box`
 - [ ] `cd /opt/pihole`
 - [ ] Inspect the container state with `docker ps`
 - [ ] Inspect recent logs with `docker compose logs`

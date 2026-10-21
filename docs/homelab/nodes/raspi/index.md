@@ -8,9 +8,8 @@ The Raspberry Pi fleet consists of multiple Raspberry Pi devices that handle ded
 
 | Name         | Model    | RAM | Main Storage  | Role                             |
 | ------------ | -------- | --- | ------------- | -------------------------------- |
-| `pi4-dradis` | RasPi 4B | 8GB | 64GB microSD  | Connected to Fritz!Box via cable |
 | `pi4-0005`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
-| `pi4-0002`   | RasPi 4B | 8GB | 64GB microSD  | -                                |
+| `pi4-0002`   | RasPi 4B | 8GB | 64GB microSD  | Pi-hole, FRITZ!Box exporter      |
 | `pi4-0006`   | RasPi 4B | 8GB | 32GB microSD  | -                                |
 | `pi5-0004`   | RasPi 5  | 8GB | 128GB microSD | -                                |
 
@@ -27,8 +26,6 @@ Workstations and Raspberry Pi nodes are organized in a "DeskPi RackMate T0", a c
                      |  Network Switch         |
                      +-------------------------+
 ```
-
-`pi4-dradis` is in a separate case outside of the rack
 
 > **:NOTE:** Node numbers are not necessarily sequential. When a node is reinstalled, its number is incremented to avoid hostname conflicts with the FritzBox router.
 
