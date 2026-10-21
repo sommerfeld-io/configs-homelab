@@ -13,10 +13,7 @@
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
-          "legacyOptions": {
-            "type": "dashboard"
-          },
-          "name": "Annotations & Alerts",
+          "name": "Annotations \u0026 Alerts",
           "query": {
             "datasource": {
               "name": "-- Grafana --"
@@ -138,6 +135,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -147,8 +145,7 @@
                       }
                     ]
                   },
-                  "unit": "bps",
-                  "min": 0
+                  "unit": "bps"
                 },
                 "overrides": []
               },
@@ -171,9 +168,251 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(gateway_cable_correctables_downstream[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
             }
+          },
+          "description": "Rate of correctable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
+          "id": 10,
+          "links": [],
+          "title": "Downstream Correctable Codeword Errors",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
+          }
+        }
+      },
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${prometheus_datasource}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(gateway_cable_uncorrectables_downstream[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{frequency}}",
+                        "queryType": "range",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Rate of uncorrectable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
+          "id": 11,
+          "links": [],
+          "title": "Downstream Uncorrectable Codeword Errors",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 10,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "short"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -282,6 +521,7 @@
                       "mode": "off"
                     }
                   },
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -291,8 +531,7 @@
                       }
                     ]
                   },
-                  "unit": "bytes",
-                  "min": 0
+                  "unit": "bytes"
                 },
                 "overrides": []
               },
@@ -314,9 +553,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -397,9 +636,9 @@
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -480,9 +719,9 @@
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -601,9 +840,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -722,9 +961,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -843,9 +1082,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -964,9 +1203,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       },
@@ -1005,7 +1244,7 @@
               "transformations": []
             }
           },
-          "description": "Downstream Mean Square Error (MSE) per channel, in dB \u2014 the closest signal-quality proxy this metric set exposes. No MER/SNR-named series or any upstream signal-quality metric is available from this exporter's cable metric set.",
+          "description": "Downstream Mean Square Error (MSE) per channel, in dB — the closest signal-quality proxy this metric set exposes. No MER/SNR-named series or any upstream signal-quality metric is available from this exporter's cable metric set.",
           "id": 9,
           "links": [],
           "title": "Downstream MSE",
@@ -1084,251 +1323,9 @@
                   "mode": "multi",
                   "sort": "desc"
                 }
-              },
-              "version": "13.1.0-24655759693"
-            }
-          }
-        }
-      },
-      "panel-10": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${prometheus_datasource}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "rate(gateway_cable_correctables_downstream[$__rate_interval])",
-                        "instant": false,
-                        "legendFormat": "{{frequency}}",
-                        "queryType": "range",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Rate of correctable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
-          "id": 10,
-          "links": [],
-          "title": "Downstream Correctable Codeword Errors",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 10,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "smooth",
-                    "lineWidth": 2,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short",
-                  "min": 0
-                },
-                "overrides": []
-              },
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max"
-                  ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              },
-              "version": "13.1.0-24655759693"
-            }
-          }
-        }
-      },
-      "panel-11": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${prometheus_datasource}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "rate(gateway_cable_uncorrectables_downstream[$__rate_interval])",
-                        "instant": false,
-                        "legendFormat": "{{frequency}}",
-                        "queryType": "range",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Rate of uncorrectable DOCSIS 3.0 downstream codeword errors per channel. No upstream or DOCSIS 3.1 error counters are available from this exporter's cable metric set.",
-          "id": 11,
-          "links": [],
-          "title": "Downstream Uncorrectable Codeword Errors",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 10,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "smooth",
-                    "lineWidth": 2,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short",
-                  "min": 0
-                },
-                "overrides": []
-              },
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max"
-                  ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              },
-              "version": "13.1.0-24655759693"
-            }
+              }
+            },
+            "version": "13.3.0-39214152447"
           }
         }
       }
@@ -1379,7 +1376,7 @@
                           "name": "panel-3"
                         },
                         "height": 4,
-                        "width": 2,
+                        "width": 4,
                         "x": 20,
                         "y": 0
                       }
@@ -1392,9 +1389,9 @@
                           "name": "panel-4"
                         },
                         "height": 4,
-                        "width": 2,
-                        "x": 22,
-                        "y": 0
+                        "width": 4,
+                        "x": 20,
+                        "y": 4
                       }
                     }
                   ]
@@ -1466,7 +1463,7 @@
                   ]
                 }
               },
-              "title": "DOCSIS \u2014 Power"
+              "title": "DOCSIS — Power"
             }
           },
           {
@@ -1493,7 +1490,7 @@
                   ]
                 }
               },
-              "title": "DOCSIS \u2014 Signal Quality"
+              "title": "DOCSIS — Signal Quality"
             }
           },
           {
@@ -1533,7 +1530,7 @@
                   ]
                 }
               },
-              "title": "DOCSIS \u2014 Errors"
+              "title": "DOCSIS — Errors"
             }
           }
         ]
