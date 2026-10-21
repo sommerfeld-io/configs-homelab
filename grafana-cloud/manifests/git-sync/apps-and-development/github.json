@@ -2414,7 +2414,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "Development / GitHub / Default",
+    "title": "Development / GitHub",
     "variables": [
       {
         "kind": "DatasourceVariable",
