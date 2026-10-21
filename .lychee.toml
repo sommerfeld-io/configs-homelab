@@ -4,7 +4,8 @@ verbose = 'info'
 
 exclude_path = [
     'node_modules',
-    'target'
+    'target',
+    '_bmad-output'
 ]
 exclude_loopback = true
 exclude = [
