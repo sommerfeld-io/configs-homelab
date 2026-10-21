@@ -1,0 +1,773 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "github-workflows-overview-v2"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana",
+            "version": "v0",
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "spec": {}
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "builtIn": true
+        }
+      }
+    ],
+    "cursorSync": "Off",
+    "description": "Latest pipeline.yml (main) and release.yml (tag) run status per repository for the $owner GitHub org.",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "id": 1,
+          "title": "pipeline.yml - Latest run on main Branch",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "configs-homelab"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "inspec-profiles"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "container-images"
+                      }
+                    },
+                    "refId": "C",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "ansible-roles-collection"
+                      }
+                    },
+                    "refId": "D",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "tech-radar"
+                      }
+                    },
+                    "refId": "E",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "pipeline.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": ".github"
+                      }
+                    },
+                    "refId": "F",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "__expr__",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "spec": {
+                        "expression": "SELECT COALESCE((SELECT conclusion FROM A WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `configs-homelab`, COALESCE((SELECT conclusion FROM B WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `inspec-profiles`, COALESCE((SELECT conclusion FROM C WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `container-images`, COALESCE((SELECT conclusion FROM D WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `ansible-roles-collection`, COALESCE((SELECT conclusion FROM E WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `tech-radar`, COALESCE((SELECT conclusion FROM F WHERE head_branch = 'main' AND status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `.github`",
+                        "type": "sql"
+                      }
+                    },
+                    "refId": "Z",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "filterFieldsByName",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "^(${repo:pipe})$"
+                      }
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.0-39214152447",
+            "spec": {
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {},
+                "textMode": "name",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "mappings": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "cancelled": {
+                          "text": "cancelled",
+                          "color": "text",
+                          "index": 2
+                        },
+                        "failure": {
+                          "text": "failure",
+                          "color": "red",
+                          "index": 1
+                        },
+                        "no runs": {
+                          "text": "no runs",
+                          "color": "transparent",
+                          "index": 5
+                        },
+                        "skipped": {
+                          "text": "skipped",
+                          "color": "blue",
+                          "index": 3
+                        },
+                        "success": {
+                          "text": "success",
+                          "color": "green",
+                          "index": 0
+                        },
+                        "timed_out": {
+                          "text": "timed_out",
+                          "color": "orange",
+                          "index": 4
+                        }
+                      }
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "text"
+                  },
+                  "noValue": "no runs"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "id": 2,
+          "title": "release.yml - Latest run for a Git Tag",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "configs-homelab"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "inspec-profiles"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "container-images"
+                      }
+                    },
+                    "refId": "C",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "ansible-roles-collection"
+                      }
+                    },
+                    "refId": "D",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": "tech-radar"
+                      }
+                    },
+                    "refId": "E",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-github-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "cfq4tb1lcmarkd"
+                      },
+                      "spec": {
+                        "options": {
+                          "workflow": "release.yml"
+                        },
+                        "owner": "$owner",
+                        "queryType": "Workflow_Runs",
+                        "range": true,
+                        "repository": ".github"
+                      }
+                    },
+                    "refId": "F",
+                    "hidden": true
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "__expr__",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "spec": {
+                        "expression": "SELECT COALESCE((SELECT conclusion FROM A WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `configs-homelab`, COALESCE((SELECT conclusion FROM B WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `inspec-profiles`, COALESCE((SELECT conclusion FROM C WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `container-images`, COALESCE((SELECT conclusion FROM D WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `ansible-roles-collection`, COALESCE((SELECT conclusion FROM E WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `tech-radar`, COALESCE((SELECT conclusion FROM F WHERE status = 'completed' ORDER BY created_at DESC LIMIT 1), 'no runs') AS `.github`",
+                        "type": "sql"
+                      }
+                    },
+                    "refId": "Z",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "filterFieldsByName",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "^(${repo:pipe})$"
+                      }
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.0-39214152447",
+            "spec": {
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {},
+                "textMode": "name",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "mappings": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "cancelled": {
+                          "text": "cancelled",
+                          "color": "text",
+                          "index": 2
+                        },
+                        "failure": {
+                          "text": "failure",
+                          "color": "red",
+                          "index": 1
+                        },
+                        "no runs": {
+                          "text": "no runs",
+                          "color": "transparent",
+                          "index": 5
+                        },
+                        "skipped": {
+                          "text": "skipped",
+                          "color": "blue",
+                          "index": 3
+                        },
+                        "success": {
+                          "text": "success",
+                          "color": "green",
+                          "index": 0
+                        },
+                        "timed_out": {
+                          "text": "timed_out",
+                          "color": "orange",
+                          "index": 4
+                        }
+                      }
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "text"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "text"
+                  },
+                  "noValue": "no runs"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "RowsLayout",
+      "spec": {
+        "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "title": "GitHub Actions Workflows",
+              "collapse": false,
+              "layout": {
+                "kind": "AutoGridLayout",
+                "spec": {
+                  "maxColumnCount": 2,
+                  "columnWidthMode": "standard",
+                  "rowHeightMode": "standard",
+                  "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-1"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "links": [
+      {
+        "title": "Source (GitHub)",
+        "type": "link",
+        "icon": "external link",
+        "tooltip": "View source file in repository",
+        "url": "https://github.com/sommerfeld-io/configs-homelab/blob/main/grafana-cloud/manifests/git-sync/github/github-workflows-overview.json",
+        "tags": [],
+        "asDropdown": false,
+        "targetBlank": true,
+        "includeVars": false,
+        "keepTime": false
+      },
+      {
+        "title": "GitHub Dashboards",
+        "type": "dashboards",
+        "icon": "external link",
+        "tooltip": "",
+        "url": "about:blank",
+        "tags": [
+          "github"
+        ],
+        "asDropdown": true,
+        "targetBlank": false,
+        "includeVars": false,
+        "keepTime": false
+      },
+      {
+        "title": "GitHub Integration Dashboards",
+        "type": "dashboards",
+        "icon": "external link",
+        "tooltip": "",
+        "url": "about:blank",
+        "tags": [
+          "github-integration"
+        ],
+        "asDropdown": true,
+        "targetBlank": false,
+        "includeVars": false,
+        "keepTime": false
+      }
+    ],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "github"
+    ],
+    "timeSettings": {
+      "timezone": "browser",
+      "from": "now-7d",
+      "to": "now",
+      "autoRefresh": "1m",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "hideTimepicker": false,
+      "fiscalYearStartMonth": 0
+    },
+    "title": "Github / Workflows / Overview v2",
+    "variables": [
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "name": "datasource",
+          "pluginId": "grafana-github-datasource",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "current": {
+            "text": "grafana-github-datasource",
+            "value": "cfq4tb1lcmarkd"
+          },
+          "options": [],
+          "multi": false,
+          "includeAll": false,
+          "hide": "hideVariable",
+          "skipUrlSync": false,
+          "allowCustomValue": true
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "name": "owner",
+          "current": {
+            "text": "sommerfeld-io",
+            "value": "sommerfeld-io"
+          },
+          "query": "sommerfeld-io",
+          "label": "Owner",
+          "hide": "dontHide",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "repo",
+          "current": {
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "label": "Repository",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-github-datasource",
+            "version": "v0",
+            "datasource": {
+              "name": "cfq4tb1lcmarkd"
+            },
+            "spec": {
+              "owner": "$owner",
+              "queryType": "Repositories"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allowCustomValue": true
+        }
+      }
+    ],
+    "preferences": {
+      "layout": {
+        "kind": "GridLayout",
+        "spec": {
+          "items": []
+        }
+      }
+    }
+  }
+}
