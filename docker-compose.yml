@@ -90,6 +90,14 @@ services:
         done
     tty: *tty
 
+  dns-check:
+    # template service to run from configs-cloud/taskfile.yml (task cloud:dns:check)
+    # not intended to be run directly. dig for authoritative DNS queries; no volumes
+    image: nicolaka/netshoot:v0.16
+    entrypoint:
+      - dig
+    tty: *tty
+
   inspec:
     # template service to run from taskfile.yml
     # not intended to be run directly

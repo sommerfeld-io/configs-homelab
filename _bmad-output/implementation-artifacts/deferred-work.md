@@ -186,3 +186,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-5-3-caddy-logs-and-certificate-status-on-the-droplet-dashboard.md`
   summary: Unverified (medium if true): Top Paths `sum by (path)` over `[$__range]` may exceed Grafana Cloud Loki's series limit when scanners hit many distinct paths over long ranges.
   evidence: Settle by running the panel query over 7d and 30d in Explore after a few weeks of traffic; if it errors, reduce paths to their first segment or exclude 404s.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
+  summary: Decide in Story 8.2, before delegating `do.sommerfeld.app`, whether to pin Caddy's issuer to Let's Encrypt or widen the CAA record, because `CAA 0 issue "letsencrypt.org"` blocks Caddy's default ZeroSSL fallback.
+  evidence: `Caddyfile.j2` configures no `acme_ca` or issuer, so Caddy uses its default issuers; the CAA record only takes effect once the zone is delegated.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
+  summary: Unverified (medium if true): DigitalOcean may serve the CAA value as `letsencrypt.org.` with the trailing dot, which Let's Encrypt might not match as its issuer domain.
+  evidence: Settle in M5 by recording the exact `dig CAA do.sommerfeld.app @ns1.digitalocean.com` answer; if the dot is served, confirm issuance (staging) before Story 8.2 delegates the zone.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
+  summary: The DNS record derivation and the four preconditions in `dns.tf`, and `tofu validate` itself, are not run by CI; a broken key template or reference passes `fmt -check`.
+  evidence: The only OpenTofu check in CI is `lint-opentofu` (`fmt -check`); no `.tftest.hcl` exists. Belongs with Story 6.1 (CI static checks for OpenTofu): `tofu init -backend=false && tofu validate` plus a `mock_provider` plan test.

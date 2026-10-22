@@ -2,7 +2,8 @@
 title: 'Story 8.1: DigitalOcean DNS zone do.sommerfeld.app in OpenTofu'
 type: 'refactor'
 created: '2026-10-15'
-status: 'ready-for-dev'
+status: 'done'
+baseline_commit: 'b9699b0c667c8b4cfa0952c36c0176e38436615f'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -94,19 +95,19 @@ context:
 
 **Execution:**
 
-- [ ] **Pre-check (agent, read-only):** run `doctl compute domain list` and record whether `do.sommerfeld.app` or `sommerfeld.app` already exists in the account. If either exists, stop and add an import step (Design Notes). Needs `domain:read`, so this runs after M1.
-- [ ] `opentofu/dns.tf`:
+- [x] **Pre-check (agent, read-only):** run `doctl compute domain list` and record whether `do.sommerfeld.app` or `sommerfeld.app` already exists in the account. If either exists, stop and add an import step (Design Notes). Needs `domain:read`, so this runs after M1.
+- [x] `opentofu/dns.tf`:
     - `locals`: `dns_zone = "do.sommerfeld.app"`, `dns_ttl = 300`, `dns_droplet_records` (from `droplets_with_reserved_ip`), `dns_alias_records`, `dns_external_records` (empty map with a commented example), `dns_a_records` (merge of the three);
     - `digitalocean_domain.this` with `prevent_destroy` and the duplicate, alias and external preconditions;
     - `digitalocean_record.a` with `for_each = local.dns_a_records`;
     - `digitalocean_record.caa` at `@`.
 
   Each block gets a "why" comment. Result: the zone and the records are declared, with no copied IP.
-- [ ] `droplets.tf` header comment: document `dns_aliases`, and read it with `try(each.value.dns_aliases, [])` like `tags`. Result: case 5 (several names, one droplet) is supported without a new resource type.
-- [ ] `project.tf`: add the domain URN. `outputs.tf`: add `dns_records` and `dns_zone`. Result: `tofu output dns_records` replaces the manual lookup.
-- [ ] `opentofu/taskfile.yml` (`validate`), `configs-cloud/taskfile.yml` (`dns:check`), `docker-compose.yml` (pinned `dig` image). Result: authoritative queries work from the devcontainer.
-- [ ] Offline proof: `tofu fmt -check`, `tofu validate`, `task lint`. Then run `tofu plan -out=dns.tfplan` (needs the token with `domain:read`, so after M1) and `tofu show -json dns.tfplan | jq` to list every resource action. Record the action list in Implementation Notes. The only allowed actions are `create` on DNS resources and `update` on `digitalocean_project_resources.this`. Any `delete` or replacement aborts. Delete the plan file afterwards (it may contain state data). Result: the plan is reviewed before the operator applies.
-- [ ] New page `docs/cloud/digital-ocean/dns-zone.md`:
+- [x] `droplets.tf` header comment: document `dns_aliases`, and read it with `try(each.value.dns_aliases, [])` like `tags`. Result: case 5 (several names, one droplet) is supported without a new resource type.
+- [x] `project.tf`: add the domain URN. `outputs.tf`: add `dns_records` and `dns_zone`. Result: `tofu output dns_records` replaces the manual lookup.
+- [x] `opentofu/taskfile.yml` (`validate`), `configs-cloud/taskfile.yml` (`dns:check`), `docker-compose.yml` (pinned `dig` image). Result: authoritative queries work from the devcontainer.
+- [x] Offline proof: `tofu fmt -check`, `tofu validate`, `task lint`. Then run `tofu plan -out=dns.tfplan` (needs the token with `domain:read`, so after M1) and `tofu show -json dns.tfplan | jq` to list every resource action. Record the action list in Implementation Notes. The only allowed actions are `create` on DNS resources and `update` on `digitalocean_project_resources.this`. Any `delete` or replacement aborts. Delete the plan file afterwards (it may contain state data). Result: the plan is reviewed before the operator applies.
+- [x] New page `docs/cloud/digital-ocean/dns-zone.md`:
     - Architecture: the two zones, which provider is authoritative for which zone, and that the DigitalOcean zone serves nothing publicly until Story 8.2 delegates it. Diagram A.
     - Records: the derivation rule, `dns_aliases`, `dns_external_records`, TTLs and CAA.
     - How-tos:
@@ -127,7 +128,7 @@ context:
     - Recovery from a wrong record: fix and apply. A zone deleted outside OpenTofu: `apply` recreates it, and the NS hostnames are the same for every DigitalOcean zone, so the delegation needs no change.
     - Automated vs manual table.
     - Diagram B.
-- [ ] Diagram A (`kroki-plantuml` component or deployment diagram) in `dns-zone.md`:
+- [x] Diagram A (`kroki-plantuml` component or deployment diagram) in `dns-zone.md`:
     - the `.app` registry;
     - registrar and parent zone at all-inkl.com (`ns5`/`ns6.kasserver.com`), labelled authoritative for `sommerfeld.app`;
     - the NS delegation `do` → `ns1-3.digitalocean.com`, labelled "Story 8.2, manual in the KAS";
@@ -137,12 +138,12 @@ context:
     - the client resolution path through a recursive resolver.
 
   Mark manual elements with a `<<manual>>` stereotype or a note.
-- [ ] Diagram B (`kroki-plantuml` sequence diagram) in `dns-zone.md`. Actors: Operator, OpenTofu, DigitalOcean API, reserved IP, droplet, DigitalOcean DNS, recursive resolver, client. Two groups:
+- [x] Diagram B (`kroki-plantuml` sequence diagram) in `dns-zone.md`. Actors: Operator, OpenTofu, DigitalOcean API, reserved IP, droplet, DigitalOcean DNS, recursive resolver, client. Two groups:
     - **Droplet replaced:** the record is unchanged, the reserved IP is re-assigned, and clients keep the same answer.
     - **Reserved IP or target changed:** `plan` shows `~ value`, the operator reviews and applies, the API updates the record, and resolvers serve the old value until the TTL expires before they ask again.
 
   Separate the infrastructure change, the DNS update and the caching phase with `== ... ==` dividers.
-- [ ] Update the pages from the Code Map:
+- [x] Update the pages from the Code Map:
     - `droplet.md` §Files: add `dns.tf`;
     - `api-token.md`: the `domain` scope row (create, read, update, delete) and why. Remove "`domain` is not needed";
     - `index.md`: the "What Runs Where" diagram gets the DNS zone (declared, not yet delegated), plus Resources and Pages rows;
@@ -150,12 +151,12 @@ context:
     - `mkdocs.yml` nav.
 
   `domain.md` stays as it is except for one sentence linking `dns-zone.md` and saying the KAS record remains authoritative until Story 8.2. Result: the docs describe what is live.
-- [ ] Planning docs:
+- [x] Planning docs:
     - `_bmad-output/specs/spec-fantasy-hockey-digitalocean/SPEC.md` §Constraints, the DNS bullet;
     - the `ARCHITECTURE-SPINE.md` AD-10 **DNS** bullet.
 
   Both are reworded to: "`do.sommerfeld.app` is delegated from all-inkl.com to DigitalOcean DNS and declared in OpenTofu; `sommerfeld.app` and its other records stay at all-inkl.com; the token has the `domain` scope". Add "(from Story 8.2 on)" to the delegation clause. Result: the canonical contracts no longer forbid what this epic builds (retro item 27).
-- [ ] Validate diagrams: render each block through the docs build (`task docs:run`, or the `docs-build` service). Also run `docker run --rm plantuml/plantuml:<pinned tag> -syntax` on the extracted source, unprivileged and without a host mount (pipe the source through stdin). Record the result. Result: no diagram ships broken.
+- [x] Validate diagrams: render each block through the docs build (`task docs:run`, or the `docs-build` service). Also run `docker run --rm plantuml/plantuml:<pinned tag> -syntax` on the extracted source, unprivileged and without a host mount (pipe the source through stdin). Record the result. Result: no diagram ships broken.
 
 **Acceptance Criteria:**
 
@@ -183,9 +184,79 @@ Every step below needs the operator. The agent marks none of them as done, and r
 
 ## Implementation Notes
 
+All agent results are from 2026-10-22. No operator step (M1 to M6) is marked done; the token observation below is not M1.
+
+- **Pre-check:** `doctl compute domain list` returned only the header (`Domain    TTL`): neither `sommerfeld.app` nor `do.sommerfeld.app` exists in the account, so no import is needed. The call succeeded, so the token in the devcontainer already has at least `domain:read`. Whether it also has `domain:create`/`update`/`delete` is not checked (the agent never applies); M1 remains for the operator to confirm.
+- **Files:** new `configs-cloud/digital-ocean/opentofu/dns.tf` and `docs/cloud/digital-ocean/dns-zone.md`; changed `droplets.tf` (header documents `dns_aliases`), `project.tf` (domain URN), `outputs.tf` (`dns_zone`, `dns_records` keyed by FQDN), `opentofu/taskfile.yml` (`validate`, `-detailed-exitcode` comment), `configs-cloud/taskfile.yml` (`dns:check`), `docker-compose.yml` (service `dns-check`, `nicolaka/netshoot:v0.16`, entrypoint `dig`, no volumes), docs `droplet.md`, `api-token.md`, `index.md`, `tasks-and-linters.md`, `domain.md` (one sentence), `replacement.md` (the project resource now also lists the zone URN), `mkdocs.yml`, `SPEC.md`, `ARCHITECTURE-SPINE.md` AD-10.
+- **`dns_aliases` reading:** `try(droplet.dns_aliases, [])` in `dns.tf` (`local.dns_alias_list`), the same pattern as `tags`. Aliases are read from all droplets, not only those with a reserved IP, so a fourth precondition fails the plan for an alias on a droplet with `reserved_ip = false` instead of silently dropping it.
+- **CAA value:** written as `letsencrypt.org.` with a trailing dot. The provider (`resource_record.go` at `v2.106.0`) appends a dot to CAA data on read, so a value without the dot would be a perpetual diff. Confirmed only by source reading; the second plan after M4 proves it.
+- **Offline proof:** `tofu fmt -check` clean, `tofu validate` `Success!`, `task lint` exit 0 (the only yamllint warnings are pre-existing, e.g. `docker-compose.yml:88` line length in `lint-alloy-config`; lychee 0 errors).
+- **Plan before any apply** (`tofu plan -out=dns.tfplan`, refresh on, then `tofu show -json | jq`), exit 0, `Plan: 3 to add, 1 to change, 0 to destroy.`:
+    - `create digitalocean_domain.this`
+    - `update digitalocean_project_resources.this`
+    - `create digitalocean_record.a["fantasy-hockey.prod"]` (value `129.212.195.118`, TTL 300)
+    - `create digitalocean_record.caa` (`@`, flags 0, tag `issue`, `letsencrypt.org.`, TTL 3600)
+
+    No droplet, volume, reserved IP or assignment change; nothing destroyed or replaced. `dns.tfplan` was deleted afterwards.
+- **Precondition and edit tests** (temporary local edits with `-refresh=false`, reverted, `cmp` against the saved originals):
+    - `dns_external_records = { "status.prod" = "203.0.113.10" }`: plan adds `digitalocean_record.a["status.prod"]` with the literal value (`create`, because nothing is applied yet; the `~ value` in-place update on a changed external value can only be shown after M4).
+    - external `"203.0.113.300"` and `"2001:db8::1"`: `Every dns_external_records value must be an IPv4 address, but these are not: status.prod = "203.0.113.300", v6.prod = "2001:db8::1".`
+    - `dns_aliases = ["fantasy-hockey.prod", "hockey.prod", "hockey.prod"]`: `DNS record names must be unique across droplets, dns_aliases and dns_external_records, but these appear more than once: fantasy-hockey.prod, hockey.prod.`
+    - `dns_aliases = ["hockey.test", ".prod"]` on a `prod` droplet: `Every dns_aliases entry must end in .<stage> of its droplet (docs/cloud/domain-naming.md), but these do not: "hockey.test" on "fantasy-hockey" (stage prod), ".prod" on "fantasy-hockey" (stage prod).`
+    - `dns_aliases = ["hockey.prod"]`: plan adds `digitalocean_record.a["hockey.prod"]` with `129.212.195.118`; the same plus external `"hockey.prod"` fails the duplicate precondition.
+- **`dns:check` baseline** (before any apply): `+norec @ns5.kasserver.com fantasy-hockey.prod.do.sommerfeld.app A` → `flags: qr aa`, `129.212.195.118` TTL 7200; `+norec @ns1.digitalocean.com` same name → `status: REFUSED` (no zone); `@8.8.8.8 NS do.sommerfeld.app +short` → `w00f8074.kasserver.com.`; `@1.1.1.1` A → `129.212.195.118`. Nothing public changed.
+- **Diagrams:** `plantuml/plantuml:1.2026.8 -syntax`, source piped through stdin, no host mount, not privileged: diagram A `DESCRIPTION (13 entities)`, diagram B `SEQUENCE (8 participants)`, the updated "What Runs Where" `DESCRIPTION (15 entities)`. The image's own user `appuser` cannot load `libjli.so` on this host (`Permission denied`), so the container ran with `--user 0` (still unprivileged). PNG renders were inspected by eye. The `docs-build` service builds with exit 0, `DNS Zone` is in the nav after `Domain`, and each of the three kroki.io image URLs in the built pages returns HTTP 200 without a syntax error.
+- **Open for the operator:** M1 (confirm the full `domain` scope), M3 (state backup), M4 (apply, second plan `-detailed-exitcode` exit 0, record NS and SOA values), M5 (authoritative checks), M6 (public check). The `~ value` AC for an external record and the CAA perpetual-diff check need M4.
+- **Operator results (2026-10-22):** the operator reports M1, M3 and M6 done.
+    - **M4:** the apply matched the reviewed plan (`3 added, 1 changed, 0 destroyed`). A second run said `No changes.`, so the CAA trailing dot causes no perpetual diff. `dns_records` = `{"fantasy-hockey.prod.do.sommerfeld.app" = "129.212.195.118"}`.
+    - **M5** (`task cloud:dns:check -- +norec …`): `ns1`, `ns2` and `ns3.digitalocean.com` answer `flags: qr aa` with `fantasy-hockey.prod.do.sommerfeld.app. 300 IN A 129.212.195.118`. CAA is served as `do.sommerfeld.app. 3600 IN CAA 0 issue "letsencrypt.org"`, **without** the trailing dot, so the deferred trailing-dot risk is settled. An undeclared name returns `NXDOMAIN` with `aa`.
+    - **NS:** `ns1`/`ns2`/`ns3.digitalocean.com.`, TTL 1800.
+    - **SOA:** `ns1.digitalocean.com. hostmaster.do.sommerfeld.app. 0 10800 3600 604800 1800`, so the negative-caching TTL is 1800 s.
+    - **Public, unchanged:** `@8.8.8.8` A → `129.212.195.118` (KAS), `@1.1.1.1` NS `do.sommerfeld.app` → `w00f8074.kasserver.com.` (KAS wildcard).
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+Blind Hunter, 15 findings:
+
+- medium, patch — `domain.md` "Why DNS Is Not in OpenTofu" still says OpenTofu does not manage DNS and the token needs no `domain` scope, contradicting `api-token.md`; qualified to `sommerfeld.app` and the KAS record.
+- low, patch — `domain.md` says the zone has no CAA record and a new reserved IP needs a manual record change; qualified for the DigitalOcean zone.
+- medium, defer — `Caddyfile.j2` sets no issuer, so Caddy keeps its default issuers (Let's Encrypt, ZeroSSL fallback); `CAA 0 issue "letsencrypt.org"` blocks the fallback once the zone is delegated. Harmless until Story 8.2; pinning the issuer or widening CAA changes Caddy or the frozen CAA intent, so it is decided in 8.2.
+- maybe-false, defer — the CAA value `letsencrypt.org.` may be served with the trailing dot, and Let's Encrypt's CAA match on it is unverified; M5 records the exact served string, and `dns-zone.md` Checks now says so.
+- low, reject — record names (alias label syntax, external keys, case) are not validated; operator-only inputs, a bad name fails at apply or is visible in the plan, and the fix adds guards.
+- low, reject — the IPv4 check accepts private and loopback addresses; operator-only input, fix adds guards.
+- medium, defer — the preconditions and the derivation have no repeatable test (`tofu test`); CI static checks for OpenTofu are Story 6.1.
+- medium, defer — `tofu validate` is not in `task lint` or CI; Story 6.1.
+- low, patch — "Move an App to Another Droplet" claims a tag change renames the record; names come from key, `stage` and `dns_aliases`.
+- low, patch — "without it `tofu plan` fails with 403" is overstated: a plan that only creates does not call the domain API; apply fails.
+- false — status mismatch between the spec and `sprint-status.yaml`: the workflow syncs `sprint-status.yaml` at the end of review.
+- low, reject — `task cloud:info` does not list domains and `dns_records` omits CAA; a convenience, not a defect.
+- false — `nicolaka/netshoot:v0.16` pinned by tag only: every service in `docker-compose.yml` pins by tag, and the root `docker-compose` Dependabot entry covers it.
+- low, patch — diagram B shows an in-place reserved IP update; a new reserved IP is a deliberate destroy and create.
+- false — `SPEC.md` and `ARCHITECTURE-SPINE.md` say "the token has the `domain` scope": that wording is prescribed by the spec task and describes the contract, not the current token.
+
+Verification Gap, 3 gaps and 2 other findings:
+
+- medium, defer — no plan-mode test for the derivation and the preconditions (same root cause as the Blind Hunter test finding); Story 6.1.
+- medium, defer — `validate` not automated; Story 6.1.
+- maybe-false, defer — the CAA trailing dot and the in-place `~ value` are proven only after the first apply; tracked as M4.
+- medium, patch — `domain.md` contradiction (same as above).
+- low, patch — the `apply:yes` row in `tasks-and-linters.md` omits the DNS zone from `prevent_destroy`.
+
+Edge Case Hunter, 11 findings:
+
+- low, reject — `dns_external_records` keys unvalidated (`@`, FQDN, wildcard); same as the Blind Hunter name finding.
+- low, reject — alias label syntax (`*.prod`, uppercase, `_`); same.
+- low, reject — case-only duplicate names; same.
+- low, reject — `dns_aliases = null` or a string fails with a raw HCL error; a loud failure on bad input is correct.
+- low, reject — a droplet key that is not a DNS label fails at apply; the key already builds the droplet name, which has the same constraint.
+- low, reject — external value in private or loopback ranges; same as the Blind Hunter IPv4 finding.
+- maybe-false, defer — CAA trailing dot served literally (same as above).
+- low, reject — a reserved IP replacement briefly leaves the record on the released IP during the apply; deliberate, rare operation, `create_before_destroy` on a `prevent_destroy` resource is out of proportion.
+- low, patch — `apply:yes` row omits the DNS zone (same as above).
+- medium, patch — `domain.md` contradiction (same as above).
+- maybe-false, defer — the `~ value` AC is unproven until M4 (same as above).
 
 ## Design Notes
 

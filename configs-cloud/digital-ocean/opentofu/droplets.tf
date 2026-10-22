@@ -30,6 +30,13 @@ locals {
   #   tags           List of extra droplet tags, e.g. ["fantasy-hockey"].
   #                  Merged with the stage tag. Ansible composes inventory
   #                  groups from these tags. Defaults to no extra tags.
+  #   dns_aliases    List of extra DNS names relative to the zone
+  #                  do.sommerfeld.app, e.g. ["hockey.prod"]. Each name gets
+  #                  an A record on the droplet's reserved IP (dns.tf), next
+  #                  to <key>.<stage>. Every name must end in .<stage>, and the
+  #                  droplet needs reserved_ip = true. DNS only: serving an
+  #                  alias over HTTPS needs a Caddy change. Defaults to no
+  #                  aliases.
   droplets = {
     fantasy-hockey = {
       stage          = "prod"

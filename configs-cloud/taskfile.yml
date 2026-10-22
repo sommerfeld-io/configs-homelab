@@ -31,6 +31,15 @@ tasks:
       - task: digital-ocean:opentofu:apply
       - task: digital-ocean:ansible:all
 
+  # The devcontainer has no dig, and DNS over HTTPS cannot ask a specific
+  # authoritative server, so dig runs in a pinned container (service dns-check
+  # in the root docker-compose.yml). Arguments after `--` go to dig, e.g.
+  # `task cloud:dns:check -- +norec @ns1.digitalocean.com fantasy-hockey.prod.do.sommerfeld.app A`.
+  dns:check:
+    desc: Query DNS with dig in a container, arguments after -- go to dig (docs/cloud/digital-ocean/dns-zone.md)
+    cmds:
+      - docker compose --file {{ .ROOT_DIR }}/docker-compose.yml run --rm dns-check {{ .CLI_ARGS }}
+
   info:
     desc: Print information for all cloud environments
     preconditions: *do-token

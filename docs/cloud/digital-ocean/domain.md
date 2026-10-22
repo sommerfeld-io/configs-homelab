@@ -10,7 +10,7 @@ The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. A
 
 Hostnames follow the pattern `<app>.<stage>.do.sommerfeld.app` (see [Domain Naming](../domain-naming.md)), built from the same parts as the droplet name `<stage>-<app>` (see [Droplet](droplet.md)): `<app>` is the key of the droplet in the `droplets` map of `droplets.tf` (`fantasy-hockey`), `<stage>` is the droplet's `stage` (also its tag and the Alloy label), and `do` stands for DigitalOcean. A later `test` droplet for the same app gets `fantasy-hockey.test.do.sommerfeld.app`. It needs `reserved_ip = true` in `droplets.tf`, unlike the throwaway `example-scratch` template in [Droplet](droplet.md#reserved_ip): the deploy stops when the droplet has no reserved IP, and the record has to point at one.
 
-The record points at the reserved IP, not at the droplet's own IPv4. The reserved IP survives a droplet replacement, so a [Replacement](replacement.md) needs no DNS change. A new reserved IP needs one: changing the region, the `stage` or the map key gives the droplet a new reserved IP or a new name (see [Droplet](droplet.md)), and then the record has to be changed or a new one created. Read the reserved IP with:
+The record points at the reserved IP, not at the droplet's own IPv4. The reserved IP survives a droplet replacement, so a [Replacement](replacement.md) needs no DNS change. A new reserved IP needs one: changing the region, the `stage` or the map key gives the droplet a new reserved IP or a new name (see [Droplet](droplet.md)). The record in the DigitalOcean zone follows automatically with the next apply (see [DNS Zone](dns-zone.md)), but the KAS record on this page still has to be changed or a new one created by hand until Story 8.2. Read the reserved IP with:
 
 ```bash
 tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses
@@ -18,13 +18,15 @@ tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses
 
 There is no AAAA record: the reserved IP is IPv4 only.
 
-## Why DNS Is Not in OpenTofu
+OpenTofu now also declares this record in the DigitalOcean zone `do.sommerfeld.app` (see [DNS Zone](dns-zone.md)), but that zone is not delegated yet: the KAS record on this page remains authoritative until Story 8.2.
 
-`sommerfeld.app` is registered and hosted at the web hosting provider all-inkl.com (nameservers `ns5.kasserver.com` and `ns6.kasserver.com`). DNS stays there, and OpenTofu does not manage it. So the record is created by hand, and the DigitalOcean API token needs no `domain` scope (see [API Token](api-token.md)).
+## Where the Public Record Lives
+
+`sommerfeld.app` is registered and hosted at the web hosting provider all-inkl.com (nameservers `ns5.kasserver.com` and `ns6.kasserver.com`). The zone stays there, and OpenTofu does not manage it. Until Story 8.2 delegates `do.sommerfeld.app`, the record on this page is kept by hand in the KAS and is the one the public sees. OpenTofu manages only the DigitalOcean zone `do.sommerfeld.app`, which is why the DigitalOcean API token needs the `domain` scope (see [DNS Zone](dns-zone.md) and [API Token](api-token.md)).
 
 The `.app` TLD is on the browsers' HSTS preload list: browsers open `.app` domains only over HTTPS, never over plain HTTP. A `.app` name opens in a browser only when the droplet serves HTTPS for it, which Caddy does.
 
-The zone has no CAA record (checked 2026-10-15 for the name and every parent up to `sommerfeld.app`), so any certificate authority, including Let's Encrypt, may issue certificates for the name. A CAA record added later must allow `letsencrypt.org`.
+The KAS zone has no CAA record (checked 2026-10-15 for the name and every parent up to `sommerfeld.app`), so today any certificate authority, including Let's Encrypt, may issue certificates for the name. The DigitalOcean zone has `CAA 0 issue "letsencrypt.org"` at `do.sommerfeld.app`, which takes effect once Story 8.2 delegates the zone (see [DNS Zone](dns-zone.md#ttl-and-caa)).
 
 ## Create the Record
 

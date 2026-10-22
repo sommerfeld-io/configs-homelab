@@ -8,5 +8,6 @@ resource "digitalocean_project_resources" "this" {
     [for droplet in digitalocean_droplet.this : droplet.urn],
     [for volume in digitalocean_volume.this : volume.urn],
     [for ip in digitalocean_reserved_ip.this : ip.urn],
+    [digitalocean_domain.this.urn],
   )
 }

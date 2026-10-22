@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-16-2026 12:44
+last_updated: 10-22-2026 14:00
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -77,8 +77,8 @@ development_status:
   epic-7-retrospective: done
 
   # Epic 8 runs after Epic 7 and before Epic 6 (Epic 7 retro item 27: DNS moves into OpenTofu)
-  epic-8: backlog
-  8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu: ready-for-dev
+  epic-8: in-progress
+  8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu: done
   # 8.2 needs 8.1 applied and checked against ns1.digitalocean.com (manual tasks M1-M6)
   8-2-delegate-do-sommerfeld-app-and-retire-the-kas-record: ready-for-dev
   epic-8-retrospective: optional

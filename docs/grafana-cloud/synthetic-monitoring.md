@@ -69,12 +69,12 @@ Check it with `echo "${GRAFANA_SM_ACCESS_TOKEN:+set}"`. `plan`, `apply` and `app
 |--------------------------------|--------------------------------------------------|
 | `task grafana-cloud:init`      | `tofu init`                                      |
 | `task grafana-cloud:fmt`       | `tofu fmt -recursive` (also part of `task lint`) |
-| `task grafana-cloud:validate`  | `tofu validate`                                  |
+| `task grafana-cloud:validate`  | `tofu validate` (also part of `task lint`)       |
 | `task grafana-cloud:plan`      | `tofu plan`                                      |
 | `task grafana-cloud:apply`     | `tofu apply`                                     |
 | `task grafana-cloud:apply:yes` | `tofu apply -auto-approve`, read `plan` first    |
 
-`lint-opentofu` (`docker-compose.yml`) checks the formatting of `grafana-cloud` together with `configs-cloud`. No GitHub Actions workflow applies this configuration yet.
+`lint-opentofu` (`docker-compose.yml`) checks the formatting of `grafana-cloud` together with `configs-cloud`, and the `validate-opentofu` job in `.github/workflows/pipeline.yml` runs `tofu validate` on it in CI. No GitHub Actions workflow applies this configuration yet.
 
 ## Fully Managed by OpenTofu
 
