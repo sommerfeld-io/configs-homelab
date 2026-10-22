@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-22-2026 20:58
+last_updated: 10-22-2026 21:05
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -379,7 +379,7 @@ action_items:
       commits (tofu validate already in task lint and CI): narrow 6.1 to tofu test
       plan-level tests for dns.tf and mark the resolved 8.1 entries"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
   - id: "epic-8-retro-item-40-record-as-project-pitfalls-off-story-wor"
     epic: 8
