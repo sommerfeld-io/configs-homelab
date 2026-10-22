@@ -198,3 +198,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
   summary: The DNS record derivation and the four preconditions in `dns.tf`, and `tofu validate` itself, are not run by CI; a broken key template or reference passes `fmt -check`.
   evidence: The only OpenTofu check in CI is `lint-opentofu` (`fmt -check`); no `.tftest.hcl` exists. Belongs with Story 6.1 (CI static checks for OpenTofu): `tofu init -backend=false && tofu validate` plus a `mock_provider` plan test.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-35-opentofu-lint-without-init.md`
+  summary: Make CI run the `task cloud:digital-ocean:opentofu:validate` and `task grafana-cloud:validate` entry points (fresh checkout, lock file unchanged) instead of an inlined copy of their commands.
+  evidence: `validate-opentofu` (`.github/workflows/pipeline.yml`) inlines `init`/`validate`; no workflow runs `task lint` or the validate tasks, so dropping the init or `-lockfile=readonly` from a task passes CI. Fits retro item 36.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-35-opentofu-lint-without-init.md`
+  summary: OpenTofu does not enforce the exact `required_version` pin locally, so the pin strategy (Epic 2 retro item 5) and `api-token.md` rely on a check that does not happen.
+  evidence: host `tofu 1.12.7` ran `init -backend=false`, `validate` and `plan` with exit 0 on a root pinning `1.99.0` (2026-10-22); only CI ties the version to the pin by deriving the image tag. Deciding on a guard reverses the item 5 "no sync check" decision.
