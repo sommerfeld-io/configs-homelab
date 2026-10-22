@@ -51,7 +51,7 @@ skinparam card<<digitalocean>> {
   BorderThickness 2
 }
 skinparam card<<allinkl>> {
-  BorderColor #722F37
+  BorderColor #6F42C1
   BorderThickness 2
 }
 hide <<digitalocean>> stereotype
