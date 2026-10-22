@@ -1,7 +1,7 @@
 ---
 title: Homelab Configs
 created: 2026-08-24
-updated: 2026-08-24
+updated: 2026-10-22
 status: final
 ---
 
@@ -116,6 +116,16 @@ Once provisioned, a node continuously reports operational telemetry (including c
 
 - An alertable condition on any node (e.g., NTP desync) surfaces in Grafana Cloud without the operator manually checking that node first.
 
+#### FR-10: Wi-Fi nodes report their wireless link quality
+
+Every homelab node (desktops, servers, Raspberry Pis) reports Wi-Fi interface and station metrics (signal strength, link bitrates, retries and failures) to Grafana Cloud through the node_exporter wifi collector in its Alloy config, so a connection drop can be correlated with the link quality at that time. Cloud droplets are out of scope: whether a VM's uplink is wireless does not matter to the operator.
+
+**Consequences (testable):**
+
+- On a node that uses Wi-Fi (e.g. pi4-0002), `node_wifi_*` series for its interface appear in Grafana Cloud after `grafana-agents.yml` ran.
+- A dashboard "Wi-Fi" in the Git Sync folder `network` shows these series per node.
+- The Alloy configs of `configs-cloud` are unchanged.
+
 ### 4.4 Automation Safety Net (CI + Git Branching)
 
 **Description:** The `ansible-roles-collection` submodule runs its own CI test matrix against multiple Ubuntu versions, on every push and weekly — surfacing the most likely failure mode (an Ubuntu upgrade breaking role assumptions) in a virtual environment before a broken role reaches a real node. Because everything lives in git, a broken role gets fixed on a branch without ever touching machines running the last-known-good configuration. This discipline — version control, code review, and CI — is a deliberate choice over ad hoc shell scripts, which wouldn't provide the same audit trail or safety net for a fleet this size.
@@ -208,6 +218,7 @@ The sudoers NOPASSWD workaround needed on newer Ubuntu versions is resolved so i
 - Docs mirroring the configs-homelab/ansible/ structure (FR-7)
 - Documented, closed manual bootstrap steps (FR-8)
 - Closing #160 (FR-9)
+- Wi-Fi link-quality telemetry for homelab nodes (FR-10)
 
 ### 6.2 Out of Scope for MVP
 
