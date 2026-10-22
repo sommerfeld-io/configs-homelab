@@ -2,69 +2,81 @@
 
 The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. An A record points it at the droplet's reserved IP. Users reach the app by this name instead of by IP: Caddy serves it at `https://fantasy-hockey.prod.do.sommerfeld.app` with a Let's Encrypt certificate. It answers `http://<reserved-ip>` with 404, and `https://<reserved-ip>` fails the TLS handshake, because Caddy has no certificate for the IP (see [Deployment](deployment.md)).
 
+> **Status:** the delegation and the second CAA record (`sectigo.com`) take effect with steps [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records) and [M10](dns-delegation.md#m10-add-the-ns-records) of [DNS Delegation](dns-delegation.md); the dates are in [History](#history). Until M10, the hand-made KAS record answers publicly, and a new app name either needs a hand-made A record in the KAS (Tools → DNS-Einstellungen, `sommerfeld.app`) or must wait for M10.
+
 ## Record
 
-| Name                                    | Type | Value                                    | TTL  | Where                     |
-|-----------------------------------------|------|------------------------------------------|------|---------------------------|
-| `fantasy-hockey.prod.do.sommerfeld.app` | `A`  | The reserved IP of `prod-fantasy-hockey` | 7200 | DNS of all-inkl.com (KAS) |
+| Name                                    | Type | Value                                    | TTL | Where                                                   |
+|-----------------------------------------|------|------------------------------------------|-----|---------------------------------------------------------|
+| `fantasy-hockey.prod.do.sommerfeld.app` | `A`  | The reserved IP of `prod-fantasy-hockey` | 300 | DigitalOcean zone `do.sommerfeld.app`, OpenTofu-managed |
 
-Hostnames follow the pattern `<app>.<stage>.do.sommerfeld.app` (see [Domain Naming](../domain-naming.md)), built from the same parts as the droplet name `<stage>-<app>` (see [Droplet](droplet.md)): `<app>` is the key of the droplet in the `droplets` map of `droplets.tf` (`fantasy-hockey`), `<stage>` is the droplet's `stage` (also its tag and the Alloy label), and `do` stands for DigitalOcean. A later `test` droplet for the same app gets `fantasy-hockey.test.do.sommerfeld.app`. It needs `reserved_ip = true` in `droplets.tf`, unlike the throwaway `example-scratch` template in [Droplet](droplet.md#reserved_ip): the deploy stops when the droplet has no reserved IP, and the record has to point at one.
-
-The record points at the reserved IP, not at the droplet's own IPv4. The reserved IP survives a droplet replacement, so a [Replacement](replacement.md) needs no DNS change. A new reserved IP needs one: changing the region, the `stage` or the map key gives the droplet a new reserved IP or a new name (see [Droplet](droplet.md)). The record in the DigitalOcean zone follows automatically with the next apply (see [DNS Zone](dns-zone.md)), but the KAS record on this page still has to be changed or a new one created by hand until Story 8.2. Read the reserved IP with:
+The record is declared in OpenTofu (`configs-cloud/digital-ocean/opentofu/dns.tf`) and derived from the droplet map: every droplet with `reserved_ip = true` gets one. Nobody creates it by hand. Read the declared records with:
 
 ```bash
+tofu -chdir=configs-cloud/digital-ocean/opentofu output dns_records
 tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses
 ```
 
+Hostnames follow the pattern `<app>.<stage>.do.sommerfeld.app` (see [Domain Naming](../domain-naming.md)), built from the same parts as the droplet name `<stage>-<app>` (see [Droplet](droplet.md)): `<app>` is the key of the droplet in the `droplets` map of `droplets.tf` (`fantasy-hockey`), `<stage>` is the droplet's `stage` (also its tag and the Alloy label), and `do` stands for DigitalOcean. A later `test` droplet for the same app gets its own key and record (see [Same App in Another Stage](dns-zone.md#same-app-in-another-stage)). It needs `reserved_ip = true` in `droplets.tf`, unlike the throwaway `example-scratch` template in [Droplet](droplet.md#reserved_ip): the deploy stops when the droplet has no reserved IP, and a droplet without one gets no record.
+
+The record points at the reserved IP, not at the droplet's own IPv4. The reserved IP survives a droplet replacement, so a [Replacement](replacement.md) changes no record. A new reserved IP (a new region, `stage` or map key, see [Droplet](droplet.md)) changes the record in the same apply, in place. Resolvers keep the old answer for the rest of the TTL, up to 300 s.
+
 There is no AAAA record: the reserved IP is IPv4 only.
 
-OpenTofu now also declares this record in the DigitalOcean zone `do.sommerfeld.app` (see [DNS Zone](dns-zone.md)), but that zone is not delegated yet: the KAS record on this page remains authoritative until Story 8.2.
+## Where DNS Lives
 
-## Where the Public Record Lives
+`sommerfeld.app` is registered and hosted at the web hosting provider all-inkl.com (nameservers `ns5.kasserver.com` and `ns6.kasserver.com`). That zone stays there, and OpenTofu does not manage it. It delegates the subdomain `do.sommerfeld.app` to DigitalOcean DNS (`ns1`/`ns2`/`ns3.digitalocean.com`) with three NS records set by hand in the KAS. Every name at or below `do.sommerfeld.app`, this record included, is declared in OpenTofu in the delegated zone. That is why the DigitalOcean API token needs the `domain` scope (see [API Token](api-token.md)).
 
-`sommerfeld.app` is registered and hosted at the web hosting provider all-inkl.com (nameservers `ns5.kasserver.com` and `ns6.kasserver.com`). The zone stays there, and OpenTofu does not manage it. Until Story 8.2 delegates `do.sommerfeld.app`, the record on this page is kept by hand in the KAS and is the one the public sees. OpenTofu manages only the DigitalOcean zone `do.sommerfeld.app`, which is why the DigitalOcean API token needs the `domain` scope (see [DNS Zone](dns-zone.md) and [API Token](api-token.md)).
+- [DNS Zone](dns-zone.md): the DigitalOcean zone, its records, the how-tos and the checks.
+- [DNS Delegation](dns-delegation.md): the NS records in the KAS, the migration runbook and the rollback.
 
 The `.app` TLD is on the browsers' HSTS preload list: browsers open `.app` domains only over HTTPS, never over plain HTTP. A `.app` name opens in a browser only when the droplet serves HTTPS for it, which Caddy does.
 
-The KAS zone has no CAA record (checked 2026-10-15 for the name and every parent up to `sommerfeld.app`), so today any certificate authority, including Let's Encrypt, may issue certificates for the name. The DigitalOcean zone has `CAA 0 issue "letsencrypt.org"` at `do.sommerfeld.app`, which takes effect once Story 8.2 delegates the zone (see [DNS Zone](dns-zone.md#ttl-and-caa)).
+The DigitalOcean zone serves `CAA 0 issue "letsencrypt.org"` and `CAA 0 issue "sectigo.com"` at `do.sommerfeld.app`: only Let's Encrypt and ZeroSSL (Caddy's fallback issuer, CAA identifier `sectigo.com`) may issue certificates for the app's name (see [TTL and CAA](dns-zone.md#ttl-and-caa)). CAA lookups for every name under `do` stop at `do.sommerfeld.app`.
+
+The parent zone has a wildcard record `*.sommerfeld.app`, a CNAME to the all-inkl web host `w00f8074.kasserver.com` (`85.13.131.235` on 2026-10-22; all-inkl can change it). It applies only outside `do`: by DNS rules a wildcard never matches at or below a delegation point. A name under `do` that is not declared returns NXDOMAIN, not the web host.
 
 ## Create the Record
 
-1. Log in to the KAS at `https://kas.all-inkl.com`.
-2. Open Tools → DNS-Einstellungen and edit the domain `sommerfeld.app`.
-3. Create a new DNS record:
-    - Name: `fantasy-hockey.prod.do` (without `.sommerfeld.app`, the KAS appends the domain)
-    - Type: `A`
-    - Data: the reserved IP
-    - TTL: `7200`, as in the Record table
-4. Save.
+Add the droplet to `droplets.tf` with `reserved_ip = true`, then plan, review and apply: the record is created with the droplet and its reserved IP (see [Add an App Hostname](dns-zone.md#add-an-app-hostname)). Other cases (an alias, an external IP, a moved app) are in the [DNS Zone how-tos](dns-zone.md#how-tos).
 
-The TTL also decides how long resolvers keep an old answer: after the record changes, for example to a new reserved IP, the deploy's DNS check and Let's Encrypt may see the old address for up to 2 hours.
-
-Create a DNS record, not a KAS subdomain (Domain → Subdomains). A KAS subdomain points the name at the all-inkl web server and collides with the A record.
-
-The zone has a wildcard record `*.sommerfeld.app`, a CNAME to the all-inkl web host `w00f8074.kasserver.com`, that answers every other name. The A record for this exact name takes precedence over it. Before the record exists, or while resolvers still cache the wildcard answer (TTL up to 2 hours), the name resolves through that CNAME to the web host's address (`85.13.131.235` on 2026-10-15; all-inkl can change it).
+Do not create records for names under `do` in the KAS: the delegation hides them. The KAS answers queries for those names with a referral to DigitalOcean.
 
 ## Check
 
-Ask public resolvers, not the home router: the Fritz!Box resolver may still cache the wildcard answer. `dig` is not installed in the devcontainer, so the check uses DNS over HTTPS against Google and Cloudflare:
+Ask both the authoritative nameservers and public resolvers, not the home router: the Fritz!Box resolver may still cache an old answer. One resolver is never enough.
 
 ```bash
+task cloud:dns:check -- +norec @ns1.digitalocean.com fantasy-hockey.prod.do.sommerfeld.app A
+task cloud:dns:check -- +norec @ns5.kasserver.com fantasy-hockey.prod.do.sommerfeld.app A
 curl -s 'https://dns.google/resolve?name=fantasy-hockey.prod.do.sommerfeld.app&type=A' | python3 -m json.tool
 curl -s -H 'accept: application/dns-json' 'https://cloudflare-dns.com/dns-query?name=fantasy-hockey.prod.do.sommerfeld.app&type=A' | python3 -m json.tool
 ```
 
-Both answers have exactly one A record whose `"data"` is the reserved IP from `tofu output reserved_ip_addresses`. A CNAME to a `*.kasserver.com` host in the answer means the record is missing or a resolver still caches the wildcard answer. The same queries with `type=AAAA` return no AAAA record: Let's Encrypt prefers IPv6, and the deploy's check sees only IPv4. On the droplet, `getent ahostsv4 fantasy-hockey.prod.do.sommerfeld.app` shows what the deploy's check sees.
+- `ns1.digitalocean.com` answers with `flags: qr aa` and the reserved IP from `tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses`.
+- `ns5.kasserver.com` answers with a referral: no `aa`, and the three DigitalOcean nameservers in the authority section.
+- Google and Cloudflare return exactly one A record whose `"data"` is the reserved IP. The same queries with `type=AAAA` return no AAAA record: Let's Encrypt prefers IPv6, and the deploy's check sees only IPv4.
+- On the droplet, `getent ahostsv4 fantasy-hockey.prod.do.sommerfeld.app` shows what the deploy's check sees.
+
+The full set of checks, including `+trace` and CAA, is in [DNS Delegation](dns-delegation.md#verification-commands).
 
 The deploy checks the record too: before it writes anything, it resolves the name through the droplet's resolver and stops unless the answer is exactly the reserved IP, so Caddy does not start with a name that points elsewhere (see [DNS Check](deployment.md#dns-check)). The check runs only at deploy time: it does not cover renewals, CAA records, AAAA records or whether ports 80 and 443 are reachable.
 
-The domain is derived from the droplet name, so a new droplet needs its record before its first deploy. The reserved IP exists only after the OpenTofu apply, so a new droplet takes this order:
+A new droplet gets its record in the same OpenTofu apply that creates its reserved IP, so `task cloud:deploy:all` can run in one go:
 
-1. `task cloud:digital-ocean:opentofu:apply` creates the droplet and its reserved IP.
-2. Create the record with the IP from `tofu output reserved_ip_addresses` (see [Create the Record](#create-the-record)).
-3. Wait until the check above returns the reserved IP, and `ssh root@<reserved-ip> getent ahostsv4 fantasy-hockey.prod.do.sommerfeld.app` returns only the reserved IP too: the deploy checks through the droplet's resolver. Resolvers that already asked for the name may cache the wildcard answer for up to 2 hours.
-4. `task cloud:deploy:all` (or the provisioning and the app deploy on their own).
+1. `task cloud:digital-ocean:opentofu:apply` creates the droplet, its reserved IP and its A record.
+2. The app deployment resolves the name on the droplet. If a resolver asked for the name before the record existed, it caches the NXDOMAIN for up to the zone's negative-caching TTL of 1800 s, and the deploy stops at the DNS check. Wait, check as above, then run `task cloud:digital-ocean:ansible:deploy-fantasy-hockey` again.
 
 ## Remove the Record
 
-Delete the record in the KAS (Tools → DNS-Einstellungen, `sommerfeld.app`) when the droplet is retired or its reserved IP is released. A record that points at a released IP points at an address DigitalOcean can give to another customer, who could then serve content under the name. A [Replacement](replacement.md) keeps the reserved IP, so the record stays.
+The record goes in the same apply as the droplet: removing the droplet entry removes its record (see [Remove a Hostname](dns-zone.md#remove-a-hostname)). Never leave a record on a released reserved IP: DigitalOcean can give the address to another customer, who could then serve content under the name. A [Replacement](replacement.md) keeps the reserved IP, so the record stays.
+
+## History
+
+| Date       | Change                                                                                                                           |
+|------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 2026-10-15 | The A record is created by hand in the KAS zone `sommerfeld.app` (Story 7.1), TTL 7200                                           |
+| 2026-10-22 | OpenTofu creates the DigitalOcean zone `do.sommerfeld.app` with the same record, not yet delegated (Story 8.1)                   |
+| pending    | OpenTofu adds `CAA 0 issue "sectigo.com"` for ZeroSSL (Story 8.2, [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records)) |
+| pending    | The KAS delegates `do` to DigitalOcean with three NS records (Story 8.2, [M10](dns-delegation.md#m10-add-the-ns-records))        |
+| pending    | The hand-made KAS A record is deleted (Story 8.2, [M14](dns-delegation.md#m14-delete-the-obsolete-kas-a-record))                 |

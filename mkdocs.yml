@@ -114,6 +114,7 @@ nav:
           - Droplet: cloud/digital-ocean/droplet.md
           - Domain: cloud/digital-ocean/domain.md
           - DNS Zone: cloud/digital-ocean/dns-zone.md
+          - DNS Delegation: cloud/digital-ocean/dns-delegation.md
           - Provisioning: cloud/digital-ocean/provisioning.md
           - Deployment: cloud/digital-ocean/deployment.md
           - Replacement: cloud/digital-ocean/replacement.md

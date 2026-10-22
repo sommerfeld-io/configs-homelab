@@ -26,7 +26,7 @@ ssh-keygen -R <reserved-ip>
 task cloud:deploy:all
 ```
 
-`deploy:all` runs `opentofu:apply` and then `ansible:all` (provisioning and the app deploy) and asks for the vault password once. The apply creates the droplet and the reserved IP assignment. After a targeted OpenTofu destroy it also recreates `digitalocean_project_resources.this`; after a destroy in the web UI it only updates it. The volume and the reserved IP stay as they are. The domain points at the reserved IP, so a replacement needs no DNS change (see [Domain](domain.md)).
+`deploy:all` runs `opentofu:apply` and then `ansible:all` (provisioning and the app deploy) and asks for the vault password once. The apply creates the droplet and the reserved IP assignment. After a targeted OpenTofu destroy it also recreates `digitalocean_project_resources.this`; after a destroy in the web UI it only updates it. The volume and the reserved IP stay as they are. The domain's A record lives in OpenTofu and points at the reserved IP, not at the droplet, so a replacement changes no record (see [Recreated Droplet](dns-zone.md#recreated-droplet)).
 
 DigitalOcean attaches the existing volume to the new droplet but does not mount it. The app deploy mounts it (see [Deployment](deployment.md#deploy-fantasy-hockeyyml)), finds `fantasy-hockey.yml` and does not seed it again. Caddy finds its certificate and ACME account in `caddy/data/` on the volume and orders no new certificate.
 

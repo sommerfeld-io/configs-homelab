@@ -32,4 +32,4 @@ No other provider names are allowed. A new provider gets a short name in this li
 - `sommerfeld.app` → Actual app deployments, always under a name that follows the pattern above
 - `sommerfeld.io` → The organization's website, which at the moment redirects to GitHub. No app deployments here.
 
-How the DNS record for a DigitalOcean deployment is created and checked is described in [Domain](digital-ocean/domain.md).
+How the DNS record for a DigitalOcean deployment is created and checked is described in [Domain](digital-ocean/domain.md) and [DNS Zone](digital-ocean/dns-zone.md).
