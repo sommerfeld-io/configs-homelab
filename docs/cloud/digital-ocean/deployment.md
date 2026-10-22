@@ -40,6 +40,56 @@ The record is declared in OpenTofu: compare `tofu -chdir=configs-cloud/digital-o
 
 The check runs only at deploy time and only through the droplet's resolver. It does not cover certificate renewals, CAA records, AAAA records (`getent ahostsv4` sees IPv4 only, and Let's Encrypt prefers IPv6) or whether Let's Encrypt can reach ports 80 and 443.
 
+## TLS Termination
+
+Caddy on the droplet terminates TLS. It is the only process that holds the certificate and its private key, and the reverse proxy in front of the app: the client talks HTTPS to Caddy, and Caddy forwards the decrypted request as plain HTTP to `app:8080` on the compose network inside the droplet. The app's port is published on `127.0.0.1` only, so nothing outside the droplet reaches it without Caddy.
+
+```kroki-plantuml
+@startuml
+skinparam defaultTextAlignment center
+skinparam rectangle<<encrypted>> {
+  BackgroundColor #E6F4EA
+  BorderColor #2E7D32
+}
+skinparam rectangle<<plain>> {
+  BackgroundColor #FFF4E0
+  BorderColor #C77700
+}
+
+actor "Client\n(browser)" as client
+rectangle "Browser HSTS preload list\nall of .app: HTTPS only" as hsts
+rectangle "Let's Encrypt\n(ZeroSSL as Caddy's fallback)" as ca
+
+cloud "DigitalOcean" as digitalocean {
+  rectangle "DNS zone do.sommerfeld.app (OpenTofu)\nA fantasy-hockey.prod -> reserved IP\nCAA: letsencrypt.org, sectigo.com" as dns
+  rectangle "Reserved IP 129.212.195.118\npasses TCP/UDP through, no TLS" as reservedip
+  node "Droplet prod-fantasy-hockey" as droplet {
+    rectangle "Caddy :443 (TCP, UDP)\nTLS termination, reverse proxy\n:80 -> 308 to https://, ACME challenge" <<encrypted>> as caddy
+    rectangle "App :8080\n(127.0.0.1 and compose network only)" <<plain>> as app
+  }
+  storage "Volume caddy/data\ncertificate, private key, ACME account" as volume
+}
+
+client ..> hsts : 1. never sends http:// to .app
+client --> dns : 2. resolve the name
+client --> reservedip : 3. HTTPS (TLS 1.2/1.3, HTTP/3)
+reservedip --> caddy : 4. still encrypted
+caddy --> app : 5. plain HTTP\ninside the droplet
+caddy <--> ca : ACME: order and renew\n(HTTP-01 on :80, TLS-ALPN-01 on :443)
+ca ..> dns : checks CAA and that the name\nresolves to the reserved IP
+caddy --> volume : stores
+@enduml
+```
+
+| Part                        | Role in TLS                                                                                                                                                                                                                                                        |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Caddy                       | Orders and renews the certificate through ACME (Let's Encrypt, ZeroSSL as fallback), terminates TLS on 443, redirects `http://` on the domain to `https://` with `308`, and proxies to the app. The only place that encrypts and decrypts                          |
+| App                         | Speaks plain HTTP on 8080. Never sees TLS and never faces the internet                                                                                                                                                                                             |
+| `.app` HSTS preload         | Every major browser ships `.app` on its HSTS preload list, so it never sends plain HTTP to the domain, not even the first request. It encrypts nothing itself: without Caddy's certificate the browser shows an error, and clients such as `curl` ignore the list  |
+| DigitalOcean DNS (OpenTofu) | Not part of the encryption, but issuance depends on it: the A record must point at the reserved IP so the ACME challenges reach Caddy, and the CAA records allow only Let's Encrypt and ZeroSSL (`sectigo.com`) to issue (see [DNS Zone](dns-zone.md#ttl-and-caa)) |
+| Reserved IP                 | Forwards TCP and UDP to the droplet unchanged. No load balancer and no TLS at DigitalOcean                                                                                                                                                                         |
+| Volume                      | Keeps `caddy/data` with the certificate and the private key, so a replacement droplet reuses the certificate (see [Certificates](#certificates))                                                                                                                   |
+
 ## Certificates
 
 Caddy keeps the certificate, its private key and the ACME account in `caddy/data/` on the volume, so a replacement droplet reuses the certificate and orders no new one (see [Replacement](replacement.md)). Caddy renews the certificate itself about 30 days before it expires; the renewal needs ports 80 and 443 open, which they are (no DigitalOcean firewall). A firewall added later must allow, besides SSH (22/tcp) for Ansible, 80/tcp and 443/tcp for the ACME challenges and renewals, and 443/udp for HTTP/3. There is no ACME email address: Let's Encrypt no longer sends expiry mails. Check the certificate from outside with:
