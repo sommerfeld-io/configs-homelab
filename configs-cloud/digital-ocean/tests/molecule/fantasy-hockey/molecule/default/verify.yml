@@ -266,7 +266,8 @@
             guard_sibling: "{{ ansible_failed_task.name }}"
 
     # Volume and path pass, but localhost does not resolve to 192.0.2.1, like a
-    # domain that is missing (wildcard answer) or points at another address.
+    # domain that is missing (NXDOMAIN, or a cached old answer) or points at
+    # another address.
     - name: Guard case, domain not resolving to the reserved IP
       vars:
         default_user: fh-guard-dns
@@ -313,7 +314,8 @@
           - guard_dns is search('Stop when the domain does not resolve to the reserved IP')
           - guard_dns_msg is search('localhost resolves to 127.0.0.1')
           - guard_dns_msg is search('not to the reserved IP 192.0.2.1')
-          - guard_dns_msg is search('docs/cloud/digital-ocean/domain.md')
+          - guard_dns_msg is search('output dns_records')
+          - guard_dns_msg is search('docs/cloud/digital-ocean/dns-zone.md')
           - "'fh-guard-unmounted' not in ansible_facts.getent_passwd"
           - "'fh-guard-outside' not in ansible_facts.getent_passwd"
           - "'fh-guard-dotdot' not in ansible_facts.getent_passwd"

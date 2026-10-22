@@ -1,13 +1,19 @@
 locals {
   # The DigitalOcean DNS zone. sommerfeld.app itself stays at all-inkl.com;
-  # only this subdomain is (from Story 8.2 on) delegated to ns1-3.digitalocean.com
-  # (docs/cloud/digital-ocean/dns-zone.md).
+  # only this subdomain is delegated to ns1-3.digitalocean.com with NS records
+  # in the KAS (docs/cloud/digital-ocean/dns-delegation.md).
   dns_zone = "do.sommerfeld.app"
 
   # A wrong A record heals five minutes after a fix. The CAA record rarely
   # changes, so it keeps a longer TTL.
   dns_ttl     = 300
   dns_caa_ttl = 3600
+
+  # Certificate authorities allowed to issue for the zone and every name below
+  # it, one CAA "0 issue" record each. Caddy configures no issuer, so it tries
+  # Let's Encrypt first and falls back to ZeroSSL, whose CAA identifier is
+  # sectigo.com. Without the second entry the fallback would be refused.
+  dns_caa_issuers = ["letsencrypt.org", "sectigo.com"]
 
   # One A record <key>.<stage> per droplet with a reserved IP, the hostname
   # pattern of docs/cloud/domain-naming.md. Name relative to the zone =>
@@ -55,8 +61,9 @@ locals {
   )
 }
 
-# The zone. It is authoritative only once the parent zone sommerfeld.app at
-# all-inkl.com delegates "do" to DigitalOcean with NS records (Story 8.2).
+# The zone. It is authoritative because the parent zone sommerfeld.app at
+# all-inkl.com delegates "do" to DigitalOcean with NS records, set by hand in
+# the KAS (docs/cloud/digital-ocean/dns-delegation.md).
 # No ip_address: that argument would create an apex A record outside the
 # records below.
 resource "digitalocean_domain" "this" {
@@ -103,16 +110,25 @@ resource "digitalocean_record" "a" {
   ttl    = local.dns_ttl
 }
 
-# Only Let's Encrypt (Caddy's ACME issuer) may issue certificates for the
-# zone and every name below it. Without it, CAA lookups would fall through to
-# the parent zone. The provider reads the value back with a trailing dot, so
-# it is written with one to keep the next plan clean.
+# Only the issuers Caddy uses may issue certificates for the zone and every
+# name below it. Without these records, CAA lookups would fall through to the
+# parent zone. The provider reads the value back with a trailing dot, so it is
+# written with one to keep the next plan clean.
 resource "digitalocean_record" "caa" {
+  for_each = toset(local.dns_caa_issuers)
+
   domain = digitalocean_domain.this.id
   type   = "CAA"
   name   = "@"
   flags  = 0
   tag    = "issue"
-  value  = "letsencrypt.org."
+  value  = "${each.key}."
   ttl    = local.dns_caa_ttl
+}
+
+# Story 8.1 created the Let's Encrypt record as a single resource. This keeps
+# it in place instead of destroying and recreating it under the new address.
+moved {
+  from = digitalocean_record.caa
+  to   = digitalocean_record.caa["letsencrypt.org"]
 }

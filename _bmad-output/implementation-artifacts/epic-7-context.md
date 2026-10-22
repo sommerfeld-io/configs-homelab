@@ -27,6 +27,7 @@ Serve the fantasy hockey app only at `https://fantasy-hockey.prod.do.sommerfeld.
 ## Technical Decisions
 
 - **DNS is outside the declaration.** `sommerfeld.app` is hosted at all-inkl.com (nameservers `ns5`/`ns6.kasserver.com`). The operator creates the A record by hand there and it is documented. OpenTofu does not manage DNS, and the DigitalOcean token gets no `domain` scope. This is a deliberate exception to "OpenTofu declares the cloud resources". Epic 6 needs no new secrets because of it.
+    - **Superseded by Epic 8 (2026-10-15, Epic 7 retro item 27):** `do.sommerfeld.app` is delegated from all-inkl.com to DigitalOcean DNS and declared in OpenTofu, and the token has the `domain` scope (Stories 8.1 and 8.2, `docs/cloud/digital-ocean/dns-zone.md`, `docs/cloud/digital-ocean/dns-delegation.md`). `sommerfeld.app` and its other records stay at all-inkl.com.
 - **The `.app` TLD is on the browsers' HSTS preload list**, so browsers use HTTPS only. The DigitalOcean project keeps the name `sommerfeld.io`.
 - **Caddy replaces nginx** inside the existing compose project of the `fantasy-hockey` role (under `configs-cloud/digital-ocean/ansible/roles`), listening on ports 80 and 443 and proxying to `127.0.0.1:8080`. nginx with certbot was rejected.
 - **Caddy's data folder (certificates and ACME account) lives on the volume** next to the app data under `/mnt/prod_fantasy_hockey_data/`, not in OpenTofu state.

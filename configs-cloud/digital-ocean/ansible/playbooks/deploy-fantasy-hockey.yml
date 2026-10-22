@@ -30,7 +30,7 @@
     # alloy_stage, the same value as the stage label of the droplet's series.
     # The app is the rest of the name after the first hyphen; that is the key
     # because OpenTofu allows only dev, test and prod, none with a hyphen. The A
-    # record is created by hand, see docs/cloud/digital-ocean/domain.md.
+    # record is declared in OpenTofu, see docs/cloud/digital-ocean/dns-zone.md.
     # Overrides the role default, which only covers the prod droplet.
     fantasy_hockey_domain: "{{ inventory_hostname.split('-', 1) | last }}.{{ alloy_stage }}.do.sommerfeld.app"
   tasks:

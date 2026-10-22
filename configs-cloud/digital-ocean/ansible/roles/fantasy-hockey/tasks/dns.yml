@@ -2,8 +2,9 @@
 # Caddy orders the certificate for fantasy_hockey_domain as soon as it starts.
 # Let's Encrypt validates against the address the name resolves to, so the
 # deploy stops first when that is not this droplet's reserved IP. "Resolves at
-# all" is not enough: the sommerfeld.app wildcard answers every missing name
-# with a CNAME to the web host. fantasy_hockey_reserved_ip comes from the
+# all" is not enough: a resolver may still cache an old answer, such as the
+# sommerfeld.app wildcard's CNAME to the web host from before do.sommerfeld.app
+# was delegated to DigitalOcean. fantasy_hockey_reserved_ip comes from the
 # DigitalOcean metadata service (deploy-fantasy-hockey.yml).
 
 - name: Fantasy Hockey  ----  Resolve the domain
@@ -27,9 +28,12 @@
       {{ fantasy_hockey_domain_addresses | join(', ') if fantasy_hockey_domain_addresses else 'nothing' }},
       not to the reserved IP {{ fantasy_hockey_reserved_ip }} of {{ inventory_hostname }}.
       Caddy would request a certificate that Let's Encrypt cannot validate, so
-      nothing was written. Create or fix the A record as described in
-      docs/cloud/digital-ocean/domain.md, check public resolvers as in its
-      section Check, and repeat this lookup on the droplet with
-      `getent ahostsv4 {{ fantasy_hockey_domain }}` (its resolver may cache
-      the wildcard answer for up to 2 hours).
+      nothing was written. The A record is declared in OpenTofu: first check
+      `tofu -chdir=configs-cloud/digital-ocean/opentofu output dns_records`
+      from the repository root. If the record is right, wait for the cache
+      of the droplet's resolver (an NXDOMAIN up to 1800 s, an old address up
+      to 300 s, the wildcard CNAME from before the delegation up to 7200 s)
+      and check on the droplet with `getent ahostsv4 {{ fantasy_hockey_domain }}`.
+      Apply OpenTofu only if the record is wrong
+      (docs/cloud/digital-ocean/dns-zone.md).
     quiet: true

@@ -2,13 +2,13 @@
 
 Cloud deployments run in three steps, always in this order. Each step builds on the one before it and is safe to run again.
 
-1. **Infrastructure (OpenTofu):** declares the cloud resources (droplet, reserved IP, volume) and creates or updates them through the provider API.
+1. **Infrastructure (OpenTofu):** declares the cloud resources (droplet, reserved IP, volume, DNS zone and records) and creates or updates them through the provider API.
 2. **Provisioning (Ansible):** configures every droplet the same way: base tools, Docker, swap, monitoring and login banner.
 3. **App deployment (Ansible):** runs the apps on the droplets that carry the matching tag.
 
 `task cloud:deploy:all` runs all three steps in one go. Each step also has its own task.
 
-A new droplet that runs an app cannot pass its first `deploy:all`: steps 1 and 2 succeed, but the app deployment stops unless the app's domain resolves to the droplet's reserved IP, and that IP exists only after step 1. Its DNS record is created by hand in between. So run step 1 alone (`task cloud:digital-ocean:opentofu:apply`), create the record, wait until public resolvers and the droplet return the reserved IP, then run `deploy:all`. See [Domain](digital-ocean/domain.md#check) for the steps. A replacement keeps the reserved IP and its record, so `deploy:all` works in one go there.
+The app deployment stops unless the app's domain resolves to the droplet's reserved IP. Step 1 creates the reserved IP and the app's DNS record together (in the delegated zone `do.sommerfeld.app`, see [DNS Zone](digital-ocean/dns-zone.md)), so a new droplet passes `deploy:all` in one go. Only a resolver that asked for the name before the record existed caches the NXDOMAIN for up to 1800 s; then wait and run the app deployment again (see [Domain](digital-ocean/domain.md#check)). A replacement keeps the reserved IP and its record.
 
 ```kroki-plantuml
 @startuml
@@ -24,7 +24,8 @@ partition "1. Infrastructure - OpenTofu" {
   :task cloud:digital-ocean:opentofu:apply;
   :Create or update resources;
   note right
-    Droplet, reserved IP and volume
+    Droplet, reserved IP, volume
+    and DNS records
     State in local terraform.tfstate
   end note
 }
@@ -46,7 +47,7 @@ partition "3. App deployment - Ansible" {
   if (Domain resolves to exactly the reserved IP?) then (yes)
   else (no)
     :Stop before anything is written;
-    note right: New droplet: create the DNS record first
+    note right: Wait for the DNS record, deploy again
     stop
   endif
   :Start the app stack;

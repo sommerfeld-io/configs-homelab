@@ -2,16 +2,18 @@
 
 OpenTofu declares the DigitalOcean DNS zone `do.sommerfeld.app` and every record in it, in `configs-cloud/digital-ocean/opentofu/dns.tf`. The zone lives in the same root module and state as the droplets. Its records are derived from the `droplets` map, so a new app with a reserved IP gets its hostname in the same apply that creates the droplet.
 
-**The zone is not delegated yet.** `sommerfeld.app` stays at all-inkl.com, and its nameservers (`ns5`/`ns6.kasserver.com`) still answer every name, including `fantasy-hockey.prod.do.sommerfeld.app` from the hand-made A record described in [Domain](domain.md). Resolvers never ask DigitalOcean until the parent zone has NS records for `do` that point at `ns1`/`ns2`/`ns3.digitalocean.com`. Story 8.2 adds those records by hand in the KAS. Until then, the DigitalOcean zone serves nothing publicly, and it can only be checked by asking `ns1.digitalocean.com` directly (see [Checks](#checks)).
+`sommerfeld.app` stays at all-inkl.com. Its nameservers (`ns5`/`ns6.kasserver.com`) delegate `do` to `ns1`/`ns2`/`ns3.digitalocean.com` with three NS records, set by hand in the KAS, so resolvers ask DigitalOcean for every name at or below `do.sommerfeld.app`. The NS records, the migration from the hand-made KAS record and the rollback are described in [DNS Delegation](dns-delegation.md).
+
+> **Status:** the delegation and the second CAA record (`sectigo.com`) take effect with steps [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records) and [M10](dns-delegation.md#m10-add-the-ns-records) of [DNS Delegation](dns-delegation.md); the dates are in [History](domain.md#history). Until M10, the hand-made KAS record answers publicly, and a new app name either needs a hand-made A record in the KAS (Tools → DNS-Einstellungen, `sommerfeld.app`) or must wait for M10.
 
 ## Architecture
 
 Two zones, two providers:
 
-| Zone                | Hosted at                                                   | Authoritative for                                                       | Managed by                  |
-|---------------------|-------------------------------------------------------------|-------------------------------------------------------------------------|-----------------------------|
-| `sommerfeld.app`    | all-inkl.com (registrar and DNS, `ns5`/`ns6.kasserver.com`) | `sommerfeld.app` and every name outside `do`                            | by hand in the KAS (manual) |
-| `do.sommerfeld.app` | DigitalOcean DNS (`ns1`/`ns2`/`ns3.digitalocean.com`)       | `do.sommerfeld.app` and every name below it, once delegated (Story 8.2) | OpenTofu (`dns.tf`)         |
+| Zone                | Hosted at                                                   | Authoritative for                                                          | Managed by                  |
+|---------------------|-------------------------------------------------------------|----------------------------------------------------------------------------|-----------------------------|
+| `sommerfeld.app`    | all-inkl.com (registrar and DNS, `ns5`/`ns6.kasserver.com`) | `sommerfeld.app` and every name outside `do`, plus the NS records for `do` | by hand in the KAS (manual) |
+| `do.sommerfeld.app` | DigitalOcean DNS (`ns1`/`ns2`/`ns3.digitalocean.com`)       | `do.sommerfeld.app` and every name below it, delegated by the KAS          | OpenTofu (`dns.tf`)         |
 
 ```kroki-plantuml
 @startuml
@@ -35,8 +37,7 @@ cloud ".app registry" as registry {
 cloud "all-inkl.com" as allinkl {
   rectangle "Registrar and KAS" <<manual>> as kas
   rectangle "Zone sommerfeld.app\nns5/ns6.kasserver.com\nauthoritative for sommerfeld.app" as parent
-  rectangle "NS do -> ns1/ns2/ns3.digitalocean.com\nStory 8.2, manual in the KAS\n(not yet created)" <<manual>> as delegation
-  rectangle "A fantasy-hockey.prod.do (hand-made, Story 7.1)\nanswers until Story 8.2" <<manual>> as kasrecord
+  rectangle "NS do -> ns1/ns2/ns3.digitalocean.com\nmanual in the KAS (Story 8.2)" <<manual>> as delegation
 }
 
 node "Operator devcontainer" as devcontainer {
@@ -45,16 +46,15 @@ node "Operator devcontainer" as devcontainer {
 
 cloud "DigitalOcean" as digitalocean {
   component "DigitalOcean API" as api
-  rectangle "Zone do.sommerfeld.app\nns1/ns2/ns3.digitalocean.com\nauthoritative for do.sommerfeld.app and below\n(declared, not yet delegated)" as zone
-  rectangle "A fantasy-hockey.prod  TTL 300\nCAA @ 0 issue letsencrypt.org  TTL 3600" as records
+  rectangle "Zone do.sommerfeld.app\nns1/ns2/ns3.digitalocean.com\nauthoritative for do.sommerfeld.app and below" as zone
+  rectangle "A fantasy-hockey.prod  TTL 300\nCAA @ 0 issue letsencrypt.org, sectigo.com  TTL 3600" as records
   component "Reserved IP\n(prevent_destroy)" as reservedip
   node "Droplet prod-fantasy-hockey\nCaddy :443" as droplet
 }
 
 kas --> parent : edits by hand
-parent --> kasrecord
-parent ..> delegation : refers "do" to
-delegation ..> zone : delegates
+parent --> delegation : refers "do" to
+delegation --> zone : delegates
 tld --> parent : delegates sommerfeld.app
 
 tofu --> api : plan, apply\nDIGITALOCEAN_ACCESS_TOKEN (domain scope)
@@ -65,13 +65,13 @@ reservedip --> droplet : assigned to
 
 client --> resolver : 1. fantasy-hockey.prod.do.sommerfeld.app?
 resolver --> tld : 2. who serves sommerfeld.app?
-resolver --> parent : 3. today: answers the A record\nafter 8.2: refers to DigitalOcean
-resolver ..> zone : 4. after 8.2 only: A record
+resolver --> parent : 3. who serves do.sommerfeld.app?\nreferral to DigitalOcean
+resolver --> zone : 4. A record (aa)
 client --> reservedip : 5. HTTPS :443 to the reserved IP
 @enduml
 ```
 
-Elements with the orange `<<manual>>` stereotype are changed by hand in the KAS, never by OpenTofu. The dotted delegation edge does not exist yet: Story 8.2 creates it.
+Elements with the orange `<<manual>>` stereotype are changed by hand in the KAS, never by OpenTofu.
 
 ## Records
 
@@ -128,13 +128,14 @@ The three sources (derived names, aliases, external records) share one namespace
 ### TTL and CAA
 
 - A records have a TTL of 300 s: a wrong record heals five minutes after the fix is applied.
-- The zone apex has `CAA 0 issue "letsencrypt.org"` with a TTL of 3600 s. Only Let's Encrypt, the issuer Caddy uses, may issue certificates for `do.sommerfeld.app` and every name below it. In `dns.tf` the value is written as `letsencrypt.org.` with a trailing dot, because the provider reads it back that way; without the dot every plan would show a change.
+- The zone apex has one `CAA 0 issue` record per entry of `local.dns_caa_issuers`, each with a TTL of 3600 s: `letsencrypt.org` and `sectigo.com`. Only the issuers Caddy uses may issue certificates for `do.sommerfeld.app` and every name below it: Caddy configures no issuer, so it tries Let's Encrypt first and falls back to ZeroSSL, whose CAA identifier is `sectigo.com`. Because `do` is delegated, every CAA lookup for a name under `do` stops here; the parent zone's wildcard never answers it. In `dns.tf` each value is written with a trailing dot (`letsencrypt.org.`), because the provider reads it back that way; without the dot every plan would show a change. DigitalOcean serves it without the dot (`0 issue "letsencrypt.org"`, checked 2026-10-22).
+- `digitalocean_record.caa` is keyed by issuer. Story 8.1 created the Let's Encrypt record as a single resource; a `moved` block in `dns.tf` moves it to `digitalocean_record.caa["letsencrypt.org"]` without replacing it.
 - There is no AAAA record (the reserved IP is IPv4 only), no wildcard (an undeclared name returns NXDOMAIN, and the deploy's DNS guard stops on a name that resolves to nothing) and no DNSSEC (DigitalOcean DNS cannot sign zones).
 - The SOA and NS records at the apex are created by DigitalOcean and stay unmanaged. Never declare them.
 
 ## How-Tos
 
-Every how-to ends with the steps in [Plan and Review](#plan-and-review). Until Story 8.2 delegates the zone, none of them changes what the public sees: the KAS record in [Domain](domain.md) still answers.
+Every how-to ends with the steps in [Plan and Review](#plan-and-review). None of them needs a KAS change: the delegation covers every name under `do`.
 
 ### Add an App Hostname
 
@@ -221,26 +222,26 @@ task cloud:dns:check -- +norec @ns1.digitalocean.com nothing-here.prod.do.sommer
 Expected after the apply:
 
 - the `flags:` line contains `aa` (authoritative answer);
-- the A answers are the reserved IP from `tofu output reserved_ip_addresses`, the same on all three nameservers;
-- the CAA answer is `0 issue "letsencrypt.org"`;
+- the A answers are the reserved IP from `tofu -chdir=configs-cloud/digital-ocean/opentofu output reserved_ip_addresses`, the same on all three nameservers;
+- the CAA answers are `0 issue "letsencrypt.org"` and `0 issue "sectigo.com"`;
 - the undeclared name returns `status: NXDOMAIN`.
 
-`dns.tf` writes the CAA value as `letsencrypt.org.` (with a trailing dot). M5 must record the exact string DigitalOcean serves. If it serves `letsencrypt.org.` with the dot, check that before Story 8.2 delegates the zone: whether Let's Encrypt's CAA check matches `letsencrypt.org.` is unverified.
+`dns.tf` writes the CAA values with a trailing dot (`letsencrypt.org.`); DigitalOcean serves them without it (`0 issue "letsencrypt.org"`, Story 8.1 M5, 2026-10-22), which is what the certificate authorities match.
 
-Before the apply, `ns1.digitalocean.com` answers `status: REFUSED`: it serves no zone of that name.
+Before the zone exists, `ns1.digitalocean.com` answers `status: REFUSED`: it serves no zone of that name.
 
-Public resolvers still return the KAS answers until Story 8.2: the A record `129.212.195.118` from all-inkl, and for `NS do.sommerfeld.app` the wildcard CNAME `w00f8074.kasserver.com`. Check them with the DoH commands from [Domain](domain.md#check), or with `task cloud:dns:check -- @8.8.8.8 fantasy-hockey.prod.do.sommerfeld.app A`.
+Public resolvers get the same answers through the delegation. Check them, the KAS referral and `+trace` with the commands in [DNS Delegation](dns-delegation.md#verification-commands).
 
 ## Troubleshooting
 
 ### NXDOMAIN
 
-- From `ns1.digitalocean.com`: the name is not declared. Compare it with `tofu output dns_records`; check the key, the `stage` and `reserved_ip = true`.
-- From a public resolver after Story 8.2: a resolver that asked before the record existed caches the NXDOMAIN for up to the SOA minimum of the zone. Wait, or ask `ns1.digitalocean.com` to confirm the record exists.
+- From `ns1.digitalocean.com`: the name is not declared. Compare it with `tofu -chdir=configs-cloud/digital-ocean/opentofu output dns_records`; check the key, the `stage` and `reserved_ip = true`.
+- From a public resolver: a resolver that asked before the record existed caches the NXDOMAIN for up to the SOA minimum of the zone. Wait, or ask `ns1.digitalocean.com` to confirm the record exists.
 
 ### The Old all-inkl Answer
 
-Until Story 8.2, the public answer comes from the KAS, by design. A CNAME to `w00f8074.kasserver.com` means the name has no KAS record and falls through to the all-inkl wildcard. After Story 8.2, the old answer stays in resolver caches for up to the KAS TTL of 7200 s.
+A CNAME to `w00f8074.kasserver.com` for a name under `do` comes from the parent zone's wildcard, cached from before the delegation, for up to the KAS TTL of 7200 s. If `+trace` also ends at a `kasserver.com` nameserver, the NS records for `do` are missing in the KAS (see [DNS Delegation](dns-delegation.md#troubleshooting)).
 
 ### Perpetual Diff
 
@@ -258,18 +259,18 @@ Without the `domain` scope, `tofu apply` fails with 403 when it creates the zone
 
 ## Automated and Manual Steps
 
-| Step                                                    | Who                     | Where                                         |
-|---------------------------------------------------------|-------------------------|-----------------------------------------------|
-| Derive record names and values from the droplet map     | OpenTofu (automated)    | `dns.tf`                                      |
-| Check duplicate names, alias suffixes and external IPv4 | OpenTofu (automated)    | `tofu plan` (preconditions)                   |
-| Format and lint `dns.tf`                                | `task lint` (automated) | devcontainer, pre-commit hook, CI             |
-| Add the `domain` scope to the API token                 | operator (manual)       | DigitalOcean control panel                    |
-| Back up the state before the first DNS apply            | operator (manual)       | devcontainer                                  |
-| Review the plan and apply                               | operator (manual)       | devcontainer                                  |
-| Check the zone with `task cloud:dns:check`              | operator (manual)       | devcontainer                                  |
-| Check public resolution                                 | operator (manual)       | outside the home network (DoH, phone hotspot) |
-| NS records for `do` in the parent zone (Story 8.2)      | operator (manual)       | KAS at all-inkl.com                           |
-| Remove the hand-made KAS A record (Story 8.2)           | operator (manual)       | KAS at all-inkl.com                           |
+| Step                                                    | Who                     | Where                                                                                          |
+|---------------------------------------------------------|-------------------------|------------------------------------------------------------------------------------------------|
+| Derive record names and values from the droplet map     | OpenTofu (automated)    | `dns.tf`                                                                                       |
+| Check duplicate names, alias suffixes and external IPv4 | OpenTofu (automated)    | `tofu plan` (preconditions)                                                                    |
+| Format and lint `dns.tf`                                | `task lint` (automated) | devcontainer, pre-commit hook, CI                                                              |
+| Add the `domain` scope to the API token                 | operator (manual)       | DigitalOcean control panel                                                                     |
+| Back up the state before the first DNS apply            | operator (manual)       | devcontainer                                                                                   |
+| Review the plan and apply                               | operator (manual)       | devcontainer                                                                                   |
+| Check the zone with `task cloud:dns:check`              | operator (manual)       | devcontainer                                                                                   |
+| Check public resolution                                 | operator (manual)       | outside the home network (DoH, phone hotspot)                                                  |
+| NS records for `do` in the parent zone                  | operator (manual)       | KAS at all-inkl.com ([DNS Delegation](dns-delegation.md))                                      |
+| Remove the hand-made KAS A record (once, Story 8.2)     | operator (manual)       | KAS at all-inkl.com ([DNS Delegation](dns-delegation.md#m14-delete-the-obsolete-kas-a-record)) |
 
 ## Change Flow
 
@@ -323,4 +324,4 @@ end
 @enduml
 ```
 
-Until Story 8.2 delegates the zone, the resolver in this diagram still asks the KAS, and the KAS record has to be changed by hand as described in [Domain](domain.md).
+The resolver reaches DigitalOcean DNS through the referral from the parent zone at all-inkl.com (see [DNS Delegation](dns-delegation.md)).
