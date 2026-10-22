@@ -42,7 +42,7 @@ node "Operator devcontainer" as devcontainer {
   component "OpenTofu\ndns.tf" as tofu
 }
 
-cloud "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean {
   component "DigitalOcean API" as api
   rectangle "Zone do.sommerfeld.app\nns1/ns2/ns3.digitalocean.com\nauthoritative for do.sommerfeld.app and below" as zone
   rectangle "A fantasy-hockey.prod  TTL 300\nCAA @ 0 issue letsencrypt.org, sectigo.com  TTL 3600" as records

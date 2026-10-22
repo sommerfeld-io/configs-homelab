@@ -25,7 +25,7 @@ node "Operator workstation" as workstation {
 
 cloud "Grafana Cloud" as grafana
 
-cloud "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean {
   component "DigitalOcean API" as api
 
   frame "Project sommerfeld.io" as project {

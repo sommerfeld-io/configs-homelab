@@ -45,7 +45,7 @@ cloud "all-inkl.com: KAS, zone sommerfeld.app on ns5/ns6.kasserver.com" as kas {
   rectangle "Delegation, by hand in the KAS\nNS do -> ns1.digitalocean.com.\nNS do -> ns2.digitalocean.com.\nNS do -> ns3.digitalocean.com." <<manual>> as delegation
 }
 
-cloud "DigitalOcean DNS: zone do.sommerfeld.app on ns1/ns2/ns3.digitalocean.com" as digitalocean {
+card "DigitalOcean DNS: zone do.sommerfeld.app on ns1/ns2/ns3.digitalocean.com" as digitalocean {
   rectangle "Zone basics, created by DigitalOcean\nSOA, NS do.sommerfeld.app -> ns1/ns2/ns3.digitalocean.com\n(never declared in OpenTofu)" <<provider>> as dosoa
   rectangle "Records under do, declared in OpenTofu\nA fantasy-hockey.prod -> reserved IP 129.212.195.118\n(one per droplet with a reserved IP, plus aliases and external records)\nCAA @ -> 0 issue letsencrypt.org\nCAA @ -> 0 issue sectigo.com" <<opentofu>> as dorecords
 }

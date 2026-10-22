@@ -60,7 +60,7 @@ actor "Client\n(browser)" as client
 rectangle "Browser HSTS preload list\nall of .app: HTTPS only" as hsts
 rectangle "Let's Encrypt\n(ZeroSSL as Caddy's fallback)" as ca
 
-cloud "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean {
   rectangle "DNS zone do.sommerfeld.app (OpenTofu)\nA fantasy-hockey.prod -> reserved IP\nCAA: letsencrypt.org, sectigo.com" as dns
   rectangle "Reserved IP 129.212.195.118\npasses TCP/UDP through, no TLS" as reservedip
   node "Droplet prod-fantasy-hockey" as droplet {
