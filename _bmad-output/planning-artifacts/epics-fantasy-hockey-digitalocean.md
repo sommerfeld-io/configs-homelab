@@ -7,7 +7,7 @@ inputDocuments: ['../specs/spec-fantasy-hockey-digitalocean/SPEC.md', '../specs/
 
 ## Overview
 
-Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS) is Epic 7 here; it was pulled forward on 2026-10-15 and runs after Story 5.1 and before Story 5.2 and Epic 6. Epic 8 (DNS for `do.sommerfeld.app` in OpenTofu) was added on 2026-10-15 after the Epic 7 retro (action item 27) and runs after Epic 7 and before Epic 6. The spec's E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
+Epic and story breakdown for running the fantasy hockey app on a DigitalOcean droplet, decomposed from `SPEC-fantasy-hockey-digitalocean` (CAP-1 to CAP-8) and its stories. Numbering continues after the completed Epic 1 ("Close the Bootstrap Debt") in `epics.md`. The spec's E1 to E5 are Epics 2 to 6 here. The spec's E6 (HTTPS) is Epic 7 here; it was pulled forward on 2026-10-15 and runs after Story 5.1 and before Story 5.2 and Epic 6. Epic 8 (DNS for `do.sommerfeld.app` in OpenTofu) was added on 2026-10-15 after the Epic 7 retro (action item 27) and runs after Epic 7 and before Epic 6. Epic 9 (Wi-Fi telemetry for homelab nodes) is a homelab epic in `epics.md`, added on 2026-10-22; it also runs before Epic 6 and changes nothing in this file's scope. The spec's E7 (hardening) and E8 (backup) get their own breakdown later and are not in this file. Architecture rule AD-10 in the spine governs this work. Every story updates the docs under `docs/cloud/digital-ocean` in the same change (CAP-7).
 
 ## Requirements Inventory
 
@@ -494,9 +494,11 @@ So that broken cloud configs fail before merge.
 
 **Acceptance Criteria:**
 
-**Given** a change under `configs-cloud`
-**When** CI runs in `pipeline.yml` or a dedicated workflow
-**Then** the OpenTofu and Ansible checks run the same way as locally
+`tofu fmt -check` (`lint-opentofu` in the CI lint matrix) and `tofu validate` (`validate-opentofu` CI job) already run for every OpenTofu root, and both run in `task lint` (off-story commits `63fabb4`, `3e90479`, `a96b137`, Epic 8 retro finding A2; Epic 8 retro item 35, `6da3d31`). ansible-lint runs in the CI lint matrix. This story adds what is still missing (re-scoped by Epic 8 retro item 39).
+
+**Given** `configs-cloud/digital-ocean/opentofu/`, whose inputs (the `droplets` map, `dns_external_records`, `dns_caa_issuers`) are `locals` today, which `tofu test` cannot override
+**When** the story makes those inputs injectable (for example variables whose defaults are today's values) and `tofu test` runs with `mock_provider` in `task lint` and in CI, without a token or state
+**Then** it checks the record derivation from the `droplets` map (`<key>.<stage>`, `dns_aliases`, `dns_external_records`), the exact CAA set (`0 issue` for `letsencrypt.org.` and `sectigo.com.`, TTL 3600), and that each of the five preconditions (four in `dns.tf`, the stage list in `droplets.tf`) fails the plan on its bad input
 
 **Given** `provision.yml` and every cloud playbook
 **When** CI runs

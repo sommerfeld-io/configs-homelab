@@ -65,14 +65,14 @@ Check it with `echo "${GRAFANA_SM_ACCESS_TOKEN:+set}"`. `plan`, `apply` and `app
 
 ## Tasks
 
-| Task                           | What it does                                     |
-|--------------------------------|--------------------------------------------------|
-| `task grafana-cloud:init`      | `tofu init`                                      |
-| `task grafana-cloud:fmt`       | `tofu fmt -recursive` (also part of `task lint`) |
-| `task grafana-cloud:validate`  | `tofu validate` (also part of `task lint`)       |
-| `task grafana-cloud:plan`      | `tofu plan`                                      |
-| `task grafana-cloud:apply`     | `tofu apply`                                     |
-| `task grafana-cloud:apply:yes` | `tofu apply -auto-approve`, read `plan` first    |
+| Task                           | What it does                                                                                                                                                                                                                                                                  |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `task grafana-cloud:init`      | `tofu init`                                                                                                                                                                                                                                                                   |
+| `task grafana-cloud:fmt`       | `tofu fmt -recursive` (also part of `task lint`)                                                                                                                                                                                                                              |
+| `task grafana-cloud:validate`  | `tofu validate` (also part of `task lint`); runs `tofu init -backend=false -input=false -lockfile=readonly` when a first validate fails, for example because the provider cache is missing or does not match the lock file (needs the network), so no manual `init` is needed |
+| `task grafana-cloud:plan`      | `tofu plan`                                                                                                                                                                                                                                                                   |
+| `task grafana-cloud:apply`     | `tofu apply`                                                                                                                                                                                                                                                                  |
+| `task grafana-cloud:apply:yes` | `tofu apply -auto-approve`, read `plan` first                                                                                                                                                                                                                                 |
 
 `lint-opentofu` (`docker-compose.yml`) checks the formatting of `grafana-cloud` together with `configs-cloud`, and the `validate-opentofu` job in `.github/workflows/pipeline.yml` runs `tofu validate` on it in CI. No GitHub Actions workflow applies this configuration yet.
 

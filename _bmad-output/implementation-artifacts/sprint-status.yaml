@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-22-2026 18:13
+last_updated: 10-22-2026 21:09
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -81,7 +81,14 @@ development_status:
   8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu: done
   # 8.2 needs 8.1 applied and checked against ns1.digitalocean.com (manual tasks M1-M6)
   8-2-delegate-do-sommerfeld-app-and-retire-the-kas-record: done
-  epic-8-retrospective: optional
+  epic-8-retrospective: done
+
+  # Epic 9 (homelab, epics.md) runs after Epic 8 and before Epic 6 (sprint-change-proposal-2026-10-22)
+  epic-9: backlog
+  9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config: backlog
+  # 9.2 needs live node_wifi_* series from 9.1, and stays in review until Git Sync from main is observed
+  9-2-wi-fi-dashboard-in-the-git-sync-folder-network: backlog
+  epic-9-retrospective: optional
 
   epic-6: backlog
   6-1-ci-static-checks-for-opentofu-and-ansible: backlog
@@ -341,3 +348,51 @@ action_items:
     owner: "user"
     status: done
     ref: "_bmad-output/implementation-artifacts/epic-5-retro-2026-10-16.md"
+  - id: "epic-8-retro-item-35-make-task-lint-validate-opentofu-without"
+    epic: 8
+    action: "Make task lint validate OpenTofu without a prior manual init (tofu init
+      -backend=false -input=false -lockfile=readonly before validate, ideally in a
+      pinned compose service) and align the lint-opentofu image with required_version"
+    owner: "dev loop"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-8-retro-item-36-harden-the-validate-opentofu-ci-job-disc"
+    epic: 8
+    action: "Harden the validate-opentofu CI job: discover roots from versions.tf
+      instead of a hand-kept matrix (same list for task lint), require an exact x.y.z
+      required_version, drop the unneeded Docker Hub login and submodule checkout"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift-pipeline"
+    epic: 8
+    action: "Fix Epic 8 docs and guard drift: pipelines.md no-validate line, domain.md
+      in-place claim for stage/key changes, dns-zone.md steps table, R4 import keys
+      from doctl, DNS guard fail_msg checks authoritative DNS first, *.tfplan in .gitignore"
+    owner: "dev loop"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-8-retro-item-38-reconcile-runbook-m13-and-the-epic-8-ac"
+    epic: 8
+    action: "Reconcile runbook M13 and the Epic 8 AC with the as-built: gate M14 on
+      both KAS nameservers referring and +trace ending at DigitalOcean (or keep the
+      wait), and note the skipped wait in domain.md History"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-8-retro-item-39-reconcile-story-6-1-scope-and-deferred-w"
+    epic: 8
+    action: "Reconcile Story 6.1 scope and deferred-work.md with the off-story CI
+      commits (tofu validate already in task lint and CI): narrow 6.1 to tofu test
+      plan-level tests for dns.tf and mark the resolved 8.1 entries"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-8-retro-item-40-record-as-project-pitfalls-off-story-wor"
+    epic: 8
+    action: "Record as project pitfalls: off-story work that closes a deferred item
+      or part of a later story goes through a story or at least updates deferred-work.md
+      and that story; a runbook wait states the observable condition it protects"
+    owner: "user"
+    status: done
+    ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"

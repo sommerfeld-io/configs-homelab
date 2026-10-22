@@ -22,6 +22,7 @@ FR6: An in-progress role fix stays isolated (via git branching) from nodes alrea
 FR7: Docs stay structurally aligned with `configs-homelab/ansible/playbooks/` — exactly one doc per playbook, kept in sync when a playbook is renamed or removed. (SPEC CAP-7 / PRD FR-7, corrected scope per Architecture AD-9 — playbooks only, not every configs-homelab/ansible/ subdirectory)
 FR8: Every currently-manual bootstrap step (SSH key exchange, sudoers workaround, Docker registry login, GitHub key setup) is documented with an explicit disposition — "permanently accepted" or "tracked to close" — with none left untagged. (SPEC CAP-8 / PRD FR-8)
 FR9: The sudoers NOPASSWD workaround needed on newer Ubuntu versions is resolved so it no longer appears in the manual-steps list. (SPEC CAP-9 / PRD FR-9) — tracked directly via GitHub issue #160; no BMad story needed.
+FR10: Every homelab node (desktops, servers, Raspberry Pis) reports its Wi-Fi link quality (signal strength, bitrates, retries, failures) to Grafana Cloud through the node_exporter wifi collector in its Alloy config, shown on a "Wi-Fi" dashboard; cloud droplets are excluded. (SPEC CAP-10 / PRD FR-10)
 
 ### NonFunctional Requirements
 
@@ -62,12 +63,17 @@ FR6: Already delivered, no epic - git-branch isolation, ratified as-is
 FR7: Already delivered, no epic - docs-mirrors-playbooks (AD-9), ratified as-is
 FR8: Epic 1 - tag every manual bootstrap step with an explicit disposition
 FR9: No BMad story - already tracked directly via GitHub issue #160
+FR10: Epic 9 - Wi-Fi collector in the homelab Alloy config and the Wi-Fi dashboard
 
 ## Epic List
 
 ### Epic 1: Close the Bootstrap Debt
 Every manual bootstrap step has an explicit, auditable disposition.
 **FRs covered:** FR8
+
+### Epic 9: Wi-Fi telemetry for homelab nodes
+Wi-Fi drops on homelab nodes can be correlated with signal strength and link quality in Grafana Cloud. Homelab only: nothing under configs-cloud changes. Added 2026-10-22 (sprint-change-proposal-2026-10-22); runs after Epic 8 and before Epic 6 (epics-fantasy-hockey-digitalocean.md).
+**FRs covered:** FR10
 
 ## Epic 1: Close the Bootstrap Debt
 
@@ -89,3 +95,53 @@ So that no manual step is ambiguous about whether it's meant to go away.
 **Given** a manual step is tagged "tracked to close"
 **When** I look for its tracking reference
 **Then** a linked GitHub issue number is present (e.g. issue #160 for the sudoers workaround)
+
+## Epic 9: Wi-Fi telemetry for homelab nodes
+Wi-Fi drops on homelab nodes can be correlated with signal strength and link quality in Grafana Cloud. Homelab only: nothing under configs-cloud changes. Added 2026-10-22 (sprint-change-proposal-2026-10-22); runs after Epic 8 and before Epic 6 (epics-fantasy-hockey-digitalocean.md).
+**FRs covered:** FR10
+```
+
+**New section** after Epic 1:
+
+```markdown
+## Epic 9: Wi-Fi telemetry for homelab nodes
+
+### Story 9.1: Enable the Wi-Fi collector in the homelab Alloy config
+
+As an operator,
+I want every homelab node's Alloy to export Wi-Fi metrics,
+So that a connection drop can be correlated with the link quality at that time.
+
+**Acceptance Criteria:**
+
+**Given** `configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2`
+**When** the change is made
+**Then** `prometheus.exporter.unix "integrations_node_exporter"` enables the `wifi` collector, `task lint` passes (including `lint-alloy-config`), and nothing under `configs-cloud/` changes (the droplet keeps its own template)
+
+**Given** `grafana-agents.yml` applied to the fleet (operator)
+**When** Grafana Cloud is queried
+**Then** pi4-0002 reports `node_wifi_station_signal_dbm` and the other `node_wifi_*` series for its Wi-Fi interface, every node that has a Wi-Fi interface is listed with its result, and nodes without Wi-Fi still scrape without collector errors
+
+**Given** the change
+**When** it is done
+**Then** the Alloy role README (copied to docs by `task docs:generate`) says which collector is on, which metrics it gives, and that no `iw` or `wireless-tools` package is needed
+
+### Story 9.2: Wi-Fi dashboard in the Git Sync folder network
+
+As an operator,
+I want a Wi-Fi dashboard in Grafana Cloud,
+So that I see the link quality of every Wi-Fi node at a glance and next to its drops.
+
+**Acceptance Criteria:**
+
+**Given** the `node_wifi_*` series from Story 9.1
+**When** the dashboard "Wi-Fi" is added as `grafana-cloud/manifests/git-sync/network/` (with `_folder.json`)
+**Then** it shows per node and interface: signal strength (dBm), receive and transmit bitrate, transmit retries and failures, beacon loss, connected SSID/BSSID, and a node variable, and the Git Sync resource count stays within the Free plan limit of 20 (13 after this story)
+
+**Given** the dashboard merged to `main`
+**When** Git Sync has run
+**Then** the dashboard is visible in Grafana Cloud under the folder `network` with data from pi4-0002; the story stays in `review` until this was observed (AGENTS.md pitfall)
+
+**Given** the change
+**When** it is done
+**Then** the dashboard is documented next to the other Grafana Cloud docs

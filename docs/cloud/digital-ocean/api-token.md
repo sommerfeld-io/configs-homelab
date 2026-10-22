@@ -48,6 +48,6 @@ If `doctl` reports an unauthorized error inside the devcontainer, the variable w
 
 ## Tool Versions
 
-The devcontainer installs pinned versions of `doctl` and OpenTofu through devcontainer features. The versions are set in `.devcontainer/devcontainer.json`. OpenTofu is pinned exactly (`1.12.7`), matching `required_version` in `versions.tf` and the `lint-opentofu` image; `tofu init` and `plan` refuse any other version.
+The devcontainer installs pinned versions of `doctl` and OpenTofu through devcontainer features. The versions are set in `.devcontainer/devcontainer.json`. OpenTofu is pinned exactly (`1.12.8`), matching `required_version` in `versions.tf` and the `lint-opentofu` image. Locally, `init`, `validate` and `plan` did not check `required_version` at all (a root pinning `1.99.0` passed with `1.12.7`), so use the devcontainer, and rebuild it after a pin bump to get the new version. The CI `validate-opentofu` job derives its image tag from `required_version`.
 
 The devcontainer is the supported way to run `tofu`. The host install (snap or pacman via the `packages` role) is an unpinned safety net only; if it ships a different OpenTofu version, use the devcontainer.

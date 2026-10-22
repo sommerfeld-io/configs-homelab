@@ -50,6 +50,10 @@ Manual machine setup at this homelab produces "snowflakes" — machines meant to
     - **intent:** The sudoers NOPASSWD workaround needed on newer Ubuntu versions is resolved so it no longer appears in the manual-steps list.
     - **success:** GitHub issue #160 is closed and the docs' manual-steps list no longer includes the sudoers workaround.
 
+- **CAP-10**
+    - **intent:** Every homelab node reports its Wi-Fi link quality (signal strength, bitrates, retries, failures) to Grafana Cloud through the node_exporter wifi collector in its Alloy config. Cloud droplets are excluded.
+    - **success:** On a Wi-Fi node (e.g. pi4-0002), `node_wifi_*` series appear in Grafana Cloud and the "Wi-Fi" dashboard in the Git Sync folder `network` shows them per node; the `configs-cloud` Alloy configs are unchanged.
+
 ## Constraints
 
 - All node-configuration secrets go through Ansible Vault only, referenced directly by variable name in tasks — no plaintext, no ad hoc per-playbook secret handling.

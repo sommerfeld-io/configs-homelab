@@ -17,9 +17,17 @@ tasks:
     cmds:
       - tofu fmt -recursive
 
+  # Checks syntax and references without the token or the state. The first
+  # validate is quiet; whenever it fails (e.g. the provider cache is missing or
+  # does not match the lock file), the task initializes without a backend. Only
+  # that init needs the network, and -lockfile=readonly never rewrites
+  # .terraform.lock.hcl. A failed init does not stop the task: the final
+  # validate always runs and reports the result.
   validate:
     desc: Validate the OpenTofu configuration for Grafana Cloud
     cmds:
+      - cmd: tofu validate >/dev/null 2>&1 || tofu init -backend=false -input=false -lockfile=readonly
+        ignore_error: true
       - tofu validate
 
   plan:
