@@ -182,7 +182,7 @@ Agent results from 2026-10-22. No operator step (M7 to M16, M8a) is done; none i
 
 **Operator results (2026-10-22, reported by the operator; agent re-check at 18:12 UTC):**
 
-- **M7:** before the change the KAS had the A record `fantasy-hockey.prod.do` `129.212.195.118` in the zone `sommerfeld.app`, and a KAS subdomain object for the app name (reported as `fantasy-hockey.prod.do.sommerfeld.io`, presumably `.app`). It did not block the NS records; whether it was removed is not reported.
+- **M7:** before the change the KAS had the A record `fantasy-hockey.prod.do` `129.212.195.118` in the zone `sommerfeld.app`, and a legacy KAS subdomain `fantasy-hockey.prod.do.sommerfeld.io` (a different domain, unrelated to `sommerfeld.app`). The operator deleted the legacy subdomain.
 - **M8 (18:00 UTC):** `@ns5.kasserver.com` → `flags: qr aa`, `129.212.195.118` TTL 7200; `@ns1.digitalocean.com` → `aa`, TTL 300; `+trace` ended at `ns6.kasserver.com`.
 - **M8a:** plan, apply and second plan exactly as in the runbook (move no-op, 1 to add, then `No changes.`). Google and Cloudflare return both CAA records, `0 issue "letsencrypt.org"` and `0 issue "sectigo.com"`.
 - **M9:** `dns.google` DS for `sommerfeld.app` has no `Answer`; DNSSEC is off.
