@@ -207,6 +207,12 @@ All agent results are from 2026-10-22. No operator step (M1 to M6) is marked don
 - **`dns:check` baseline** (before any apply): `+norec @ns5.kasserver.com fantasy-hockey.prod.do.sommerfeld.app A` → `flags: qr aa`, `129.212.195.118` TTL 7200; `+norec @ns1.digitalocean.com` same name → `status: REFUSED` (no zone); `@8.8.8.8 NS do.sommerfeld.app +short` → `w00f8074.kasserver.com.`; `@1.1.1.1` A → `129.212.195.118`. Nothing public changed.
 - **Diagrams:** `plantuml/plantuml:1.2026.8 -syntax`, source piped through stdin, no host mount, not privileged: diagram A `DESCRIPTION (13 entities)`, diagram B `SEQUENCE (8 participants)`, the updated "What Runs Where" `DESCRIPTION (15 entities)`. The image's own user `appuser` cannot load `libjli.so` on this host (`Permission denied`), so the container ran with `--user 0` (still unprivileged). PNG renders were inspected by eye. The `docs-build` service builds with exit 0, `DNS Zone` is in the nav after `Domain`, and each of the three kroki.io image URLs in the built pages returns HTTP 200 without a syntax error.
 - **Open for the operator:** M1 (confirm the full `domain` scope), M3 (state backup), M4 (apply, second plan `-detailed-exitcode` exit 0, record NS and SOA values), M5 (authoritative checks), M6 (public check). The `~ value` AC for an external record and the CAA perpetual-diff check need M4.
+- **Operator results (2026-10-22):** the operator reports M1, M3 and M6 done.
+    - **M4:** the apply matched the reviewed plan (`3 added, 1 changed, 0 destroyed`). A second run said `No changes.`, so the CAA trailing dot causes no perpetual diff. `dns_records` = `{"fantasy-hockey.prod.do.sommerfeld.app" = "129.212.195.118"}`.
+    - **M5** (`task cloud:dns:check -- +norec …`): `ns1`, `ns2` and `ns3.digitalocean.com` answer `flags: qr aa` with `fantasy-hockey.prod.do.sommerfeld.app. 300 IN A 129.212.195.118`. CAA is served as `do.sommerfeld.app. 3600 IN CAA 0 issue "letsencrypt.org"`, **without** the trailing dot, so the deferred trailing-dot risk is settled. An undeclared name returns `NXDOMAIN` with `aa`.
+    - **NS:** `ns1`/`ns2`/`ns3.digitalocean.com.`, TTL 1800.
+    - **SOA:** `ns1.digitalocean.com. hostmaster.do.sommerfeld.app. 0 10800 3600 604800 1800`, so the negative-caching TTL is 1800 s.
+    - **Public, unchanged:** `@8.8.8.8` A → `129.212.195.118` (KAS), `@1.1.1.1` NS `do.sommerfeld.app` → `w00f8074.kasserver.com.` (KAS wildcard).
 
 ## Spec Change Log
 
