@@ -46,8 +46,16 @@ Caddy on the droplet terminates TLS. It is the only process that holds the certi
 
 ```kroki-plantuml
 @startuml
-skinparam cardBorderColor #0B3D91
-skinparam cardBorderThickness 2
+skinparam card<<digitalocean>> {
+  BorderColor #0969DA
+  BorderThickness 2
+}
+skinparam card<<allinkl>> {
+  BorderColor #722F37
+  BorderThickness 2
+}
+hide <<digitalocean>> stereotype
+hide <<allinkl>> stereotype
 skinparam defaultTextAlignment center
 skinparam rectangle<<encrypted>> {
   BackgroundColor #E6F4EA
@@ -62,7 +70,7 @@ actor "Client\n(browser)" as client
 rectangle "Browser HSTS preload list\nall of .app: HTTPS only" as hsts
 rectangle "Let's Encrypt\n(ZeroSSL as Caddy's fallback)" as ca
 
-card "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean <<digitalocean>> {
   rectangle "DNS zone do.sommerfeld.app (OpenTofu)\nA fantasy-hockey.prod -> reserved IP\nCAA: letsencrypt.org, sectigo.com" as dns
   rectangle "Reserved IP 129.212.195.118\npasses TCP/UDP through, no TLS" as reservedip
   node "Droplet prod-fantasy-hockey" as droplet {

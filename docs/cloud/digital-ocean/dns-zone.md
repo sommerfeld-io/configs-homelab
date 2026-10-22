@@ -15,8 +15,16 @@ Two zones, two providers:
 
 ```kroki-plantuml
 @startuml
-skinparam cardBorderColor #0B3D91
-skinparam cardBorderThickness 2
+skinparam card<<digitalocean>> {
+  BorderColor #0969DA
+  BorderThickness 2
+}
+skinparam card<<allinkl>> {
+  BorderColor #722F37
+  BorderThickness 2
+}
+hide <<digitalocean>> stereotype
+hide <<allinkl>> stereotype
 skinparam defaultTextAlignment center
 skinparam rectangle<<manual>> {
   BackgroundColor #FFF4E0
@@ -34,7 +42,7 @@ cloud ".app registry" as registry {
   rectangle "TLD zone app.\nNS sommerfeld.app -> ns5/ns6.kasserver.com" as tld
 }
 
-cloud "all-inkl.com" as allinkl {
+card "all-inkl.com" as allinkl <<allinkl>> {
   rectangle "Registrar and KAS" <<manual>> as kas
   rectangle "Zone sommerfeld.app\nns5/ns6.kasserver.com\nauthoritative for sommerfeld.app" as parent
   rectangle "NS do -> ns1/ns2/ns3.digitalocean.com\nmanual in the KAS (Story 8.2)" <<manual>> as delegation
@@ -44,7 +52,7 @@ node "Operator devcontainer" as devcontainer {
   component "OpenTofu\ndns.tf" as tofu
 }
 
-card "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean <<digitalocean>> {
   component "DigitalOcean API" as api
   rectangle "Zone do.sommerfeld.app\nns1/ns2/ns3.digitalocean.com\nauthoritative for do.sommerfeld.app and below" as zone
   rectangle "A fantasy-hockey.prod  TTL 300\nCAA @ 0 issue letsencrypt.org, sectigo.com  TTL 3600" as records

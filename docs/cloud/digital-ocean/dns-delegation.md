@@ -18,8 +18,16 @@ This page is the migration runbook for the switch from the hand-made KAS record 
 
 ```kroki-plantuml
 @startuml
-skinparam cardBorderColor #0B3D91
-skinparam cardBorderThickness 2
+skinparam card<<digitalocean>> {
+  BorderColor #0969DA
+  BorderThickness 2
+}
+skinparam card<<allinkl>> {
+  BorderColor #722F37
+  BorderThickness 2
+}
+hide <<digitalocean>> stereotype
+hide <<allinkl>> stereotype
 skinparam defaultTextAlignment left
 skinparam rectangle<<manual>> {
   BackgroundColor #FFF4E0
@@ -41,13 +49,13 @@ cloud ".app registry" as registry {
   rectangle "NS sommerfeld.app -> ns5/ns6.kasserver.com\n(set through the registrar all-inkl.com)" <<provider>> as tld
 }
 
-cloud "all-inkl.com: KAS, zone sommerfeld.app on ns5/ns6.kasserver.com" as kas {
+card "all-inkl.com: KAS, zone sommerfeld.app on ns5/ns6.kasserver.com" as kas <<allinkl>> {
   rectangle "Zone basics, created by all-inkl.com\nSOA, NS sommerfeld.app -> ns5/ns6.kasserver.com" <<provider>> as kassoa
   rectangle "Records outside do, by hand in the KAS\nA sommerfeld.app -> 85.13.131.235\nMX sommerfeld.app -> 10 w00f8074.kasserver.com.\nCNAME * -> w00f8074.kasserver.com.\n(and every other name outside do)" <<manual>> as kasrecords
   rectangle "Delegation, by hand in the KAS\nNS do -> ns1.digitalocean.com.\nNS do -> ns2.digitalocean.com.\nNS do -> ns3.digitalocean.com." <<manual>> as delegation
 }
 
-card "DigitalOcean DNS: zone do.sommerfeld.app on ns1/ns2/ns3.digitalocean.com" as digitalocean {
+card "DigitalOcean DNS: zone do.sommerfeld.app on ns1/ns2/ns3.digitalocean.com" as digitalocean <<digitalocean>> {
   rectangle "Zone basics, created by DigitalOcean\nSOA, NS do.sommerfeld.app -> ns1/ns2/ns3.digitalocean.com\n(never declared in OpenTofu)" <<provider>> as dosoa
   rectangle "Records under do, declared in OpenTofu\nA fantasy-hockey.prod -> reserved IP 129.212.195.118\n(one per droplet with a reserved IP, plus aliases and external records)\nCAA @ -> 0 issue letsencrypt.org\nCAA @ -> 0 issue sectigo.com" <<opentofu>> as dorecords
 }

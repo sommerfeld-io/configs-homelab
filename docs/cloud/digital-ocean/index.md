@@ -8,8 +8,16 @@ All cloud resources are declared with OpenTofu and managed from this repository 
 
 ```kroki-plantuml
 @startuml
-skinparam cardBorderColor #0B3D91
-skinparam cardBorderThickness 2
+skinparam card<<digitalocean>> {
+  BorderColor #0969DA
+  BorderThickness 2
+}
+skinparam card<<allinkl>> {
+  BorderColor #722F37
+  BorderThickness 2
+}
+hide <<digitalocean>> stereotype
+hide <<allinkl>> stereotype
 skinparam componentStyle rectangle
 skinparam defaultTextAlignment center
 
@@ -27,7 +35,7 @@ node "Operator workstation" as workstation {
 
 cloud "Grafana Cloud" as grafana
 
-card "DigitalOcean" as digitalocean {
+card "DigitalOcean" as digitalocean <<digitalocean>> {
   component "DigitalOcean API" as api
 
   frame "Project sommerfeld.io" as project {
@@ -41,7 +49,7 @@ card "DigitalOcean" as digitalocean {
   }
 }
 
-cloud "all-inkl.com" as allinkl {
+card "all-inkl.com" as allinkl <<allinkl>> {
   component "Zone sommerfeld.app (KAS)\nNS do -> ns1-3.digitalocean.com\n(by hand)" as kas
 }
 
