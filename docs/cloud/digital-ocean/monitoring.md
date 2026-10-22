@@ -49,6 +49,11 @@ Caddy writes all its logs as JSON lines to stderr: the access log of the app's d
 
 ```kroki-plantuml
 @startuml
+skinparam card<<grafana>> {
+  BorderColor #F46800
+  BorderThickness 2
+}
+hide <<grafana>> stereotype
 skinparam componentStyle rectangle
 skinparam defaultTextAlignment center
 
@@ -63,7 +68,7 @@ node "Droplet" as droplet {
   }
 }
 
-cloud "Grafana Cloud" as grafana {
+card "Grafana Cloud" as grafana <<grafana>> {
   database "Loki" as loki
   database "Prometheus" as prometheus
   component "Synthetic Monitoring check\nup-and-running___digital-ocean\n(Frankfurt, Paris)" as check

@@ -1,5 +1,25 @@
 # Temp Requirement Notes to feed to bmad (later)
 
+## Pipeline
+
+Check with inspec or something if app is up-and-running.
+Also check with inspec if the cloud vm is provisioned the way we want it to.
+Bump versions in inspec yaml files on release.
+
+Inpec Droplet
+    Assert Timezone Europe/Berlin
+    App up-and-running? ports listening? endpoints available?
+
+## Pipeline 2
+
+The OpenTofu for grafana cloud should also be its own github actions workflow and should deploy opentofu changes to grafana cloud.
+
+all workflows for cloud deployments should be named "Cloud Deploy: <type>" (e.g. "Cloud Deploy: Applications" for all app deployments or "Cloud Deploy: Grafana Cloud")
+
+## Pipeline IMPORTANT
+
+Can dependabot commit with "feat:" prefix for fantasy-hockey updates? If so, the cloud deployments can be part of the release.yml and do not need a different pipeline with a dedicated trigger. but do i want this? because then, all unrelated features would also trigger cloud deployments. but since I do not change anything manually, this should not cause any harm and should instead avoid configuration drift.
+
 ## Taskfile
 
 - Use `task: [cloud:info] doctl compute reserved-ip list` to create a ssh helper taskfile.
@@ -19,22 +39,6 @@
 ## Firewall
 
 Lock the droplet in a way that only the app (or the proxy or nginx proxy manager) is reachable from the outside. Management UI should not be reachable publicly bt should be reachable for me. but first check if this is needed or if my app is protected enough. does a firewall cost me real-life money or is it free/included?
-
-## Pipeline
-
-Check with inspec or something if app is up-and-running.
-Also check with inspec if the cloud vm is provisioned the way we want it to.
-Bump versions in inspec yaml files on release.
-
-Inpec Droplet
-    Assert Timezone Europe/Berlin
-    App up-and-running? ports listening? endpoints available?
-
-## Pipeline 2
-
-The OpenTofu for grafana cloud should also be its own github actions workflow and should deploy opentofu changes to grafana cloud.
-
-all workflows for cloud deployments should be named "Cloud Deploy: <type>" (e.g. "Cloud Deploy: Applications" for all app deployments or "Cloud Deploy: Grafana Cloud")
 
 ## Versions
 

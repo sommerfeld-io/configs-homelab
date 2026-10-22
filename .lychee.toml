@@ -3,9 +3,10 @@
 verbose = 'info'
 
 exclude_path = [
+    '_bmad-output',
+    'configs-homelab/tests/molecule/netaudit/molecule/default/files/samples',
     'node_modules',
-    'target',
-    '_bmad-output'
+    'target'
 ]
 exclude_loopback = true
 exclude = [

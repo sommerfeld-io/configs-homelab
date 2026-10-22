@@ -62,14 +62,14 @@ jobs:
 
   validate-opentofu:
     runs-on: ubuntu-latest
-    name: validate-opentofu (${{ matrix.root }})
+    name: ${{ matrix.root_module }}
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
         # One entry per OpenTofu root module (folder with a versions.tf) - keep in sync.
-        root: ['configs-cloud/digital-ocean/opentofu', 'grafana-cloud/opentofu']
+        root_module: ['configs-cloud/digital-ocean/opentofu', 'grafana-cloud/opentofu']
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -86,7 +86,7 @@ jobs:
       # the committed lock file.
       - name: Run tofu init and validate
         env:
-          ROOT: ${{ matrix.root }}
+          ROOT: ${{ matrix.root_module }}
         run: |
           version="$(sed -n 's/^ *required_version *= *"\([^"]*\)".*/\1/p' "$ROOT/versions.tf")"
           if [ -z "$version" ]; then

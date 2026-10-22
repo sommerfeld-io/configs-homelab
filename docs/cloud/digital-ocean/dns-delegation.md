@@ -14,6 +14,71 @@ This page is the migration runbook for the switch from the hand-made KAS record 
 | The operator (manual)       | the KAS steps, the DigitalOcean API token with the `domain` scope, every `tofu apply`                                                      |
 | The agent (documented only) | the runbook, the docs and the code; it never logs in to the KAS, never applies and never deploys                                           |
 
+### Who Manages Which DNS Record
+
+```kroki-plantuml
+@startuml
+skinparam card<<digitalocean>> {
+  BorderColor #0969DA
+  BorderThickness 2
+}
+skinparam card<<allinkl>> {
+  BorderColor #BF3989
+  BorderThickness 2
+}
+hide <<digitalocean>> stereotype
+hide <<allinkl>> stereotype
+skinparam defaultTextAlignment left
+skinparam rectangle<<manual>> {
+  BackgroundColor #FFF4E0
+  BorderColor #C77700
+}
+skinparam rectangle<<opentofu>> {
+  BackgroundColor #E6F0FF
+  BorderColor #3B6FD8
+}
+skinparam rectangle<<provider>> {
+  BackgroundColor #F0F0F0
+  BorderColor #888888
+}
+
+actor "Operator" as operator
+component "OpenTofu\ndns.tf" as tofu
+
+cloud ".app registry" as registry {
+  rectangle "NS sommerfeld.app -> ns5/ns6.kasserver.com\n(set through the registrar all-inkl.com)" <<provider>> as tld
+}
+
+card "all-inkl.com: KAS, zone sommerfeld.app on ns5/ns6.kasserver.com" as kas <<allinkl>> {
+  rectangle "Zone basics, created by all-inkl.com\nSOA, NS sommerfeld.app -> ns5/ns6.kasserver.com" <<provider>> as kassoa
+  rectangle "Records outside do, by hand in the KAS\nA sommerfeld.app -> 85.13.131.235\nMX sommerfeld.app -> 10 w00f8074.kasserver.com.\nCNAME * -> w00f8074.kasserver.com.\n(and every other name outside do)" <<manual>> as kasrecords
+  rectangle "Delegation, by hand in the KAS\nNS do -> ns1.digitalocean.com.\nNS do -> ns2.digitalocean.com.\nNS do -> ns3.digitalocean.com." <<manual>> as delegation
+}
+
+card "DigitalOcean DNS: zone do.sommerfeld.app on ns1/ns2/ns3.digitalocean.com" as digitalocean <<digitalocean>> {
+  rectangle "Zone basics, created by DigitalOcean\nSOA, NS do.sommerfeld.app -> ns1/ns2/ns3.digitalocean.com\n(never declared in OpenTofu)" <<provider>> as dosoa
+  rectangle "Records under do, declared in OpenTofu\nA fantasy-hockey.prod -> reserved IP 129.212.195.118\n(one per droplet with a reserved IP, plus aliases and external records)\nCAA @ -> 0 issue letsencrypt.org\nCAA @ -> 0 issue sectigo.com" <<opentofu>> as dorecords
+}
+
+tld --> kassoa : delegates sommerfeld.app
+delegation --> dosoa : delegates do.sommerfeld.app
+operator --> kasrecords : edits by hand
+operator --> delegation : edits by hand\n(once, Story 8.2)
+operator --> tofu : plan, apply
+tofu --> dorecords : DigitalOcean API\n(token with domain scope)
+
+legend right
+  orange <<manual>>: changed by hand in the KAS
+  blue <<opentofu>>: declared in OpenTofu, changed only by plan and apply
+  grey <<provider>>: created by the DNS provider, never edited
+endlegend
+@enduml
+```
+
+**all-inkl.com (KAS)** is the registrar of `sommerfeld.app` and hosts its parent zone on `ns5`/`ns6.kasserver.com`. It answers every name outside `do`: the domain itself, mail (MX), the web hosting and the wildcard `*.sommerfeld.app`. Its only records for the DigitalOcean side are the three NS records for `do`, which hand every question at or below `do.sommerfeld.app` to DigitalOcean. Every KAS record is changed by hand in the KAS; OpenTofu has no access to it. After the delegation the KAS holds no record below `do`: an A record there would be ignored and only mislead the next operator.
+
+**DigitalOcean DNS** hosts the zone `do.sommerfeld.app` on `ns1`/`ns2`/`ns3.digitalocean.com` and answers every name at or below it. DigitalOcean creates the zone's SOA and NS records itself. Every other record is declared in OpenTofu (`configs-cloud/digital-ocean/opentofu/dns.tf`): the A record per droplet with a reserved IP, the optional aliases and external records, and the CAA records. Change them only with plan and apply, never in the DigitalOcean control panel: a hand edit shows up as drift in the next plan. A new app name under `do` needs no KAS change at all.
+
 ## Delegation
 
 The parent zone `sommerfeld.app` holds exactly these records for `do`, created in the KAS under Tools → DNS-Einstellungen → `sommerfeld.app` → "Neuen DNS-Eintrag":
