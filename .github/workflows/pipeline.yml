@@ -60,6 +60,36 @@ jobs:
         run: docker compose up "lint-$LINTER" --exit-code-from "lint-$LINTER"
         shell: bash
 
+  validate-opentofu:
+    runs-on: ubuntu-latest
+    name: validate-opentofu (${{ matrix.root }})
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        # One entry per OpenTofu root module (folder with a versions.tf) - keep in sync.
+        root: ['configs-cloud/digital-ocean/opentofu', 'grafana-cloud/opentofu']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      # Runs the OpenTofu version the root pins in required_version, so the image never drifts
+      # from the pin. init -backend=false needs no token and no state; the providers come from
+      # the committed lock file.
+      - name: Run tofu init and validate
+        env:
+          ROOT: ${{ matrix.root }}
+        run: |
+          version="$(sed -n 's/^ *required_version *= *"\([^"]*\)".*/\1/p' "$ROOT/versions.tf")"
+          if [ -z "$version" ]; then
+            echo "::error file=$ROOT/versions.tf::no exact required_version found"
+            exit 1
+          fi
+          tofu=(docker run --rm --volume "$PWD:/workspace" --workdir "/workspace/$ROOT" "ghcr.io/opentofu/opentofu:$version")
+          "${tofu[@]}" init -backend=false -input=false -lockfile=readonly
+          "${tofu[@]}" validate
+        shell: bash
+
   check-inspec-profile:
     runs-on: ubuntu-latest
     name: ${{ matrix.profile }}
@@ -102,6 +132,7 @@ jobs:
       contents: read
     needs: [
       'lint',
+      'validate-opentofu',
       'shellcheck',
       'check-inspec-profile',
     ]
@@ -143,6 +174,7 @@ jobs:
       contents: read
     needs: [
       'lint',
+      'validate-opentofu',
       'shellcheck',
       'check-inspec-profile',
     ]
