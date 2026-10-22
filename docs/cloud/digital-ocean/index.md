@@ -8,6 +8,8 @@ All cloud resources are declared with OpenTofu and managed from this repository 
 
 ```kroki-plantuml
 @startuml
+skinparam cardBorderColor #0B3D91
+skinparam cardBorderThickness 2
 skinparam componentStyle rectangle
 skinparam defaultTextAlignment center
 

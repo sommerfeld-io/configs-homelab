@@ -46,6 +46,8 @@ Caddy on the droplet terminates TLS. It is the only process that holds the certi
 
 ```kroki-plantuml
 @startuml
+skinparam cardBorderColor #0B3D91
+skinparam cardBorderThickness 2
 skinparam defaultTextAlignment center
 skinparam rectangle<<encrypted>> {
   BackgroundColor #E6F4EA

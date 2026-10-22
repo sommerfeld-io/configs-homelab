@@ -18,6 +18,8 @@ This page is the migration runbook for the switch from the hand-made KAS record 
 
 ```kroki-plantuml
 @startuml
+skinparam cardBorderColor #0B3D91
+skinparam cardBorderThickness 2
 skinparam defaultTextAlignment left
 skinparam rectangle<<manual>> {
   BackgroundColor #FFF4E0

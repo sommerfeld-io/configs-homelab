@@ -15,6 +15,8 @@ Two zones, two providers:
 
 ```kroki-plantuml
 @startuml
+skinparam cardBorderColor #0B3D91
+skinparam cardBorderThickness 2
 skinparam defaultTextAlignment center
 skinparam rectangle<<manual>> {
   BackgroundColor #FFF4E0
