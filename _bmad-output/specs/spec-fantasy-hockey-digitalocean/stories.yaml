@@ -115,6 +115,7 @@
   title: CI static checks for OpenTofu and Ansible
   description: >-
     Run the new linters and static checks for configs-cloud in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
+    tofu fmt -check (CI lint matrix) and tofu validate (validate-opentofu CI job) already run, also in task lint (Epic 8 retro finding A2 and item 35), so the OpenTofu part is a tofu test plan test with mock_provider (re-scoped by Epic 8 retro item 39): make the locals it needs injectable, then check the dns.tf record derivation, the exact CAA set and the five preconditions (four in dns.tf, the stage list in droplets.tf).
     Also covers the parts of epic-3 retro item 15 that are not Molecule tests: a vault-free syntax check of the cloud playbooks and a check that every collection they use is pinned in requirements.yml (see deferred-work.md).
     Docs updated in the same change.
 - id: "15"

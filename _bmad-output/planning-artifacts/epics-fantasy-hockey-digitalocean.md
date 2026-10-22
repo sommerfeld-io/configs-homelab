@@ -494,9 +494,11 @@ So that broken cloud configs fail before merge.
 
 **Acceptance Criteria:**
 
-**Given** a change under `configs-cloud`
-**When** CI runs in `pipeline.yml` or a dedicated workflow
-**Then** the OpenTofu and Ansible checks run the same way as locally
+`tofu fmt -check` (`lint-opentofu` in the CI lint matrix) and `tofu validate` (`validate-opentofu` CI job) already run for every OpenTofu root, and both run in `task lint` (off-story commits `63fabb4`, `3e90479`, `a96b137`, Epic 8 retro finding A2; Epic 8 retro item 35, `6da3d31`). ansible-lint runs in the CI lint matrix. This story adds what is still missing (re-scoped by Epic 8 retro item 39).
+
+**Given** `configs-cloud/digital-ocean/opentofu/`, whose inputs (the `droplets` map, `dns_external_records`, `dns_caa_issuers`) are `locals` today, which `tofu test` cannot override
+**When** the story makes those inputs injectable (for example variables whose defaults are today's values) and `tofu test` runs with `mock_provider` in `task lint` and in CI, without a token or state
+**Then** it checks the record derivation from the `droplets` map (`<key>.<stage>`, `dns_aliases`, `dns_external_records`), the exact CAA set (`0 issue` for `letsencrypt.org.` and `sectigo.com.`, TTL 3600), and that each of the five preconditions (four in `dns.tf`, the stage list in `droplets.tf`) fails the plan on its bad input
 
 **Given** `provision.yml` and every cloud playbook
 **When** CI runs

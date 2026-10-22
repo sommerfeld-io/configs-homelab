@@ -10,10 +10,6 @@
   summary: Drop the stale `export DIGITALOCEAN_TOKEN` line from existing `.bashrc` files via `bash-secrets.yml`, and make the write replace an existing export instead of appending a second line when the token is rotated (Epic 2 retro action item 3).
   evidence: The devcontainer half of this entry was fixed in `6f8671f`. `configs-homelab/ansible/tasks/bash-secrets.yml` still removes only `GITHUB_METRICS_EXPORTER_TOKEN` as obsolete, and its `lineinfile` has no `regexp`.
 
-- source_spec: `_bmad-output/implementation-artifacts/spec-2-4-opentofu-droplet-ssh-keys-tag-and-project.md`
-  summary: Add a token-free `tofu init -backend=false && tofu validate` check for `configs-cloud/digital-ocean/opentofu` to `task lint` and the CI lint matrix (Story 6.1).
-  evidence: `lint-opentofu` (`docker-compose.yml`) runs only `fmt -check`; a wrong attribute reference or a breaking provider bump from the weekly `opentofu` Dependabot entry passes CI and fails only at a manual `plan`. Raised again in the code review of Story 2.4 and in the Story 2.5 review.
-
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-5-reserved-ip-and-2-gb-volume-with-prevent-destroy.md`
   summary: Add a repeatable check that `prevent_destroy` on the volume and the reserved IP still refuses a destroy plan.
   evidence: Only a one-time manual `tofu plan -destroy` proved it; deleting a `lifecycle` block passes `fmt -check` and CI. Needs real state, so it belongs with the remote-state and CI work in Epic 6.
@@ -188,16 +184,8 @@
   evidence: Settle by running the panel query over 7d and 30d in Explore after a few weeks of traffic; if it errors, reduce paths to their first segment or exclude 404s.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
-  summary: Decide in Story 8.2, before delegating `do.sommerfeld.app`, whether to pin Caddy's issuer to Let's Encrypt or widen the CAA record, because `CAA 0 issue "letsencrypt.org"` blocks Caddy's default ZeroSSL fallback.
-  evidence: `Caddyfile.j2` configures no `acme_ca` or issuer, so Caddy uses its default issuers; the CAA record only takes effect once the zone is delegated.
-
-- source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
-  summary: Unverified (medium if true): DigitalOcean may serve the CAA value as `letsencrypt.org.` with the trailing dot, which Let's Encrypt might not match as its issuer domain.
-  evidence: Settle in M5 by recording the exact `dig CAA do.sommerfeld.app @ns1.digitalocean.com` answer; if the dot is served, confirm issuance (staging) before Story 8.2 delegates the zone.
-
-- source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
-  summary: The DNS record derivation and the four preconditions in `dns.tf`, and `tofu validate` itself, are not run by CI; a broken key template or reference passes `fmt -check`.
-  evidence: The only OpenTofu check in CI is `lint-opentofu` (`fmt -check`); no `.tftest.hcl` exists. Belongs with Story 6.1 (CI static checks for OpenTofu): `tofu init -backend=false && tofu validate` plus a `mock_provider` plan test.
+  summary: The DNS record derivation, the four preconditions and the CAA issuer set in `dns.tf` (and the stage precondition in `droplets.tf`) have no repeatable plan-level test; a broken key template or a dropped precondition passes `fmt -check` and `tofu validate` (Story 6.1).
+  evidence: `tofu validate` now runs in `task lint` (`63fabb4`, `6da3d31`) and in the `validate-opentofu` CI job (`3e90479`, `a96b137`), but validate does not evaluate preconditions or `for_each` keys against the `droplets` map; no `.tftest.hcl` exists. Fix: a `tofu test` with `mock_provider`, run in `task lint` and CI. Now Story 6.1's first acceptance criterion; delete this entry when Story 6.1 is done.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-35-opentofu-lint-without-init.md`
   summary: Make CI run the `task cloud:digital-ocean:opentofu:validate` and `task grafana-cloud:validate` entry points (fresh checkout, lock file unchanged) instead of an inlined copy of their commands.
