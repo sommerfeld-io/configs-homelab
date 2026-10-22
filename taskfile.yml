@@ -45,7 +45,9 @@ tasks:
       - task: symlinks
       - task: docs:generate
       - task: cloud:digital-ocean:opentofu:fmt
+      - task: cloud:digital-ocean:opentofu:validate
       - task: grafana-cloud:fmt
+      - task: grafana-cloud:validate
       - for: ['yaml', 'filenames', 'folders', 'ansible', 'opentofu', 'alloy-config', 'workflows', 'markdown-links']
         cmd: docker compose up lint-{{ .ITEM }} --exit-code-from lint-{{ .ITEM }}
 
