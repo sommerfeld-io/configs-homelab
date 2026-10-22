@@ -18,6 +18,11 @@ skinparam card<<allinkl>> {
 }
 hide <<digitalocean>> stereotype
 hide <<allinkl>> stereotype
+skinparam card<<grafana>> {
+  BorderColor #F46800
+  BorderThickness 2
+}
+hide <<grafana>> stereotype
 skinparam componentStyle rectangle
 skinparam defaultTextAlignment center
 
@@ -33,7 +38,7 @@ node "Operator workstation" as workstation {
   }
 }
 
-cloud "Grafana Cloud" as grafana
+card "Grafana Cloud" as grafana <<grafana>>
 
 card "DigitalOcean" as digitalocean <<digitalocean>> {
   component "DigitalOcean API" as api
