@@ -123,7 +123,7 @@ context:
 - [x] Reconcile every file in the Code Map. Result: nothing says the record is kept by hand or that the token needs no `domain` scope. Check with `git grep -n -i -E "by hand at all-inkl|domain. is not needed|outside OpenTofu|dig \+short"` over `docs/` and `configs-cloud/`.
 - [x] Validate the diagrams as in Story 8.1 (docs build, plus `plantuml -syntax` in a pinned, unprivileged container fed through stdin).
 - [x] Dry-run the runbook as a read-only walk: run each verification command once **before** M10 and record the baseline output. A command that cannot run (tool missing, flag wrong) is fixed in the runbook before the operator starts.
-- [ ] After the operator reports M7 to M16: record the results in Implementation Notes. Update `domain.md` with the date the delegation went live and the date the KAS record was removed.
+- [x] After the operator reports M7 to M16: record the results in Implementation Notes. Update `domain.md` with the date the delegation went live and the date the KAS record was removed.
 
 **Acceptance Criteria:**
 
@@ -179,6 +179,20 @@ Agent results from 2026-10-22. No operator step (M7 to M16, M8a) is done; none i
     - HTTPS from the devcontainer (not from outside the home network): `/` `302 https://fantasy-hockey.prod.do.sommerfeld.app/login`, `/login` `200`, `http://` `308 https://…/`, `/metrics` `404`; `issuer=C=US, O=Let's Encrypt, CN=YE1`, `notAfter=Jan 13 18:13:07 2027 GMT`.
     - No runbook command needed a fix. M7 (the KAS listing) needs the KAS login, so only its public view is recorded above.
 - **Open for the operator:** M7, M8 (own baseline), M8a (apply the CAA change), M9 to M16. The agent has not verified live delegation, public resolution after M10 or HTTPS from outside the home network. After the report: record the results here, fill the two `pending` dates in `domain.md` §History, and close retro items 26 and 27 if asked. The 8.1 deferred-work entry on the ZeroSSL fallback (`deferred-work.md`) is resolved by M8a once applied.
+
+**Operator results (2026-10-22, reported by the operator; agent re-check at 18:12 UTC):**
+
+- **M7:** before the change the KAS had the A record `fantasy-hockey.prod.do` `129.212.195.118` in the zone `sommerfeld.app`, and a KAS subdomain object for the app name (reported as `fantasy-hockey.prod.do.sommerfeld.io`, presumably `.app`). It did not block the NS records; whether it was removed is not reported.
+- **M8 (18:00 UTC):** `@ns5.kasserver.com` → `flags: qr aa`, `129.212.195.118` TTL 7200; `@ns1.digitalocean.com` → `aa`, TTL 300; `+trace` ended at `ns6.kasserver.com`.
+- **M8a:** plan, apply and second plan exactly as in the runbook (move no-op, 1 to add, then `No changes.`). Google and Cloudflare return both CAA records, `0 issue "letsencrypt.org"` and `0 issue "sectigo.com"`.
+- **M9:** `dns.google` DS for `sommerfeld.app` has no `Answer`; DNSSEC is off.
+- **M10 (18:06:05 UTC):** three NS records `do` → `ns1`/`ns2`/`ns3.digitalocean.com.` added in the KAS. The KAS accepted them while the A record below `do` existed (open question 1: yes).
+- **M11 (18:06 to 18:07 UTC):** `@ns5` and `@ns6.kasserver.com` return a referral (`flags: qr`, `ANSWER: 0`, three NS with TTL 7200 in the authority section): the KAS does not serve the occluded A record (open question 1: no). The NS TTL in the KAS is 7200 (open question 2). `+trace` ends at `ns2.digitalocean.com` with TTL 300. Google and Cloudflare return the DigitalOcean NS (TTL 1800, from the child zone), the reserved IP and both CAA records.
+- **M12:** the app answers from outside the home network (operator). Agent re-check at 18:12 UTC from the devcontainer: `302` to `/login`, `200`, `308`, `404`, issuer `C=US, O=Let's Encrypt, CN=YE1`, `notAfter=Jan 13 18:13:07 2027 GMT` (unchanged).
+- **M13: skipped.** The operator deleted the A record 4 minutes after M10 instead of waiting 2 × 7200 s. No harm followed: both KAS nameservers already referred, so no resolver could get the wildcard for the app name, and a resolver holding the old A record held the same IP. The agent re-check at 18:12 UTC was green on `ns5`, `ns6`, `+trace` (ends at `ns3.digitalocean.com`), Google, Cloudflare and Quad9.
+- **M14 (18:10:02 UTC):** the KAS A record `fantasy-hockey.prod.do` deleted. Names outside `do` unchanged at 18:12 UTC: `sommerfeld.app` A `85.13.131.235`, `www.sommerfeld.app` CNAME `w00f8074.kasserver.com.`.
+- **M15:** a deploy ran and passed the DNS guard (operator).
+- **M16:** this report. `domain.md` History has the dates, the status notes in `domain.md` and `dns-zone.md` are removed, and Epic 7 retro items 26 and 27 are closed in `sprint-status.yaml`.
 
 ## Spec Change Log
 

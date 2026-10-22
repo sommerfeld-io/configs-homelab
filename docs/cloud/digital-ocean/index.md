@@ -85,12 +85,12 @@ reservedip --> app : HTTPS :443\nfantasy-hockey.prod.do.sommerfeld.app
 
 All resources belong to the project `sommerfeld.io`.
 
-| Resource    | Details                                                                                                                                                                                                                                                                    | Status   |
-|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| Droplet     | [`prod-fantasy-hockey`](droplet.md), `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, tag `prod`, DigitalOcean monitoring on, SSH key `picon___id_rsa.pub`                                                                                                                | declared |
-| Reserved IP | [Stable public address](droplet.md#reserved-ip-and-volume), survives droplet rebuilds, `prevent_destroy`                                                                                                                                                                   | declared |
-| Volume      | [`prod-fantasy-hockey-data`](droplet.md#reserved-ip-and-volume), 2 GB, ext4, attached at creation and mounted at `/mnt/prod_fantasy_hockey_data`, survives rebuilds, `prevent_destroy`                                                                                     | declared |
-| DNS zone    | [`do.sommerfeld.app`](dns-zone.md), A record `fantasy-hockey.prod` on the reserved IP, CAA `letsencrypt.org` and `sectigo.com`, `prevent_destroy`, delegated from all-inkl.com (CAA `sectigo.com` and delegation live from [M8a/M10](dns-delegation.md#migration-runbook)) | declared |
+| Resource    | Details                                                                                                                                                                                                                               | Status   |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| Droplet     | [`prod-fantasy-hockey`](droplet.md), `s-1vcpu-1gb`, region fra1, Ubuntu 26.04 LTS x64, tag `prod`, DigitalOcean monitoring on, SSH key `picon___id_rsa.pub`                                                                           | declared |
+| Reserved IP | [Stable public address](droplet.md#reserved-ip-and-volume), survives droplet rebuilds, `prevent_destroy`                                                                                                                              | declared |
+| Volume      | [`prod-fantasy-hockey-data`](droplet.md#reserved-ip-and-volume), 2 GB, ext4, attached at creation and mounted at `/mnt/prod_fantasy_hockey_data`, survives rebuilds, `prevent_destroy`                                                | declared |
+| DNS zone    | [`do.sommerfeld.app`](dns-zone.md), A record `fantasy-hockey.prod` on the reserved IP, CAA `letsencrypt.org` and `sectigo.com`, `prevent_destroy`, delegated from all-inkl.com since 2026-10-22 ([DNS Delegation](dns-delegation.md)) | declared |
 
 The droplet is configured with Ansible. Ansible finds it through a [dynamic inventory](provisioning.md) by its tag.
 

@@ -4,8 +4,6 @@ OpenTofu declares the DigitalOcean DNS zone `do.sommerfeld.app` and every record
 
 `sommerfeld.app` stays at all-inkl.com. Its nameservers (`ns5`/`ns6.kasserver.com`) delegate `do` to `ns1`/`ns2`/`ns3.digitalocean.com` with three NS records, set by hand in the KAS, so resolvers ask DigitalOcean for every name at or below `do.sommerfeld.app`. The NS records, the migration from the hand-made KAS record and the rollback are described in [DNS Delegation](dns-delegation.md).
 
-> **Status:** the delegation and the second CAA record (`sectigo.com`) take effect with steps [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records) and [M10](dns-delegation.md#m10-add-the-ns-records) of [DNS Delegation](dns-delegation.md); the dates are in [History](domain.md#history). Until M10, the hand-made KAS record answers publicly, and a new app name either needs a hand-made A record in the KAS (Tools → DNS-Einstellungen, `sommerfeld.app`) or must wait for M10.
-
 ## Architecture
 
 Two zones, two providers:

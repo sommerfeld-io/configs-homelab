@@ -2,8 +2,6 @@
 
 The fantasy hockey app has the domain `fantasy-hockey.prod.do.sommerfeld.app`. An A record points it at the droplet's reserved IP. Users reach the app by this name instead of by IP: Caddy serves it at `https://fantasy-hockey.prod.do.sommerfeld.app` with a Let's Encrypt certificate. It answers `http://<reserved-ip>` with 404, and `https://<reserved-ip>` fails the TLS handshake, because Caddy has no certificate for the IP (see [Deployment](deployment.md)).
 
-> **Status:** the delegation and the second CAA record (`sectigo.com`) take effect with steps [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records) and [M10](dns-delegation.md#m10-add-the-ns-records) of [DNS Delegation](dns-delegation.md); the dates are in [History](#history). Until M10, the hand-made KAS record answers publicly, and a new app name either needs a hand-made A record in the KAS (Tools → DNS-Einstellungen, `sommerfeld.app`) or must wait for M10.
-
 ## Record
 
 | Name                                    | Type | Value                                    | TTL | Where                                                   |
@@ -73,10 +71,10 @@ The record goes in the same apply as the droplet: removing the droplet entry rem
 
 ## History
 
-| Date       | Change                                                                                                                           |
-|------------|----------------------------------------------------------------------------------------------------------------------------------|
-| 2026-10-15 | The A record is created by hand in the KAS zone `sommerfeld.app` (Story 7.1), TTL 7200                                           |
-| 2026-10-22 | OpenTofu creates the DigitalOcean zone `do.sommerfeld.app` with the same record, not yet delegated (Story 8.1)                   |
-| pending    | OpenTofu adds `CAA 0 issue "sectigo.com"` for ZeroSSL (Story 8.2, [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records)) |
-| pending    | The KAS delegates `do` to DigitalOcean with three NS records (Story 8.2, [M10](dns-delegation.md#m10-add-the-ns-records))        |
-| pending    | The hand-made KAS A record is deleted (Story 8.2, [M14](dns-delegation.md#m14-delete-the-obsolete-kas-a-record))                 |
+| Date       | Change                                                                                                                                 |
+|------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| 2026-10-15 | The A record is created by hand in the KAS zone `sommerfeld.app` (Story 7.1), TTL 7200                                                 |
+| 2026-10-22 | OpenTofu creates the DigitalOcean zone `do.sommerfeld.app` with the same record, not yet delegated (Story 8.1)                         |
+| 2026-10-22 | OpenTofu adds `CAA 0 issue "sectigo.com"` for ZeroSSL (Story 8.2, [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records))       |
+| 2026-10-22 | The KAS delegates `do` to DigitalOcean with three NS records at 18:06 UTC (Story 8.2, [M10](dns-delegation.md#m10-add-the-ns-records)) |
+| 2026-10-22 | The hand-made KAS A record is deleted at 18:10 UTC (Story 8.2, [M14](dns-delegation.md#m14-delete-the-obsolete-kas-a-record))          |
