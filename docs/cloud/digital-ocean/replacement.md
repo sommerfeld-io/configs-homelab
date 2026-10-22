@@ -13,7 +13,7 @@ Remove the droplet in one of two ways:
     tofu -chdir=configs-cloud/digital-ocean/opentofu apply -destroy -target='digitalocean_droplet.this["fantasy-hockey"]'
     ```
 
-    The plan must destroy only `digitalocean_droplet.this["fantasy-hockey"]`, `digitalocean_reserved_ip_assignment.this["fantasy-hockey"]` and `digitalocean_project_resources.this`. `digitalocean_project_resources.this` is one resource that lists the URNs of the droplets, the volumes and the reserved IPs, so it is destroyed with the droplet. Until the next apply recreates it, the volume and the reserved IP drop out of the project `sommerfeld.io` together with the droplet; both stay in the account.
+    The plan must destroy only `digitalocean_droplet.this["fantasy-hockey"]`, `digitalocean_reserved_ip_assignment.this["fantasy-hockey"]` and `digitalocean_project_resources.this`. `digitalocean_project_resources.this` is one resource that lists the URNs of the droplets, the volumes, the reserved IPs and the DNS zone, so it is destroyed with the droplet. Until the next apply recreates it, the volume, the reserved IP and the DNS zone drop out of the project `sommerfeld.io` together with the droplet; all of them stay in the account, and the DNS records are untouched.
 
 Do not remove the droplet entry from `droplets.tf` to delete the droplet. The volume and the reserved IP come from the same entry, so the plan would destroy them too, and `prevent_destroy` stops it with `Resource instance cannot be destroyed`.
 

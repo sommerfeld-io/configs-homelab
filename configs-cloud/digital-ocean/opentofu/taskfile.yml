@@ -17,6 +17,14 @@ tasks:
     cmds:
       - tofu fmt -recursive
 
+  # Checks syntax and references offline, without the token or the state.
+  validate:
+    desc: Validate the OpenTofu configuration for DigitalOcean (run init first)
+    cmds:
+      - tofu validate
+
+  # `tofu plan -detailed-exitcode` exits 0 when there are no changes, 2 when
+  # there are (docs/cloud/digital-ocean/dns-zone.md).
   plan:
     desc: Show the changes OpenTofu would make on DigitalOcean (needs DIGITALOCEAN_ACCESS_TOKEN)
     preconditions: &do-token

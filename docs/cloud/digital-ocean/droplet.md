@@ -6,15 +6,16 @@ All droplets come from one map, `local.droplets`. Each entry chooses its own siz
 
 ## Files
 
-| File                  | Content                                                                                                            |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------|
-| `versions.tf`         | Pinned OpenTofu version and `digitalocean/digitalocean` provider, empty provider block                             |
-| `droplets.tf`         | region, droplet map, SSH key lookup and the `digitalocean_droplet` resource                                        |
-| `volumes.tf`          | A `digitalocean_volume` for each droplet with a `volume_size_gb`: ext4 data volume with `prevent_destroy`          |
-| `reserved-ips.tf`     | A `digitalocean_reserved_ip` for each droplet with `reserved_ip = true` and `prevent_destroy`, plus its assignment |
-| `project.tf`          | Lookup of the project `sommerfeld.io` and assignment of all droplets, volumes and reserved IPs to it               |
-| `outputs.tf`          | `droplet_ipv4_addresses`, `reserved_ip_addresses` and `volume_mount_paths`, keyed by droplet name                  |
-| `.terraform.lock.hcl` | Provider lock file with hashes for every platform the provider is released for, committed                          |
+| File                  | Content                                                                                                                                                                     |
+|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `versions.tf`         | Pinned OpenTofu version and `digitalocean/digitalocean` provider, empty provider block                                                                                      |
+| `droplets.tf`         | region, droplet map, SSH key lookup and the `digitalocean_droplet` resource                                                                                                 |
+| `volumes.tf`          | A `digitalocean_volume` for each droplet with a `volume_size_gb`: ext4 data volume with `prevent_destroy`                                                                   |
+| `reserved-ips.tf`     | A `digitalocean_reserved_ip` for each droplet with `reserved_ip = true` and `prevent_destroy`, plus its assignment                                                          |
+| `dns.tf`              | The DNS zone `do.sommerfeld.app` (`prevent_destroy`), an A record per droplet with a reserved IP, aliases, external records and the CAA record, see [DNS Zone](dns-zone.md) |
+| `project.tf`          | Lookup of the project `sommerfeld.io` and assignment of all droplets, volumes, reserved IPs and the DNS zone to it                                                          |
+| `outputs.tf`          | `droplet_ipv4_addresses`, `reserved_ip_addresses` and `volume_mount_paths`, keyed by droplet name; `dns_zone` and `dns_records` (keyed by FQDN)                             |
+| `.terraform.lock.hcl` | Provider lock file with hashes for every platform the provider is released for, committed                                                                                   |
 
 The provider reads the API token from `DIGITALOCEAN_ACCESS_TOKEN`. The token is never written to a `.tf` or `.tfvars` file. See [API Token](api-token.md).
 
@@ -28,17 +29,18 @@ The provider reads the API token from `DIGITALOCEAN_ACCESS_TOKEN`. The token is 
 
 ## Droplet Config Options
 
-Each entry of the `droplets` map describes one droplet. The `stage` and the map key build the droplet name `<stage>-<key>`, so the stage `prod` and the key `example-app` create the droplet `prod-example-app`. Do not repeat the stage in the key. All options are required except `tags`.
+Each entry of the `droplets` map describes one droplet. The `stage` and the map key build the droplet name `<stage>-<key>`, so the stage `prod` and the key `example-app` create the droplet `prod-example-app`. Do not repeat the stage in the key. All options are required except `tags` and `dns_aliases`.
 
-| Option           | Allowed values          | Effect                                                                                                                                                                         |
-|------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `stage`          | `dev`, `test` or `prod` | Name prefix and tag of the droplet. The volume name uses it as well. Any other value fails `tofu plan`                                                                         |
-| `size`           | DigitalOcean size slug  | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                 |
-| `image`          | DigitalOcean image slug | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`. Changing it [replaces](replacement.md) the droplet                                                      |
-| `resize_disk`    | `true` or `false`       | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                         |
-| `reserved_ip`    | `true` or `false`       | `true` gives the droplet a stable public address. `false` means no reserved IP                                                                                                 |
-| `volume_size_gb` | Number of GB, or `null` | A number creates and attaches a data volume of that size. `null` means no block volume                                                                                         |
-| `tags`           | Optional list of labels | Extra droplet tags next to the stage tag, e.g. `["fantasy-hockey"]`. Ansible [composes inventory groups](provisioning.md) from them. Adding a tag updates the droplet in place |
+| Option           | Allowed values             | Effect                                                                                                                                                                                                                                                          |
+|------------------|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `stage`          | `dev`, `test` or `prod`    | Name prefix and tag of the droplet. The volume name uses it as well. Any other value fails `tofu plan`                                                                                                                                                          |
+| `size`           | DigitalOcean size slug     | CPU and RAM of the droplet, e.g. `s-1vcpu-1gb`                                                                                                                                                                                                                  |
+| `image`          | DigitalOcean image slug    | Operating system the droplet is created from, e.g. `ubuntu-26-04-x64`. Changing it [replaces](replacement.md) the droplet                                                                                                                                       |
+| `resize_disk`    | `true` or `false`          | Whether a resize also grows the disk. `false` resizes CPU and RAM only                                                                                                                                                                                          |
+| `reserved_ip`    | `true` or `false`          | `true` gives the droplet a stable public address. `false` means no reserved IP                                                                                                                                                                                  |
+| `volume_size_gb` | Number of GB, or `null`    | A number creates and attaches a data volume of that size. `null` means no block volume                                                                                                                                                                          |
+| `tags`           | Optional list of labels    | Extra droplet tags next to the stage tag, e.g. `["fantasy-hockey"]`. Ansible [composes inventory groups](provisioning.md) from them. Adding a tag updates the droplet in place                                                                                  |
+| `dns_aliases`    | Optional list of DNS names | Extra names relative to `do.sommerfeld.app`, e.g. `["hockey.prod"]`, each an A record on the droplet's reserved IP next to `<key>.<stage>`. Each must end in `.<stage>` and needs `reserved_ip = true`. DNS only, no HTTPS. See [DNS Zone](dns-zone.md#aliases) |
 
 An annotated example with two different droplets:
 
@@ -142,7 +144,7 @@ Add one entry to the `droplets` map. Nothing else changes:
     }
 ```
 
-This creates `prod-example-app` with the tag `prod`, its reserved IP and the volume `prod-example-app-data` in the same region and project. Set `reserved_ip = false` and `volume_size_gb = null` for a droplet that needs neither.
+This creates `prod-example-app` with the tag `prod`, its reserved IP, the volume `prod-example-app-data` in the same region and project, and the A record `example-app.prod.do.sommerfeld.app` on the reserved IP (see [DNS Zone](dns-zone.md)). Set `reserved_ip = false` and `volume_size_gb = null` for a droplet that needs neither.
 
 ## SSH Keys
 

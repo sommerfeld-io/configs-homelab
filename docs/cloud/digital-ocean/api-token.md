@@ -6,21 +6,22 @@ All DigitalOcean steps (`doctl`, OpenTofu) authenticate with a personal access t
 
 Create the token as a custom-scoped personal access token in the DigitalOcean control panel (API > Tokens) with access to these resources:
 
-| Scope         | Permissions                  | Needed for                                                                |
-|---------------|------------------------------|---------------------------------------------------------------------------|
-| droplet       | create, read, update, delete | create, read, update and delete the droplet                               |
-| ssh_key       | read                         | look up the existing SSH key (data source, nothing is created or changed) |
-| tag           | create, read                 | tag the droplet at creation (`tags = [...]`, stage plus extra tags)       |
-| block_storage | create, read, update, delete | create and attach the 2 GB data volume                                    |
-| reserved_ip   | create, read, update, delete | create and assign the reserved IP                                         |
-| project       | create, read, update, delete | assign resources to the project                                           |
-| actions       | read                         | read the status of long-running operations                                |
+| Scope         | Permissions                  | Needed for                                                                                                                                                                                  |
+|---------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| droplet       | create, read, update, delete | create, read, update and delete the droplet                                                                                                                                                 |
+| ssh_key       | read                         | look up the existing SSH key (data source, nothing is created or changed)                                                                                                                   |
+| tag           | create, read                 | tag the droplet at creation (`tags = [...]`, stage plus extra tags)                                                                                                                         |
+| block_storage | create, read, update, delete | create and attach the 2 GB data volume                                                                                                                                                      |
+| reserved_ip   | create, read, update, delete | create and assign the reserved IP                                                                                                                                                           |
+| project       | create, read, update, delete | assign resources to the project                                                                                                                                                             |
+| actions       | read                         | read the status of long-running operations                                                                                                                                                  |
+| domain        | create, read, update, delete | create and change the DNS zone `do.sommerfeld.app` and its records (see [DNS Zone](dns-zone.md)); without it `tofu apply` fails with 403, and `tofu plan` too once the zone is in the state |
 
 Creating a droplet also requires read access to regions, sizes, images, snapshots and VPCs (`regions:read`, `sizes:read`, `image:read`, `snapshot:read`, `vpc:read`), because the DigitalOcean API lists them as required scopes of `droplet:create`. The control panel groups scopes by resource, so tick the read scope of each of these as well. `tag:create` is only an optional "associated" scope of `droplet:create`, but DigitalOcean states that tagging a droplet during creation needs it; `tag:create` in turn requires `tag:read`. See [Scopes for API Tokens](https://docs.digitalocean.com/reference/api/scopes/) and [`droplet:create`](https://docs.digitalocean.com/reference/api/scopes/droplet/create/).
 
 If the control panel names a scope differently, pick the one covering that resource. The permissions of the `block_storage`, `reserved_ip` and `project` scopes are the broad set used so far; trimming them was not verified.
 
-`firewall` is not needed, because DigitalOcean firewalls are not used. A firewall added later must allow 80/tcp, 443/tcp and 443/udp besides SSH (22/tcp), or Caddy cannot get or renew its certificate (see [Certificates](deployment.md#certificates)). `domain` is not needed, because DNS stays at all-inkl.com (see [Domain](domain.md)).
+`firewall` is not needed, because DigitalOcean firewalls are not used. A firewall added later must allow 80/tcp, 443/tcp and 443/udp besides SSH (22/tcp), or Caddy cannot get or renew its certificate (see [Certificates](deployment.md#certificates)). `domain` is needed because OpenTofu declares the DNS zone `do.sommerfeld.app` and its records at DigitalOcean (see [DNS Zone](dns-zone.md)). The parent zone `sommerfeld.app` stays at all-inkl.com and needs no DigitalOcean scope. Whether the control panel lets an existing token's scopes be edited is unverified; if it does not, generate a new token with all scopes above, follow [How the Token Reaches the Shell](#how-the-token-reaches-the-shell), and revoke the old token only after `doctl compute domain list` works with the new one.
 
 ## How the Token Reaches the Shell
 
