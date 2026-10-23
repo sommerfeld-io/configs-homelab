@@ -130,6 +130,7 @@ nav:
           - Swap: cloud/ansible/roles/swap.md
   - Grafana Cloud:
       - Synthetic Monitoring: grafana-cloud/synthetic-monitoring.md
+      - Wi-Fi Dashboard: grafana-cloud/wifi.md
   - Pipelines: pipelines.md
   - Incidents:
       - Runbooks:

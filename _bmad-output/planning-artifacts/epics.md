@@ -129,12 +129,12 @@ So that I see the link quality of every Wi-Fi node at a glance and next to its d
 **Acceptance Criteria:**
 
 **Given** the `node_wifi_*` series from Story 9.1
-**When** the dashboard "Wi-Fi" is added as `grafana-cloud/manifests/git-sync/network/` (with `_folder.json`)
-**Then** it shows per node and interface: signal strength (dBm), receive and transmit bitrate, transmit retries and failures, beacon loss, connected SSID/BSSID, and a node variable, and the Git Sync resource count stays within the Free plan limit of 20 (13 after this story)
+**When** the dashboard "Network / Wi-Fi" is added to the existing Git Sync folder `grafana-cloud/manifests/git-sync/homelab-infrastructure/` (no new folder; decision 2026-10-23, option B)
+**Then** it shows per node and interface: signal strength (dBm), receive and transmit bitrate, transmit retries and failures, beacon loss, connected SSID/BSSID, and a node variable, and the Git Sync resource count stays within the Free plan limit of 20 (12 after this story: 2 folders, 10 dashboards)
 
 **Given** the dashboard merged to `main`
 **When** Git Sync has run
-**Then** the dashboard is visible in Grafana Cloud under the folder `network` with data from pi4-0002; the story stays in `review` until this was observed (AGENTS.md pitfall)
+**Then** the dashboard is visible in Grafana Cloud under the folder `homelab-infrastructure` with data from pi4-0002; the story stays in `review` until this was observed (AGENTS.md pitfall)
 
 **Given** the change
 **When** it is done

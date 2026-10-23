@@ -198,3 +198,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: Nothing automated guards the Wi-Fi collector: a misspelled or dropped `enable_collectors = ["wifi"]` in the fleet Alloy template, or one added to the DigitalOcean template, passes `task lint` and CI.
   evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario covers the Alloy role. Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Fits Epic 6 (CI checks).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
+  summary: No `task lint` or CI step reads the Git Sync manifests: a JSON parse error, a duplicate `metadata.name` across dashboards, or more than 20 Git Sync resources reaches `main` green.
+  evidence: Only ls-lint touches `grafana-cloud/manifests/git-sync/` (filenames). `6813c9f` put two dashboards with `metadata.name` `000000013` (`fritz-box-status.json`, `network-fritz-box-status.json`) on `feat/epic-9` and every check passed (Story 9.2 review, verification-gap layer). Fix: a `jq` check in `task lint` and CI for parse, unique `metadata.name` and count <= 20. Same gap as the Story 5.1 triage row 1; fits Epic 6.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
+  summary: `grafana-cloud/manifests/git-sync/README.md` forbids manual edits, while hand-written dashboards (5.1, 9.2) are the established way to add one; nobody owns re-committing what Git Sync writes back after the first sync.
+  evidence: Story 9.2 review (blind hunter) and Story 5.1 triage row 12; the README rule is the user's, so changing it is their decision.

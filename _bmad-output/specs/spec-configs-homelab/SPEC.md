@@ -52,7 +52,7 @@ Manual machine setup at this homelab produces "snowflakes" — machines meant to
 
 - **CAP-10**
     - **intent:** Every homelab node reports its Wi-Fi link quality (signal strength, bitrates, retries, failures) to Grafana Cloud through the node_exporter wifi collector in its Alloy config. Cloud droplets are excluded.
-    - **success:** On a Wi-Fi node (e.g. pi4-0002), `node_wifi_*` series appear in Grafana Cloud and the "Wi-Fi" dashboard in the Git Sync folder `network` shows them per node; the `configs-cloud` Alloy configs are unchanged.
+    - **success:** On a Wi-Fi node (e.g. pi4-0002), `node_wifi_*` series appear in Grafana Cloud and the "Network / Wi-Fi" dashboard in the Git Sync folder `homelab-infrastructure` shows them per node; the `configs-cloud` Alloy configs are unchanged.
 
 ## Constraints
 

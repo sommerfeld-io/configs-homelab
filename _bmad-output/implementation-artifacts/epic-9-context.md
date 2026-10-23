@@ -17,8 +17,8 @@ Make Wi-Fi drops on homelab nodes correlatable with signal strength and link qua
 - Nothing under `configs-cloud/` changes. Droplets are VMs, and whether their uplink is wireless does not matter. `git diff` over the whole epic must show no file under `configs-cloud/`.
 - On a Wi-Fi node (pi4-0002 is the reference), `node_wifi_station_signal_dbm` and the other `node_wifi_*` series for its interface must appear in Grafana Cloud after the rollout. Every node with a Wi-Fi interface is listed with its result. Nodes without Wi-Fi must still scrape without collector errors.
 - Residual risk: the Raspberry Pi Wi-Fi driver might not report every station metric. Record what each node actually delivers.
-- The dashboard "Wi-Fi" lives in the Git Sync folder `network` (with `_folder.json`) and shows per node and interface: signal strength (dBm), receive and transmit bitrate, transmit retries and failures, beacon loss, connected SSID/BSSID, plus a node variable.
-- Grafana Cloud Free allows 20 Git Sync resources, and folders count. Today there are 11 (2 folders, 9 dashboards). The `network` folder with one dashboard makes 13. A `network` folder was removed before for this limit, so stay within it.
+- The dashboard "Network / Wi-Fi" lives in the existing Git Sync folder `homelab-infrastructure`, next to "Network / FRITZ!Box / Status", and shows per node and interface: signal strength (dBm), receive and transmit bitrate, transmit retries and failures, beacon loss, connected SSID/BSSID, plus a node variable.
+- Grafana Cloud Free allows 20 Git Sync resources, and folders count. Today there are 11 (2 folders, 9 dashboards). The Wi-Fi dashboard makes 12 (2 folders, 10 dashboards). A `network` folder was removed before for this limit, so no new folder is created (user decision 2026-10-23, option B).
 - `task lint` must pass, including `lint-alloy-config`, which validates the homelab template.
 - Docs: the Alloy role README says which collector is on, which metrics it gives, and that no `iw` or `wireless-tools` package is needed. Edit the README, not the copy that `task docs:generate` makes. The dashboard is documented next to the other Grafana Cloud docs.
 
@@ -35,5 +35,5 @@ Make Wi-Fi drops on homelab nodes correlatable with signal strength and link qua
 
 - Story 9.2 needs live `node_wifi_*` series from Story 9.1, so 9.1 must be rolled out and verified on pi4-0002 first.
 - The operator runs the rollout for 9.1 and confirms data from pi4-0002.
-- Story 9.2 stays in `review` until the dashboard is merged to `main` and Git Sync has been observed to show it in the folder `network` with data from pi4-0002. Never mark it `done` before that.
+- Story 9.2 stays in `review` until the dashboard is merged to `main` and Git Sync has been observed to show it in the folder `homelab-infrastructure` with data from pi4-0002. Never mark it `done` before that.
 - Epic 6 starts after this epic. The open Epic 8 retro items are independent of it.

@@ -123,7 +123,7 @@ Every homelab node (desktops, servers, Raspberry Pis) reports Wi-Fi interface an
 **Consequences (testable):**
 
 - On a node that uses Wi-Fi (e.g. pi4-0002), `node_wifi_*` series for its interface appear in Grafana Cloud after `grafana-agents.yml` ran.
-- A dashboard "Wi-Fi" in the Git Sync folder `network` shows these series per node.
+- A dashboard "Network / Wi-Fi" in the Git Sync folder `homelab-infrastructure` shows these series per node.
 - The Alloy configs of `configs-cloud` are unchanged.
 
 ### 4.4 Automation Safety Net (CI + Git Branching)
