@@ -293,9 +293,9 @@
                 "overrides": []
               },
               "options": {
-                "colorMode": "value",
+                "colorMode": "background",
                 "graphMode": "none",
-                "justifyMode": "auto",
+                "justifyMode": "center",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
