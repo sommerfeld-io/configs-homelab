@@ -70,7 +70,7 @@ services:
     tty: *tty
 
   lint-opentofu:
-    image: ghcr.io/opentofu/opentofu:1.12.8
+    image: ghcr.io/opentofu/opentofu:1.13.2
     volumes: *volumes
     working_dir: *default-workdir
     command: fmt -check -diff -recursive configs-cloud grafana-cloud
