@@ -97,14 +97,8 @@ So that no manual step is ambiguous about whether it's meant to go away.
 **Then** a linked GitHub issue number is present (e.g. issue #160 for the sudoers workaround)
 
 ## Epic 9: Wi-Fi telemetry for homelab nodes
-Wi-Fi drops on homelab nodes can be correlated with signal strength and link quality in Grafana Cloud. Homelab only: nothing under configs-cloud changes. Added 2026-10-22 (sprint-change-proposal-2026-10-22); runs after Epic 8 and before Epic 6 (epics-fantasy-hockey-digitalocean.md).
-**FRs covered:** FR10
-```
 
-**New section** after Epic 1:
-
-```markdown
-## Epic 9: Wi-Fi telemetry for homelab nodes
+Wi-Fi drops on homelab nodes can be correlated with signal strength and link quality in Grafana Cloud.
 
 ### Story 9.1: Enable the Wi-Fi collector in the homelab Alloy config
 
