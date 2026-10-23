@@ -50,15 +50,17 @@ Against the Story 9.1 ACs in `epics.md`:
 - AC 3 (README): met. "Wi-Fi Metrics" in the Alloy role README names the collector, its metrics and labels, says no `iw`/`wireless-tools` is needed; copied by `task docs:generate`.
 - AC 2 (fleet data): open until the operator runs `grafana-agents.yml`. Then, per node over read-only SSH, the `curl` from the README; for nodes that do not resolve from the devcontainer, `count by (instance, device) (node_wifi_station_info)` in Grafana Cloud. Results:
 
-| Node     | Interface | Alloy   | Collector success | `node_wifi_*` | Missing station metrics |
-|----------|-----------|---------|-------------------|---------------|-------------------------|
-| pi4-0002 | `wlan0`   | v1.19.2 | pending rollout   | pending       | pending                 |
-| pi5-0004 | `wlan0`   | v1.19.2 | pending rollout   | pending       | pending                 |
-| caprica  | `wlo1`    | v1.16.0 | pending rollout   | pending       | pending                 |
-| picon    | `wlp9s0`  | v1.20.1 | pending rollout   | pending       | pending                 |
-| pi4-0005 | unknown   | unknown | not resolvable    | pending       | pending                 |
-| pi4-0006 | unknown   | unknown | not resolvable    | pending       | pending                 |
-| kobol    | unknown   | unknown | not resolvable    | pending       | pending                 |
+| Node     | Interface | Alloy   | Collector success | `node_wifi_*`      | Missing station metrics |
+|----------|-----------|---------|-------------------|--------------------|-------------------------|
+| pi4-0002 | `wlan0`   | v1.19.2 | 1                 | all 12, signal -73 | none                    |
+| pi5-0004 | `wlan0`   | v1.19.2 | 1                 | all 12, signal -73 | none                    |
+| caprica  | `wlo1`    | v1.16.0 | 1                 | all 12, signal -68 | none                    |
+| picon    | `wlp9s0`  | v1.20.1 | 1                 | all 12, signal -61 | none                    |
+| pi4-0005 | unknown   | unknown | not resolvable    | not checked        | not checked             |
+| pi4-0006 | unknown   | unknown | not resolvable    | not checked        | not checked             |
+| kobol    | unknown   | unknown | not resolvable    | not checked        | not checked             |
+
+Checked 2026-10-23 over read-only SSH on each node's local exporter endpoint, after the user's rollout. "All 12" means `interface_frequency_hertz` plus the eleven `station_*` metrics (`beacon_loss_total`, `connected_seconds_total`, `inactive_seconds`, `info`, `receive_bits_per_second`, `receive_bytes_total`, `signal_dbm`, `transmit_bits_per_second`, `transmit_bytes_total`, `transmit_failed_total`, `transmit_retries_total`); the Raspberry Pi driver delivers every one, so the epic's residual risk did not occur. pi4-0005, pi4-0006 and kobol did not resolve from the devcontainer and were not checked. The user marked the story done on 2026-10-23.
 
 ## Review Triage Log
 

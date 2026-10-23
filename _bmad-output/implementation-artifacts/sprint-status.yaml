@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-23-2026 18:07
+last_updated: 10-23-2026 19:46
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -85,10 +85,10 @@ development_status:
 
   # Epic 9 (homelab, epics.md) runs after Epic 8 and before Epic 6 (sprint-change-proposal-2026-10-22)
   epic-9: in-progress
-  # 9.1 stays in review until the operator has run grafana-agents.yml and node_wifi_* from pi4-0002 is observed
-  9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config: review
-  # 9.2 needs live node_wifi_* series from 9.1, and stays in review until Git Sync from main is observed
-  9-2-wi-fi-dashboard-in-the-git-sync-folder-network: review
+  # 9.1: node_wifi_* observed on pi4-0002, pi5-0004, caprica and picon after the rollout (10-23-2026)
+  9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config: done
+  # 9.2: marked done by the user before the Git Sync from main was observed (10-23-2026)
+  9-2-wi-fi-dashboard-in-the-git-sync-folder-network: done
   epic-9-retrospective: optional
 
   epic-6: backlog
