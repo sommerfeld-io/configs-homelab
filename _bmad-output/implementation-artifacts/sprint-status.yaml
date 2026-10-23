@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-23-2026 19:55
+last_updated: 10-23-2026 20:24
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -403,7 +403,7 @@ action_items:
       in homelab-infrastructure shows data from pi4-0002 in every panel and the renamed
       FRITZ!Box dashboard kept its history"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
   - id: "epic-9-retro-item-42-check-whether-pi4-0005-pi4-0006-and-kobo"
     epic: 9
