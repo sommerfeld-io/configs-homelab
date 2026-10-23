@@ -4908,7 +4908,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "FRITZ!Box / Status",
+    "title": "Network / FRITZ!Box / Status",
     "variables": [
       {
         "kind": "DatasourceVariable",

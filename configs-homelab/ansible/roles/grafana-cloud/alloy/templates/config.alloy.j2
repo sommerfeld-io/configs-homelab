@@ -55,6 +55,7 @@ discovery.relabel "integrations_node_exporter" {
 }
 
 prometheus.exporter.unix "integrations_node_exporter" {
+  enable_collectors  = ["wifi"]
   disable_collectors = ["ipvs", "btrfs", "infiniband", "xfs", "zfs"]
 
   filesystem {
