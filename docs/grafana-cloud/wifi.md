@@ -14,14 +14,14 @@ The manifest was written by hand. It reaches Grafana Cloud through Git Sync once
 
 ## Node Variable
 
-The variable "Node" (`instance`) offers every node with `environment="homelab"` that has a `wl*` interface in `node_network_info` (every Wi-Fi interface in the fleet is named `wl*`: `wlan0`, `wlo1`, `wlp9s0`). That series exists independent of the connection, so a node is also offered while it is disconnected. A node without a Wi-Fi interface is not offered. Several nodes or "All" can be selected; every panel then has one line per node and interface.
+The variable "Node" (`instance`) offers every node with `environment="homelab"` that has a `wl*` interface in `node_network_info` (every Wi-Fi interface in the fleet is named `wl*`: `wlan0`, `wlo1`, `wlp9s0`). That series exists independent of the connection, so a node is also offered while it is disconnected. A node without a Wi-Fi interface is not offered. A node with an unused Wi-Fi card (on Ethernet) is offered too, and its panels show "No data". Several nodes or "All" can be selected; every panel then has one line per node and interface.
 
 ## Rows
 
 | Row        | Panel             | Shows                                                                                                         |
 |------------|-------------------|---------------------------------------------------------------------------------------------------------------|
-| Connection | Connection        | Table per node and interface: SSID, BSSID (the access point's MAC address), channel frequency, time connected |
-| Connection | Reconnects        | Reconnects to the same access point in the selected time range                                                |
+| Connection | Connection        | Per node and interface at the end of the time range: SSID, BSSID, channel frequency, time connected           |
+| Connection | Reconnects        | Restarts of the connection time in the selected time range                                                    |
 | Connection | Connected time    | Time connected to the current access point; a drop to 0 is a reconnect                                        |
 | Signal     | Signal strength   | Signal strength in dBm, with lines at -60 (good), -70 (fair) and -80 dBm (weak below)                         |
 | Throughput | Receive bitrate   | Link bitrate of received frames, the rate negotiated with the access point, not the traffic volume            |
@@ -30,7 +30,7 @@ The variable "Node" (`instance`) offers every node with `environment="homelab"` 
 | Errors     | Transmit failures | Frames not delivered after all retries, per second                                                            |
 | Errors     | Beacon loss       | Beacons from the access point the node missed, per second                                                     |
 
-Reconnects are counted as resets of `node_wifi_station_connected_seconds_total`, which restarts at 0 on every new association, so no extra metric is needed. A switch to another access point starts a new series instead and is not counted; the BSSID in the Connection table shows which access point the node is on now. For up to 5 minutes after a roam (the query lookback), the previous access point can still be listed as a second row. Very short drops between two scrapes can be missed, when the new connection is already longer at the next scrape than the old one was at the last scrape before the drop; they show only as a dip in "Connected time", if at all.
+Reconnects are counted as resets of `node_wifi_station_connected_seconds_total`, which restarts at 0 on every new association, so no extra metric is needed. A reconnect, a node reboot, a Wi-Fi driver reload and a return to an access point used earlier in the range all count. A switch to a new access point starts a new series instead and is not counted, and a drop still ongoing at the end of the range is not counted either. The Connection table shows the state at the end of the time range: a node disconnected at that time is not listed, and after a roam the previous access point is gone with the next scrape, because Alloy marks the old series as stale. Very short drops between two scrapes can be missed, when the new connection is already longer at the next scrape than the old one was at the last scrape before the drop; they show only as a dip in "Connected time", if at all.
 
 While a node is disconnected, its station series stop. The panels then show a gap, not zeros.
 

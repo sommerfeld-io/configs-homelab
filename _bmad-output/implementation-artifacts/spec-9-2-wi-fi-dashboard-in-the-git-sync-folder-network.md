@@ -96,3 +96,31 @@ Pass 1: Blind Hunter (13), Edge Case Hunter (6), Verification Gap (1 gap plus 3 
 - false (BH 10): the hard-coded `grafanacloud-prom` matches `docker-containers-by-node.json` in the same folder.
 - false (BH 12): validation is recorded in Implementation Notes (`task lint`, check script, promtool, markdownlint, docs build).
 - low, rejected (BH 13): code spans for paths outside `docs/` follow the docs convention, the count repeated across planning docs follows the AGENTS.md rule, and the `cps` unit is cosmetic.
+
+### Review Findings
+
+Code review of Epic 9 (Stories 9.1 and 9.2, `origin/main...feat/epic-9`), 2026-10-23: Blind Hunter, Edge Case Hunter, Verification Gap and Acceptance Auditor. The user asked for every finding to be fixed right away or deferred, so there are no decision items.
+
+- [x] [Review][Patch] "For up to 5 minutes after a roam the previous access point can still be listed" is wrong: Alloy's scrape writes staleness markers, so the old series ends at the next scrape [grafana-cloud/manifests/git-sync/homelab-infrastructure/network-wi-fi.json:panel-1]
+- [x] [Review][Patch] Reconnects count reboots, driver reloads and returns to an earlier access point, and miss a drop still ongoing at the end of the range; panel and doc now say so [grafana-cloud/manifests/git-sync/homelab-infrastructure/network-wi-fi.json:panel-2]
+- [x] [Review][Patch] The Connection table shows the state at the end of the time range, so a node disconnected then is not listed; panel and doc now say so [docs/grafana-cloud/wifi.md:23]
+- [x] [Review][Patch] The node variable also offers a node with an unused `wl*` card, whose panels show "No data"; the doc now says so (filtering on `operstate="up"` would hide disconnected nodes again) [docs/grafana-cloud/wifi.md:17]
+- [x] [Review][Patch] A deferred-work entry said "no Molecule scenario covers the Alloy role"; the cloud scenario does, with the cloud template [_bmad-output/implementation-artifacts/deferred-work.md:200]
+- [x] [Review][Defer] The cloud `alloy` verify has no `'wifi' not in alloy_config` assert [configs-cloud/digital-ocean/tests/molecule/alloy/molecule/default/verify.yml] — deferred: Epic 9 forbids changes under `configs-cloud/`; fits the Epic 6 guard
+- [x] [Review][Defer] No standing check for the fleet collector line or the Git Sync manifests [configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2:58] — deferred: the gap predates this change and is already logged; Epic 6
+- [x] [Review][Defer] Whether SSID, BSSID and `mac_address` should go to Grafana Cloud is undecided [configs-homelab/ansible/roles/grafana-cloud/alloy/README.md] — deferred: user decision
+
+#### Rejected
+
+- Spec status `done` while the live-data ACs are open (Acceptance Auditor, Blind Hunter, Edge Case Hunter): the fix edits the specs under review. Sprint status keeps both stories in `review`, as the AGENTS.md Git Sync pitfall requires.
+- Stale notes on the `fritz-box-status.json` deletion, the empty Spec Change Log, and the Tasks line still naming `node_wifi_station_info` as the variable source (Acceptance Auditor, Blind Hunter, Edge Case Hunter): the fix edits the specs under review. The deletion is in `5694b1e` at the user's request.
+- The deletion breaks the 9.2 rule "no change to existing dashboards" (Acceptance Auditor): false. The user asked for the deletion on 2026-10-23; it removes a duplicate of `000000013` and leaves the user's renamed dashboard unchanged.
+- Story 9.1 AC 2 is not met and has no row for nodes without Wi-Fi (Acceptance Auditor, Blind Hunter): this is the open rollout gate, tracked in sprint status and the 9.1 Acceptance Check, not a code defect.
+- The 9.1 spec contradicts itself on `success` 1 or 0 for nodes without Wi-Fi (Acceptance Auditor): the README gives the rule (1 means nl80211 was read, 0 with no error means no nl80211 or no permission). The container in the Investigation had the host's nl80211, so both are true. A fix would edit the spec.
+- `max` on `connected_seconds_total` shows the old access point's value during a roam (Blind Hunter): false. With staleness markers the old series ends at the next scrape, so `max` picks the new one.
+- A Wi-Fi interface not named `wl*` would be hidden (Edge Case Hunter): low. Every Wi-Fi interface in the fleet is `wl*`; a fallback adds a branch for a state not seen.
+- The Connection table merge after a roam gives duplicate rows (Edge Case Hunter): low. With staleness markers both series overlap at most one scrape.
+- The Git Sync reaction to the hand-made rename is unknown (Blind Hunter): low, maybe-false. The rename is the user's commit; the first sync after the merge shows it, and the dashboard name `000000013` is unchanged.
+- The Alloy README has no link to the dashboard page, and there is no Wi-Fi runbook (Blind Hunter): low. Copied READMEs must not carry relative links (CLAUDE.md); a runbook is outside the ACs.
+- `wifi.md` repeats the roaming text in two sections (Blind Hunter): low, cosmetic.
+- The panels do not filter `device=~"wl.+"` like the variable does (Blind Hunter): low. Every `node_wifi_*` series comes from a Wi-Fi interface.

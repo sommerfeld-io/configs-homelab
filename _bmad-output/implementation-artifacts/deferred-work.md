@@ -197,7 +197,7 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: Nothing automated guards the Wi-Fi collector: a misspelled or dropped `enable_collectors = ["wifi"]` in the fleet Alloy template, or one added to the DigitalOcean template, passes `task lint` and CI.
-  evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario covers the Alloy role. Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Fits Epic 6 (CI checks).
+  evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario renders the fleet template (the cloud `alloy` scenario renders the cloud template only and does not assert the collector's absence). Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Fits Epic 6 (CI checks).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
   summary: No `task lint` or CI step reads the Git Sync manifests: a JSON parse error, a duplicate `metadata.name` across dashboards, or more than 20 Git Sync resources reaches `main` green.
@@ -206,3 +206,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
   summary: `grafana-cloud/manifests/git-sync/README.md` forbids manual edits, while hand-written dashboards (5.1, 9.2) are the established way to add one; nobody owns re-committing what Git Sync writes back after the first sync.
   evidence: Story 9.2 review (blind hunter) and Story 5.1 triage row 12; the README rule is the user's, so changing it is their decision.
+
+## Deferred from: code review of spec-9-1 and spec-9-2 (2026-10-23)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
+  summary: The cloud `alloy` Molecule verify does not assert that the rendered cloud config has no `wifi` collector, so copying the line into the cloud template passes `molecule-cloud`.
+  evidence: `configs-cloud/digital-ocean/tests/molecule/alloy/molecule/default/verify.yml` asserts labels, `'github' not in alloy_config` and `'remotecfg' not in alloy_config` only. A one-line assert fixes it, but Epic 9 forbids any change under `configs-cloud/`; do it with the fleet guard in Epic 6.
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
+  summary: The fleet Wi-Fi collector line and the Git Sync manifests (parse, unique `metadata.name`, count <= 20) still have no standing check; both are already logged above and fit Epic 6.
+  evidence: Code review 2026-10-23, verification-gap layer; same entries as the Story 9.1 and 9.2 deferrals.
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
+  summary: Decide whether the SSID, the access points' MACs (`bssid`, `mac_address`) and one extra series set per roam should go to Grafana Cloud, or be dropped or hashed in `prometheus.relabel "integrations_node_exporter"`.
+  evidence: The Alloy README states that they are sent; the 9.2 dashboard shows SSID/BSSID as the story asks. No recorded decision on sending network identifiers off-site or on the series cost of roaming (Free plan active-series limit); user decision.

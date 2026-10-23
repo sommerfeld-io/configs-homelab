@@ -150,7 +150,7 @@
               ]
             }
           },
-          "description": "Current access point per node and interface: SSID, BSSID (MAC address of the access point), channel frequency and time connected to that access point. For up to 5 minutes after a roam, the previous access point can still be listed as a second row.",
+          "description": "Current access point per node and interface: SSID, BSSID (MAC address of the access point), channel frequency and time connected to that access point. Shows the state at the end of the selected time range; a node disconnected at that time is not listed. After a roam, the previous access point is gone with the next scrape.",
           "id": 1,
           "links": [],
           "title": "Connection",
@@ -263,7 +263,7 @@
               "transformations": []
             }
           },
-          "description": "Reconnects to the same access point in the selected time range, counted as resets of node_wifi_station_connected_seconds_total (it restarts at 0 on every new association). A switch to another access point starts a new series and is not counted here; see BSSID in the Connection table. Very short drops between two scrapes can be missed and show only as a dip in Connected time, if at all.",
+          "description": "Restarts of the connection time in the selected time range, counted as resets of node_wifi_station_connected_seconds_total (it restarts at 0 on every new association). A reconnect, a node reboot, a Wi-Fi driver reload and a return to an access point used earlier in the range all count. A switch to a new access point starts a new series and is not counted; see BSSID in the Connection table. A drop that is still ongoing at the end of the range is not counted; see Connected time. Very short drops between two scrapes can be missed and show only as a dip in Connected time, if at all.",
           "id": 2,
           "links": [],
           "title": "Reconnects",
