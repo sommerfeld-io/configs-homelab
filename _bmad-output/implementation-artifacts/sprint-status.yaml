@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-23-2026 19:46
+last_updated: 10-23-2026 19:55
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -84,12 +84,12 @@ development_status:
   epic-8-retrospective: done
 
   # Epic 9 (homelab, epics.md) runs after Epic 8 and before Epic 6 (sprint-change-proposal-2026-10-22)
-  epic-9: in-progress
+  epic-9: done
   # 9.1: node_wifi_* observed on pi4-0002, pi5-0004, caprica and picon after the rollout (10-23-2026)
   9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config: done
   # 9.2: marked done by the user before the Git Sync from main was observed (10-23-2026)
   9-2-wi-fi-dashboard-in-the-git-sync-folder-network: done
-  epic-9-retrospective: optional
+  epic-9-retrospective: done
 
   epic-6: backlog
   6-1-ci-static-checks-for-opentofu-and-ansible: backlog
@@ -397,3 +397,43 @@ action_items:
     owner: "user"
     status: done
     ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
+  - id: "epic-9-retro-item-41-after-pr-389-is-merged-and-git-sync-has"
+    epic: 9
+    action: "After PR #389 is merged and Git Sync has run, confirm Network / Wi-Fi
+      in homelab-infrastructure shows data from pi4-0002 in every panel and the renamed
+      FRITZ!Box dashboard kept its history"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
+  - id: "epic-9-retro-item-42-check-whether-pi4-0005-pi4-0006-and-kobo"
+    epic: 9
+    action: "Check whether pi4-0005, pi4-0006 and kobol are online; if so, add their
+      Wi-Fi results (count by instance, device of node_wifi_station_info) to the spec-9-1
+      Acceptance Check"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
+  - id: "epic-9-retro-item-43-record-epic-9-process-lessons-as-project"
+    epic: 9
+    action: "Record Epic 9 process lessons as project pitfalls: name branch and commit
+      for HOST ONLY rollouts and verify on the nodes over SSH; check git log -1 before
+      re-applying edits that vanish during a user commit (pre-commit stash); text
+      added while fixing a review finding is a claim to check"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
+  - id: "epic-9-retro-item-44-when-epic-6-is-planned-fold-the-epic-9-d"
+    epic: 9
+    action: "When Epic 6 is planned, fold the Epic 9 deferrals into Story 6.1: wifi
+      collector in the fleet template and absent in the cloud template, and a Git
+      Sync manifest check (parse, unique metadata.name, at most 20 resources)"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
+  - id: "epic-9-retro-item-45-decide-whether-ssid-bssid-and-mac_addres"
+    epic: 9
+    action: "Decide whether SSID, BSSID and mac_address labels keep going to Grafana
+      Cloud or are dropped or hashed in prometheus.relabel integrations_node_exporter"
+    owner: "user"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
