@@ -12,6 +12,36 @@ All sensitive credentials are stored in an encrypted Ansible Vault file. The vau
 
 Every series and log line leaving a node carries the label `environment`, set as `external_labels` on `prometheus.remote_write` and `loki.write` in `templates/config.alloy.j2` from the variable `alloy_environment` (default `homelab`). The DigitalOcean inventory sets it to `digital-ocean`. It tells homelab nodes apart from the DigitalOcean droplet, whose own Alloy config (`configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`, selected with `alloy_config_template`) sets `environment=digital-ocean` and `stage`. The homelab has no `stage` label.
 
+## Wi-Fi Metrics
+
+The fleet template turns on the node_exporter `wifi` collector (`enable_collectors = ["wifi"]` in `prometheus.exporter.unix "integrations_node_exporter"`). It is off by default upstream. The DigitalOcean template does not turn it on.
+
+The collector reads the Wi-Fi interface and its access-point connection through the kernel's nl80211 netlink interface. No `iw` or `wireless-tools` package is needed, and the role needs no change for it. When pi4-0002 logged "no supported wireless tool installed" and Grafana Cloud suggested installing `iw` or `wireless-tools`, the missing piece was this collector, not a package.
+
+Every station series carries the labels `device` (the interface, e.g. `wlan0`) and `mac_address` (the access point the node is connected to). When a node roams to another access point, its series continue under a new `mac_address`, so queries per node aggregate by `instance` and `device`. Among others, the collector sends:
+
+| Metric                                        | Meaning                                                      |
+|-----------------------------------------------|--------------------------------------------------------------|
+| `node_wifi_station_signal_dbm`                | Signal strength of the connection to the access point        |
+| `node_wifi_station_receive_bits_per_second`   | Receive bitrate                                              |
+| `node_wifi_station_transmit_bits_per_second`  | Transmit bitrate                                             |
+| `node_wifi_station_transmit_retries_total`    | Transmit retries                                             |
+| `node_wifi_station_transmit_failed_total`     | Failed transmits                                             |
+| `node_wifi_station_beacon_loss_total`         | Beacons from the access point that were missed               |
+| `node_wifi_station_connected_seconds_total`   | Time connected to the access point, resets on a reconnect    |
+| `node_wifi_station_info`                      | Labels `device`, `ssid`, `bssid` and `mode`, value `1`       |
+| `node_wifi_interface_frequency_hertz`         | Channel frequency of the interface                           |
+
+The SSID and the access points' MAC addresses (`bssid`, `mac_address`) are sent to Grafana Cloud as labels.
+
+A node without a Wi-Fi interface sends no `node_wifi_*` series. A failing collector logs `collector failed` with `collector=wifi` at level `error` in the Alloy log (systemd journal, also in Loki). When the kernel has no nl80211 (no Wi-Fi driver loaded) or access is denied, the collector returns no data instead and logs only at debug level.
+
+`alloy validate` (and so `task lint`) accepts an unknown collector name, and Alloy then skips it without an error. To check on a node that the collector runs, read its scrape status there; `node_scrape_collector_*` is dropped before it is sent to Grafana Cloud. `node_scrape_collector_success{collector="wifi"} 1` means it read nl80211; `0` without an error log means no nl80211 or no permission:
+
+```bash
+curl -s localhost:12345/api/v0/component/prometheus.exporter.unix.integrations_node_exporter/metrics | grep -E 'collector="wifi"|^node_wifi_'
+```
+
 ## Restarts
 
 Alloy restarts through the `Restart Alloy` handler (with a systemd daemon reload), only when the config, the environment file, the systemd override, the GitHub token file, the binary capabilities or the docker group membership changed. A second run with nothing changed restarts nothing.

@@ -194,3 +194,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-35-opentofu-lint-without-init.md`
   summary: OpenTofu does not enforce the exact `required_version` pin locally, so the pin strategy (Epic 2 retro item 5) and `api-token.md` rely on a check that does not happen.
   evidence: host `tofu 1.12.7` ran `init -backend=false`, `validate` and `plan` with exit 0 on a root pinning `1.99.0` (2026-10-22); only CI ties the version to the pin by deriving the image tag. Deciding on a guard reverses the item 5 "no sync check" decision.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
+  summary: Nothing automated guards the Wi-Fi collector: a misspelled or dropped `enable_collectors = ["wifi"]` in the fleet Alloy template, or one added to the DigitalOcean template, passes `task lint` and CI.
+  evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario covers the Alloy role. Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Fits Epic 6 (CI checks).
