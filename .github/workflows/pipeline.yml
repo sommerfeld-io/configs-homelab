@@ -13,6 +13,7 @@ on:
       - '.github/workflows/dev-environment.yml'
       - '.vscode/**'
       - '.gitkeep'
+      - 'grafana-cloud/manifests/git-sync/**'
   schedule:
     - cron: '0 1 * * 2'
 
