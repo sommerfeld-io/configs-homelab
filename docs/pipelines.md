@@ -36,11 +36,12 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 
 `pipeline.yml` runs these jobs in a single workflow run:
 
-1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`), **`find-opentofu-roots`** and **`find-inspec-modules`** start in parallel. `find-opentofu-roots` lists every folder with a tracked `versions.tf` (`.github/workflows/assets/find-opentofu-roots.sh`), `find-inspec-modules` every folder with a tracked `inspec.yml` (`.github/workflows/assets/find-inspec-modules.sh`). When `shellcheck` and `lint` succeed, **`validate-opentofu`** runs `tofu validate` once per root and **`check-inspec-profile`** runs `task homelab:inspec:check:<profile>` (vendor and `inspec check`) once per profile, one matrix entry each. `task opentofu:validate` and `task homelab:inspec:check` read the same lists, so a new root or profile needs no edit to either.
-2. When the checks and `validate-opentofu` succeed, **`molecule`** (matrix `common`, `omarchy`, `netaudit`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, `fantasy-hockey`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
-3. When `molecule` and `molecule-cloud` succeed, **`generate-docs`** starts.
+1. **`shellcheck`** and **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`) start in parallel.
+2. When both succeed, four find jobs list what the next jobs run, each with a script in `.github/workflows/assets/`: **`find-opentofu-roots`** (`find-opentofu-roots.sh`, every folder with a tracked `versions.tf`), **`find-inspec-modules`** (`find-inspec-modules.sh`, every folder with a tracked `inspec.yml`), **`find-molecule`** (`find-molecule.sh`, every folder below `configs-homelab/` with a tracked `molecule/default/molecule.yml`) and **`find-molecule-cloud`** (`find-molecule-cloud.sh`, the same below `configs-cloud/`). The matching tasks (`task opentofu:validate`, `task homelab:inspec:check`, `task homelab:molecule:test`, `task cloud:molecule:test`) read the same lists, so a new root, profile or scenario needs no edit to a task or the pipeline.
+3. Each find job starts its own matrix job, one entry per path, as soon as it succeeds: **`validate-opentofu`** runs `tofu validate` per root, **`check-inspec-profile`** runs `task homelab:inspec:check:<path>` (vendor and `inspec check`) per profile, **`molecule`** runs `task homelab:molecule:test:<path>` for the homelab roles and **`molecule-cloud`** runs `task cloud:molecule:test:<path>` for the roles the DigitalOcean droplet runs (see [Tests](cloud/digital-ocean/tests.md)). Every Molecule scenario runs to the end (`fail-fast: false`). Both Molecule jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
+4. When all four matrix jobs succeed, **`generate-docs`** starts.
     - `generate-docs` runs `task docs:generate`, builds the `docs-build` image and commits changed files as `docs: [Actions Bot] generate docs` to the pushed branch. This happens on every branch, not only on `main`. The docs site itself is not built or published here.
-4. When `generate-docs` succeeds, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
+5. When `generate-docs` succeeds, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
 
 ### Semantic Release
 
@@ -140,7 +141,7 @@ autonumber
 actor Developer
 participant "GitHub" as GH
 box "pipeline.yml run" #F2F7FC
-  participant "checks\nshellcheck, lint,\nfind-opentofu-roots,\nvalidate-opentofu,\nfind-inspec-modules,\ncheck-inspec-profile" as Checks
+  participant "checks\nshellcheck, lint,\nfind jobs, then\nvalidate-opentofu,\ncheck-inspec-profile" as Checks
   participant "molecule, molecule-cloud\nthen generate-docs" as Build
   participant "release-code\n(lib-release-code.yml)" as Rel
 end box

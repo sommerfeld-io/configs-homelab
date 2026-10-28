@@ -7,35 +7,26 @@ env:
   PY_COLORS: '1'
 
 vars:
-  MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config ../base.yml
+  # base.yml by absolute path, so a scenario found anywhere by the find script uses it.
+  MOLECULE_CMD: uvx --with molecule-plugins[docker] --with ansible-core molecule --base-config "{{ .TASKFILE_DIR }}/base.yml"
 
 tasks:
 
   test:
-    desc: Run every molecule scenario end-to-end
+    desc: Run every molecule scenario (folder with a tracked molecule/default/molecule.yml) end-to-end
+    vars:
+      # Every homelab scenario folder (repo-root-relative), the same list the CI matrix runs.
+      SCENARIOS:
+        sh: '"{{ .ROOT_DIR }}/.github/workflows/assets/find-molecule.sh"'
     cmds:
-      - task: test:common
-      - task: test:omarchy
-      - task: test:netaudit
+      - for: { var: SCENARIOS }
+        task: test:{{ .ITEM }}
 
-  test:common:
-    desc: &molecule-desc Run the {{ .DIR }} role group scenario end-to-end
+  test:*:
+    desc: Run one role group scenario end-to-end, by name (folder next to this taskfile) or by repo-root-relative path
     vars:
-      DIR: common
-    dir: &molecule-dir "{{ .DIR }}"
-    cmds: &molecule-cmds
-      - "{{ .MOLECULE_CMD }} test"
-
-  test:omarchy:
-    desc: *molecule-desc
-    vars:
-      DIR: omarchy
-    dir: *molecule-dir
-    cmds: *molecule-cmds
-
-  test:netaudit:
-    desc: *molecule-desc
-    vars:
-      DIR: netaudit
-    dir: *molecule-dir
-    cmds: *molecule-cmds
+      # A bare name keeps `test:<name>` working; a path is what the find script lists.
+      DIR: '{{ $s := index .MATCH 0 }}{{ if contains "/" $s }}{{ .ROOT_DIR }}/{{ $s }}{{ else }}{{ .TASKFILE_DIR }}/{{ $s }}{{ end }}'
+    cmds:
+      # cd instead of dir: Task resolves an absolute dir below the include dir (and creates it).
+      - cd "{{ .DIR }}" && {{ .MOLECULE_CMD }} test

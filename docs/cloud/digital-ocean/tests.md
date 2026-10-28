@@ -18,7 +18,7 @@ configs-cloud/digital-ocean/tests/molecule/
 
 | Task                              | What it does                                           |
 |-----------------------------------|--------------------------------------------------------|
-| `task cloud:molecule:test`        | Run every scenario: `motd`, `alloy`, `fantasy-hockey`  |
+| `task cloud:molecule:test`        | Run every scenario `find-molecule-cloud.sh` lists      |
 | `task cloud:molecule:test:<role>` | Run one scenario, e.g. `task cloud:molecule:test:motd` |
 
 Each scenario runs dependency, destroy, create, prepare, converge, idempotence, verify and destroy. Molecule runs through `uvx`, so it needs Docker and `uv` but no local Molecule install. The collections come from the pinned `configs-cloud/digital-ocean/ansible/requirements.yml`, the same file provisioning uses.
@@ -51,13 +51,12 @@ The fleet role `grafana-cloud/exporters` (cAdvisor) has no scenario either. It r
 
 ## CI
 
-The `molecule-cloud` job in `.github/workflows/pipeline.yml` runs the scenarios as a matrix (`motd`, `alloy`, `fantasy-hockey`) after the linters, ShellCheck and the InSpec checks, next to the `molecule` job for the homelab roles. `generate-docs`, and through it the release, waits for both. See [Pipelines](../../pipelines.md).
+The `molecule-cloud` job in `.github/workflows/pipeline.yml` runs the scenarios as a matrix, one entry per folder below `configs-cloud/` with a tracked `molecule/default/molecule.yml`. The `find-molecule-cloud` job builds the matrix with `.github/workflows/assets/find-molecule-cloud.sh` after the linters and ShellCheck; `task cloud:molecule:test` reads the same list. The `molecule` job does the same for the homelab roles. `generate-docs`, and through it the release, waits for both. See [Pipelines](../../pipelines.md).
 
 ## Adding a Role
 
 A new role is not done without a scenario. For a new role under `configs-cloud/digital-ocean/ansible/roles`:
 
 1. Add `<role>/molecule/default/molecule.yml`, `converge.yml` and `verify.yml` following the `motd` scenario.
-2. Add a `test:<role>` task to `configs-cloud/digital-ocean/tests/molecule/taskfile.yml` and call it from `test`.
-3. Add the role to the `molecule-cloud` matrix in `pipeline.yml`.
-4. Put test-only setup in `prepare.yml` or the scenario's converge `pre_tasks`, never in the role. Never make the container privileged or mount host paths into it.
+2. Nothing else to register: `find-molecule-cloud.sh` picks up the new `molecule.yml`, so `task cloud:molecule:test:<role>`, `task cloud:molecule:test` and the `molecule-cloud` matrix include it.
+3. Put test-only setup in `prepare.yml` or the scenario's converge `pre_tasks`, never in the role. Never make the container privileged or mount host paths into it.

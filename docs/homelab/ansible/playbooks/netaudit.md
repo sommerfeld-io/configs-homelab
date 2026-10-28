@@ -130,4 +130,4 @@ The `netaudit` Molecule scenario (`configs-homelab/tests/molecule/netaudit/`) te
 task homelab:molecule:test:netaudit
 ```
 
-In CI, the `molecule` job of `.github/workflows/pipeline.yml` runs the scenario (matrix entry `netaudit`), see [Pipelines](../../../pipelines.md).
+In CI, the `molecule` job of `.github/workflows/pipeline.yml` runs the scenario (matrix entry `configs-homelab/tests/molecule/netaudit`), see [Pipelines](../../../pipelines.md).

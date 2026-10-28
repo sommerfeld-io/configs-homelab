@@ -105,6 +105,50 @@ jobs:
           echo "profiles=$profiles" >> "$GITHUB_OUTPUT"
         shell: bash
 
+  # Every homelab Molecule scenario folder, the same list task homelab:molecule:test runs.
+  find-molecule:
+    runs-on: ubuntu-latest
+    needs: [
+      'shellcheck',
+      'lint'
+    ]
+    permissions:
+      contents: read
+    outputs:
+      scenarios: ${{ steps.scenarios.outputs.scenarios }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Find homelab Molecule scenarios
+        id: scenarios
+        # Assigned first, so a failing script fails this step with its own message.
+        run: |
+          scenarios="$(.github/workflows/assets/find-molecule.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          echo "scenarios=$scenarios" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+  # Every cloud Molecule scenario folder, the same list task cloud:molecule:test runs.
+  find-molecule-cloud:
+    runs-on: ubuntu-latest
+    needs: [
+      'shellcheck',
+      'lint'
+    ]
+    permissions:
+      contents: read
+    outputs:
+      scenarios: ${{ steps.scenarios.outputs.scenarios }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Find cloud Molecule scenarios
+        id: scenarios
+        # Assigned first, so a failing script fails this step with its own message.
+        run: |
+          scenarios="$(.github/workflows/assets/find-molecule-cloud.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          echo "scenarios=$scenarios" >> "$GITHUB_OUTPUT"
+        shell: bash
+
   validate-opentofu:
     runs-on: ubuntu-latest
     name: ${{ matrix.root_module }}
@@ -183,8 +227,7 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'shellcheck',
-      'lint'
+      'find-molecule'
     ]
     # needs: [
     #   'validate-opentofu',
@@ -195,8 +238,8 @@ jobs:
       # Run every scenario to the end, so one failing role group doesn't hide failures in another.
       fail-fast: false
       matrix:
-        # One entry per test:<scenario> task in configs-homelab/tests/molecule/taskfile.yml - keep in sync.
-        scenario: ['common', 'omarchy', 'netaudit']
+        # Repo-root-relative scenario folders; the test:* task takes a path as well as a name.
+        scenario: ${{ fromJSON(needs.find-molecule.outputs.scenarios) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -227,8 +270,7 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'shellcheck',
-      'lint'
+      'find-molecule-cloud'
     ]
     # needs: [
     #   'validate-opentofu',
@@ -239,8 +281,8 @@ jobs:
       # Run every scenario to the end, so one failing role doesn't hide failures in another.
       fail-fast: false
       matrix:
-        # One entry per test:<scenario> task in configs-cloud/digital-ocean/tests/molecule/taskfile.yml - keep in sync.
-        scenario: ['motd', 'alloy', 'fantasy-hockey']
+        # Repo-root-relative scenario folders; the test:* task takes a path as well as a name.
+        scenario: ${{ fromJSON(needs.find-molecule-cloud.outputs.scenarios) }}
     steps:
       # Submodules are needed: the root taskfile includes taskfiles from the .task submodule.
       - name: Checkout code
