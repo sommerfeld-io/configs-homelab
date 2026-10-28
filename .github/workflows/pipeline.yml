@@ -64,7 +64,10 @@ jobs:
   # Every folder with a tracked versions.tf, the same list task lint validates.
   find-opentofu-roots:
     runs-on: ubuntu-latest
-    needs: shellcheck
+    needs: [
+      'shellcheck',
+      'lint'
+    ]
     permissions:
       contents: read
     outputs:
@@ -83,7 +86,10 @@ jobs:
   # Every folder with a tracked inspec.yml, the same list task homelab:inspec:check checks.
   find-inspec-modules:
     runs-on: ubuntu-latest
-    needs: shellcheck
+    needs: [
+      'shellcheck',
+      'lint'
+    ]
     permissions:
       contents: read
     outputs:
