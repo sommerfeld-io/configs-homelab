@@ -505,6 +505,17 @@ So that broken cloud configs fail before merge.
 **Then** each playbook passes `ansible-playbook --syntax-check` without the vault password (for example by moving the vault-free parts into imported playbooks, or giving the check a dummy vault file)
 **And** a check fails when a cloud playbook uses a collection that is not pinned in `configs-cloud/digital-ocean/ansible/requirements.yml`
 
+The next two criteria fold in the Epic 9 deferrals (Epic 9 retro item 44, findings C1 and C2; `deferred-work.md`, spec-9-1 and spec-9-2 entries).
+
+**Given** the fleet Alloy template `configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2` and the DigitalOcean template `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`, where `alloy validate` accepts a misspelled collector name such as `wifix`
+**When** `task lint` and CI run
+**Then** a check fails unless `enable_collectors = ["wifi"]` is in `prometheus.exporter.unix "integrations_node_exporter"` of the fleet template
+**And** the cloud `alloy` Molecule verify asserts that the rendered cloud config has no `wifi` collector
+
+**Given** the Git Sync manifests under `grafana-cloud/manifests/git-sync/`
+**When** `task lint` and CI run
+**Then** a check fails when a manifest does not parse as JSON, when two manifests share a `metadata.name`, or when there are more than 20 Git Sync resources (folders plus dashboards)
+
 ### Story 6.2: Remote state with locking
 
 As an operator,

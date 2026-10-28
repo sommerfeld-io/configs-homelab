@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-23-2026 20:24
+last_updated: 10-28-2026 12:00
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -428,7 +428,7 @@ action_items:
       collector in the fleet template and absent in the cloud template, and a Git
       Sync manifest check (parse, unique metadata.name, at most 20 resources)"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
   - id: "epic-9-retro-item-45-decide-whether-ssid-bssid-and-mac_addres"
     epic: 9
