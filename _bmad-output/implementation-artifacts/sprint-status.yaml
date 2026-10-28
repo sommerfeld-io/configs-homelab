@@ -92,7 +92,8 @@ development_status:
   epic-9-retrospective: done
 
   epic-6: backlog
-  6-1-ci-static-checks-for-opentofu-and-ansible: backlog
+  # 6.1 re-scoped on 2026-10-28 to the cloud alloy Molecule wifi assert (user decision)
+  6-1-molecule-check-that-the-cloud-alloy-config-has-no-wi-fi-collector: backlog
   6-2-remote-state-with-locking: backlog
   6-3-cloud-deployment-yml-with-org-secrets-and-ci-ssh-key: backlog
   epic-6-retrospective: optional

@@ -32,7 +32,7 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-1-dynamic-inventory-and-base-provision-yml.md`
   summary: Add an automated check for the dynamic inventory groups, the droplet `tags` merge and the `changed=0` second run.
-  evidence: Only static linters reach `configs-cloud`; a wrong `do_tags` key silently leaves the `ubuntu` or `fantasy-hockey` group empty. Needs a token or fixture, fits Story 6.1.
+  evidence: Only static linters reach `configs-cloud`; a wrong `do_tags` key silently leaves the `ubuntu` or `fantasy-hockey` group empty. Needs a token or fixture. Not part of Story 6.1 (user decision 2026-10-28).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-3-2-swap-and-alloy-on-the-droplet-with-environment-and-stage-labels.md`
   summary: Add an automated check that renders the cloud Alloy template and the inventory stage/environment values, and asserts swap and the active config on the droplet.
@@ -185,7 +185,7 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-8-1-digitalocean-dns-zone-do-sommerfeld-app-in-opentofu.md`
   summary: The DNS record derivation, the four preconditions and the CAA issuer set in `dns.tf` (and the stage precondition in `droplets.tf`) have no repeatable plan-level test; a broken key template or a dropped precondition passes `fmt -check` and `tofu validate` (Story 6.1).
-  evidence: `tofu validate` now runs in `task lint` (`63fabb4`, `6da3d31`) and in the `validate-opentofu` CI job (`3e90479`, `a96b137`), but validate does not evaluate preconditions or `for_each` keys against the `droplets` map; no `.tftest.hcl` exists. Fix: a `tofu test` with `mock_provider`, run in `task lint` and CI. Now Story 6.1's first acceptance criterion; delete this entry when Story 6.1 is done.
+  evidence: `tofu validate` now runs in `task lint` (`63fabb4`, `6da3d31`) and in the `validate-opentofu` CI job (`3e90479`, `a96b137`), but validate does not evaluate preconditions or `for_each` keys against the `droplets` map; no `.tftest.hcl` exists. Not fixed with `tofu test` and `mock_provider`: Story 6.1 dropped that criterion (user decision 2026-10-28); to be tested later against the real provisioned infrastructure (InSpec is the candidate). Delete this entry when Story 6.1 is done.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-35-opentofu-lint-without-init.md`
   summary: Make CI run the `task cloud:digital-ocean:opentofu:validate` and `task grafana-cloud:validate` entry points (fresh checkout, lock file unchanged) instead of an inlined copy of their commands.
@@ -197,11 +197,11 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: Nothing automated guards the Wi-Fi collector: a misspelled or dropped `enable_collectors = ["wifi"]` in the fleet Alloy template, or one added to the DigitalOcean template, passes `task lint` and CI.
-  evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario renders the fleet template (the cloud `alloy` scenario renders the cloud template only and does not assert the collector's absence). Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Fits Epic 6 (CI checks). Now a Story 6.1 acceptance criterion (Epic 9 retro item 44); delete this entry when Story 6.1 is done.
+  evidence: `alloy validate` v1.16.0 and v1.21.0 exit 0 for `enable_collectors = ["wifix"]`, and `alloy run` skips the unknown name without an error (2026-10-23); no Molecule scenario renders the fleet template (the cloud `alloy` scenario renders the cloud template only and does not assert the collector's absence). Fix: a lint check (or Alloy role scenario) that asserts the collector in the fleet template and its absence in the cloud template. Story 6.1 adds only the cloud-template assert (separate entry below); the fleet-template check was dropped and `alloy validate` stays unchanged (user decision 2026-10-28), so the fleet half stays deferred.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
   summary: No `task lint` or CI step reads the Git Sync manifests: a JSON parse error, a duplicate `metadata.name` across dashboards, or more than 20 Git Sync resources reaches `main` green.
-  evidence: Only ls-lint touches `grafana-cloud/manifests/git-sync/` (filenames). `6813c9f` put two dashboards with `metadata.name` `000000013` (`fritz-box-status.json`, `network-fritz-box-status.json`) on `feat/epic-9` and every check passed (Story 9.2 review, verification-gap layer). Fix: a `jq` check in `task lint` and CI for parse, unique `metadata.name` and count <= 20. Same gap as the Story 5.1 triage row 1; fits Epic 6. Now a Story 6.1 acceptance criterion (Epic 9 retro item 44); delete this entry when Story 6.1 is done.
+  evidence: Only ls-lint touches `grafana-cloud/manifests/git-sync/` (filenames). `6813c9f` put two dashboards with `metadata.name` `000000013` (`fritz-box-status.json`, `network-fritz-box-status.json`) on `feat/epic-9` and every check passed (Story 9.2 review, verification-gap layer). Fix: a `jq` check in `task lint` and CI for parse, unique `metadata.name` and count <= 20. Same gap as the Story 5.1 triage row 1; Dropped from Story 6.1 (user decision 2026-10-28); stays deferred.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
   summary: `grafana-cloud/manifests/git-sync/README.md` forbids manual edits, while hand-written dashboards (5.1, 9.2) are the established way to add one; nobody owns re-committing what Git Sync writes back after the first sync.
@@ -211,10 +211,10 @@
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-2-wi-fi-dashboard-in-the-git-sync-folder-network.md`
   summary: The cloud `alloy` Molecule verify does not assert that the rendered cloud config has no `wifi` collector, so copying the line into the cloud template passes `molecule-cloud`.
-  evidence: `configs-cloud/digital-ocean/tests/molecule/alloy/molecule/default/verify.yml` asserts labels, `'github' not in alloy_config` and `'remotecfg' not in alloy_config` only. A one-line assert fixes it, but Epic 9 forbids any change under `configs-cloud/`; do it with the fleet guard in Epic 6. Now a Story 6.1 acceptance criterion (Epic 9 retro item 44); delete this entry when Story 6.1 is done.
+  evidence: `configs-cloud/digital-ocean/tests/molecule/alloy/molecule/default/verify.yml` asserts labels, `'github' not in alloy_config` and `'remotecfg' not in alloy_config` only. A one-line assert fixes it, but Epic 9 forbids any change under `configs-cloud/`; Now Story 6.1's only acceptance criterion (Epic 9 retro item 44, re-scoped 2026-10-28); delete this entry when Story 6.1 is done.
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: The fleet Wi-Fi collector line and the Git Sync manifests (parse, unique `metadata.name`, count <= 20) still have no standing check; both are already logged above and fit Epic 6.
-  evidence: Code review 2026-10-23, verification-gap layer; same entries as the Story 9.1 and 9.2 deferrals. Now a Story 6.1 acceptance criterion (Epic 9 retro item 44); delete this entry when Story 6.1 is done.
+  evidence: Code review 2026-10-23, verification-gap layer; same entries as the Story 9.1 and 9.2 deferrals. Both were dropped from Story 6.1 (user decision 2026-10-28) and stay deferred in those entries; delete this entry when Story 6.1 is done.
 
 ## Deferred from: spec-epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift (2026-10-28)
 

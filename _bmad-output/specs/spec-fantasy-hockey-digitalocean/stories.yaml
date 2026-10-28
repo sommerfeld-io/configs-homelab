@@ -112,12 +112,12 @@
     Caddy exports no certificate metric, so days to expiry come from Story 5.2's synthetic check: build after 5.2.
     Caddy masks client IPs in the access log (IPv4 /24, IPv6 /48).
 - id: "14"
-  title: CI static checks for OpenTofu and Ansible
+  title: Molecule check that the cloud Alloy config has no Wi-Fi collector
   description: >-
-    Run the new linters and static checks for configs-cloud in CI, in pipeline.yml or a dedicated workflow, the same way as today (CAP-5, CAP-6).
-    tofu fmt -check (CI lint matrix) and tofu validate (validate-opentofu CI job) already run, also in task lint (Epic 8 retro finding A2 and item 35), so the OpenTofu part is a tofu test plan test with mock_provider (re-scoped by Epic 8 retro item 39): make the locals it needs injectable, then check the dns.tf record derivation, the exact CAA set and the five preconditions (four in dns.tf, the stage list in droplets.tf).
-    Also covers the parts of epic-3 retro item 15 that are not Molecule tests: a vault-free syntax check of the cloud playbooks and a check that every collection they use is pinned in requirements.yml (see deferred-work.md).
-    Also covers the Epic 9 deferrals (Epic 9 retro item 44): a check that the fleet Alloy template turns on the wifi collector, a cloud alloy Molecule assert that the rendered cloud config has none, and a Git Sync manifest check (JSON parses, unique metadata.name, at most 20 resources).
+    Add an assert to the cloud alloy Molecule verify that the rendered cloud config has no wifi collector (Epic 9 retro item 44, finding C1).
+    tofu fmt -check and tofu validate already run in CI and task lint (Epic 8 retro finding A2 and item 35).
+    Re-scoped on 2026-10-28 by user decision: no tofu test with mock_provider and no vault-free playbook syntax or collection pin check (to be tested later against the real provisioned infrastructure, InSpec is the candidate), no fleet Alloy template check (alloy validate unchanged), no Git Sync manifest check, no dynamic inventory check.
+    When done, delete the deferred-work.md entries for the tofu test plan-level tests, the cloud alloy Molecule assert and the combined fleet line and Git Sync note.
     Docs updated in the same change.
 - id: "15"
   title: Remote state with locking

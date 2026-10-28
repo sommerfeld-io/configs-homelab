@@ -486,35 +486,29 @@ So that DigitalOcean is authoritative for every cloud hostname without an outage
 
 Changes under `configs-cloud/digital-ocean` are applied by a workflow with shared state.
 
-### Story 6.1: CI static checks for OpenTofu and Ansible
+### Story 6.1: Molecule check that the cloud Alloy config has no Wi-Fi collector
 
 As an operator,
-I want the new linters and static checks in CI,
-So that broken cloud configs fail before merge.
+I want the cloud `alloy` Molecule scenario to reject a `wifi` collector in the rendered droplet config,
+So that a Wi-Fi collector copied into the DigitalOcean template fails before merge.
 
 **Acceptance Criteria:**
 
-`tofu fmt -check` (`lint-opentofu` in the CI lint matrix) and `tofu validate` (`validate-opentofu` CI job) already run for every OpenTofu root, and both run in `task lint` (off-story commits `63fabb4`, `3e90479`, `a96b137`, Epic 8 retro finding A2; Epic 8 retro item 35, `6da3d31`). ansible-lint runs in the CI lint matrix. This story adds what is still missing (re-scoped by Epic 8 retro item 39).
+`tofu fmt -check` (`lint-opentofu` in the CI lint matrix) and `tofu validate` (`validate-opentofu` CI job) already run for every OpenTofu root, and both run in `task lint` (off-story commits `63fabb4`, `3e90479`, `a96b137`, Epic 8 retro finding A2; Epic 8 retro item 35, `6da3d31`). ansible-lint runs in the CI lint matrix. This story adds only the cloud half of the Epic 9 Wi-Fi collector deferral (Epic 9 retro item 44, finding C1).
 
-**Given** `configs-cloud/digital-ocean/opentofu/`, whose inputs (the `droplets` map, `dns_external_records`, `dns_caa_issuers`) are `locals` today, which `tofu test` cannot override
-**When** the story makes those inputs injectable (for example variables whose defaults are today's values) and `tofu test` runs with `mock_provider` in `task lint` and in CI, without a token or state
-**Then** it checks the record derivation from the `droplets` map (`<key>.<stage>`, `dns_aliases`, `dns_external_records`), the exact CAA set (`0 issue` for `letsencrypt.org.` and `sectigo.com.`, TTL 3600), and that each of the five preconditions (four in `dns.tf`, the stage list in `droplets.tf`) fails the plan on its bad input
+Re-scoped on 2026-10-28 by user decision. Out of scope:
 
-**Given** `provision.yml` and every cloud playbook
-**When** CI runs
-**Then** each playbook passes `ansible-playbook --syntax-check` without the vault password (for example by moving the vault-free parts into imported playbooks, or giving the check a dummy vault file)
-**And** a check fails when a cloud playbook uses a collection that is not pinned in `configs-cloud/digital-ocean/ansible/requirements.yml`
+- `tofu test` with `mock_provider` for `dns.tf` and `droplets.tf`, and the vault-free `ansible-playbook --syntax-check` with the collection pin check: both are to be tested later against the real provisioned infrastructure (InSpec is the candidate).
+- A lint check that the fleet Alloy template enables the `wifi` collector; `alloy validate` is not changed.
+- A Git Sync manifest check (JSON parse, unique `metadata.name`, at most 20 resources).
+- An automated check of the dynamic inventory groups (`do_tags`).
 
-The next two criteria fold in the Epic 9 deferrals (Epic 9 retro item 44, findings C1 and C2; `deferred-work.md`, spec-9-1 and spec-9-2 entries).
+**Given** the DigitalOcean template `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`
+**When** the cloud `alloy` Molecule scenario runs (`task cloud:molecule:test:alloy` and the `molecule-cloud` CI job)
+**Then** its verify asserts that the rendered cloud config has no `wifi` collector, and the scenario fails when one is added
 
-**Given** the fleet Alloy template `configs-homelab/ansible/roles/grafana-cloud/alloy/templates/config.alloy.j2` and the DigitalOcean template `configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2`, where `alloy validate` accepts a misspelled collector name such as `wifix`
-**When** `task lint` and CI run
-**Then** a check fails unless `enable_collectors = ["wifi"]` is in `prometheus.exporter.unix "integrations_node_exporter"` of the fleet template
-**And** the cloud `alloy` Molecule verify asserts that the rendered cloud config has no `wifi` collector
-
-**Given** the Git Sync manifests under `grafana-cloud/manifests/git-sync/`
-**When** `task lint` and CI run
-**Then** a check fails when a manifest does not parse as JSON, when two manifests share a `metadata.name`, or when there are more than 20 Git Sync resources (folders plus dashboards)
+**Given** Story 6.1 is done
+**Then** the `deferred-work.md` entries for the `tofu test` plan-level tests (spec-8-1), the cloud `alloy` Molecule assert (code review of spec-9-1 and spec-9-2) and the combined fleet line and Git Sync note (same review) are deleted
 
 ### Story 6.2: Remote state with locking
 

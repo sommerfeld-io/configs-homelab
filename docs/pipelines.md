@@ -85,7 +85,7 @@ What exists today:
 
 What is planned (backlog stories in `_bmad-output/implementation-artifacts/sprint-status.yaml`, decided in architecture decision AD-10):
 
-- **Story 6.1:** OpenTofu and Ansible static checks in CI.
+- **Story 6.1:** a cloud `alloy` Molecule assert that the droplet's Alloy config has no Wi-Fi collector.
 - **Story 6.2:** remote OpenTofu state with locking, so CI and localhost can share the state.
 - **Story 6.3:** `cloud-deployment.yml`, the single CI apply path. It runs only on `main`, is serialized by a concurrency group, applies changes under `configs-cloud/digital-ocean` (static checks, OpenTofu, provisioning and app deployment) with organization secrets (DigitalOcean token, vault password, CI SSH key).
 
