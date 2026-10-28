@@ -16,6 +16,8 @@ but do i want this? because then, all unrelated features would also trigger clou
 
 otherwise, a dedicated pipeline should run only when cloud-configs or grafana-cloud changes. and pipeline.yml should not be triggered on these changes.
 
+Merging lots of dependabot PRs in the repo in quick succession would result in lots of pipeline runs that all would provision infrastructore omn digitalocean. even though they would not change anything (most likely), they are still obsolete. So maybe this is a point for a dedicated workflow? if so, the workflow would need linting and validation etc. too. but i would like to not duplicate this steps.
+
 ### Pipeline Testss
 
 Check with inspec or something if app is up-and-running.
