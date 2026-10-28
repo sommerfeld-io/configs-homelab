@@ -9,27 +9,34 @@ tasks:
 
   cleanup:
     desc: Cleanup inspec profiles and lock files
+    vars:
+      # Every folder with a tracked inspec.yml (repo-root-relative), the same list the
+      # check-inspec-profile CI job checks.
+      PROFILES: &inspec-profiles
+        sh: '"{{ .ROOT_DIR }}/.github/workflows/assets/find-inspec-modules.sh"'
     cmds:
-      - for: &inspec-profiles ['desktop-baseline', 'ollama', 'raspi-baseline', 'server-baseline']
+      - for: { var: PROFILES }
         cmd: |
-          sudo rm -rf {{ .TASKFILE_DIR }}/{{ .ITEM }}/vendor
-          sudo rm -rf {{ .TASKFILE_DIR }}/{{ .ITEM }}/inspec.lock
+          sudo rm -rf "{{ .ROOT_DIR }}/{{ .ITEM }}/vendor"
+          sudo rm -rf "{{ .ROOT_DIR }}/{{ .ITEM }}/inspec.lock"
 
   check:
-    desc: &inspec-check-desc Vendor and check InSpec profile validity
+    desc: Vendor and check every InSpec profile (folder with a tracked inspec.yml)
+    vars:
+      PROFILES: *inspec-profiles
     cmds:
-      - for: *inspec-profiles
+      - for: { var: PROFILES }
         task: check:{{ .ITEM }}
 
   check:*:
-    desc: *inspec-check-desc
+    desc: Vendor and check one InSpec profile, by name (in {{ .INSPEC_DIR }}) or by repo-root-relative path
     vars:
-      PROFILE: '{{ index .MATCH 0 }}'
+      # A bare name keeps `task homelab:inspec:check:ollama` working; a path is what the script lists.
+      PROFILE_DIR: '{{ $p := index .MATCH 0 }}{{ if contains "/" $p }}{{ $p }}{{ else }}{{ .INSPEC_DIR }}/{{ $p }}{{ end }}'
     cmds:
       - task: cleanup
-      - rm -f "{{ .TASKFILE_DIR }}/{{ .PROFILE }}/inspec.lock"
-      - docker compose run --rm inspec vendor "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --overwrite --chef-license=accept
-      - docker compose run --rm inspec check "{{ .INSPEC_DIR }}/{{ .PROFILE }}" --chef-license=accept
+      - docker compose run --rm inspec vendor "{{ .PROFILE_DIR }}" --overwrite --chef-license=accept
+      - docker compose run --rm inspec check "{{ .PROFILE_DIR }}" --chef-license=accept
 
   internal:run-profile:
     desc: Run the profile

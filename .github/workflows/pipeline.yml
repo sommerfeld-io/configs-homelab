@@ -54,6 +54,24 @@ jobs:
           echo "roots=$roots" >> "$GITHUB_OUTPUT"
         shell: bash
 
+  # Every folder with a tracked inspec.yml, the same list task homelab:inspec:check checks.
+  find-inspec-modules:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      profiles: ${{ steps.profiles.outputs.profiles }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Find InSpec profiles
+        id: profiles
+        # Assigned first, so a failing script fails this step with its own message.
+        run: |
+          profiles="$(.github/workflows/assets/find-inspec-modules.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          echo "profiles=$profiles" >> "$GITHUB_OUTPUT"
+        shell: bash
+
   lint:
     runs-on: ubuntu-latest
     name: ${{ matrix.linter }}
@@ -119,6 +137,7 @@ jobs:
     name: ${{ matrix.profile }}
     needs: [
       'shellcheck',
+      'find-inspec-modules',
       'lint'
     ]
     permissions:
@@ -127,7 +146,8 @@ jobs:
       INSPEC_IMAGE: chef/inspec:5.22.76
     strategy:
       matrix:
-        profile: ['desktop-baseline', 'raspi-baseline', 'ollama', 'server-baseline']
+        # Repo-root-relative profile paths; task homelab:inspec:check:* takes a path as well as a name.
+        profile: ${{ fromJSON(needs.find-inspec-modules.outputs.profiles) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7

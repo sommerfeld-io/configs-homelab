@@ -36,7 +36,7 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 
 `pipeline.yml` runs these jobs in a single workflow run:
 
-1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`), **`check-inspec-profile`** (matrix `desktop-baseline`, `raspi-baseline`, `ollama`, `server-baseline`) and **`find-opentofu-roots`** start in parallel. `find-opentofu-roots` lists every folder with a tracked `versions.tf` (`.github/workflows/assets/find-opentofu-roots.sh`); **`validate-opentofu`** then runs `tofu validate` once per root (one matrix entry each).
+1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`), **`find-opentofu-roots`** and **`find-inspec-modules`** start in parallel. `find-opentofu-roots` lists every folder with a tracked `versions.tf` (`.github/workflows/assets/find-opentofu-roots.sh`), `find-inspec-modules` every folder with a tracked `inspec.yml` (`.github/workflows/assets/find-inspec-modules.sh`). When `shellcheck` and `lint` succeed, **`validate-opentofu`** runs `tofu validate` once per root and **`check-inspec-profile`** runs `task homelab:inspec:check:<profile>` (vendor and `inspec check`) once per profile, one matrix entry each. `task opentofu:validate` and `task homelab:inspec:check` read the same lists, so a new root or profile needs no edit to either.
 2. When the checks and `validate-opentofu` succeed, **`molecule`** (matrix `common`, `omarchy`, `netaudit`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, `fantasy-hockey`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
 3. When `molecule` and `molecule-cloud` succeed, **`generate-docs`** starts.
     - `generate-docs` runs `task docs:generate`, builds the `docs-build` image and commits changed files as `docs: [Actions Bot] generate docs` to the pushed branch. This happens on every branch, not only on `main`. The docs site itself is not built or published here.
@@ -140,7 +140,7 @@ autonumber
 actor Developer
 participant "GitHub" as GH
 box "pipeline.yml run" #F2F7FC
-  participant "checks\nshellcheck, lint,\ncheck-inspec-profile,\nfind-opentofu-roots,\nvalidate-opentofu" as Checks
+  participant "checks\nshellcheck, lint,\nfind-opentofu-roots,\nvalidate-opentofu,\nfind-inspec-modules,\ncheck-inspec-profile" as Checks
   participant "molecule, molecule-cloud\nthen generate-docs" as Build
   participant "release-code\n(lib-release-code.yml)" as Rel
 end box
