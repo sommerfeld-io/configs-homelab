@@ -57,7 +57,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: ${{ matrix.linter }}
-    needs: shellcheck
     permissions:
       contents: read
     strategy:
@@ -85,7 +84,8 @@ jobs:
     name: ${{ matrix.root_module }}
     needs: [
       'shellcheck',
-      'find-opentofu-roots'
+      'find-opentofu-roots',
+      'lint',
     ]
     permissions:
       contents: read
@@ -117,7 +117,10 @@ jobs:
   check-inspec-profile:
     runs-on: ubuntu-latest
     name: ${{ matrix.profile }}
-    needs: shellcheck
+    needs: [
+      'shellcheck',
+      'lint'
+    ]
     permissions:
       contents: read
     env:
@@ -156,7 +159,6 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'lint',
       'validate-opentofu',
       'check-inspec-profile',
     ]
@@ -197,7 +199,6 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'lint',
       'validate-opentofu',
       'check-inspec-profile',
     ]
