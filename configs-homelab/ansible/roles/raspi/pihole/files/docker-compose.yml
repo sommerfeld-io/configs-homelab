@@ -13,5 +13,8 @@ services:
       TZ: Europe/Berlin
       FTLCONF_dns_listeningMode: ALL
       FTLCONF_webserver_api_password: 'pihole'
+      # All clients reach Pi-hole through the FRITZ!Box (192.168.178.1), so a
+      # per-client rate limit would lock out the whole network. 0 disables it.
+      FTLCONF_dns_rateLimit_count: 0
     volumes:
       - ./etc-pihole:/etc/pihole
