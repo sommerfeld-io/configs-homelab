@@ -2,6 +2,22 @@
 
 ## Pipeline
 
+Think about and refine "6.3 Cloud deployment.yml with org secrets and a CI SSH key"
+Do i want a decicated cloud-deployment.yml or should this be part of pipeline.yml and release.yml?
+Brainstorm and update?
+
+The OpenTofu for grafana cloud should also be its own github actions workflow and should deploy opentofu changes to grafana cloud.
+
+all workflows for cloud deployments should be named "Cloud Deploy: <type>" (e.g. "Cloud Deploy: Applications" for all app deployments or "Cloud Deploy: Grafana Cloud")
+
+Can dependabot commit with "feat:" prefix for fantasy-hockey updates? If so, the cloud deployments can be part of the release.yml and do not need a different pipeline with a dedicated trigger.
+
+but do i want this? because then, all unrelated features would also trigger cloud deployments. but since I do not change anything manually, this should not cause any harm and should instead avoid configuration drift.
+
+otherwise, a dedicated pipeline should run only when cloud-configs or grafana-cloud changes. and pipeline.yml should not be triggered on these changes.
+
+### Pipeline Testss
+
 Check with inspec or something if app is up-and-running.
 Also check with inspec if the cloud vm is provisioned the way we want it to.
 Bump versions in inspec yaml files on release.
@@ -9,16 +25,6 @@ Bump versions in inspec yaml files on release.
 Inpec Droplet
     Assert Timezone Europe/Berlin
     App up-and-running? ports listening? endpoints available?
-
-## Pipeline 2
-
-The OpenTofu for grafana cloud should also be its own github actions workflow and should deploy opentofu changes to grafana cloud.
-
-all workflows for cloud deployments should be named "Cloud Deploy: <type>" (e.g. "Cloud Deploy: Applications" for all app deployments or "Cloud Deploy: Grafana Cloud")
-
-## Pipeline IMPORTANT
-
-Can dependabot commit with "feat:" prefix for fantasy-hockey updates? If so, the cloud deployments can be part of the release.yml and do not need a different pipeline with a dedicated trigger. but do i want this? because then, all unrelated features would also trigger cloud deployments. but since I do not change anything manually, this should not cause any harm and should instead avoid configuration drift.
 
 ## Taskfile
 

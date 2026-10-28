@@ -28,12 +28,20 @@
       {{ fantasy_hockey_domain_addresses | join(', ') if fantasy_hockey_domain_addresses else 'nothing' }},
       not to the reserved IP {{ fantasy_hockey_reserved_ip }} of {{ inventory_hostname }}.
       Caddy would request a certificate that Let's Encrypt cannot validate, so
-      nothing was written. The A record is declared in OpenTofu: first check
-      `tofu -chdir=configs-cloud/digital-ocean/opentofu output dns_records`
-      from the repository root. If the record is right, wait for the cache
-      of the droplet's resolver (an NXDOMAIN up to 1800 s, an old address up
-      to 300 s, the wildcard CNAME from before the delegation up to 7200 s)
-      and check on the droplet with `getent ahostsv4 {{ fantasy_hockey_domain }}`.
-      Apply OpenTofu only if the record is wrong
-      (docs/cloud/digital-ocean/dns-zone.md).
+      nothing was written. First ask the authoritative nameserver, from the
+      repository root:
+      `task cloud:dns:check -- +norec @ns1.digitalocean.com {{ fantasy_hockey_domain }} A`.
+      If it does not answer the reserved IP (a wrong address, NXDOMAIN, or
+      REFUSED when the zone is gone), the A record is declared in OpenTofu:
+      run `task cloud:digital-ocean:opentofu:plan`, which compares the state
+      with DigitalOcean, and apply the fix
+      (docs/cloud/digital-ocean/dns-zone.md). If it answers the reserved IP,
+      check the delegation:
+      `task cloud:dns:check -- +norec @ns5.kasserver.com {{ fantasy_hockey_domain }} A`
+      must return a referral to ns1-ns3.digitalocean.com; if not, see R1 in
+      docs/cloud/digital-ocean/dns-delegation.md. If both are right, wait for
+      the cache of the droplet's resolver (an NXDOMAIN up to 1800 s, an old
+      address up to 300 s, the wildcard CNAME from before the delegation up
+      to 7200 s) and check on the droplet with
+      `getent ahostsv4 {{ fantasy_hockey_domain }}`.
     quiet: true

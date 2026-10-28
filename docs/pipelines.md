@@ -36,8 +36,8 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 
 `pipeline.yml` runs these jobs in a single workflow run:
 
-1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`) and **`check-inspec-profile`** (matrix `desktop-baseline`, `raspi-baseline`, `ollama`, `server-baseline`) start in parallel.
-2. When all three succeed, **`molecule`** (matrix `common`, `omarchy`, `netaudit`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, `fantasy-hockey`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
+1. **`shellcheck`**, **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`), **`check-inspec-profile`** (matrix `desktop-baseline`, `raspi-baseline`, `ollama`, `server-baseline`) and **`find-opentofu-roots`** start in parallel. `find-opentofu-roots` lists every folder with a tracked `versions.tf` (`.github/workflows/assets/find-opentofu-roots.sh`); **`validate-opentofu`** then runs `tofu validate` once per root (one matrix entry each).
+2. When the checks and `validate-opentofu` succeed, **`molecule`** (matrix `common`, `omarchy`, `netaudit`, the homelab roles) and **`molecule-cloud`** (matrix `motd`, `alloy`, `fantasy-hockey`, the roles the DigitalOcean droplet runs, see [Tests](cloud/digital-ocean/tests.md)) start in parallel. Every scenario runs to the end (`fail-fast: false`). Both jobs and `generate-docs` have `if: github.actor != 'dependabot[bot]'`.
 3. When `molecule` and `molecule-cloud` succeed, **`generate-docs`** starts.
     - `generate-docs` runs `task docs:generate`, builds the `docs-build` image and commits changed files as `docs: [Actions Bot] generate docs` to the pushed branch. This happens on every branch, not only on `main`. The docs site itself is not built or published here.
 4. When `generate-docs` succeeds, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
@@ -80,7 +80,7 @@ The two version-bump commits and the `generate-docs` commit do not start a new `
 What exists today:
 
 - **Local apply:** OpenTofu runs from the operator's devcontainer through `task cloud:digital-ocean:{init,fmt,plan,apply}` with a local state file. See [Tasks and Linters](cloud/digital-ocean/tasks-and-linters.md) and [Droplet](cloud/digital-ocean/droplet.md).
-- **CI checks:** a push that changes `configs-cloud/` runs `pipeline.yml`. It covers that folder with `lint-opentofu` (`tofu fmt -check`), ansible-lint, folderslint, ls-lint and yamllint, but it has no `tofu validate`, no plan and no apply.
+- **CI checks:** a push that changes `configs-cloud/` runs `pipeline.yml`. It covers that folder with `lint-opentofu` (`tofu fmt -check`), the `validate-opentofu` job (`tofu validate` for each OpenTofu root module), ansible-lint, folderslint, ls-lint and yamllint, but it runs no plan and no apply.
 
 What is planned (backlog stories in `_bmad-output/implementation-artifacts/sprint-status.yaml`, decided in architecture decision AD-10):
 
@@ -140,7 +140,7 @@ autonumber
 actor Developer
 participant "GitHub" as GH
 box "pipeline.yml run" #F2F7FC
-  participant "checks\nshellcheck, lint,\ncheck-inspec-profile" as Checks
+  participant "checks\nshellcheck, lint,\ncheck-inspec-profile,\nfind-opentofu-roots,\nvalidate-opentofu" as Checks
   participant "molecule, molecule-cloud\nthen generate-docs" as Build
   participant "release-code\n(lib-release-code.yml)" as Rel
 end box

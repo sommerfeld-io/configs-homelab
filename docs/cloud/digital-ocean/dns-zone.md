@@ -183,7 +183,7 @@ The droplet name and the hostname both use the map key, and the key is unique pe
 Run from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 
 1. `task cloud:digital-ocean:opentofu:init`, after provider changes or in a fresh clone.
-2. `task cloud:digital-ocean:opentofu:validate`: syntax and references, offline.
+2. `task opentofu:validate`: syntax and references of every OpenTofu root, offline once initialized.
 3. Write the plan to a file and list every action:
 
     ```bash
@@ -196,7 +196,7 @@ Run from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 5. Apply exactly the reviewed plan (manual, operator): `tofu -chdir=configs-cloud/digital-ocean/opentofu apply dns.tfplan`. Then delete `dns.tfplan`: it can contain state data.
 6. Plan again: `tofu -chdir=configs-cloud/digital-ocean/opentofu plan -detailed-exitcode` must print `No changes.` and exit 0. Exit code 2 means there are changes; a change right after an apply is a perpetual diff (see [Troubleshooting](#troubleshooting)).
 
-Before the first apply that adds the zone, back up the state outside the repository. `.gitignore` matches `*.tfstate` only, so a `terraform.tfstate.<suffix>` copy inside the repository could be committed:
+Before the first apply that adds the zone, back up the state outside the repository. `.gitignore` matches `*.tfstate`, `*.tfstate.*` and `*.tfplan`, but a backup under another name inside the repository could still be committed:
 
 ```bash
 mkdir -p ~/tfstate-backups
@@ -271,7 +271,7 @@ Without the `domain` scope, `tofu apply` fails with 403 when it creates the zone
 |---------------------------------------------------------|-------------------------|------------------------------------------------------------------------------------------------|
 | Derive record names and values from the droplet map     | OpenTofu (automated)    | `dns.tf`                                                                                       |
 | Check duplicate names, alias suffixes and external IPv4 | OpenTofu (automated)    | `tofu plan` (preconditions)                                                                    |
-| Format and lint `dns.tf`                                | `task lint` (automated) | devcontainer, pre-commit hook, CI                                                              |
+| Format, lint and validate `dns.tf`                      | `task lint` (automated) | devcontainer, pre-commit hook, CI (`lint-opentofu`, `validate-opentofu`)                       |
 | Add the `domain` scope to the API token                 | operator (manual)       | DigitalOcean control panel                                                                     |
 | Back up the state before the first DNS apply            | operator (manual)       | devcontainer                                                                                   |
 | Review the plan and apply                               | operator (manual)       | devcontainer                                                                                   |
