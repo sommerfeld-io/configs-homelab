@@ -273,8 +273,9 @@ jobs:
     needs: [
       'molecule',
       'molecule-cloud',
-      'shellcheck',
-      'lint'
+      'check-inspec-profile',
+      'validate-opentofu',
+
     ]
     # needs: [
     #   'molecule',
