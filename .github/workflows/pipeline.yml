@@ -84,7 +84,7 @@ jobs:
         shell: bash
 
   # Every folder with a tracked inspec.yml, the same list task homelab:inspec:check checks.
-  find-inspec-modules:
+  find-inspec-profiles:
     runs-on: ubuntu-latest
     needs: [
       'shellcheck',
@@ -101,7 +101,7 @@ jobs:
         id: profiles
         # Assigned first, so a failing script fails this step with its own message.
         run: |
-          profiles="$(.github/workflows/assets/find-inspec-modules.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          profiles="$(.github/workflows/assets/find-inspec-profiles.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
           echo "profiles=$profiles" >> "$GITHUB_OUTPUT"
         shell: bash
 
@@ -186,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     name: ${{ matrix.profile }}
     needs: [
-      'find-inspec-modules',
+      'find-inspec-profiles',
     ]
     permissions:
       contents: read
@@ -195,7 +195,7 @@ jobs:
     strategy:
       matrix:
         # Repo-root-relative profile paths; task homelab:inspec:check:* takes a path as well as a name.
-        profile: ${{ fromJSON(needs.find-inspec-modules.outputs.profiles) }}
+        profile: ${{ fromJSON(needs.find-inspec-profiles.outputs.profiles) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7

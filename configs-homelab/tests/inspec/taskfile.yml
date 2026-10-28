@@ -13,7 +13,7 @@ tasks:
       # Every folder with a tracked inspec.yml (repo-root-relative), the same list the
       # check-inspec-profile CI job checks.
       PROFILES: &inspec-profiles
-        sh: '"{{ .ROOT_DIR }}/.github/workflows/assets/find-inspec-modules.sh"'
+        sh: '"{{ .ROOT_DIR }}/.github/workflows/assets/find-inspec-profiles.sh"'
     cmds:
       - for: { var: PROFILES }
         cmd: |
