@@ -14,7 +14,7 @@ Every series and log line leaving a node carries the label `environment`, set as
 
 ## Wi-Fi Metrics
 
-The fleet template turns on the node_exporter `wifi` collector (`enable_collectors = ["wifi"]` in `prometheus.exporter.unix "integrations_node_exporter"`). It is off by default upstream. The DigitalOcean template does not turn it on.
+The fleet template turns on the node_exporter `wifi` collector (`enable_collectors = ["wifi"]` in `prometheus.exporter.unix "integrations_node_exporter"`). It is off by default upstream. The DigitalOcean template does not turn it on; the verify of the cloud `alloy` Molecule scenario (`configs-cloud/digital-ocean/tests/molecule/alloy/`) fails when the rendered cloud config contains `wifi`.
 
 The collector reads the Wi-Fi interface and its access-point connection through the kernel's nl80211 netlink interface. No `iw` or `wireless-tools` package is needed, and the role needs no change for it. When pi4-0002 logged "no supported wireless tool installed" and Grafana Cloud suggested installing `iw` or `wireless-tools`, the missing piece was this collector, not a package.
 

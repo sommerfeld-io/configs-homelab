@@ -37,6 +37,18 @@
           - "'github' not in alloy_config"
           - "'remotecfg' not in alloy_config"
 
+    # Story 6.1 (Epic 9 retro item 44): the wifi collector is fleet-only, the
+    # cloud template must not copy it. Any "wifi" text fails, so a wifi { }
+    # block is caught as well as enable_collectors = ["wifi"].
+    - name: Assert the cloud config has no wifi collector
+      vars:
+        alloy_config: "{{ alloy_config_file.content | b64decode }}"
+      ansible.builtin.assert:
+        that: "'wifi' not in alloy_config"
+        fail_msg: >-
+          The rendered cloud config contains "wifi". The wifi collector belongs in
+          the fleet template only, not in configs-cloud/digital-ocean/ansible/templates/alloy/config.alloy.j2.
+
     # Story 5.3: the Docker log source forwards to loki.process "caddy", which
     # labels Caddy's lines with log_type; the relabel rules give only the Caddy
     # container a stream label. The pipeline itself cannot run here (no Docker).
