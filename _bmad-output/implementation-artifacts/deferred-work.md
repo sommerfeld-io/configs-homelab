@@ -215,9 +215,6 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: The fleet Wi-Fi collector line and the Git Sync manifests (parse, unique `metadata.name`, count <= 20) still have no standing check; both are already logged above and fit Epic 6.
   evidence: Code review 2026-10-23, verification-gap layer; same entries as the Story 9.1 and 9.2 deferrals. Now a Story 6.1 acceptance criterion (Epic 9 retro item 44); delete this entry when Story 6.1 is done.
-- source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
-  summary: Decide whether the SSID, the access points' MACs (`bssid`, `mac_address`) and one extra series set per roam should go to Grafana Cloud, or be dropped or hashed in `prometheus.relabel "integrations_node_exporter"`.
-  evidence: The Alloy README states that they are sent; the 9.2 dashboard shows SSID/BSSID as the story asks. No recorded decision on sending network identifiers off-site or on the series cost of roaming (Free plan active-series limit); user decision.
 
 ## Deferred from: spec-epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift (2026-10-28)
 

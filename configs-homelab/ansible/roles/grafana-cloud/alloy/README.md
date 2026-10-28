@@ -32,7 +32,7 @@ Every station series carries the labels `device` (the interface, e.g. `wlan0`) a
 | `node_wifi_station_info`                      | Labels `device`, `ssid`, `bssid` and `mode`, value `1`       |
 | `node_wifi_interface_frequency_hertz`         | Channel frequency of the interface                           |
 
-The SSID and the access points' MAC addresses (`bssid`, `mac_address`) are sent to Grafana Cloud as labels.
+The SSID and the access points' MAC addresses (`bssid`, `mac_address`) are sent to Grafana Cloud as labels. This is on purpose: `prometheus.relabel "integrations_node_exporter"` neither drops nor hashes them, and the Network / Wi-Fi dashboard shows the SSID and BSSID. Each roam to another access point starts a new set of station series under the new `mac_address` and `bssid`.
 
 A node without a Wi-Fi interface sends no `node_wifi_*` series. A failing collector logs `collector failed` with `collector=wifi` at level `error` in the Alloy log (systemd journal, also in Loki). When the kernel has no nl80211 (no Wi-Fi driver loaded) or access is denied, the collector returns no data instead and logs only at debug level.
 
