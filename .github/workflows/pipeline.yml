@@ -183,9 +183,13 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'validate-opentofu',
-      'check-inspec-profile',
+      'shellcheck',
+      'lint'
     ]
+    # needs: [
+    #   'validate-opentofu',
+    #   'check-inspec-profile',
+    # ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     strategy:
       # Run every scenario to the end, so one failing role group doesn't hide failures in another.
@@ -223,9 +227,13 @@ jobs:
     permissions:
       contents: read
     needs: [
-      'validate-opentofu',
-      'check-inspec-profile',
+      'shellcheck',
+      'lint'
     ]
+    # needs: [
+    #   'validate-opentofu',
+    #   'check-inspec-profile',
+    # ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     strategy:
       # Run every scenario to the end, so one failing role doesn't hide failures in another.
@@ -265,7 +273,13 @@ jobs:
     needs: [
       'molecule',
       'molecule-cloud',
+      'shellcheck',
+      'lint'
     ]
+    # needs: [
+    #   'molecule',
+    #   'molecule-cloud',
+    # ]
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       contents: write
