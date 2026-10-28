@@ -112,7 +112,7 @@ Why this order: the NS records are added while the old KAS A record still exists
 | M10  | operator (manual)           | KAS                                    | yes, the same three records    | none, both sides answer alike    | [R1](#r1-broken-delegation)                  |
 | M11  | operator (manual)           | devcontainer                           | yes, read-only                 | none                             | [R1](#r1-broken-delegation)                  |
 | M12  | operator (manual)           | outside the home network, devcontainer | yes, read-only                 | none                             | [R1](#r1-broken-delegation)                  |
-| M13  | operator (manual)           | calendar, then as M11 and M12          | yes                            | none                             | [R1](#r1-broken-delegation)                  |
+| M13  | operator (manual)           | devcontainer                           | yes, read-only                 | none                             | [M11](#m11-check-the-delegation)             |
 | M14  | operator (manual)           | KAS                                    | yes, deleting twice is a no-op | only if the delegation is broken | [R3](#r3-failure-after-the-a-record-is-gone) |
 | M15  | operator (manual)           | devcontainer                           | yes, idempotent                | none                             | none needed                                  |
 | M16  | operator (manual)           | devcontainer                           | yes                            | none                             | none needed                                  |
@@ -157,7 +157,7 @@ Why this order: the NS records are added while the old KAS A record still exists
 
 - **When:** after M8a and M9.
 - **Where:** KAS → Tools → DNS-Einstellungen → `sommerfeld.app` → "Neuen DNS-Eintrag".
-- **Action (manual):** create the three records from [Delegation](#delegation): Name `do`, Type `NS`, Prio `0`, Data `ns1.digitalocean.com.`, then the same with `ns2.digitalocean.com.` and `ns3.digitalocean.com.`. **Keep the trailing dot.** Leave the A record `fantasy-hockey.prod.do` in place. Note the time (`date -u`): M13 counts from it. all-inkl says changes take up to 3 to 4 hours.
+- **Action (manual):** create the three records from [Delegation](#delegation): Name `do`, Type `NS`, Prio `0`, Data `ns1.digitalocean.com.`, then the same with `ns2.digitalocean.com.` and `ns3.digitalocean.com.`. **Keep the trailing dot.** Leave the A record `fantasy-hockey.prod.do` in place. Note the time (`date -u`): the 4 hours of M11's rollback count from it. all-inkl says changes take up to 3 to 4 hours.
 - **If the KAS refuses the NS records** (for example because the A record exists below `do`): stop. Do not delete the A record to make room, that opens a window in which the name may resolve to the wildcard. Re-plan.
 - **Repeat-safe:** yes, the same records. **Outage risk:** none, both sides answer the same IP. **Rollback:** [R1](#r1-broken-delegation).
 
@@ -178,22 +178,23 @@ Why this order: the NS records are added while the old KAS A record still exists
 - **Expected:** `302` to `/login`, `/login` `200`, `http://` `308` to `https://`, `/metrics` `404`; certificate issuer Let's Encrypt or, after a renewal through Caddy's fallback, ZeroSSL (`O=ZeroSSL`, a Sectigo CA), and expiry `Jan 13 18:13:07 2027 GMT` or later; CAA `0 issue "letsencrypt.org"` and `0 issue "sectigo.com"`.
 - **Repeat-safe:** yes. **Outage risk:** none. **Rollback:** red → [R1](#r1-broken-delegation). A ZeroSSL issuer alone is not red and no reason for R1: M8a allows it on purpose.
 
-### M13: Wait Two TTLs
+### M13: Confirm the Delegation Is Authoritative
 
-- **When:** after M12.
-- **Where:** calendar, then the devcontainer and outside the home network.
-- **Action (manual):** wait at least 4 hours (2 × the KAS TTL of 7200 s) after M10, ideally 24 hours. Then repeat M11 and M12 once.
-- **Why:** by then every resolver has expired the KAS answers and asks DigitalOcean.
-- **Repeat-safe:** yes. **Outage risk:** none. **Rollback:** red → [R1](#r1-broken-delegation).
+- **When:** once, after M12 has passed, at most 10 minutes before M14 with no KAS change in between. There is no waiting period: M14 may run as soon as the condition below holds.
+- **Where:** devcontainer.
+- **Action (manual, read-only):** the [authoritative KAS checks](#authoritative-kas) and the [trace](#trace).
+- **Condition:** `ns5` **and** `ns6.kasserver.com` both return a referral: `flags: qr` without `aa`, `ANSWER: 0`, and the three NS records `ns1`/`ns2`/`ns3.digitalocean.com.` in the authority section. `+trace` ends with `Received … from … (nsN.digitalocean.com)`, and its final `IN A` answer is the reserved IP, the value of the KAS A record M14 deletes (`129.212.195.118`).
+- **Why:** once both KAS nameservers refer, the A record is occluded and never served, so deleting it changes no answer. A resolver that still caches the old A record holds the same IP that DigitalOcean answers. Waiting 2 × the KAS TTL of 7200 s after M10 would protect nothing extra, so the condition replaces that wait.
+- **Repeat-safe:** yes, read-only. **Outage risk:** none. **Rollback:** red → do not run M14; go back to [M11](#m11-check-the-delegation), which opens the all-inkl ticket when the KAS answers with `aa` ([Occluded A Record](#occluded-a-record)) and rolls back with R1 when still red 4 hours after M10.
 
 ### M14: Delete the Obsolete KAS A Record
 
-- **When:** only after M13's wait has passed and M12 has passed.
+- **When:** only when M12 has passed and M13's condition held at most 10 minutes ago, with no KAS change since.
 - **Where:** KAS → Tools → DNS-Einstellungen → `sommerfeld.app`.
 - **Action (manual):** delete the A record `fantasy-hockey.prod.do` (value `129.212.195.118`). Touch nothing else.
 - **Why:** the delegation occludes it, and a stale copy at the KAS would mislead the next operator.
-- **Verify:** `ns5.kasserver.com` still refers; Google and Cloudflare still return the reserved IP; the KAS list equals the M7 baseline minus the A record plus the three NS records.
-- **Repeat-safe:** yes. **Outage risk:** only if the delegation is broken, which M11 to M13 excluded. **Rollback:** [R3](#r3-failure-after-the-a-record-is-gone).
+- **Verify:** `ns5` and `ns6.kasserver.com` still refer; Google and Cloudflare still return the reserved IP; the KAS list equals the M7 baseline minus the A record plus the three NS records.
+- **Repeat-safe:** yes. **Outage risk:** only if the delegation is broken, which M13's check at most 10 minutes before this step excludes. **Rollback:** [R3](#r3-failure-after-the-a-record-is-gone).
 
 ### M15: Deploy Once
 
@@ -430,11 +431,13 @@ group HTTPS verification
   end
 end
 
-group Wait 2 x TTL
-  ... at least 4 h after M10 (2 x 7200 s), ideally 24 h ...
-  operator -> resolvers : M13 repeat M11 and M12
-  alt validation fails
-    operator -> kas : R1 delete the three NS records (manual)
+group Confirm the delegation (at most 10 min before M14, no wait)
+  operator -> parent : M13 +norec @ns5 and @ns6 A
+  parent --> operator : referral from both: NS x3, no aa
+  operator -> dodns : M13 +trace (root -> KAS -> DigitalOcean)
+  dodns --> operator : last answer from nsN.digitalocean.com: reserved IP
+  alt red
+    operator -> operator : no M14, back to M11
   end
 end
 

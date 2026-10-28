@@ -71,10 +71,12 @@ The record goes in the same apply as the droplet: removing the droplet entry rem
 
 ## History
 
-| Date       | Change                                                                                                                                 |
-|------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| 2026-10-15 | The A record is created by hand in the KAS zone `sommerfeld.app` (Story 7.1), TTL 7200                                                 |
-| 2026-10-22 | OpenTofu creates the DigitalOcean zone `do.sommerfeld.app` with the same record, not yet delegated (Story 8.1)                         |
-| 2026-10-22 | OpenTofu adds `CAA 0 issue "sectigo.com"` for ZeroSSL (Story 8.2, [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records))       |
-| 2026-10-22 | The KAS delegates `do` to DigitalOcean with three NS records at 18:06 UTC (Story 8.2, [M10](dns-delegation.md#m10-add-the-ns-records)) |
-| 2026-10-22 | The hand-made KAS A record is deleted at 18:10 UTC (Story 8.2, [M14](dns-delegation.md#m14-delete-the-obsolete-kas-a-record))          |
+| Date       | Change                                                                                                                                                                                                                                                                          |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2026-10-15 | The A record is created by hand in the KAS zone `sommerfeld.app` (Story 7.1), TTL 7200                                                                                                                                                                                          |
+| 2026-10-22 | OpenTofu creates the DigitalOcean zone `do.sommerfeld.app` with the same record, not yet delegated (Story 8.1)                                                                                                                                                                  |
+| 2026-10-22 | OpenTofu adds `CAA 0 issue "sectigo.com"` for ZeroSSL (Story 8.2, [M8a](dns-delegation.md#m8a-allow-zerossl-in-the-caa-records))                                                                                                                                                |
+| 2026-10-22 | The KAS delegates `do` to DigitalOcean with three NS records at 18:06 UTC (Story 8.2, [M10](dns-delegation.md#m10-add-the-ns-records))                                                                                                                                          |
+| 2026-10-22 | The hand-made KAS A record is deleted at 18:10 UTC (Story 8.2, [M14](dns-delegation.md#m14-delete-the-obsolete-kas-a-record))                                                                                                                                                   |
+| 2026-10-22 | The M13 wait of 2 × 7200 s was skipped: the A record was deleted at 18:10:02 UTC, 4 min after M10 (18:06:05 UTC). Harmless, because at 18:06–18:07 UTC (M11) both KAS nameservers already referred, so the record was occluded and any cached copy held the same IP (Story 8.2) |
+| 2026-10-28 | Runbook [M13](dns-delegation.md#m13-confirm-the-delegation-is-authoritative) checks the referral on both KAS nameservers and the trace instead of waiting 2 × TTL (Epic 8 retro item 38)                                                                                        |

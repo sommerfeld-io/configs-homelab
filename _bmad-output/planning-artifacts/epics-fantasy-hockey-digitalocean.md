@@ -474,7 +474,7 @@ So that DigitalOcean is authoritative for every cloud hostname without an outage
 **When** the KAS and public resolvers are queried
 **Then** the KAS refers to DigitalOcean, public resolvers return the reserved IP and the CAA record from the DigitalOcean zone, and records outside `do` are unchanged
 
-**Given** the delegation verified for at least twice the KAS TTL and HTTPS verified from outside
+**Given** both KAS nameservers `ns5` and `ns6.kasserver.com` returning a referral to the three DigitalOcean nameservers (no `aa`, `ANSWER: 0`), `+trace` ending at `nsN.digitalocean.com`, re-checked at most 10 minutes before the deletion, and HTTPS verified from outside
 **When** the KAS A record `fantasy-hockey.prod.do` is deleted
 **Then** the app stays reachable over HTTPS with the same certificate
 

@@ -233,3 +233,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-36-harden-the-validate-opentofu-ci-job.md`
   summary: The `lint-opentofu` image (`ghcr.io/opentofu/opentofu:1.13.2` in `docker-compose.yml`) no longer matches `required_version = "1.12.8"`, while `docs/cloud/digital-ocean/api-token.md` says the pin matches that image.
   evidence: Blind-hunter review of item 36 (2026-10-28); predates item 36. Decide whether the linter follows the pin or the devcontainer, then fix the image or the doc.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-38-reconcile-runbook-m13-and-the-epic-8-ac.md`
+  summary: Check whether a single `+norec` query to `ns5`/`ns6.kasserver.com` can hit an instance that has not yet received the NS records, so that runbook M13 passes while another instance still serves the A record with `aa`.
+  evidence: Unverified, would be medium. all-inkl quotes 3 to 4 hours for changes to take effect; M13 now gates M14 on the referral without a wait. Settled by whether the KAS nameservers are anycast with independently updated zone copies, and whether NS additions and the A deletion reach each instance in order (repeated queries over time after a test change).

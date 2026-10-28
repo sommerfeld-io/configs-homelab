@@ -379,7 +379,7 @@ action_items:
       both KAS nameservers referring and +trace ending at DigitalOcean (or keep the
       wait), and note the skipped wait in domain.md History"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
   - id: "epic-8-retro-item-39-reconcile-story-6-1-scope-and-deferred-w"
     epic: 8
