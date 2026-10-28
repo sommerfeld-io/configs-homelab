@@ -224,3 +224,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift.md`
   summary: Older DNS docs next to the item 37 fixes still use state-based or stale commands: `dns-zone.md` Troubleshooting > NXDOMAIN compares with `tofu output dns_records`, "Import an Existing Zone or Record" uses a bare `doctl compute domain records list` without the R4 key rules, and `docs/pipelines.md` names `task cloud:digital-ocean:{init,fmt,plan,apply}` while the tasks are `cloud:digital-ocean:opentofu:*`.
   evidence: Blind-hunter review of item 37 (2026-10-28); `task --list-all` shows only `cloud:digital-ocean:opentofu:plan` and `:validate`. Not caused by item 37, which fixed only the R6-R11 locations.
+
+## Deferred from: spec-epic-8-retro-item-36-harden-the-validate-opentofu-ci-job (2026-10-28)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-36-harden-the-validate-opentofu-ci-job.md`
+  summary: OpenTofu formatting still uses hand-kept root lists (`task lint` calls `cloud:digital-ocean:opentofu:fmt` and `grafana-cloud:fmt`; `lint-opentofu` runs `fmt -check -recursive configs-cloud grafana-cloud`), so a root outside those trees is validated but never formatted or fmt-checked.
+  evidence: Blind-hunter review of item 36 (2026-10-28); item 36 (R2) covered the validate lists only. Fix: drive fmt from `.github/workflows/assets/find-opentofu-roots.sh` too, or run `fmt -recursive` from the repository root.
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-36-harden-the-validate-opentofu-ci-job.md`
+  summary: The `lint-opentofu` image (`ghcr.io/opentofu/opentofu:1.13.2` in `docker-compose.yml`) no longer matches `required_version = "1.12.8"`, while `docs/cloud/digital-ocean/api-token.md` says the pin matches that image.
+  evidence: Blind-hunter review of item 36 (2026-10-28); predates item 36. Decide whether the linter follows the pin or the devcontainer, then fix the image or the doc.

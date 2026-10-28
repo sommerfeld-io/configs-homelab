@@ -61,37 +61,48 @@ jobs:
         run: docker compose up "lint-$LINTER" --exit-code-from "lint-$LINTER"
         shell: bash
 
+  # Every folder with a tracked versions.tf, the same list task lint validates.
+  find-opentofu-roots:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      roots: ${{ steps.roots.outputs.roots }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Find OpenTofu root modules
+        id: roots
+        # Assigned first, so a failing script fails this step with its own message.
+        run: |
+          roots="$(.github/workflows/assets/find-opentofu-roots.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          echo "roots=$roots" >> "$GITHUB_OUTPUT"
+        shell: bash
+
   validate-opentofu:
     runs-on: ubuntu-latest
     name: ${{ matrix.root_module }}
+    needs: find-opentofu-roots
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
-        # One entry per OpenTofu root module (folder with a versions.tf) - keep in sync.
-        root_module: ['configs-cloud/digital-ocean/opentofu', 'grafana-cloud/opentofu']
+        root_module: ${{ fromJSON(needs.find-opentofu-roots.outputs.roots) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        with:
-          submodules: true
-      - name: Login to Container Registry
-        uses: docker/login-action@v4.6.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
       # Runs the OpenTofu version the root pins in required_version, so the image never drifts
-      # from the pin. init -backend=false needs no token and no state; the providers come from
+      # from the pin. The image comes from ghcr.io, so the job needs no Docker Hub login; add the
+      # login back if a Docker Hub image is ever pulled here (anonymous pull limits). init -backend=false needs no token and no state; the providers come from
       # the committed lock file.
       - name: Run tofu init and validate
         env:
           ROOT: ${{ matrix.root_module }}
         run: |
           version="$(sed -n 's/^ *required_version *= *"\([^"]*\)".*/\1/p' "$ROOT/versions.tf")"
-          if [ -z "$version" ]; then
-            echo "::error file=$ROOT/versions.tf::no exact required_version found"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error file=$ROOT/versions.tf::required_version must be an exact x.y.z version (the image tag), found '$version'"
             exit 1
           fi
           tofu=(docker run --rm --volume "$PWD:/workspace" --workdir "/workspace/$ROOT" "ghcr.io/opentofu/opentofu:$version")

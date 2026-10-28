@@ -183,7 +183,7 @@ The droplet name and the hostname both use the map key, and the key is unique pe
 Run from the repository root with `DIGITALOCEAN_ACCESS_TOKEN` set:
 
 1. `task cloud:digital-ocean:opentofu:init`, after provider changes or in a fresh clone.
-2. `task cloud:digital-ocean:opentofu:validate`: syntax and references, offline.
+2. `task opentofu:validate`: syntax and references of every OpenTofu root, offline once initialized.
 3. Write the plan to a file and list every action:
 
     ```bash

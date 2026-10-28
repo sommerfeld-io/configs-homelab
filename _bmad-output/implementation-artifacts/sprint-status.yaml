@@ -363,7 +363,7 @@ action_items:
       instead of a hand-kept matrix (same list for task lint), require an exact x.y.z
       required_version, drop the unneeded Docker Hub login and submodule checkout"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
   - id: "epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift-pipeline"
     epic: 8
