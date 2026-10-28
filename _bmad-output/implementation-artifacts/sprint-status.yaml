@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 08-24-2026 23:05
-last_updated: 10-28-2026 12:00
+last_updated: 10-28-2026 15:09
 project: configs-homelab
 project_key: NOKEY
 tracking_system: file-system
@@ -411,7 +411,7 @@ action_items:
       Wi-Fi results (count by instance, device of node_wifi_station_info) to the spec-9-1
       Acceptance Check"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
   - id: "epic-9-retro-item-43-record-epic-9-process-lessons-as-project"
     epic: 9
@@ -420,7 +420,7 @@ action_items:
       re-applying edits that vanish during a user commit (pre-commit stash); text
       added while fixing a review finding is a claim to check"
     owner: "user"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-9-retro-2026-10-23.md"
   - id: "epic-9-retro-item-44-when-epic-6-is-planned-fold-the-epic-9-d"
     epic: 9
