@@ -80,7 +80,7 @@ The two version-bump commits and the `generate-docs` commit do not start a new `
 What exists today:
 
 - **Local apply:** OpenTofu runs from the operator's devcontainer through `task cloud:digital-ocean:{init,fmt,plan,apply}` with a local state file. See [Tasks and Linters](cloud/digital-ocean/tasks-and-linters.md) and [Droplet](cloud/digital-ocean/droplet.md).
-- **CI checks:** a push that changes `configs-cloud/` runs `pipeline.yml`. It covers that folder with `lint-opentofu` (`tofu fmt -check`), ansible-lint, folderslint, ls-lint and yamllint, but it has no `tofu validate`, no plan and no apply.
+- **CI checks:** a push that changes `configs-cloud/` runs `pipeline.yml`. It covers that folder with `lint-opentofu` (`tofu fmt -check`), the `validate-opentofu` job (`tofu validate` for each OpenTofu root module), ansible-lint, folderslint, ls-lint and yamllint, but it runs no plan and no apply.
 
 What is planned (backlog stories in `_bmad-output/implementation-artifacts/sprint-status.yaml`, decided in architecture decision AD-10):
 

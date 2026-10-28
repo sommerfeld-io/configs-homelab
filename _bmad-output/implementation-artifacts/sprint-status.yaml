@@ -371,7 +371,7 @@ action_items:
       in-place claim for stage/key changes, dns-zone.md steps table, R4 import keys
       from doctl, DNS guard fail_msg checks authoritative DNS first, *.tfplan in .gitignore"
     owner: "dev loop"
-    status: open
+    status: done
     ref: "_bmad-output/implementation-artifacts/epic-8-retro-2026-10-22.md"
   - id: "epic-8-retro-item-38-reconcile-runbook-m13-and-the-epic-8-ac"
     epic: 8

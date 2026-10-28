@@ -218,3 +218,9 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-9-1-enable-the-wi-fi-collector-in-the-homelab-alloy-config.md`
   summary: Decide whether the SSID, the access points' MACs (`bssid`, `mac_address`) and one extra series set per roam should go to Grafana Cloud, or be dropped or hashed in `prometheus.relabel "integrations_node_exporter"`.
   evidence: The Alloy README states that they are sent; the 9.2 dashboard shows SSID/BSSID as the story asks. No recorded decision on sending network identifiers off-site or on the series cost of roaming (Free plan active-series limit); user decision.
+
+## Deferred from: spec-epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift (2026-10-28)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-epic-8-retro-item-37-fix-epic-8-docs-and-guard-drift.md`
+  summary: Older DNS docs next to the item 37 fixes still use state-based or stale commands: `dns-zone.md` Troubleshooting > NXDOMAIN compares with `tofu output dns_records`, "Import an Existing Zone or Record" uses a bare `doctl compute domain records list` without the R4 key rules, and `docs/pipelines.md` names `task cloud:digital-ocean:{init,fmt,plan,apply}` while the tasks are `cloud:digital-ocean:opentofu:*`.
+  evidence: Blind-hunter review of item 37 (2026-10-28); `task --list-all` shows only `cloud:digital-ocean:opentofu:plan` and `:validate`. Not caused by item 37, which fixed only the R6-R11 locations.
