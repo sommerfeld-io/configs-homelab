@@ -36,9 +36,28 @@ jobs:
         with:
           ignore_paths: node_modules target
 
+  # Every folder with a tracked versions.tf, the same list task lint validates.
+  find-opentofu-roots:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      roots: ${{ steps.roots.outputs.roots }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Find OpenTofu root modules
+        id: roots
+        # Assigned first, so a failing script fails this step with its own message.
+        run: |
+          roots="$(.github/workflows/assets/find-opentofu-roots.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
+          echo "roots=$roots" >> "$GITHUB_OUTPUT"
+        shell: bash
+
   lint:
     runs-on: ubuntu-latest
     name: ${{ matrix.linter }}
+    needs: shellcheck
     permissions:
       contents: read
     strategy:
@@ -61,28 +80,13 @@ jobs:
         run: docker compose up "lint-$LINTER" --exit-code-from "lint-$LINTER"
         shell: bash
 
-  # Every folder with a tracked versions.tf, the same list task lint validates.
-  find-opentofu-roots:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      roots: ${{ steps.roots.outputs.roots }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Find OpenTofu root modules
-        id: roots
-        # Assigned first, so a failing script fails this step with its own message.
-        run: |
-          roots="$(.github/workflows/assets/find-opentofu-roots.sh | jq --raw-input --slurp --compact-output 'split("\n") | map(select(. != ""))')"
-          echo "roots=$roots" >> "$GITHUB_OUTPUT"
-        shell: bash
-
   validate-opentofu:
     runs-on: ubuntu-latest
     name: ${{ matrix.root_module }}
-    needs: find-opentofu-roots
+    needs: [
+      'shellcheck',
+      'find-opentofu-roots'
+    ]
     permissions:
       contents: read
     strategy:
@@ -113,6 +117,7 @@ jobs:
   check-inspec-profile:
     runs-on: ubuntu-latest
     name: ${{ matrix.profile }}
+    needs: shellcheck
     permissions:
       contents: read
     env:
@@ -153,7 +158,6 @@ jobs:
     needs: [
       'lint',
       'validate-opentofu',
-      'shellcheck',
       'check-inspec-profile',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
@@ -195,7 +199,6 @@ jobs:
     needs: [
       'lint',
       'validate-opentofu',
-      'shellcheck',
       'check-inspec-profile',
     ]
     if: ${{ github.actor != 'dependabot[bot]' }}
