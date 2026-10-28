@@ -48,3 +48,17 @@ tasks:
       - doctl compute droplet list
       - doctl compute reserved-ip list
       - doctl compute volume list
+      - doctl compute tag list
+      - doctl compute ssh-key list
+      - doctl compute domain list
+      - |
+        for domain in $(doctl compute domain list --format Domain --no-header); do
+          echo "Records of $domain"
+          doctl compute domain records list "$domain"
+        done
+      - doctl projects list
+      - |
+        for project in $(doctl projects list --format ID --no-header); do
+          echo "Resources of project $(doctl projects get "$project" --format Name --no-header)"
+          doctl projects resources list "$project"
+        done
