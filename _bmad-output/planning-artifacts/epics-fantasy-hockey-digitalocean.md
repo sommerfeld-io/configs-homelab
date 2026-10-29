@@ -518,9 +518,17 @@ So that localhost and GitHub Actions can alternate runs without corrupting state
 
 **Acceptance Criteria:**
 
-Open decision (user, added 2026-10-29): whether to pay for DO Spaces. Spaces costs a flat $5/month as soon as it is enabled, which includes 250 GiB of storage; the $0.02/GiB rate applies only above that. The state is a few KB, so the real cost is the $5 minimum, which nearly doubles the epic's budget of about $6.20 per month. Check the current price on the DigitalOcean pricing page, and decide before the backend is chosen: pay for Spaces (one provider, one bill) or use an S3-compatible store with a free tier (for example Cloudflare R2 or Backblaze B2), which means a second provider account and keys. Either candidate must pass the lock criterion below.
+Backend options (user, added 2026-10-29). DigitalOcean and OpenTofu have no hosted state service; the backend is one of these. The user leans towards DO Spaces, but the payment decision below is still open. A Gemini guide for the Spaces setup, with the points where it does not match this repo, is in `research-opentofu-state-on-do-spaces-2026-10-29.md` next to this file.
 
-**Given** the cost of DO Spaces against a free-tier S3-compatible store
+- **DO Spaces (preferred candidate):** OpenTofu's `s3` backend pointed at the Spaces endpoint, with native locking (`use_lockfile = true`, needs OpenTofu 1.10 or later; the repo pins `1.12.8`). One provider and one bill; no DynamoDB needed.
+    - Cost (open decision): Spaces costs a flat $5/month as soon as it is enabled, which includes 250 GiB of storage; the $0.02/GiB rate applies only above that. The state is a few KB, so the real cost is the $5 minimum, which nearly doubles the epic's budget of about $6.20 per month. Check the current price on the DigitalOcean pricing page before deciding.
+    - One bucket only, because the only data to store is OpenTofu state. Each OpenTofu root gets its own key under a folder structure: `opentofu/state/digital-ocean` for this root and `opentofu/state/grafana-cloud` for the Grafana Cloud root, so the Grafana Cloud local state moves to the same bucket.
+    - Spaces access keys are separate from the DigitalOcean API token. The `s3` backend reads them from `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`; locally they come from the vault, in CI from org-level secrets.
+    - Unconfirmed: whether Spaces honours the conditional writes that `use_lockfile` relies on. The lock criterion below is the proof.
+- **AWS S3:** the same `s3` backend and `use_lockfile` on real S3, where locking is confirmed. Usage-based cost of cents per month, no minimum. Adds an AWS account and an IAM user with keys.
+- **CI-only OpenTofu with git-backed state:** only CI runs OpenTofu, and a concurrency group makes sure no two GitHub Actions runs overlap. The state lives encrypted (OpenTofu state encryption) in a dedicated private repo, never in this public one. A pipeline run clones the state repo to a temporary location (or syncs it in) to make the state available to OpenTofu, and pushes it back after the run. This changes the story's goal: localhost no longer runs OpenTofu. The user judges it a non-standard custom implementation that might be unstable.
+
+**Given** the backend options above (DO Spaces with its $5/month minimum, AWS S3, CI-only with git-backed state)
 **When** the backend is chosen
 **Then** the user's decision and its reason are recorded in the story and in the backend docs
 
@@ -528,7 +536,11 @@ Open decision (user, added 2026-10-29): whether to pay for DO Spaces. Spaces cos
 **When** two runs start at once
 **Then** the second is blocked by the lock
 
-**Given** the existing local state
+**Given** DO Spaces is chosen
+**When** the bucket is created
+**Then** it is the only bucket, and the DigitalOcean and Grafana Cloud states live under `opentofu/state/digital-ocean` and `opentofu/state/grafana-cloud`
+
+**Given** the existing local state of each root that moves to the backend
 **When** I migrate it
 **Then** local and CI see the same state
 **And** the backend and its backup are documented

@@ -128,7 +128,7 @@
   invoke_dev_with: >-
     The backend is not decided yet: prototype and confirm locking support before migrating the local state.
     Spaces keys are separate from the DigitalOcean API token.
-    Open user decision: DO Spaces costs a flat $5 per month (250 GiB included, $0.02/GiB only above that), nearly doubling the budget of about $6.20 per month for a state of a few KB. Decide whether to pay for Spaces or use a free-tier S3-compatible store (for example Cloudflare R2 or Backblaze B2) before choosing the backend, and record the decision.
+    Backend options (user, 2026-10-29; details in Story 6.2 of epics-fantasy-hockey-digitalocean.md): DO Spaces (preferred; flat $5 per month minimum, nearly doubling the budget of about $6.20, payment still undecided; one bucket with keys opentofu/state/digital-ocean and opentofu/state/grafana-cloud, so the Grafana Cloud state moves too; use_lockfile on Spaces unconfirmed), AWS S3 (use_lockfile confirmed, cents per month, needs an AWS account), or CI-only OpenTofu with encrypted state in a dedicated private repo cloned by the pipeline and a concurrency group (judged non-standard and possibly unstable). Record the decision before migrating.
 - id: "16"
   title: cloud-deployment.yml with org secrets and CI SSH key
   description: >-
