@@ -518,6 +518,12 @@ So that localhost and GitHub Actions can alternate runs without corrupting state
 
 **Acceptance Criteria:**
 
+Open decision (user, added 2026-10-29): whether to pay for DO Spaces. Spaces costs a flat $5/month as soon as it is enabled, which includes 250 GiB of storage; the $0.02/GiB rate applies only above that. The state is a few KB, so the real cost is the $5 minimum, which nearly doubles the epic's budget of about $6.20 per month. Check the current price on the DigitalOcean pricing page, and decide before the backend is chosen: pay for Spaces (one provider, one bill) or use an S3-compatible store with a free tier (for example Cloudflare R2 or Backblaze B2), which means a second provider account and keys. Either candidate must pass the lock criterion below.
+
+**Given** the cost of DO Spaces against a free-tier S3-compatible store
+**When** the backend is chosen
+**Then** the user's decision and its reason are recorded in the story and in the backend docs
+
 **Given** a chosen backend (DO Spaces is the candidate)
 **When** two runs start at once
 **Then** the second is blocked by the lock

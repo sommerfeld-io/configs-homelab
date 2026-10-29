@@ -128,6 +128,7 @@
   invoke_dev_with: >-
     The backend is not decided yet: prototype and confirm locking support before migrating the local state.
     Spaces keys are separate from the DigitalOcean API token.
+    Open user decision: DO Spaces costs a flat $5 per month (250 GiB included, $0.02/GiB only above that), nearly doubling the budget of about $6.20 per month for a state of a few KB. Decide whether to pay for Spaces or use a free-tier S3-compatible store (for example Cloudflare R2 or Backblaze B2) before choosing the backend, and record the decision.
 - id: "16"
   title: cloud-deployment.yml with org secrets and CI SSH key
   description: >-
