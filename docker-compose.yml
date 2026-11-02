@@ -1,6 +1,5 @@
 ---
 x-volumes: &volumes
-  - /etc/timezone:/etc/timezone:ro
   - /etc/localtime:/etc/localtime:ro
   - project-root-volume:/workspaces/configs-homelab
 x-workdir: &default-workdir /workspaces/configs-homelab
