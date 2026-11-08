@@ -76,7 +76,7 @@ services:
     tty: *tty
 
   lint-alloy-config:
-    image: grafana/alloy:v1.21.2
+    image: grafana/alloy:v1.21.3
     volumes: *volumes
     working_dir: *default-workdir
     entrypoint:
