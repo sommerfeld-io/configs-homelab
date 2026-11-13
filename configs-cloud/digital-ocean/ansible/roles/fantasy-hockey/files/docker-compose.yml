@@ -28,7 +28,7 @@ services:
   # Terminates TLS for the domain in the Caddyfile and proxies to app:8080. The
   # certificate and the ACME account live in ./caddy/data on the volume.
   caddy:
-    image: caddy:2.11.7
+    image: caddy:2.11.8
     container_name: ${COMPOSE_PROJECT_NAME}-caddy
     restart: unless-stopped
     depends_on:
