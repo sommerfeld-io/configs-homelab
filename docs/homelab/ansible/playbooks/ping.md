@@ -7,6 +7,7 @@ This Ansible playbook performs a lightweight connectivity and Python execution c
 - **Node Reachability Check**: Connects to every configured host in the Ansible inventory
 - **Ansible Ping Validation**: Executes `ansible.builtin.ping` to confirm remote module execution works
 - **Fact Gathering**: Collects OS, network, and hardware facts from every reachable node
+- **Privileged Users**: Lists superusers (UID 0) and sudoers (members of the `sudo`, `wheel` and `admin` groups) on every node
 
 The playbook targets all inventory nodes to provide a simple, centralized operational readiness check for the full home lab.
 

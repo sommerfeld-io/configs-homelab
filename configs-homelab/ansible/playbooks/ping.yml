@@ -58,3 +58,28 @@
         - name: SSH  ----  Print id_rsa.pub
           ansible.builtin.debug:
             var: ssh_pub_key.stdout_lines
+
+    - name: Users  ----  List superusers and sudoers
+      block:
+        - name: Users  ----  Find superusers (UID 0)
+          ansible.builtin.shell:
+            cmd: getent passwd | awk -F ':' '$3 == 0 { print $1 }'
+          args:
+            executable: /bin/bash
+          register: superusers
+          changed_when: false
+          failed_when: false
+        - name: Users  ----  Print superusers
+          ansible.builtin.debug:
+            var: superusers.stdout_lines
+        - name: Users  ----  Find sudoers (members of sudo, wheel and admin groups)
+          ansible.builtin.shell:
+            cmd: for group in sudo wheel admin; do getent group "$group"; done
+          args:
+            executable: /bin/bash
+          register: sudoers
+          changed_when: false
+          failed_when: false
+        - name: Users  ----  Print sudoers
+          ansible.builtin.debug:
+            var: sudoers.stdout_lines
