@@ -89,6 +89,11 @@
         append: true
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/bash
+    # ~/.config, ~/tmp, ~/work and the repo folders (dir_* in ../vars/main.yml). Timezone and
+    # apt keyring from the same role are system-wide and already done in the first play.
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/filesystem
+        tasks_from: 10-common-directories
     # Same .gitconfig (and identity) as the actual default_user. only works with git
     # locally: its SSH key is not registered anywhere, so it cannot push or pull.
     - ansible.builtin.include_role:
