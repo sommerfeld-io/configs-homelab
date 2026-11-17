@@ -5,6 +5,9 @@
 # ~/.ssh/id_rsa.pub is added to dest's ~/.ssh/authorized_keys, and dest's host key is added
 # to src's ~/.ssh/known_hosts. Every entry is a trust edge - only add the pairs you need.
 # Hostnames must match the inventory (ansible/hosts.yml).
+#
+# The `cylon` AI user on caprica (playbooks/server.yml) is deliberately left out: pairs
+# only ever apply to default_user, and cylon must not reach other nodes or droplets.
 ssh_trust_pairs:
   - { src: picon.fritz.box, dest: picon.fritz.box }
   - { src: picon.fritz.box, dest: kobol.fritz.box }

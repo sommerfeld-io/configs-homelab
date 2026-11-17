@@ -13,6 +13,24 @@ tasks:
 
   # ===============================================================================================
 
+  user:cylon:
+    desc: 'Switch to the cylon AI user (login shell)'
+    interactive: true
+    vars:
+      USER: cylon
+    cmds:
+      - sudo -iu {{ .USER }}
+
+  user:sebastian:
+    desc: 'Switch to sebastian (login shell, asks for the password of sebastian)'
+    interactive: true
+    vars:
+      USER: sebastian
+    cmds:
+      - su - {{ .USER }}
+
+  # ===============================================================================================
+
   system:info:
     desc: 'Show system information'
     cmds:

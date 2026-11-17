@@ -67,6 +67,50 @@
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/claude
 
+- name: Install and configure the AI user
+  hosts: ubuntu_server
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vars/main.yml
+    - ../vars/amd64.yml
+  vars:
+    # Every role below targets default_user, so overriding it here provisions cylon exactly
+    # like the actual {{ default_user }}. cylon is never added to ../vars/ssh-trust.yml, so
+    # its key is not authorized on any other node or droplet.
+    default_user: cylon
+  tasks:
+    - name: AI User  ----  Create user and add to docker group
+      ansible.builtin.user:
+        name: "{{ default_user }}"
+        shell: /bin/bash
+        create_home: true # Copies the /etc/skel .bashrc, the roles below append to it
+        groups: docker
+        append: true
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/bash
+    # Same .gitconfig (and identity) as the actual default_user. only works with git
+    # locally: its SSH key is not registered anywhere, so it cannot push or pull.
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/git
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/node
+        tasks_from: main
+    # Deploys taskfile-caprica.yml, so `task user:sebastian` works from the cylon shell
+    - ansible.builtin.include_role:
+        name: ../roles/common/taskfile-dev
+    # Becoming an unprivileged user other than the connection user needs setfacl to hand
+    # Ansible's temp files over. Without it Ansible falls back to macOS-only `chmod +a`.
+    - name: AI User  ----  Install acl (needed for become_user to an unprivileged user)
+      ansible.builtin.apt:
+        name: acl
+        state: present
+    # atuin installs into the user's home, so it runs for this user instead of root
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/atuin
+        apply:
+          become_user: "{{ default_user }}"
+
 - name: Install and configure caprica specifics
   hosts: caprica.fritz.box
   gather_facts: true
