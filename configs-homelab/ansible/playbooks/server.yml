@@ -105,9 +105,20 @@
       ansible.builtin.apt:
         name: acl
         state: present
-    # atuin installs into the user's home, so it runs for this user instead of root
+    # atuin, Claude Code and the Copilot CLI install into the user's home (~/.atuin,
+    # ~/.local), so they run as this user instead of root - same as for the actual
+    # default_user in the non-root play above.
     - ansible.builtin.include_role:
         name: ../roles/ansible-roles-collection/atuin
+        apply:
+          become_user: "{{ default_user }}"
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/node
+        tasks_from: modules-ai
+        apply:
+          become_user: "{{ default_user }}"
+    - ansible.builtin.include_role:
+        name: ../roles/ansible-roles-collection/claude
         apply:
           become_user: "{{ default_user }}"
 
