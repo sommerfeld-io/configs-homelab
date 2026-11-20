@@ -3,6 +3,15 @@ version: '3.42.1'
 
 tasks:
 
+  dockerhub:login:
+    desc: Log in to Docker Hub and the Docker Hardened Images registry (dhi.io)
+    interactive: true
+    cmds:
+      - docker login
+      - docker login dhi.io
+
+  # ===============================================================================================
+
   docker:stack:portainer:
     vars:
       STACK: portainer

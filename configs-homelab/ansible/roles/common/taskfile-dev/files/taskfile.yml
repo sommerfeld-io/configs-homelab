@@ -3,17 +3,12 @@ version: '3.42.1'
 
 tasks:
 
-  conky:
-    desc: Start all conky instances
-    dir: .config/conky
+  dockerhub:login:
+    desc: Log in to Docker Hub and the Docker Hardened Images registry (dhi.io)
+    interactive: true
     cmds:
-      - killall conky | true
-      - for: ["docker.conkyrc", "host.conkyrc"]
-        cmd: |
-          (
-            conky -c {{ .ITEM }} &
-            sleep 8
-          )
+      - docker login
+      - docker login dhi.io
 
   # ===============================================================================================
 
