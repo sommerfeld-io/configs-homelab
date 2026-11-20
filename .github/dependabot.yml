@@ -1,5 +1,17 @@
 ---
 version: 2
+registries:
+  dockerhub:
+    type: docker-registry
+    url: registry.hub.docker.com
+    username: ${{ secrets.DOCKERHUB_USER }}
+    password: ${{ secrets.DOCKERHUB_TOKEN }}
+  dhi:
+    type: docker-registry
+    url: dhi.io
+    username: ${{ secrets.DOCKERHUB_USER }}
+    password: ${{ secrets.DOCKERHUB_TOKEN }}
+
 updates:
   - package-ecosystem: github-actions
     directory: /
@@ -7,41 +19,65 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker
+    registries:
+      - dockerhub
+      - dhi
     directory: .devcontainer
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: /
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-homelab/ansible/roles/common/taskfile-dev/files/docker-stacks/portainer
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-homelab/ansible/roles/grafana-cloud/exporters/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-homelab/ansible/roles/media/jellyfin/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-homelab/ansible/roles/raspi/fritz-box-exporter/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-homelab/ansible/roles/raspi/pihole/files
     schedule:
       interval: weekly
 
   - package-ecosystem: docker-compose
+    registries:
+      - dockerhub
+      - dhi
     directory: configs-cloud/digital-ocean/ansible/roles/fantasy-hockey/files
     schedule:
       interval: weekly
