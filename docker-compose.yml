@@ -34,7 +34,6 @@ services:
       - .github/workflows/codeql.yml
       - .github/workflows/dev-environment.yml
       - .github/workflows/docs.yml
-      - .github/workflows/housekeeping-issues-ai-refinement.yml
       - .github/workflows/housekeeping-issues.yml
       - .github/workflows/housekeeping-labels.yml
       - .github/workflows/housekeeping-project.yml
