@@ -327,54 +327,15 @@ jobs:
           # in detail instead of just ok/changed/failed.
           MOLECULE_VERBOSITY: '1'
 
-  # ----- Build Docs stage ------------------------------------------------------------------------
-
-  generate-docs:
-    runs-on: ubuntu-latest
-    needs: [
-      'molecule',
-      'molecule-cloud',
-      'check-inspec-profile',
-      'validate-opentofu',
-
-    ]
-    # needs: [
-    #   'molecule',
-    #   'molecule-cloud',
-    # ]
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-        with:
-          submodules: true
-          ref: ${{github.ref}}
-      - name: Install Task
-        uses: arduino/setup-task@v3.0.0
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run task to generate docs
-        run: task docs:generate
-        shell: bash
-      - name: Build docs-build image
-        run: docker compose build docs-build
-        shell: bash
-      - name: Commit and push
-        uses: EndBug/add-and-commit@v11.1.1
-        with:
-          author_name: sebastian
-          author_email: sebastian@sommerfeld.io
-          message: 'docs: [Actions Bot] generate docs'
-
   # ----- Release stage ---------------------------------------------------------------------------
 
   release-code:
     uses: sommerfeld-io/.github/.github/workflows/lib-release-code.yml@main
     needs: [
-      'generate-docs',
+      'molecule',
+      'molecule-cloud',
+      'check-inspec-profile',
+      'validate-opentofu',
     ]
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     secrets:

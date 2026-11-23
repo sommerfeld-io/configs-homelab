@@ -1,0 +1,82 @@
+---
+name: "Pipeline: Docs"
+
+# Builds the docs site (docs/, built with MkDocs: task docs:generate + docs-build) and publishes it
+# to GitHub Pages. Runs the same tasks as locally - no generate or build logic lives here. This is
+# the only workflow that builds and deploys the docs.
+
+on:
+  workflow_run:
+    workflows: ["Pipeline: Commit + Test", "Pipeline: Release"]
+    types: [completed]
+  schedule:
+    - cron: '0 4 * * *'  # every night at 04:00 (UTC)
+  workflow_dispatch:
+
+# Never more than one docs build at a time. A running build is not cancelled (it may be deploying);
+# GitHub keeps only the newest pending run.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: docker.io
+
+jobs:
+
+  docs:
+    runs-on: ubuntu-latest
+    # After "Pipeline: Commit + Test" only for runs on main (not for other branches). Runs of
+    # "Pipeline: Release" belong to a tag, so they are not filtered by branch.
+    if: >-
+      ${{ github.event_name != 'workflow_run'
+      || github.event.workflow_run.name == 'Pipeline: Release'
+      || github.event.workflow_run.head_branch == 'main' }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write  # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Install Task
+        uses: arduino/setup-task@v3.0.0
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Container Registry
+        uses: docker/login-action@v4.8.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # ----- Markdown docs (MkDocs) -----
+      - name: Generate Markdown docs
+        run: task docs:generate
+        shell: bash
+      - name: Build docs page
+        run: docker compose up docs-build --exit-code-from docs-build
+        shell: bash
+      - name: List contents
+        run: ls -alF target/docs/site
+        shell: bash
+
+      # ----- Publish -----
+      - name: Setup Pages
+        uses: actions/configure-pages@v6.0.0
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: target/docs/site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
