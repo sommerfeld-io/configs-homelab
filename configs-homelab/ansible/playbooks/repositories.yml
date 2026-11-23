@@ -32,7 +32,6 @@
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "container-images" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "fantasy-hockey" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "inspec-profiles" }
-          - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "skills" }
           - { dest: "{{ dir_repos_sommerfeld_io }}", org: "sommerfeld-io", repo: "tech-radar" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "bookmarks" }
           - { dest: "{{ dir_repos_sebastian_sommerfeld_io }}", org: "sebastian-sommerfeld-io", repo: "gatus" }
@@ -74,6 +73,7 @@
         - "{{ dir_repos_sommerfeld_io }}/gatus-status-page"
         - "{{ dir_repos_sommerfeld_io }}/github-metrics-exporter"
         - "{{ dir_repos_sommerfeld_io }}/release-watcher"
+        - "{{ dir_repos_sommerfeld_io }}/skills"
         - "{{ dir_repos_sommerfeld_io }}/talos-runtime"
         - "{{ dir_repos_sommerfeld_io }}/telemetry"
         - "{{ dir_repos_sommerfeld_io }}/template-repository"
