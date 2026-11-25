@@ -33,10 +33,9 @@ services:
       - -color
       - .github/workflows/codeql.yml
       - .github/workflows/dev-environment.yml
-      - .github/workflows/housekeeping-issues-ai-refinement.yml
+      - .github/workflows/docs.yml
       - .github/workflows/housekeeping-issues.yml
       - .github/workflows/housekeeping-labels.yml
-      - .github/workflows/housekeeping-project.yml
       - .github/workflows/pipeline.yml
       - .github/workflows/release.yml
     tty: *tty
@@ -76,7 +75,7 @@ services:
     tty: *tty
 
   lint-alloy-config:
-    image: grafana/alloy:v1.21.3
+    image: grafana/alloy:v1.22.0
     volumes: *volumes
     working_dir: *default-workdir
     entrypoint:
