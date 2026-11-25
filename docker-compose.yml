@@ -36,7 +36,6 @@ services:
       - .github/workflows/docs.yml
       - .github/workflows/housekeeping-issues.yml
       - .github/workflows/housekeeping-labels.yml
-      - .github/workflows/housekeeping-project.yml
       - .github/workflows/pipeline.yml
       - .github/workflows/release.yml
     tty: *tty
