@@ -93,7 +93,8 @@
           --enable-discussions \
           --enable-issues \
           --enable-projects \
-          --enable-wiki=false
+          --enable-wiki=false \
+          --delete-branch-on-merge
       args:
         executable: /bin/bash
       vars:
