@@ -8,7 +8,7 @@ The three workflows that matter for changes in this repository are:
 
 - **`pipeline.yml` ("Pipeline: Commit + Test")** checks every push and, on `main`, runs Semantic Release.
 - **`release.yml` ("Pipeline: Release")** runs when Semantic Release creates a GitHub release. It completes the release notes.
-- **`docs.yml` ("Pipeline: Docs")** generates and builds the documentation site and publishes it to GitHub Pages. It is the only workflow that builds and deploys the docs.
+- **`docs.yml` ("Pipeline: Docs")** checks the links in all Markdown files and generates and builds the documentation site and publishes it to GitHub Pages. It is the only workflow that lints Markdown and builds and deploys the docs.
 
 There is **no `cloud-deployment.yml` yet**. Nothing in CI applies OpenTofu or deploys to DigitalOcean today; changes under `configs-cloud/` are applied by an operator from a workstation (see [Cloud Deployment Pipeline](#cloud-deployment-pipeline)).
 
@@ -22,7 +22,7 @@ Every workflow run is independent. A run never "continues" in another workflow; 
 |--------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|------------------------------------------------------|
 | `pipeline.yml` (Pipeline: Commit + Test)                     | `push`; `schedule` `0 1 * * 2` (Tuesday 01:00 UTC)                                                                            | Push: all branches except `dependabot/**`, and not when every changed file matches `paths-ignore` (`**.adoc`, `**.md`, `docs/**`, `.devcontainer/**`, `.github/workflows/dev-environment.yml`, `.vscode/**`, `.gitkeep`). Tag pushes never start it. Job conditions: see [Release Pipeline](#release-pipeline) | Lint, ShellCheck, InSpec profile checks, Molecule, Semantic Release          | On `main` possibly a version, tag and GitHub release |
 | `release.yml` (Pipeline: Release)                            | `release` with type `created`                                                                                                 | None                                                                                                                                                                                                                                                                                                           | Complete the release notes                                                   | Edited GitHub release notes                          |
-| `docs.yml` (Pipeline: Docs)                                  | `workflow_run` `completed` of `pipeline.yml` and `release.yml`; `schedule` `0 4 * * *` (daily 04:00 UTC); `workflow_dispatch` | After `pipeline.yml` only for runs on `main`; after `release.yml` always. `concurrency` group: one docs run at a time, a running build is not cancelled                                                                                                                                                        | Generate (`task docs:generate`) and build (MkDocs) the docs site, publish it | Deployment to the `github-pages` environment         |
+| `docs.yml` (Pipeline: Docs) | `push`; `workflow_run` `completed` of `pipeline.yml` and `release.yml`; `schedule` `0 4 * * *` (daily 04:00 UTC); `workflow_dispatch` | Push: all branches except `dependabot/**`, no `paths-ignore` (Markdown-only changes run it). `markdown-links` job: not after `workflow_run`. `docs` job: push only on `main`; after `pipeline.yml` only for runs on `main`; after `release.yml` always. `concurrency` group per branch: one run on `main` at a time, a running build is not cancelled | Check Markdown links (`markdown-links`); generate (`task docs:generate`) and build (MkDocs) the docs site, publish it | Link check result; deployment to the `github-pages` environment |
 | `codeql.yml` (CodeQL Advanced)                               | `push` to `main`; `pull_request` against `main`; `schedule` `0 5 * * 0` (Sunday 05:00 UTC)                                    | Push: `paths-ignore` like `pipeline.yml` but without `docs/**`                                                                                                                                                                                                                                                 | Code scanning of the GitHub Actions workflows (language `actions`)           | Code scanning results                                |
 | `dev-environment.yml` (Development Environment)              | `push`; `schedule` `0 1 * * 2`; `workflow_dispatch`                                                                           | Push: all branches except `dependabot/**`, only for changes in `.devcontainer/**` or `.github/workflows/dev-environment.yml`                                                                                                                                                                                   | Lint (hadolint) and build the devcontainer image without pushing it          | Build result only                                    |
 | `housekeeping-issues.yml` (Housekeeping: Issues + PRs)       | `issues` `opened`; `pull_request` `opened`, `assigned`                                                                        | Labeling job only for issues without the `story` label                                                                                                                                                                                                                                                         | Add issues and PRs to the organization project, set default labels           | Project items and labels                             |
@@ -36,7 +36,7 @@ Dependabot is configured in `.github/dependabot.yml` (see [Dependabot Integratio
 
 `pipeline.yml` runs these jobs in a single workflow run:
 
-1. **`shellcheck`** and **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `markdown-links`, `ansible`, `opentofu`, `alloy-config`) start in parallel.
+1. **`shellcheck`** and **`lint`** (matrix of the `docker-compose.yml` linters `yaml`, `workflows`, `filenames`, `folders`, `ansible`, `opentofu`, `alloy-config`) start in parallel.
 2. When both succeed, four find jobs list what the next jobs run, each with a script in `.github/workflows/assets/`: **`find-opentofu-roots`** (`find-opentofu-roots.sh`, every folder with a tracked `versions.tf`), **`find-inspec-profiles`** (`find-inspec-profiles.sh`, every folder with a tracked `inspec.yml`), **`find-molecule`** (`find-molecule.sh`, every folder below `configs-homelab/` with a tracked `molecule/default/molecule.yml`) and **`find-molecule-cloud`** (`find-molecule-cloud.sh`, the same below `configs-cloud/`). The matching tasks (`task opentofu:validate`, `task homelab:inspec:check`, `task homelab:molecule:test`, `task cloud:molecule:test`) read the same lists, so a new root, profile or scenario needs no edit to a task or the pipeline.
 3. Each find job starts its own matrix job, one entry per path, as soon as it succeeds: **`validate-opentofu`** runs `tofu validate` per root, **`check-inspec-profile`** runs `task homelab:inspec:check:<path>` (vendor and `inspec check`) per profile, **`molecule`** runs `task homelab:molecule:test:<path>` for the homelab roles and **`molecule-cloud`** runs `task cloud:molecule:test:<path>` for the roles the DigitalOcean droplet runs (see [Tests](cloud/digital-ocean/tests.md)). Every Molecule scenario runs to the end (`fail-fast: false`). Both Molecule jobs have `if: github.actor != 'dependabot[bot]'`.
 4. When all four matrix jobs succeed, **`release-code`** calls the reusable workflow `lib-release-code.yml`. It has `if: github.actor != 'dependabot[bot]' && github.ref == 'refs/heads/main'`, so on any other branch it is skipped and the run ends here.
@@ -74,18 +74,23 @@ The two version-bump commits do not start a new `pipeline.yml` run either. The r
 
 It starts:
 
+- on every push to any branch except `dependabot/**`, including Markdown-only changes (which `pipeline.yml` ignores). The `docs` job only runs for pushes to `main`.
 - after every completed `pipeline.yml` run (`workflow_run`). The `docs` job only runs when that run was on `main`, so pushes to other branches publish nothing.
 - after every completed `release.yml` run.
-- every night at 04:00 UTC (`schedule`), so docs-only changes on `main` (which `pipeline.yml` ignores) are published by the next morning.
+- every night at 04:00 UTC (`schedule`).
 - manually (`workflow_dispatch`).
 
-The `workflow_run` trigger fires on every completed run, whether it succeeded or failed. A `concurrency` group allows only one docs run at a time; a running build is never cancelled (it may be deploying), and GitHub keeps only the newest pending run.
+The `workflow_run` trigger fires on every completed run, whether it succeeded or failed. A `concurrency` group per branch allows only one run on `main` at a time (all docs builds run on `main`); a running build is never cancelled (it may be deploying), and GitHub keeps only the newest pending run. Runs on other branches cancel their predecessor.
 
 ### Inside One `docs.yml` Run
 
-The single job **`docs`**:
+Two jobs run in parallel; neither waits for the other.
 
-1. Checks out `main` with submodules (the root taskfile includes taskfiles from the `.task` submodule) and installs Task.
+**`markdown-links`** (skipped after `workflow_run`, because the push that started that run already ran it) logs in to Docker Hub and `dhi.io` and runs `docker compose up markdown-links` (lychee with `.lychee.toml`).
+
+**`docs`**:
+
+1. Checks out `main` with submodules (the root taskfile includes taskfiles from the `.task` submodule), installs Task and logs in to Docker Hub and `dhi.io`.
 2. Runs `task docs:generate`, which copies the Markdown sources (`docs/index.md` to `README.md`, the role READMEs to `docs/homelab/ansible/roles/` and `docs/cloud/ansible/roles/` and so on). The generated files are only used for this build and are not committed.
 3. Runs `docker compose up docs-build` (MkDocs), which writes the site to `target/docs/site`.
 4. Uploads `target/docs/site` as the pages artifact and deploys it to GitHub Pages in the environment `github-pages`.
