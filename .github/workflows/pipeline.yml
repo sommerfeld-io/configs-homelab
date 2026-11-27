@@ -50,7 +50,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        linter: ['yaml', 'workflows', 'filenames', 'folders', 'markdown-links', 'ansible', 'opentofu', 'alloy-config']
+        linter: ['yaml', 'workflows', 'filenames', 'folders', 'ansible', 'opentofu', 'alloy-config']
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
